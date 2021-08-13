@@ -1,0 +1,136 @@
+﻿
+@{
+    ViewBag.Title = "Usuarios";
+}
+<div class="modal fade" id="modal-registro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="editRegistro"></div>
+        </div>
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Mantención Usuarios</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Mantención</li>
+        <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+    </ol>
+</div>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <div class="form-inline my-2 my-lg-0">
+        
+    </div>
+    <div class="form-inline my-2 my-lg-0">
+        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Usuario</button>       
+    </div>
+</nav>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 1, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort" width="10%">&nbsp;</th>
+                            <th>Rut</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Correo</th>
+                            <th>Activo</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+
+    <!-- DataTable with Hover -->
+    <script>
+
+        $(document).ready(function () {  
+            AbrirMenu("Usuarios");
+            initTable();
+        });
+        function RefreshLista() {
+            var table = initTable();
+            table.ajax.reload(function (json) { });
+        }
+        function initTable() {
+            var buttonCommon=ExcelCommon();
+            var table = $('#grillaEmpresa').DataTable({  
+                buttons: [
+                    $.extend(true, {}, buttonCommon, {
+                        filename: "ListaUsuarios"
+                    })
+                ],                           
+                "retrieve": true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/Usuario/Usuarios_Read/0',
+                    "data": function (d) {
+
+                    },
+                    "dataSrc": ""
+                },                    
+                columns: [
+
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-primary btn-xs" onclick="CreateRegistro(' + o.IdUsuario +')"><i class="fa fa-edit"></i></button> ';                               
+                            return boton;
+                        }
+                    },
+                    { "data": "RutUsuario" },
+                    { "data": "NombreUsuario" },    
+                    { "data": "ApellidoUsuario" },    
+                    { "data": "CorreoElectronico" },    
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var estado = 'NO';
+                            if (o.Activo == true) {
+                                estado = "SI";
+                            }
+                            return estado;
+                        }
+                    }
+                ]
+            });
+
+            return table;
+        }
+
+        function CreateRegistro(tmpIdPago) {
+            $('#modal-registro').modal('show');
+            $.ajax({
+                url: "/Usuario/Create/" + tmpIdPago,
+                type: "Get",
+                data: {},
+                beforeSend: function () {
+                    $("#editRegistro").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#editRegistro").empty();
+                    $("#editRegistro").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+        
+    </script>
+</div>
+
+

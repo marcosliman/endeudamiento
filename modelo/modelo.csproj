@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E421A93E-5F3A-4DF8-8F3B-5B7D255D73CC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>modelo</RootNamespace>
+    <AssemblyName>modelo</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\Local\Estado.cs" />
+    <Compile Include="Models\Local\Empresa.cs" />
+    <Compile Include="Models\SoftLandContext.cs" />
+    <Compile Include="Models\Local\Crypto.cs" />
+    <Compile Include="Models\ErpContext.cs" />
+    <Compile Include="Models\Local\UsuarioPerfil.cs" />
+    <Compile Include="Models\Local\Usuario.cs" />
+    <Compile Include="Models\Local\Menu.cs" />
+    <Compile Include="Models\Local\Perfil.cs" />
+    <Compile Include="Models\Local\PermisoPerfil.cs" />
+    <Compile Include="Models\Softland\cwtauxi.cs" />
+    <Compile Include="Models\Softland\cwtccos.cs" />
+    <Compile Include="Models\Softland\iw_cocod.cs" />
+    <Compile Include="Models\Softland\iw_gsaen.cs" />
+    <Compile Include="Models\Softland\iw_gmovi.cs" />
+    <Compile Include="Models\Softland\iw_costop.cs" />
+    <Compile Include="Models\Softland\iw_timprod.cs" />
+    <Compile Include="Models\Softland\iw_nivst.cs" />
+    <Compile Include="Models\Softland\iw_tbode.cs" />
+    <Compile Include="Models\Softland\iw_tumed.cs" />
+    <Compile Include="Models\Softland\iw_tsubgr.cs" />
+    <Compile Include="Models\Softland\iw_tgrupo.cs" />
+    <Compile Include="Models\Softland\iw_tprod.cs" />
+    <Compile Include="Models\Softland\OW_vsnpTraeOCDetalle.cs" />
+    <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\EmpresaRotacionViewModel.cs" />
+    <Compile Include="ViewModel\GraficosViewModel.cs" />
+    <Compile Include="ViewModel\StockBodegaViewModel.cs" />
+    <Compile Include="ViewModel\RetornoGrafico.cs" />
+    <Compile Include="ViewModel\ControlInventarioViewModel.cs" />
+    <Compile Include="ViewModel\RotacionProductoViewModel.cs" />
+    <Compile Include="ViewModel\PermisoViewModel.cs" />
+    <Compile Include="ViewModel\RetornoGenerico.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Este proyecto hace referencia a los paquetes NuGet que faltan en este equipo. Use la restauración de paquetes NuGet para descargarlos. Para obtener más información, consulte http://go.microsoft.com/fwlink/?LinkID=322105. El archivo que falta es {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

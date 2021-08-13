@@ -1,0 +1,69 @@
+﻿@{ 
+    ViewBag.Title = "Crear Nuevo Proyecto";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Nuevo Proyecto</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@using (Ajax.BeginForm("creaProyecto", "Home", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success_dl",
+    OnFailure = "Failure_dl"
+
+}, new { id = "frmProyect", @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-body">
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Nombre del Proyecto</label>
+            <div class="col-sm-4">
+                <input type="text" name="NomProyect" id="NomProyect" class="form-control form-control-sm required" autocomplete="off" value="" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Descripción del Proyecto</label>
+            <div class="col-sm-4">
+                <input type="text" name="DesProyect" id="DesProyect" class="form-control form-control-sm required" autocomplete="off" value="" />
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm">Crear Proyecto</button>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $('#frmSoli').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        window.top.esconderCargando();
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        $('#modal-buscar').modal('hide');
+        if (data.Estado == "1") {
+            $("#modal-buscar .modal-content").empty();
+            $.notify(data.Mensaje, "success");
+
+        }
+        else {
+            $.notify(data.Mensaje, "error");
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        $.notify(data.Message, "error");
+    }
+</script>

@@ -1,0 +1,235 @@
+﻿
+@{
+    ViewBag.Title = "Cuenta Flujo";
+}
+<div class="modal fade" id="crear-material" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" id="ProductoSol">
+            <div id="datosBuscar">
+                
+            </div>
+            
+        </div>
+        <div class="modal-content" id="ProductAprob" style="display:none;">
+            <div id="datosBuscar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Producto Aprobado</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">Código Producto</label>
+                        <div class="col-sm-6 bg-success">
+                            000000001695
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">Nombre y/o Datos Técnicos Producto</label>
+                        <div class="col-sm-6">
+                            FRESADORA NEUMATICA 6MM& 1/4
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">Código de Parte</label>
+                        <div class="col-sm-6">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">Cod. Producto Similar</label>
+                        <div class="col-sm-6">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">Grupo</label>
+                        <div class="col-sm-6">
+                            MAQUINARIAS - HERRAMIENTAS
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">Sub-Grupo</label>
+                        <div class="col-sm-6">
+                            HERRAMIENTAS
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">Unidad de Medida</label>
+                        <div class="col-sm-6">
+                            UNIDAD
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">¿Para qué equipo o máquina?(Marca)</label>
+                        <div class="col-sm-6">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">¿Para qué equipo o máquina?(Modelo)</label>
+                        <div class="col-sm-6">
+
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-6 col-form-label">¿Se comprará una soloa vez?</label>
+                        <div class="col-sm-6">
+                            SI
+                        </div> 
+                    </div>
+                   
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Solicitudes para Creación de Productos</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Opciones Producto</li>
+        <li class="breadcrumb-item active" aria-current="page">Aceptar Creación Producto</li>
+    </ol>
+</div>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <div class="form-inline my-2 my-lg-0">
+
+    </div>
+    <div class="form-inline my-2 my-lg-0">
+
+    </div>
+</nav>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaSolicitudes" data-order='[[ 1, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Fecha Solicitud</th>
+                            <th>Solicitante</th>
+                            <th>Producto</th>
+                            <th>Grupo</th>                            
+                            <th>U.Medida</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>¿Se comprará una sola vez?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            AbrirMenu("SolAddProducto");
+            $('#grillaEmpresa').DataTable();
+            CargaSolicitudes();
+        });
+        
+        function editaMaterial(id) {
+            $("#datosBuscar").empty();
+            $('#crear-material').modal('show');
+            tmpUrl = "/Producto/EditaMaterial/" + id;
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: {},
+                beforeSend: function () {
+                    $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+        function CargaSolicitudes() {
+            if ($.fn.DataTable.isDataTable('#grillaSolicitudes')) {
+                var table = initTableSolicitudes();
+                table.ajax.reload(function (json) { }, false);
+            }
+            else {
+                var table = initTableSolicitudes();
+            }
+        }
+        function initTableSolicitudes() {
+            var table = $('#grillaSolicitudes').DataTable({
+            //dom: '<"top"Bf<"#id">>rt<"bottom"p><"clear">',
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [1],
+                    render: function (data) {
+                        var fecha = data;
+                        if (fecha != "" && fecha != null) {
+                            fecha = fecha.replace('/Date(', '').replace(')/', '');
+                            var expDate = new Date(parseInt(fecha));
+                            var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                            var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                            var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                            var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                            return fechaES;
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                }
+            ],
+            "retrieve": true,
+            processing: true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Producto/SolCreacionProducto_Read/',
+                "data": function (d) {
+                    d.IdEmpresa = 1;                    
+                    d.estado = '@((int)tesoreria.Helper.EstadoSolCreaProd.Enviada)';
+                },
+                "dataSrc": ""
+            },
+            columns: [
+                {
+                        mData: "IdSolicitudCreacion",
+                    bSortable: true,
+                    mRender: function (data, type, row, full) {
+
+                        return '<button class="btn btn-light btn-xs" onclick="editaMaterial(\'' + data + '\')"><i class="fa fa-edit"></i></button>';
+                    }
+                },
+                { "data": "FechaSolicitud" },
+                { "data": "UsuarioSolicitante" },
+                { "data": "NombreProducto" },
+                { "data": "Grupo" },
+                { "data": "UMedida" },
+                { "data": "Marca" },
+                { "data": "Modelo" },
+                { "data": "EsParaCompra" }
+            ]
+        });
+        return table;
+    }
+    </script>
+</div>
+
+
+

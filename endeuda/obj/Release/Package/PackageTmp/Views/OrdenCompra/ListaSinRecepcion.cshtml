@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "Cuenta Flujo";
+}
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Ordenes de Compra Sin Recepción Completa</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Reporte</li>
+        <li class="breadcrumb-item active" aria-current="page">O.C Sin Recepciones Completas</li>
+    </ol>
+</div>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <div class="form-inline my-2 my-lg-0">
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option value="">MAQUINARIAS SUR LTDA.</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option>--Seleccione--</option>
+                <option value="03-0013">BODEGA PTO VARAS</option>
+                <option value="03-0016">BODEGA PTA ARENAS</option>
+                <option value="03-0015">BODEGA AYSEN</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control form-control-sm" placeholder="Num. O.C" id="rangoFecha" name="rangoFecha" value="">
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control form-control-sm" placeholder="Fecha O.C" id="rangoFecha" name="rangoFecha" value="">
+        </div>
+        <div class="col-auto"><button class="btn btn-info btn-sm justify-content-end" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button></div>
+    </div>
+
+</nav>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 4, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>N° O.C</th>
+                            <th>Fecha</th>
+                            <th>Centro Costo</th>
+                            <th>Proveedor</th>
+                            <th>Neto $</th>                            
+                            <th>IVA $</th>
+                            <th>Total $</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            AbrirMenu("OCSinRecepcion");            
+            initTableProducto();
+        });
+        function initTableProducto() {
+            var table = $('#grillaProductos').DataTable({
+                //dom: '<"top"B<"#id">>rt<"bottom"lp><"clear">',
+                columnDefs: [
+                    { targets: '_all', className: 'align-middle' },
+                    {
+                        targets: [5,6,7],
+                        render: function (data) {
+                            var numFormt = "";
+                            if (data != null) {
+                                var num = data.toString();
+                                numFormt = SeparadorMiles(num);
+                            }
+                            return "$" + numFormt;
+                        }
+                    },
+                    {
+                        targets: 2,
+                        render: function (data) {
+                            var fecha = data;
+                            fecha = fecha.replace('/Date(', '').replace(')/', '');
+                            var expDate = new Date(parseInt(fecha));
+                            return expDate.toLocaleDateString();
+                        }
+                    }
+                ],
+                "retrieve": true,
+                processing: true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/OrdenCompra/Ordenes_Read/',
+                    "data": function (d) {
+                        d.IdEmpresa = 1;
+                    },
+                    "dataSrc": ""
+                },
+                buttons: [],
+                columns: [
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-light btn-xs" onclick="ModalComprobanteModal(\'\',\'' + o.NumOC+'\')"><i class="fa fa-search"></i></button>';
+
+                            return boton;
+                        }
+                    },
+                    { "data": "NumOC" },
+                    { "data": "FechaOC" },
+                    { "data": "DescCC" },
+                    { "data": "NomAux" },
+                    { "data": "SubTotalOC" },
+                    { "data": "ValorIva" },                    
+                    { "data": "ValorTotOC" }
+                ]
+            });
+        }
+        function ModalComprobanteModal(codProd, numOC) {
+            var tmpUrl = "/OrdenCompra/OrdenCompra";
+            $("#datosComprobante").empty();
+            $('#modal-comprobante').modal('show');
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: { codProd: codProd, numOC: numOC },
+                beforeSend: function () {
+                    $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosComprobante").empty();
+                    $("#datosComprobante").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+    </script>
+</div>
+
+
+

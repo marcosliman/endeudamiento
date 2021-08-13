@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MaqSur</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/fontawesome-free/css/all.min.css">
+    
+    <!-- Tempusdominus Bootstrap 4 -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+    
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/dist/css/adminlte.min.css">
+   
+    <script src="~/Plantilla/AdminLTE/plugins/jquery/jquery.min.js"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="~/Plantilla/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="~/Plantilla/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+   
+   
+    <!-- AdminLTE App -->
+    <script src="~/Plantilla/AdminLTE/dist/js/adminlte.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/Plantilla/AdminLTE/dist/js/demo.js"></script>
+  
+    <style>
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+    </style>
+    <script>
+        
+        $(document).ready(function () {
+            
+
+
+        });
+        
+    </script>
+</head>
+<body class="hold-transition layout-top-nav text-sm">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-dark navbar-primary">
+            <div class="container">
+                <a href="/Home/Index" class="brand-link bg-primary">
+                    <img src="/img/logo/logo2.png" alt="MaqSur" class="brand-image elevation-3" style="opacity: .8">
+                    <span class="brand-text font-weight-light">Tesorería</span>
+                </a>
+            </div>
+            
+
+            
+        </nav>
+        <!-- /.navbar -->
+        
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper">
+
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    <br />
+                    @RenderBody()
+                </div><!-- /.container-fluid -->
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <footer class="main-footer">
+            <strong>Datos del Pie</strong>
+            ...
+            <div class="float-right d-none d-sm-inline-block">
+                <b>Version</b> 1.0
+            </div>
+        </footer>
+        <!-- Control Sidebar -->
+        <aside class="control-sidebar control-sidebar-dark">
+            <!-- Control sidebar content goes here -->
+        </aside>
+        <!-- /.control-sidebar -->
+    </div>
+    <!-- ./wrapper -->
+    <!-- jQuery -->
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+    
+    <!-- Select2 -->
+    <script src="~/Plantilla/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
+
+    <script src="~/Librerias/DataTables-1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/dataTables.buttons.min.js"></script>
+
+    <script src="~/Librerias/JSZip-2.5.0/jszip.min.js"></script>
+    <script src="~/Librerias/pdfmake-0.1.36/pdfmake.min.js"></script>
+    <script src="~/Librerias/pdfmake-0.1.36/vfs_fonts.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.flash.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.html5.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.print.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.colVis.min.js"></script>
+    <script src="~/Librerias/Responsive-2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="~/Librerias/Responsive-2.2.5/js/responsive.bootstrap.js"></script>
+
+    <script src="~/Librerias/jquery_validate/messages_es.js"></script>
+
+    <script src="~/Librerias/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Librerias/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/Librerias/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+    <script src="~/Librerias/bootstrap-touchspin/js/jquery.bootstrap-touchspin.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment-with-locales.min.js"></script>
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                dom: 'Bfrtip',
+                responsive: true,
+                buttons: [
+                    /*{
+                        extend: 'copy',
+                        text: "Copiar"
+                    },*/
+                    {
+                        extend: 'csv',
+                        text: "Csv"
+                    },
+                    {
+                        extend: 'print',
+                        text: "Imprimir"
+                    },
+                    'pdf', 'excelHtml5'
+                ],
+
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false
+                }]
+            }); // ID From dataTable
+        });
+        function mostrarCargando(mensaje, imagen) {
+            if (mensaje == null || mensaje == undefined) {
+                mensaje = "CARGANDO";
+            }
+            if (imagen == null || imagen == undefined || imagen == "") {
+                imagen = "/Images/loading.gif";
+            }
+            var altura = $(document).height();
+            var ancho = $(document).width();
+            $("#divCargando").append("<div id='contenedorMsjCargando' style='height:" + altura + "px;width:" + ancho + "px'><div>");
+            $("#divCargando").append("<div id='mensajeCargando' ><span  class='fa fa-spinner fa-spin fa-3x'></span ><p>" + mensaje + "</p></div>");
+
+        }
+        function esconderCargando() {
+            $("#contenedorMsjCargando").remove();
+            $("#mensajeCargando").remove();
+
+        }
+    </script>
+</body>
+</html>

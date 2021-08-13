@@ -1,0 +1,34 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>@ViewData["Title"] - cl.dexiplus.Trazabilidad</title>
+    <style>
+        #container-wrapper {
+            font-size: .90rem;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+            $('.modal-dialog').draggable({
+                handle: ".modal-header"
+            });
+            
+        });
+    </script>
+</head>
+
+<body class="bodyModal">
+    <div class="page-content" style="border-color:white">
+        @RenderBody()
+    </div>
+</body>
+</html>
+
+@RenderSection("scripts", required: false)

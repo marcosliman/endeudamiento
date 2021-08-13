@@ -1,0 +1,302 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Solicitar Creación de Producto</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+    </ol>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-outline card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Solicitudes Pendientes</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+           
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-striped table-sm dataTable dtr-inline" width="100%" id="grillaSolicitudes" data-order='[[ 0, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Fecha Solicitud</th>                                
+                            <th>Producto</th>
+                            <th>Grupo</th>                                
+                            <th>U.Medida</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>                                
+                        </tr>
+                    </thead>
+                    <tbody>
+                            
+                    </tbody>
+                </table>
+            </div>
+            
+            
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        @using (Ajax.BeginForm("SolicitudCreaMaterial", "Home",null, new AjaxOptions
+        {
+            //InsertionMode = InsertionMode.Replace,
+            OnBegin = "mostrarCargando",
+            HttpMethod = "post",
+            OnSuccess = "Success_dl",
+            OnFailure = "Failure_dl"
+
+        }, new { id = "frmSoli", @class = "form-horizontal" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Datos Solicitud Producto</h3>                    
+                </div>
+                <div class="card-body p-0">
+
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label for="DesProd" class="col-sm-3 col-form-label">Nombre y/o Datos Técnicos Producto</label>
+                            <div class="col-sm-6">
+                                <input type="text" name="DesProd" id="DesProd" class="form-control form-control-sm required inputSol" autocomplete="off" value="" />
+                            </div>
+                            <div class="col-auto">
+                                <button type="button" name="btnSearch" id="btnSearch" class="btn btn-info btn-sm" onclick="BuscarSimilares()"><i class="fa fa-search"></i> Prod. Similares</button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="CodigoParte" class="col-sm-3 col-form-label">Código de Parte</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="CodigoParte" id="CodigoParte" class="form-control form-control-sm inputSol" autocomplete="off" value="" />
+                            </div>
+                        </div>
+                        <!--
+                        <div class="form-group row">
+                            <label for="pSimilar" class="col-sm-3 col-form-label">Cod. Producto Similar</label>
+                            <div class="col-sm-4">
+                                <input type="text" name="pSimilar" id="pSimilar" class="form-control form-control-sm inputSol" autocomplete="off" value="" />
+                            </div>
+                        </div>
+                            -->
+                        <div class="form-group row">
+                            <label for="CodGrupo" class="col-sm-3 col-form-label">Grupo</label>
+                            <div class="col-sm-6">
+                                @Html.DropDownList("CodGrupo", (SelectList)ViewData["listaGrupos"], "--Seleccione Grupo--", htmlAttributes: new { @class = "form-control form-control-sm required inputSelect2" })
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="CodUMed" class="col-sm-3 col-form-label">Unidad de Medida</label>
+                            <div class="col-sm-6">
+                                @Html.DropDownList("CodUMed", (SelectList)ViewData["listaUMedidas"], "--Seleccione U.Medida--", htmlAttributes: new { @class = "form-control form-control-sm required inputSol" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="IdMarca" class="col-sm-3 col-form-label">¿Para qué equipo o máquina?(Marca)</label>
+                            <div class="col-sm-4">
+                                @Html.DropDownList("IdMarca", (SelectList)ViewData["listaMarcas"], "--Seleccione Marca--", htmlAttributes: new { @class = "form-control form-control-sm inputSelect2" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="IdModelo" class="col-sm-3 col-form-label">¿Para qué equipo o máquina?(Modelo)</label>
+                            <div class="col-sm-4">
+                                @Html.DropDownList("IdModelo", (SelectList)ViewData["listaModelos"], "--Seleccione Modelo--", htmlAttributes: new { @class = "form-control form-control-sm inputSelect2" })
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="CompraVez" class="col-sm-3 col-form-label">¿Se comprará una sola vez?</label>
+                            <div class="col-sm-4">
+                                <select class="form-control form-control-sm" name="CompraVez" id="CompraVez">
+                                    <option value="true">SI</option>
+                                    <option value="false">NO</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Solicitar Creación</button>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="col-md-6">
+        <!-- PRODUCT LIST -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Productos Similares</h3>
+                
+            </div>
+            <div class="card-body p-0">
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered table-striped dataTable dtr-inline table-sm" width="100%" id="grillaProductos" data-order='[[ 1, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>                                
+                                <th width="15%">Cod.Producto</th>
+                                <th>Producto</th>                                
+                                <th>U.Medida</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="crear-material" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    
+    $(document).ready(function () {
+        $.fn.dataTable.moment('DD/MM/YYYY');
+        CargaSolicitudes();
+        AbrirMenu('SolCreacionMaterial');
+        $('#CodGrupo').select2({
+            theme: 'bootstrap4',
+            placeholder: '--Seleccione Grupo--'
+        });
+        $('#IdMarca').select2({
+            theme: 'bootstrap4',
+            placeholder: '--Seleccione Marca--'
+        });
+        $('#IdModelo').select2({
+            theme: 'bootstrap4',
+            placeholder: '--Seleccione Modelo--'
+        });
+        $('#frmSoli').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });        
+       
+    })
+    function CargaSolicitudes() {
+        if ($.fn.DataTable.isDataTable('#grillaSolicitudes')) {
+            var table = initTableSolicitudes();
+            table.ajax.reload(function (json) { }, false);
+        }
+        else {
+            var table = initTableSolicitudes();
+        }
+    }
+    function BuscarSimilares() {
+        if ($.fn.DataTable.isDataTable('#grillaProductos')) {
+            var table = initTableProductos();
+            table.ajax.reload(function (json) { }, false);
+        }
+        else {
+            var table = initTableProductos();
+        }
+    }
+    function initTableProductos() {
+        var table = $('#grillaProductos').DataTable({
+            dom: '<"top"Bf<"#id">>rt<"bottom"p><"clear">',
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' }
+            ],
+            "retrieve": true,
+            processing: true,
+           // searching:false,
+            'ajax': {
+                "type": "POST",
+                "url": '/Producto/ProductosSimilares_Read/',
+                "data": function (d) {
+                    d.IdEmpresa = 1;                  
+                    d.NombreProducto = $("#DesProd").val();                    
+                },
+                "dataSrc": ""
+            },
+            buttons: [],
+            columns: [                
+                { "data": "CodProd" },
+                { "data": "DesProd" },                
+                { "data": "DesUMed" }
+
+            ]
+        });
+        return table;
+    }
+    function initTableSolicitudes() {
+        
+        var table = $('#grillaSolicitudes').DataTable({
+            dom: '<"top"Bf<"#id">>rt<"bottom"p><"clear">',
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },                
+                {
+                    targets: [0],
+                    render: function (data) {
+                        var fecha = data;
+                        if (fecha != "" && fecha != null) {
+                            fecha = fecha.replace('/Date(', '').replace(')/', '');
+                            var expDate = new Date(parseInt(fecha));
+                            return expDate.toLocaleDateString();
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                }
+            ],
+            "retrieve": true,
+            processing: true,
+            // searching:false,
+            'ajax': {
+                "type": "POST",
+                "url": '/Producto/SolCreacionProducto_Read/',
+                "data": function (d) {
+                    d.IdEmpresa = 1;
+                    d.IdUsuario = '@seguridad.IdUsuario';
+                    d.estado = '@((int)tesoreria.Helper.EstadoSolCreaProd.Enviada)';
+                },
+                "dataSrc": ""
+            },
+            buttons: [],
+            columns: [
+                { "data": "FechaSolicitud" },
+                { "data": "NombreProducto" },
+                { "data": "Grupo" },
+                { "data": "UMedida" },
+                { "data": "Marca" },
+                { "data": "Modelo" }
+            ]
+        });
+        return table;
+    }
+    function Success_dl(data) {
+        esconderCargando();       
+        if (data.Estado == "0") {
+            CargaSolicitudes();
+            $(".inputSol").val('');
+            $("#CompraVez").val('true');
+            $('.inputSelect2').select2({ theme: 'bootstrap4'}).val("").trigger("change");
+            $.notify(data.Mensaje, "success");
+        }
+        else {
+            $.notify(data.Mensaje, "error");
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        $.notify(data.Message, "error");
+    }
+</script>

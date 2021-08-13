@@ -1,0 +1,204 @@
+﻿@model modelo.ViewModel.GraficosViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutAjax.cshtml";
+}
+<div id="cont-venta-bruta" class="row" style="display: block; position: relative; width: 100%;">
+    <div id="containerTable" style="height: 400px;background-color: transparent;" data-highcharts-chart="15">
+
+    </div>
+    <button class="btn btn-info btn-sm justify-content-end float-right" type="button" onclick="location.href='/RotacionProducto/ListaPorBodega'"><i class="fa fa-search"></i> Ver Reporte</button>
+    <p class="highcharts-description">
+
+    </p>
+</div>
+<form name="frmReporteBodega" id="frmReporteBodega" method="post" action="/RotacionProducto/ListaPorBodega">
+    <input type="hidden" name="CodBode" id="CodBode" value="" />
+    <input type="hidden" name="CodSubGr" id="CodSubGr" value="" />
+</form>
+<script>
+    var categoria = '';
+    var objBodega = '';
+        @foreach( var cat in Model.Bodegas.OrderBy(c => c.CodBode).ToList() as List<modelo.ViewModel.RetornoGrafico>)
+        {
+
+        <text>        
+            objBodega += '{"CodBode":"@cat.CodBode","DesBode":"@cat.DesBode.Replace("É", "E")"},';
+            categoria += '"@(cat.DesBode.ToString().Replace("É","E"))",';  
+        </text>
+    }
+    //
+    categoria = "[" + categoria.substring(0, categoria.length - 1) + "]";
+   // console.log(categoria)
+    categoria = JSON.parse(categoria);
+    //Obj bodega
+    objBodega = "[" + objBodega.substring(0, objBodega.length - 1) + "]";
+    objBodega = JSON.parse(objBodega)
+    var serie = '';        
+    var objPrecio = '';
+    var objSubGr = '';
+    @foreach( var cat in Model.SubGrupos as List<modelo.ViewModel.RetornoGrafico>)
+    {
+        var posBodega = 0;
+        <text>
+            var dataSerie = '';  
+            objSubGr += '{"CodSubGr":"@cat.CodSubGr","DesSubGr":"@cat.DesSubGr.Split('-')[1].Replace("Ó", "O")"},';
+            serie += '{ "name": "@cat.DesSubGr.Split('-')[1].Replace("Ó", "O")", ';
+            @foreach( var bodega in Model.Bodegas.OrderBy(c=>c.CodBode).ToList() as List<modelo.ViewModel.RetornoGrafico>)
+            {
+                var totalBode = Model.DataSubGrupo.Where(c => c.CodBode == bodega.CodBode && c.CodSubGr == cat.CodSubGr).FirstOrDefault();
+                var totalPrecio = Model.DataSubGrupo.Where(c => c.CodBode == bodega.CodBode && c.CodSubGr == cat.CodSubGr).Sum(c => c.TotalPrecio);
+                <text>
+                    dataSerie += '@((totalBode==null)?"0": totalBode.TotalProducto.ToString()),';
+                    var preciofr = SeparadorMiles('@totalPrecio.ToString()')
+                    objPrecio += '{"CodBode":"@posBodega","DesBode":"@bodega.DesBode.Replace("É", "E")","DesSubGr":"@cat.DesSubGr.Split('-')[1].Replace("Ó", "O")","Precio":"' + preciofr+'"},';
+                </text>
+                posBodega++;
+            }
+    var posBodega = "@posBodega";
+    dataSerie = dataSerie.substring(0, dataSerie.length - 1);
+    serie = serie + '"data":[' + dataSerie +']},';
+
+        </text>
+    }                    
+    serie = "[" + serie.substring(0, serie.length - 1) + "]";   
+    serie = JSON.parse(serie)    
+    //Objeto precio
+    objPrecio = "[" + objPrecio.substring(0, objPrecio.length - 1) + "]";        
+    objPrecio = JSON.parse(objPrecio)
+    //Obj sub grupo
+    objSubGr = "[" + objSubGr.substring(0, objSubGr.length - 1) + "]";
+    objSubGr = JSON.parse(objSubGr)
+    Highcharts.chart('containerTable', {
+        chart: {
+            type: 'column'
+        },
+        exporting: {
+            buttons: {
+                contextButton: {
+                    menuItems: ['viewFullscreen', 'printChart', 'downloadPNG', 'downloadPDF', 'downloadCSV']
+                }
+            }
+        },
+        title: {
+            text: 'Status Rotación por Bodega'
+        },
+        xAxis: {
+            categories: categoria
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Unidades'
+            },
+            stackLabels: {
+                enabled: true,
+                style: {
+                    fontWeight: 'bold',
+                    color: ( // theme
+                        Highcharts.defaultOptions.title.style &&
+                        Highcharts.defaultOptions.title.style.color
+                    ) || 'gray'
+                }
+            }
+        },
+        /*legend: {
+            align: 'right',
+            x: -30,
+            //verticalAlign: 'top',
+            y: 25,
+            floating: true,
+            backgroundColor:
+                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+            borderColor: '#CCC',
+            borderWidth: 1,
+            shadow: false
+        },*/
+        credits: {
+            enabled: false
+        },
+        /*tooltip: {
+            headerFormat: '<b>{point.x} </b><br/>',
+            pointFormat: '{series.name}: {point.y} (Precio: $50.000)<br/>Total: {point.stackTotal}'
+        },*/
+        tooltip: {           
+            formatter: function () {                   
+                var totalPrecio = '';                
+                for (var i = 0; i < objPrecio.length; i++) {                    
+                    if (objPrecio[i].DesBode == this.x && objPrecio[i].DesSubGr == this.series.name) {                        
+                        totalPrecio = objPrecio[i].Precio;                        
+                    }
+                }
+                return '<b>' + this.x + '</b><br/> ' +
+                    this.series.name + ': ' + this.y + '(Precio: $' + totalPrecio + ')<br/>' +
+                    'Total: ' + this.total;
+                
+            },
+            //shared: true
+        },
+        yAxis: {
+            stackLabels: {
+                style: {
+                    color: 'black'
+                },
+                enabled: true,
+                formatter: function () {
+                    
+                    var re = /./g;
+                    var precioTotal = 0;                    
+                    for (var i = 0; i < objPrecio.length; i++) {
+                        if (objPrecio[i].CodBode == this.x.toString()) {                        
+                            var nuevoObjeto = objPrecio[i];
+                            var precio = nuevoObjeto.Precio.replace(".", "").replace(".", "").replace(".", "").replace(",", ".");                                                                        
+                                              
+                            precioTotal = precioTotal + parseFloat(precio);                               
+                                                 
+                        }
+                    }
+                   
+                    precioTotal = redondearDecimales(precioTotal, 2)
+                    var preciofr = SeparadorMiles(precioTotal.toString())
+                    return this.total + " ($" + preciofr+")";
+                }
+            }
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+                dataLabels: {
+                    enabled: true
+                }
+            },
+            series: {
+                cursor: 'pointer',                
+                events: {
+                    click: function (event) {
+                        
+                        var CodSubGr = '';
+                        var desBode = event.point.category;
+                        var CodBode='';
+                       
+                        for (var i = 0; i < objBodega.length; i++) {
+                            if (objBodega[i].DesBode == desBode) {
+                                CodBode = objBodega[i].CodBode;
+                            }
+                        }
+                        for (var i = 0; i < objSubGr.length; i++) {
+                            if (objSubGr[i].DesSubGr == this.name) {
+                                CodSubGr = objSubGr[i].CodSubGr;
+                            }
+                        }
+                        
+                        $("#CodSubGr").val(CodSubGr);
+                        $("#CodBode").val(CodBode);
+                        $("#frmReporteBodega").submit();
+                        //if (nivel.length == 3) {
+                        //location.href = '/RotacionProducto/ListaPorBodega'
+                       // }
+                    }
+                }
+            }
+        },
+        series: serie
+    });
+    
+</script>

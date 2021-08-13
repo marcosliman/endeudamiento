@@ -1,0 +1,552 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title - MaqSur</title>
+    <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet">
+    <link href="~/Plantilla/ruang-admin/css/ruang-admin.min.css" rel="stylesheet">
+    <link href="~/Librerias/DataTables-1.10.21/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="~/Librerias/Buttons-1.6.2/css/buttons.dataTables.min.css" rel="stylesheet">
+    <link href="~/Librerias/Buttons-1.6.2/css/buttons.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/Librerias/Responsive-2.2.5/css/responsive.bootstrap.min.css" rel="stylesheet">
+    <link href="~/Librerias/selectmultiple/css/bootstrap-select.min.css" rel="stylesheet">
+    <link href="~/Librerias/dropzone/dropzone.css" rel="stylesheet">
+
+
+    <style>
+        #container-wrapper {
+            font-size: .90rem;
+        }
+
+        tr.group,
+        tr.group:hover {
+            background-color: #ddd !important;
+        }
+
+        .highcharts-figure .chart-container {
+            width: 245px;
+            height: 200px;
+            float: left;
+        }
+
+        .highcharts-figure, .highcharts-data-table table {
+            width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+    <link href="~/Content/Jquery.css" rel="stylesheet">
+    <link href="~/Librerias/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link href="~/Librerias/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+    <link href="~/Librerias/bootstrap-touchspin/css/jquery.bootstrap-touchspin.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+
+    <script src="~/Scripts/popper.min.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <script src="~/Scripts/notify.js"></script>
+
+    <script>
+        function ExcelCommon() {
+            var buttonCommon = {
+                text: 'Exportar a Excel',
+                extend: 'exceltml5',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)",
+                }
+            };
+            return buttonCommon;
+        }
+        $(document).ready(function () {
+            $.datepicker.setDefaults({
+                language: "es"
+            });
+            Highcharts.setOptions({
+                credits: {
+                    enabled: false
+                },
+                lang: {
+                    drillUpText: "\u25c1 Volver {series.name}",
+                    "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                    "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    "weekdays": ["Domingo", "Lunes", "Martes", "Mi\u00e9rcoles", "Jueves", "Viernes", "S\u00e1bado"],
+                    "decimalPoint": ",", "thousandsSep": ".", "resetZoom": "Restablecer Zoom", "resetZoomTitle": "Restablecer Zoom 1:1"
+                }
+            });
+            Dropzone.options.myAwesomeDropzone = false;
+            Dropzone.autoDiscover = false;
+            $('[data-toggle="tooltip"]').tooltip()
+            $('.modal-dialog').draggable({
+                handle: ".modal-header"
+            });
+            var botonExcel = ExcelCommon();
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: '<"top"Bf<"#id">>rt<"bottom"lp><"clear">',
+                buttons: [
+                    $.extend(true, {}, botonExcel, {
+                    })
+                ],
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "decimal": ",",
+                    "thousands": "."
+                }
+            });
+            $.extend($.fn.dataTableExt.oStdClasses, {
+                "sFilterInput": "form-control form-control-sm",
+                "sLengthSelect": "form-control form-control-sm"
+            });
+
+
+
+            $('.selectpicker').selectpicker({ noneSelectedText: 'Seleccione' });
+
+        });
+        function SeparadorMiles(numero) {
+            var num = numero;
+            var splitStr = num.split('.');
+            var splitLeft = splitStr[0];
+            var splitRight = splitStr.length > 1 ? "," + splitStr[1] : '';
+            var regx = /(\d+)(\d{3})/;
+            while (regx.test(splitLeft)) {
+                splitLeft = splitLeft.replace(regx, '$1' + "." + '$2');
+            }
+            return splitLeft + splitRight;
+        }
+    </script>
+</head>
+<body id="page-top">
+
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav sidebar sidebar-light accordion" id="accordionSidebar">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/Home/Inicio">
+                <div class="sidebar-brand-icon">
+                    <img src="/img/logo/logo2.png">
+                </div>
+                <div class="sidebar-brand-text mx-3"></div>
+            </a>
+            <hr class="sidebar-divider my-0">
+            <li class="nav-item @if (ViewBag.menuActivo == 0) {<text>active</text> } ">
+                <a class="nav-link" href="/Home/Inicio">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item @if (ViewBag.menuActivo ==1) {<text>active</text> } ">
+                <a class="nav-link" href="/Home/IndexG">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard 2</span>
+                </a>
+            </li>
+            <hr class="sidebar-divider">
+            <div class="sidebar-heading">
+                OPCIONES
+            </div>
+            
+            <li class="nav-item">
+                <a class="nav-link @if (ViewBag.menuActivo < 2) {<text>collapsed</text> }" href="#" data-toggle="collapse" data-target="#collapseMenEgr" @if (ViewBag.menuActivo > 1) {<text>aria-expanded="true"</text> } aria-controls="collapseMenEgr">
+                    <i class="fas fa-fw fa-dollar-sign"></i>
+                    <span>Egresos</span>
+                </a>
+                <div id="collapseMenEgr" class="collapse @if (ViewBag.menuActivo > 1) {<text>show</text> }" aria-labelledby="headingForm" data-parent="#accordionSidebar" style="">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Egresos</h6>
+                        <a class="collapse-item @if (ViewBag.menuActivo == 2) {<text>active</text> }" href="/Programa/Index">
+                            <i class="fas fa-fw fa-calendar"></i>
+                            <span>Programar</span>
+                        </a>
+                        <a class="collapse-item @if (ViewBag.menuActivo == 3) {<text>active</text> }" href="/Programa/IndexVal">
+                            <i class="fas fa-fw fa-check-circle"></i>
+                            <span>Validar</span>
+                        </a>
+                        <a class="collapse-item @if (ViewBag.menuActivo == 4) {<text>active</text> }" href="/Programa/IndexPago">
+                            <i class="fas fa-fw fa-dollar-sign"></i>
+                            <span>Pagar</span>
+                        </a>
+                        <a class="collapse-item @if (ViewBag.menuActivo == 5) {<text>active</text> }" href="/Egreso/Index">
+                            <i class="fas fa-fw fa-file-upload"></i>
+                            <span>Finalizar</span>
+                        </a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseForm" aria-expanded="false" aria-controls="collapseForm">
+                    <i class="fab fa-fw fa-wpforms"></i>
+                    <span>Mantenedores</span>
+                </a>
+                <div id="collapseForm" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar" style="">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Mantenedores</h6>
+                        <a class="collapse-item" href="#">Usuarios</a>
+                        <a class="collapse-item" href="#">Empresas</a>
+                        <a class="collapse-item" href="#">Bancos</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseRep" aria-expanded="false" aria-controls="collapseRep">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Reportes</span>
+                </a>
+                <div id="collapseRep" class="collapse" aria-labelledby="headingForm" data-parent="#accordionSidebar" style="">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Reportes</h6>
+                        <a class="collapse-item" href="/Tesoreria/Index">Egresos Empresa</a>
+                        <a class="collapse-item" href="/Tesoreria/IndexHist">Egresos Usuario</a>
+                        <a class="collapse-item" href="#">Egresos Vencidos</a>
+                    </div>
+                </div>
+            </li>
+            <hr class="sidebar-divider">
+            <div class="version" id="version-ruangadmin"></div>
+        </ul>
+
+        <!-- Sidebar -->
+
+        <div id="content-wrapper">
+
+            <div id="content">
+                <!-- TopBar -->
+                <nav class="navbar navbar-expand navbar-light bg-navbar topbar mb-4 static-top">
+                    <button id="sidebarToggleTop" class="btn rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <ul class="navbar-nav ml-auto">
+
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <span class="badge badge-danger badge-counter">3+</span>
+                            </a>
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Notificaciones
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-user-circle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">Junio 29, 2020</div>
+                                        <span class="font-weight-bold">Tiene 1 cliente sin contactos!</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-success">
+                                            <i class="fas fa-donate text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">Junio 29, 2020</div>
+                                        ....!
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-warning">
+                                            <i class="fas fa-exclamation-triangle text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="small text-gray-500">Junio 29, 2020</div>
+                                        .....
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Ver Todas</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-envelope fa-fw"></i>
+                                <span class="badge badge-warning badge-counter">2</span>
+                            </a>
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Mensajes
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="/img/man.png" style="max-width: 60px" alt="">
+                                        <div class="status-indicator bg-success"></div>
+                                    </div>
+                                    <div class="font-weight-bold">
+                                        <div class="text-truncate">
+                                            Cliente tal informa sobre pago de factura realizado.
+                                        </div>
+                                        <div class="small text-gray-500">Junio 29, 2020</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="dropdown-list-image mr-3">
+                                        <img class="rounded-circle" src="/img/girl.png" style="max-width: 60px" alt="">
+                                        <div class="status-indicator bg-default"></div>
+                                    </div>
+                                    <div>
+                                        <div class="text-truncate">
+                                            Cliente otro : hola quiero...
+                                        </div>
+                                        <div class="small text-gray-500">Junio 29, 2020</div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Leer más mensajes</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-tasks fa-fw"></i>
+                                <span class="badge badge-success badge-counter">3</span>
+                            </a>
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                 aria-labelledby="messagesDropdown">
+                                <h6 class="dropdown-header">
+                                    Tareas
+                                </h6>
+                                <a class="dropdown-item align-items-center" href="#">
+                                    <div class="mb-3">
+                                        <div class="small text-gray-500">
+                                            Egresos Por Validar
+                                            <div class="small float-right"><b>50%</b></div>
+                                        </div>
+                                        <div class="progress" style="height: 12px;">
+                                            <div class="progress-bar bg-success" role="progressbar" style="width: 50%" aria-valuenow="50"
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item align-items-center" href="#">
+                                    <div class="mb-3">
+                                        <div class="small text-gray-500">
+                                            Egresos por Pagar
+                                            <div class="small float-right"><b>30%</b></div>
+                                        </div>
+                                        <div class="progress" style="height: 12px;">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 30%" aria-valuenow="30"
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item align-items-center" href="#">
+                                    <div class="mb-3">
+                                        <div class="small text-gray-500">
+                                            Pagos Por Finalizar
+                                            <div class="small float-right"><b>5%</b></div>
+                                        </div>
+                                        <div class="progress" style="height: 12px;">
+                                            <div class="progress-bar bg-danger" role="progressbar" style="width: 5%" aria-valuenow="5"
+                                                 aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Ver todas las tareas</a>
+                            </div>
+                        </li>
+                        <div class="topbar-divider d-none d-sm-block"></div>
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                               aria-haspopup="true" aria-expanded="false">
+                                <img class="img-profile rounded-circle" src="/img/boy.png" style="max-width: 60px">
+                                <span class="ml-2 d-none d-lg-inline text-white small">Mauricio</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Perfil
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Configuraciones
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Log Actividades
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Cerrar Sesión
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- Topbar -->
+                <!-- Container Fluid-->
+                <!-- Modal Logout -->
+                <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+                     aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabelLogout">Ohh No!</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Estás seguro de que quieres cerrar sesión?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancel</button>
+                                <a href="/Home/Index" class="btn btn-primary">Salir</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container-fluid" id="container-wrapper">
+                    @RenderBody()
+                    <!--Row-->
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <p></p>
+                    </div>
+                </div>
+                <!---Container Fluid-->
+            </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>
+                            copyright &copy;
+                            <script>document.write(new Date().getFullYear());</script> - pie
+                            <b><a href="" target="_blank">...</a></b>
+                        </span>
+                    </div>
+                </div>
+            </footer>
+            <!-- Footer -->
+        </div>
+
+    </div>
+    <!-- Scroll to top -->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <div class="" id="divCargando" data-keyboard="false" tabindex="-1">
+
+    </div>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+    <script src="~/Librerias/DataTables-1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/dataTables.buttons.min.js"></script>
+
+    <script src="~/Librerias/JSZip-2.5.0/jszip.min.js"></script>
+    <script src="~/Librerias/pdfmake-0.1.36/pdfmake.min.js"></script>
+    <script src="~/Librerias/pdfmake-0.1.36/vfs_fonts.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.flash.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.html5.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.print.min.js"></script>
+    <script src="~/Librerias/Buttons-1.6.2/js/buttons.colVis.min.js"></script>
+    <script src="~/Librerias/Responsive-2.2.5/js/dataTables.responsive.min.js"></script>
+    <script src="~/Librerias/Responsive-2.2.5/js/responsive.bootstrap.js"></script>
+
+    <script src="~/Librerias/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Librerias/selectmultiple/js/bootstrap-select.min.js"></script>
+    <script src="~/Librerias/selectmultiple/js/i18n/defaults-es_ES.min.js"></script>
+    <script src="~/Librerias/dropzone/dropzone.min.js"></script>
+    <script src="~/Librerias/highcharts/highcharts.js"></script>
+    <script src="~/Librerias/highcharts/highcharts-more.js"></script>
+    <script src="~/Librerias/highcharts/modules/data.js"></script>
+    <script src="~/Librerias/highcharts/modules/drilldown.js"></script>
+    <script src="~/Librerias/highcharts/modules/exporting.js"></script>
+    <script src="~/Librerias/highcharts/modules/export-data.js"></script>
+    <script src="~/Librerias/highcharts/modules/solid-gauge.js"></script>
+    <script src="~/Librerias/highcharts/modules/accessibility.js"></script>
+    <script src="~/Plantilla/ruang-admin/js/ruang-admin.min.js"></script>
+    <script src="~/Librerias/jquery_validate/messages_es.js"></script>
+    <script src="~/Librerias/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/Librerias/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+    <script src="~/Librerias/bootstrap-touchspin/js/jquery.bootstrap-touchspin.js"></script>
+    @RenderSection("scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            $('#dataTable').DataTable({
+                dom: 'Bfrtip',
+                responsive: true,
+                buttons: [
+                    /*{
+                        extend: 'copy',
+                        text: "Copiar"
+                    },*/
+                    {
+                        extend: 'csv',
+                        text: "Csv"
+                    },
+                    {
+                        extend: 'print',
+                        text: "Imprimir"
+                    },
+                    'pdf', 'excelHtml5'
+                ],
+
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false
+                }]
+            }); // ID From dataTable
+        });
+        function mostrarCargando(mensaje, imagen) {
+            if (mensaje == null || mensaje == undefined) {
+                mensaje = "CARGANDO";
+            }
+            if (imagen == null || imagen == undefined || imagen == "") {
+                imagen = "/Images/loading.gif";
+            }
+            var altura = $(document).height();
+            var ancho = $(document).width();
+            $("#divCargando").append("<div id='contenedorMsjCargando' style='height:" + altura + "px;width:" + ancho + "px'><div>");
+            $("#divCargando").append("<div id='mensajeCargando' ><span  class='fa fa-spinner fa-spin fa-3x'></span ><p>" + mensaje + "</p></div>");
+
+        }
+        function esconderCargando() {
+            $("#contenedorMsjCargando").remove();
+            $("#mensajeCargando").remove();
+
+        }
+    </script>
+</body>
+</html>

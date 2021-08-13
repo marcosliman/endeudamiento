@@ -1,0 +1,217 @@
+﻿
+@{
+    ViewBag.Title = "Cuenta Flujo";
+}
+<div class="modal fade" id="ver-producto" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="datosBuscar">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Impresión de Etiquetas de productos con Stock</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Opciones Producto</li>
+        <li class="breadcrumb-item active" aria-current="page">Imprimir Etiqueta</li>
+    </ol>
+</div>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <div class="form-inline my-2 my-lg-0">
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option value="">MAQUINARIAS SUR LTDA.</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option value="BAB">BODEGA CENTRAL PUERTO VARAS</option>
+                <option value="BC">BODEGA CHONCHI</option>
+                <option value="BPA">BODEGA PUNTA ARENAS</option>
+                <option value="BAY">BODEGA AYSÉN</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option>--Seleccione Grupo--</option>
+                <option value="210">MAQUINARIAS - HERRAMIENTAS</option>
+                <option value="4">NO INVENTARIABLE</option>
+                <option value="002">INSUMOS</option>
+                <option value="005">RUEDAS</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option>--Seleccione Sub-Grupo--</option>
+                <option value="923">HERRAMIENTAS</option>
+                <option value="4">NO APLICA</option>
+                <option value="002">ACCESORIOS ELÉCTRICOS</option>
+                <option value="005">PLANCHAS</option>
+            </select>
+        </div>
+
+    </div>
+    <div class="form-inline pt-1 my-lg-0">
+
+        <div class="col-auto">
+            <input type="text" class="form-control form-control-sm" placeholder="Cod Producto" id="rangoFecha" name="rangoFecha" value="">
+        </div>
+        <div class="col-auto">
+            <input type="text" class="form-control form-control-sm" placeholder="Nombre Producto" id="rangoFecha" name="rangoFecha" value="">
+        </div>
+        <div class="col-auto"><button class="btn btn-info btn-sm justify-content-end" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button></div>
+    </div>
+
+</nav>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 4, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Cod Producto</th>
+                            <th>Producto</th>
+                            <th>Bodega</th>
+                            <th>Stock</th>
+                            <th>U.Medida</th>
+                            <th>Cant. a Imprimir</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            AbrirMenu("ImprimirEtiquetaStock");
+            initTableProducto();
+        });
+        function initTableProducto() {
+            var table = $('#grillaProductos').DataTable({
+                //dom: '<"top"B<"#id">>rt<"bottom"lp><"clear">',
+                columnDefs: [
+                    { targets: '_all', className: 'align-middle' }
+                ],
+                "retrieve": true,
+                processing: true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/Producto/ProductosEtiquetaStock_Read/',
+                    "data": function (d) {
+                        d.IdEmpresa = 1;
+                    },
+                    "dataSrc": ""
+                },
+                buttons: [
+                    {
+                        text: 'Imprimir Etiquetas',
+                        action: function (e, dt, node, config) {
+                            PrintEtiquetas()
+                        }
+                    },
+                    {
+                        text: 'Limpiar',
+                        action: function (e, dt, node, config) {
+                            
+                        }
+                    }
+                ],
+                columns: [
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-light btn-xs" onclick="VerProducto(\'' + o.CodProd + '\')"><i class="fa fa-search"></i></button>';
+
+                            return boton;
+                        }
+                    },
+                    { "data": "CodProd" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, row) {
+                            return data.DesProd;
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (data, type, row) {
+                            return "BODEGA CENTRAL PUERTO VARAS";
+                        }
+
+                    },
+
+                    { "data": "Stock" },
+                    { "data": "CodUMed" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<input type="text" class="form-control form-control-sm" value="" />';
+
+                            return boton;
+                        }
+                    },
+
+                ]
+            });
+        }
+        function VerProducto(codProducto) {
+            $("#datosBuscar").empty();
+            $('#ver-producto').modal('show');
+            $.ajax({
+                url: "/Producto/VistaProducto",
+                type: "Get",
+                data: { codProd: codProducto },
+                beforeSend: function () {
+                    $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+        function PrintEtiquetas() {
+            $("#datosBuscar").empty();
+            $('#ver-producto').modal('show');
+            $.ajax({
+                url: "/Producto/PrintEtiqueta",
+                type: "Get",
+                data: {  },
+                beforeSend: function () {
+                    $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+    </script>
+</div>
+
+
+

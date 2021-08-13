@@ -1,0 +1,306 @@
+﻿@{
+    /**/
+    ViewBag.Title = "Facturas";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h5 class="h5 mb-0 text-gray-800">Aprobar Solicitud de Material</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Aprobar Material</li>
+    </ol>
+</div>
+
+<div class="row">
+    <div class="col-12">
+
+        <div class="invoice p-3 mb-3">
+            <div class="row">
+                <div class="col-12">
+                    <h4>
+                        <i class="fas fa-globe"></i> Maqsur Ltda.
+                        <small class="float-right">Solicitado: @DateTime.Now.ToShortDateString()</small>
+                    </h4>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row invoice-info">
+                <div class="col-sm-4 invoice-col">
+
+                    <address>
+                        Centro de Costo: <strong>Centro de Costo 1</strong><br>
+                        Bodega: <strong>BODEGA CENTRAL PUERTO VARAS</strong><br>
+                        Cliente: <strong>Cliente 1</strong><br>
+                        O.T: <strong>OT001</strong><br />
+                        Proyecto:<strong>xxx</strong>
+                    </address>
+                </div>
+                <div class="col-sm-4 invoice-col">
+                    Solicitado por
+                    <address>
+                        <strong>Mecánico Fulano</strong><br>
+                        Email: mecanico@maqsur.cl
+                    </address>
+                </div>
+                <div class="col-sm-4 invoice-col">
+                    Aprobado por
+                    <address>
+                        <strong>Juan Aprobador</strong><br>
+                        Email: aprobador@maqsur.cl
+                    </address>
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-12 table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" class="form-check" id="chkAll" onclick="checkAllGeneral(this,'chkSol')" /></th>
+                                <th>Código</th>
+                                <th>Material</th>
+                                <th>Cant. Aprobada</th>
+                                <th>U.Medida</th>
+                                <th>Precio Promedio</th>
+                                <th>Total</th>
+                                <th>Ubicación</th>
+                                <th>Stock</th>
+                                <th>Otras Bodegas</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><input type="checkbox" class="form-check chkSol" /></td>
+                                <td>000000001694</td>
+                                <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL</a></td>
+                                <td>5</td>
+                                <td>UND</td>
+                                <td>$5.000</td>
+                                <td>$25.000</td>
+                                <td>RF1</td>
+                                <td><span class="badge badge-success">15</span></td>
+                                <td><a href='#' data-toggle='modal' data-target='#modalStock'><span class="badge badge-success">15</span></a></td>
+                                <td><button type="button" class="btn btn-sm btn-success" data-toggle='modal' data-target='#modalEntrega'><i class="fa fa-check-circle"></i> Entregar</button></td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="form-check chkSol" /></td>
+                                <td>000000003010</td>
+                                <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE P/SEG. INT. CURVO</a></td>
+                                <td>3</td>
+                                <td>UND</td>
+                                <td>$5.000</td>
+                                <td>$15.000</td>
+                                <td>RF1</td>
+                                <td><span class="badge badge-success">5</span></td>
+                                <td><a href='#' data-toggle='modal' data-target='#modalStock'><span class="badge badge-success">10</span></a></td>
+                                <td><button type="button" class="btn btn-sm btn-success" data-toggle='modal' data-target='#modalEntrega'><i class="fa fa-check-circle"></i> Entregar</button></td>
+                            </tr>
+                            <tr>
+                                <td><input type="checkbox" class="form-check chkSol" /></td>
+                                <td>000000006105</td>
+                                <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL 7"</a></td>
+                                <td>5</td>
+                                <td>UND</td>
+                                <td>$5.000</td>
+                                <td>$25.000</td>
+                                <td>RF1</td>
+                                <td><span class="badge badge-success">5</span></td>
+                                <td><a href='#' data-toggle='modal' data-target='#modalStock'><span class="badge badge-success">15</span></a></td>
+                                <td><button type="button" class="btn btn-sm btn-success" data-toggle='modal' data-target='#modalEntrega'><i class="fa fa-check-circle"></i> Entregar</button></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>                                
+                                <th>Total</th>
+                                <th>$65.000</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="row no-print">
+                <div class="col-12">
+                    <a href="#" rel="noopener" class="btn btn-default"><i class="fas fa-print"></i> Imprimir</a>
+                    <a href="#" rel="noopener" class="btn btn-info"><i class="fas fa-check-circle"></i> Entrega Masiva</a>
+                    <button type="button" class="btn btn-success float-right ml-1" data-toggle='modal' data-target='#modalCodigo'>
+                        <i class="fa fa-barcode"></i> Pistolear
+                    </button>
+                    <button type="button" class="btn btn-success float-right">
+                        <i class="far fa-check-circle"></i> Entrega Parcial
+                    </button>
+                    <button type="button" class="btn btn-success float-right" onclick="location.href='/Bodega/VerSolicitud'">
+                        <i class="far fa-check-circle"></i> Finalizar
+                    </button>
+                    <button type="button" class="btn btn-secondary float-right" onclick="location.href='/Home/Bodeguero'" style="margin-right: 5px;">
+                        <i class="fas fa-redo"></i> Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="modalEntrega" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Entrega Material</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-7">
+                    <dl class="row">
+                        <dt class="col-sm-6">Material</dt>
+                        <dd class="col-sm-6">Alicate Plano</dd>
+                        <dt class="col-sm-6">Cantidad Entregada</dt>
+                        <dd class="col-sm-4"><input type="text" value="5" /></dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-check-circle"></i> Entregado</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("PartDetalleMaterial", null)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalStock" tabindex="-1" role="dialog" aria-labelledby="modalStock" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detalle Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("PartDetalleStock", null)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalCodigo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Entrega Materiales</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Código</label>
+                    <input type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="card collapsed-card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Materiales Pistoleados</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-striped table-valign-middle">
+                            <thead>
+                                <tr>
+                                    <th>Material</th>
+                                    <th>Cantidad</th>
+                                    <th>Solicitado</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <img src="/Plantilla/AdminLTE/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                                        Alicate Plano
+                                    </td>
+                                    <td><input type="text" class="form-control form-control-sm" value="1" /></td>
+                                    <td>5</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-success"><i class="fa fa-check-circle"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Rechazar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="/Plantilla/AdminLTE/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                                        Alicate Universal
+                                    </td>
+                                    <td><input type="text" class="form-control form-control-sm" value="1" /></td>
+                                    <td>5</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-success"><i class="fa fa-check-circle"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Rechazar</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="/Plantilla/AdminLTE/dist/img/default-150x150.png" alt="Product 1" class="img-circle img-size-32 mr-2">
+                                        Alicate Punta Redonda
+                                    </td>
+                                    <td><input type="text" class="form-control form-control-sm" value="1" /></td>
+                                    <td>5</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-success"><i class="fa fa-check-circle"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-sm btn-danger"><i class="fa fa-ban"></i> Rechazar</button>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-sm btn-success"><i class="fa fa-check-circle"></i> Aceptar Todo</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        AbrirMenu('DashBoard3');
+
+    })
+
+</script>

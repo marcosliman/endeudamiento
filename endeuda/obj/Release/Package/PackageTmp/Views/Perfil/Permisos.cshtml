@@ -1,0 +1,281 @@
+﻿@model modelo.Models.Local.PermisoPerfil
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Permisos Usuarios</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item" aria-current="page">Usuarios</li>
+        <li class="breadcrumb-item active" aria-current="page">Permisos</li>
+    </ol>
+</div>
+@using (Ajax.BeginForm("/Permisos_Update", "Perfil", new AjaxOptions
+{
+    HttpMethod = "post",
+    OnSuccess = "Success",
+    OnFailure = "Failure"
+
+},
+                new { id = "frmPermisos" }))
+
+//@using (Html.BeginForm("/Permisos_Update", null, FormMethod.Post, new { id = "frmPermisos" }))
+{
+    <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+        <div class="form-inline my-3 my-lg-0 col-12">
+            <div class="form-group">
+
+                <div class="input-group">
+                    <select class="form-control form-control-sm required " id="IdPerfil" name="IdPerfil">
+
+                        @foreach (var item in ViewData["listaPerfil"] as List<modelo.ViewModel.RetornoGenerico>)
+                        {
+                            var select = "";
+                            if (item.Id == 1)
+                            { select = " Selected "; }
+                            <option value="@item.Id" @select>@item.Nombre</option>
+                        }
+                    </select>
+
+                </div>
+                <button class="btn btn-primary btn-sm ml-1" type="button" onclick="Filtrar()"><i class="fa fa-search"></i> Filtrar</button><br />
+                <button class="btn btn-sm btn-success ml-1" type="button" onclick="actualizarPermisos()"><i class="fa fa-save"></i> Guardar Cambios</button>
+                <!-- /.input group -->
+            </div>
+        </div>
+        
+    </nav>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+
+                @{
+                    var Status = ViewBag.Status;
+                }
+                
+                <div class="card-body">
+                    <div id="top"></div>
+                    <table id="grillaPermisos" class="table table-bordered table-hover dataTable dtr-inline" cellspacing="0" width="100%">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Nombre Grupo</th>
+                                <th>Nombre Menú</th>
+                                <th class="noBuscar">Acceder <input type='checkbox' id='masterCheckBox2' onclick='checkAll(this,"chkAccederL")' /></th>
+                                <th class="noBuscar">Crear <input type='checkbox' id='masterCheckBox2' onclick='checkAll(this,"chkCrearL")' /></th>
+                                <th class="noBuscar">Editar <input type='checkbox' id='masterCheckBox2' onclick='checkAll(this,"chkEditarL")' /></th>
+                                <th class="noBuscar">Eliminar <input type='checkbox' id='masterCheckBox2' onclick='checkAll(this,"chkEliminarL")' /></th>
+                            </tr>
+                        </thead>
+                        <tbody id="indexTbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        AbrirMenu("Permisos");
+        $('.select2').select2()
+        $("#IdPerfil").change(function () { Filtrar(); })
+    });
+    function checkAll(ele, name) {
+        var state = $(ele).is(':checked');
+        $('input[name=' + name + ']').each(function () {
+            if (state == true && $(this).prop("disabled") != true) {
+                $(this).prop("checked", true);
+            } else {
+                $(this).prop("checked", false);
+            }
+        });
+    }
+    function Filtrar() {
+        var idPerfil = $("#IdPerfil").val();
+        if (idPerfil != "") {
+            RefrescarGridPermisos(idPerfil);
+        }
+        else {
+            $.notify("Debe seleccionar un perfil", "error");
+        }
+    }
+    function ValidaEnvioForm() {
+        var table = initTablePermisos();
+        var form = $("#frmPermisos");
+        $('.checkeados').remove();
+        var params = table.$('input');
+        var keyPais = -1;
+        var checkeado = 0;
+        var idPais = 0;
+        var required = "";
+        $.each(params, function () {
+            var idCampo = this.id.split("_");
+            if (this.checked == true && idCampo[0] == 'chkAcceder') {
+                $(form).append($('<input>').attr('type', 'hidden').attr('name', "chkAcceder").attr("id", "chkAcceder" + this.value).addClass("checkeados").val(this.value));
+            }
+            if (this.checked == true && idCampo[0] == 'chkCrear') {
+                $(form).append($('<input>').attr('type', 'hidden').attr('name', "chkCrear").attr("id", "chkCrear" + this.value).addClass("checkeados").val(this.value));
+            }
+            if (this.checked == true && idCampo[0] == 'chkEditar') {
+                $(form).append($('<input>').attr('type', 'hidden').attr('name', "chkEditar").attr("id", "chkEditar" + this.value).addClass("checkeados").val(this.value));
+            }
+            if (this.checked == true && idCampo[0] == 'chkEliminar') {
+                $(form).append($('<input>').attr('type', 'hidden').attr('name', "chkEliminar").attr("id", "chkEliminar" + this.value).addClass("checkeados").val(this.value));
+            }
+
+        });
+        //  return false;
+    }
+    function RefrescarGridPermisos(idPerfil) {
+        var id = idPerfil
+        var table = initTablePermisos();
+        table.ajax.reload();
+    }
+
+    function actualizarPermisos() {
+        $('#frmPermisos').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+
+        if ($('#frmPermisos').valid()) {
+            mostrarCargando();
+            ValidaEnvioForm();
+            $("#frmPermisos").submit();
+        }
+    }
+    function initTablePermisos() {
+        var botonExcel = ExcelCommon();
+        var table = $('#grillaPermisos').DataTable({
+            "scrollX": true,  
+            "retrieve": true,
+            "paging": false,
+            ajax: {
+                url: "/Perfil/Permisos_Read",
+                dataSrc: function (json) {
+                    return json;
+                },
+                data: function (d) {
+                    d.idPerfil = $("#IdPerfil").val();
+                }
+            },
+            buttons: [
+                $.extend(true, {}, botonExcel, {
+                    filename: "PermisosUsuario",
+                    exportOptions: {
+                        format: {
+                            body: function (data, row, column, node) {
+                                // Strip $ from salary column to make it numeric
+                                var texto = "";
+                                if (column > 0) {
+                                    texto = "";
+                                    var checkeado = data.search("checked");
+                                    if (checkeado > 0) texto = "SI";
+                                }
+                                else {
+                                    texto = data;
+                                }
+                                return texto;
+                            }
+                        }
+                    }
+                })
+            ],
+            columns: [
+                { "data": "NombreGrupoPerfil" },
+                { "data": "NombreMenu" },
+                {
+                    mData: "Acceder",
+                    bSortable: false,
+                    mRender: function (data, type, row, full) {
+                        var acciones = '';
+                        var opcionPermiso = row.Acceder;
+                        var checkActivo = '';
+                        if (opcionPermiso == true) {
+                            checkActivo = "checked";
+                        }
+                        if (row.TieneAcceder == true) {
+                            acciones = "<input type='checkbox' class='form-check - input' name='chkAccederL' id='chkAcceder_" + row.IdMenu + "' " + checkActivo + " value='" + row.IdMenu + "' />";
+                        }
+                        return acciones;
+                    }
+                },
+                {
+                    mData: "Crear",
+                    bSortable: false,
+                    mRender: function (data, type, row, full) {
+                        var acciones = '';
+                        opcionPermiso = row.Crear;
+                        checkActivo = '';
+                        if (opcionPermiso == true) {
+                            checkActivo = "checked";
+                        }
+                        if (row.TieneCrear == true) {
+                            acciones = "<input type='checkbox' class='form-check - input' name='chkCrearL' id='chkCrear_" + row.IdMenu + "' " + checkActivo + " value='" + row.IdMenu + "' />";
+                        }
+                        return acciones;
+                    }
+                },
+                {
+                    mData: "Editar",
+                    bSortable: false,
+                    mRender: function (data, type, row, full) {
+                        var acciones = '';
+                        opcionPermiso = row.Editar;
+                        checkActivo = '';
+                        if (opcionPermiso == true) {
+                            checkActivo = "checked";
+                        }
+                        if (row.TieneEditar == true) {
+                            acciones = "<input type='checkbox' class='form-check - input' name='chkEditarL' id='chkEditar_" + row.IdMenu + "' " + checkActivo + " value='" + row.IdMenu + "' />";
+                        }
+                        return acciones;
+                    }
+                },
+                {
+                    mData: "Eliminar",
+                    bSortable: false,
+                    mRender: function (data, type, row, full) {
+                        var acciones = '';
+                        opcionPermiso = row.Eliminar;
+                        checkActivo = '';
+                        if (opcionPermiso == true) {
+                            checkActivo = "checked";
+                        }
+                        if (row.TieneEliminar == true) {
+                            acciones = "<input type='checkbox' class='form-check - input' name='chkEliminarL' id='chkEliminar_" + row.IdMenu + "' " + checkActivo + " value='" + row.IdMenu + "' />";
+                        }
+                        return acciones;
+                    }
+                }
+            ]
+        });
+
+        $(table.table().container()).on('keyup', 'thead input', function () {
+            table
+                .column($(this).data('index'))
+                .search(this.value)
+                .draw();
+        });
+        return table;
+    }
+
+    function Success(data) {
+        esconderCargando();
+        if (data.Status == "0") {
+            toastr.success(data.Message);   
+        }
+        else {
+            toastr.error(data.Message); 
+        }
+        Filtrar()
+    }
+
+    function Failure(data) {
+        esconderCargando();
+        toastr.error(data.Message); 
+        Filtrar();
+    }
+
+</script>

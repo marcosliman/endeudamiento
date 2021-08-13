@@ -1,0 +1,468 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+<div class="modal fade" id="modal-ordencompra" tabindex="-1" role="dialog" aria-labelledby="modal-ordencompra" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosOrdenCompra"></div>
+        </div>
+    </div>
+</div>
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Dashboard</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Aprobador</li>
+    </ol>
+</div>
+<div class="modal fade" id="entrega-material" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Entrega de Materiales</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <h5><i class="icon fas fa-info"></i>Información</h5>
+                        El solicitante debe entregarle el código asociado a la solicitud que desea retirar.
+                    </div>                    
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Código para Entrega</label>
+                        <div class="col-sm-4">
+                            <input type="text" name="CodCuenta" id="CodCuenta" class="form-control form-control-sm required" autocomplete="off" value="" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="location.href='/Home/EntregarSol'" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm">Continuar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" id="carga-pendientes">
+    <div class="col-md-2 col-sm-6 col-12">
+        <div class="info-box btn btn-outline-primary" data-toggle="modal" data-target="#entrega-material">
+            <span class="info-box-icon bg-primary"><i class="far fa fa-barcode"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text text-left">Entregar Productos</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-6 col-12">
+        <div class="info-box btn btn-outline-info" onclick="location.href='/Solicitud/GenerarTransferencia'">
+            <span class="info-box-icon bg-info"><i class="far fa fa-plus"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text text-left">Generar Transferencia</span>
+                <span class="info-box-number"></span>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-warning"><i class="far fa fa-check"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Por Retirar</span>
+                <span class="info-box-number">10</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-success"><i class="far fa fa-check"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Entregadas</span>
+                <span class="info-box-number">5</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-6 col-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-danger"><i class="far fa fa-ban"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Rechazadas</span>
+                <span class="info-box-number">5</span>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header border-transparent">
+                <h3 class="card-title">Solicitudes Por Entregar</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                            <tr>
+                                <th>Código Sol.</th>
+                                <th>Solicitante</th>
+                                <th>Fecha</th>
+                                <th>Centro de Costo</th>
+                                <th>Cliente</th>
+                                <th>O.T</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL005</a></td>
+                                <td>Mecánico 1</td>
+                                <td>16/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td>BANCO BICE</td>
+                                <td>OT005</td>
+                                <td><span class="badge badge-warning" style="width:80px">Por Retirar</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL004</a></td>
+                                <td>Mecánico 1</td>
+                                <td>15/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="badge badge-warning" style="width:80px">Por Retirar</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL003</a></td>
+                                <td>Mecánico 1</td>
+                                <td>14/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="badge badge-success" style="width:80px">Entregada</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL002</a></td>
+                                <td>Mecánico 1</td>
+                                <td>14/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td>BANCO BICE</td>
+                                <td>OT002</td>
+                                <td><span class="badge bg-primary" style="width:80px">Guía Pendiente</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL001</a></td>
+                                <td>Mecánico 1</td>
+                                <td>16/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td>BANCO BICE</td>
+                                <td>OT001</td>
+                                <td><span class="badge badge-success" style="width:80px">Entregada</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="card-footer clearfix">
+                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Ver Todas</a>
+            </div>
+
+        </div>
+        
+        
+    </div>
+    <div class="col-md-6">
+        
+        <div class="card">
+            <div class="card-header border-0">
+                <h3 class="card-title">Materiales Con Stock Crítico</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-striped table-valign-middle">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Stock</th>
+                            <th>Stock Mínimo</th>
+                            <th>Stock Reposición</th>
+                            <th>Bodega</th>
+                            <th>OC Pendiente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                ALTERNADOR TY270607815871
+                            </td>
+                            <td>2</td>
+                            <td>2</td>
+                            <td>4</td>
+                            <td>BODEGA CENTRAL PUERTO VARAS</td>
+                            <td>
+                                <a href="JavaScript:ModalOrdenesCompra('000000000524')" class="text-muted">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                BUJIA W16EXR 3031 *W16EXR 3031 *
+                            </td>
+                            <td>15</td>
+                            <td>12</td>
+                            <td>20</td>
+                            <td>BODEGA CENTRAL PUERTO VARAS</td>
+                            <td>
+                                <a href="JavaScript:ModalOrdenesCompra('000000000530')" class="text-muted">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                BALIZA ESTROBOSCOPICA 2P 12/110V
+                            </td>
+                            <td>6</td>
+                            <td>4</td>
+                            <td>6</td>
+                            <td>BODEGA CENTRAL PUERTO VARAS</td>
+                            <td>
+                                <a href="JavaScript:ModalOrdenesCompra('000000000562')" class="text-muted">
+                                    <i class="fas fa-search"></i>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer clearfix">
+                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Ver Todos</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header border-transparent">
+                <h3 class="card-title">Solicitudes Rechazas por Aprobador</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0">
+                        <thead>
+                            <tr>
+                                <th>Código Sol.</th>
+                                <th>Solicitante</th>
+                                <th>Fecha</th>
+                                <th>Centro de Costo</th>
+                                <th>Cliente</th>
+                                <th>O.T</th>
+                                <th>Categoria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL005</a></td>
+                                <td>Mecánico 1</td>
+                                <td>16/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td>BANCO BICE</td>
+                                <td>OT005</td>
+                                <td><span class="badge badge-danger" style="width:80px">Falta de Stock</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL004</a></td>
+                                <td>Mecánico 1</td>
+                                <td>15/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="badge badge-danger" style="width:80px">Falta de Stock</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL003</a></td>
+                                <td>Mecánico 1</td>
+                                <td>14/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td></td>
+                                <td></td>
+                                <td><span class="badge badge-danger" style="width:80px">Falta de Stock</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL002</a></td>
+                                <td>Mecánico 1</td>
+                                <td>14/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td>AGRICOLA EL ARCHIVO SPA</td>
+                                <td>OT002</td>
+                                <td><span class="badge bg-danger" style="width:80px">Falta de Stock</span></td>
+                            </tr>
+                            <tr>
+                                <td><a href="/Bodega/VerSolicitud">SOL001</a></td>
+                                <td>Mecánico 1</td>
+                                <td>16/09/2020</td>
+                                <td>BODEGA PTO VARAS</td>
+                                <td>BANCO BICE</td>
+                                <td>OT001</td>
+                                <td><span class="badge badge-danger" style="width:80px">Falta de Stock</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="card-footer clearfix">
+                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Ver Todas</a>
+            </div>
+
+        </div>
+
+
+    </div>
+    <div class="col-md-4">
+        <div class="card direct-chat direct-chat-primary">
+            <div class="card-header">
+                <h3 class="card-title">Stock Materiales</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card card-widget widget-user-2" id="stockMaterial">
+                    <div class="widget-user-header bg-warning">
+                        <div class="widget-user-image">
+                            <img class="img-circle elevation-2" src="/img/alicate.jpg" alt="User Avatar">
+                        </div>
+                        <h3 class="widget-user-username">Alicate PLano</h3>
+                        <h5 class="widget-user-desc">Herramientas Generales</h5>
+                    </div>
+                    <div class="card-footer p-0">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    Bodega 1 <span class="float-right badge bg-primary">15</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    Bodega 2 <span class="float-right badge bg-warning">5</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    Bodega 3 <span class="float-right badge bg-primary">12</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    Bodega 4 <span class="float-right badge bg-danger">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <form action="#" method="post">
+                    <div class="input-group">
+                        <select class="form-control select2" name="selectMaterial" id="selectMaterial">
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var data = [
+        {
+            id: 0,
+            text: 'Alicate PLano'
+        },
+        {
+            id: 1,
+            text: 'Alicate Universal'
+        },
+        {
+            id: 2,
+            text: 'Alicate Punta Redonda '
+        },
+        {
+            id: 3,
+            text: 'Destornillador estrella'
+        },
+        {
+            id: 4,
+            text: 'Destornillador Plano'
+        }
+    ];
+    $(document).ready(function () {
+        AbrirMenu('DashBoard3');
+        $("#stockMaterial").hide();
+        $('#selectMaterial').select2({
+            placeholder: 'Busque Material',
+            language: "es",
+            minimumInputLength: 3,
+            data: data
+
+        });
+        $('#selectMaterial').on('select2:select', function (e) {
+            var data = e.params.data;
+            $("#stockMaterial").show();
+            $('#selectMaterial').val(null).trigger('change');
+        });
+    })
+    function ModalOrdenesCompra(codProd) {
+        var tmpUrl = "/OrdenCompra/OrdenesProducto";        
+        $("#datosOrdenCompra").empty();
+        $('#modal-ordencompra').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { codproducto: codProd},
+            beforeSend: function () {
+                $("#datosOrdenCompra").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosOrdenCompra").empty();
+                $("#datosOrdenCompra").html(data);
+                esconderCargando();
+            }
+        });
+    }
+</script>

@@ -1,0 +1,341 @@
+﻿
+@{
+    ViewBag.Title = "Cuenta Flujo";
+}
+<div class="modal fade" id="ver-producto" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="datosBuscar">                                
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Niveles Críticos de Productos por Bodega</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Opciones Producto</li>
+        <li class="breadcrumb-item active" aria-current="page">Niveles Críticos</li>
+    </ol>
+</div>
+<div class="card m-0" style="background-color: #e3f2fd;">
+    <div class="row">
+        <div class="col-md-9">
+            <form class="card-body mb-0" name="frmBusqueda" id="frmBusqueda" method="post" action="">
+                <div class="form-row">
+                    <div class="col-auto mt-1">
+                        @Html.DropDownList("IdEmpresaBusqueda", (SelectList)ViewData["listaEmpresa"], null, htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                    <div class="col-auto mt-1">
+                        @Html.DropDownList("CodBode", (SelectList)ViewData["listaBodegas"], null, htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                    <div class="col-auto mt-1">
+                        <select class="form-control form-control-sm" name="CodSubGrupo" id="CodSubGrupo">
+                            <option value="">--Seleccione Sub-Grupo--</option>
+                        </select>
+                    </div>
+                    <div class="col-auto mt-1">
+                        <select class="form-control form-control-sm" style="width:350px" name="CodGrupo" id="CodGrupo">
+                            <option value="">--Seleccione Grupo--</option>
+                        </select>
+                    </div>
+                    <div class="col-auto mt-1">
+                        <input type="text" class="form-control form-control-sm" placeholder="Cod Producto" id="CodProducto" name="CodProducto" value="">
+                    </div>
+                    <div class="col-4 mt-1">
+                        <input type="text" class="form-control form-control-sm me-2" placeholder="Nombre Producto" id="NombreProducto" name="NombreProducto" value="">
+                    </div>
+                   
+                </div>
+
+            </form>
+        </div>
+        <div class="col-md-3 justify-content-end text-right">
+            <form class="card-body mb-0">
+                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <button class="btn btn-info btn-sm" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>                    
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 1, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Cod Producto</th>
+                            <th>Producto</th>
+                            <th>Bodega</th>
+                            <th>Mínimo</th>
+                            <th>Reposición</th>
+                            <th>Máximo</th>
+                            <th>Ubicación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            $('#CodGrupo').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Grupo--'
+            });
+            AbrirMenu("NivelCritico");   
+            $('#frmBusqueda').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            
+            $("#IdEmpresaBusqueda").change(function () { cambioEmpresabusqueda(this.value); ObtenerBodegas(this.value); })
+            cambioEmpresabusqueda($("#IdEmpresaBusqueda").val());
+            if ($("#IdEmpresaBusqueda").val() != 1) {
+                ObtenerBodegas($("#IdEmpresaBusqueda").val())
+            }
+            else {
+                RefreshLista();
+            }
+            $.fn.dataTable.ext.order['dom-text'] = function (settings, col) {
+                return this.api().column(col, { order: 'index' }).nodes().map(function (td, i) {
+                    return $('input', td).val();
+                });
+            }
+            $.fn.dataTable.ext.order['dom-text-numeric'] = function (settings, col) {
+                return this.api().column(col, { order: 'index' }).nodes().map(function (td, i) {
+                    return $('input', td).val() * 1;
+                });
+            }
+        });
+        function ObtenerBodegas(IdEmpresa) {
+            $("#CodBode").empty();            
+            $.ajax({
+                url: "/Producto/ObtenerListaBodega",
+                type: "Post",
+                data: { idEmpresa: IdEmpresa },
+                success: function (data) {
+                    var length = Object.keys(data).length;
+                    for (var i = 0; i < length; i++) {
+                        $("#CodBode").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                    };
+                }
+            });
+            
+        }
+        function cambioEmpresabusqueda(IdEmpresa) {
+            $("#CodSubGrupo").empty();
+            $("#CodSubGrupo").append('<option value="">--Seleccione Sub-Grupo--</option>');
+            $.ajax({
+                url: "/Producto/ObtenerListaSubGrupo",
+                type: "Post",
+                data: { idEmpresa: IdEmpresa },
+                success: function (data) {
+                    var length = Object.keys(data).length;
+                    for (var i = 0; i < length; i++) {
+                        $("#CodSubGrupo").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                    };
+                }
+            });
+            //Grupo
+            $("#CodGrupo").empty();
+            $("#CodGrupo").append('<option value="">--Seleccione Grupo--</option>');
+            $.ajax({
+                url: "/Producto/ObtenerListaGrupo",
+                type: "Post",
+                data: { idEmpresa: IdEmpresa },
+                success: function (data) {
+                    var length = Object.keys(data).length;
+                    for (var i = 0; i < length; i++) {
+                        $("#CodGrupo").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                    };
+                }
+            });
+        }
+
+        function RefreshLista() {
+            $('#frmBusqueda').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            
+            if ($("#frmBusqueda").valid()) {
+                if ($.fn.DataTable.isDataTable('#grillaProductos')) {
+                    var table = initTableProducto();
+                    table.ajax.reload(function (json) { });
+                }
+                else {
+                    var table = initTableProducto();
+                }
+            }
+            
+        }
+        function initTableProducto() {
+            var buttonCommon = {
+                text: 'Exportar a Excel',
+                title: 'Nivel Crítico Productos',
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)",
+                    format: {
+                        body: function (data, row, column, node) {
+                            var texto = node.innerText;
+                            return (column > 3) ? node.firstChild.value : texto;
+                        }
+                    }
+                }
+            };
+            var table = $('#grillaProductos').DataTable({
+                buttons: [
+                    $.extend(true, {}, buttonCommon, {
+                        filename: "NivelCriticoProductos"
+                    })
+                ],
+                columnDefs: [
+                    { targets: '_all', className: 'align-middle' }
+                ],
+                "retrieve": true,
+                "initComplete": function (settings, json) {
+                    esconderCargando();
+                },
+                processing: true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/Producto/NivelProductos_Read/',
+                    "data": function (d) {
+                        d.IdEmpresa = $("#IdEmpresaBusqueda").val();
+                        d.CodBode = $("#CodBode").val();
+                        d.CodProducto = $("#CodProducto").val();
+                        d.NombreProducto = $("#NombreProducto").val();
+                        d.CodSubGrupo = $("#CodSubGrupo").val();
+                        d.CodGrupo = $("#CodGrupo").val();
+                    },
+                    "dataSrc": ""
+                },
+                columns: [
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-light btn-xs" onclick="VerProducto(\'' + o.CodProd + '\',' + o.IdEmpresa+')"><i class="fa fa-search"></i></button>';
+
+                            return boton;
+                        }
+                    },
+                    { "data": "CodProd" },
+                    {
+                        "mData": null,
+                        "bSortable": true,
+                        "mRender": function (data, type, row) {
+                            return data.DesProd;
+                        }
+                    },
+                    { "data": "DesBode" },                    
+                    {
+                        "mData": null,
+                        "bSortable": true,
+                        "orderDataType": "dom-text-numeric",
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            var valor = o.NivelMinimo;
+                            if (valor == null) valor = "";
+                            boton = '<input type="text" class="form-control form-control-sm" name="NivelMinimo" onchange="ActualizaValor(\'' + o.CodProd + '\',' + o.IdEmpresa + ',this.value,\'minimo\',\'' + o.CodBode+'\');" value="' + valor+'" />';
+                            return boton;
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": true,
+                        "orderDataType": "dom-text-numeric",
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            var valor = o.NivelRepo;
+                            if (valor == null) valor = "";
+                            boton = '<input type="text" class="form-control form-control-sm" value="' + valor + '" onchange="ActualizaValor(\'' + o.CodProd + '\',' + o.IdEmpresa + ',this.value,\'reposicion\',\'' + o.CodBode +'\');" />';
+                            return boton;
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": true,
+                        "orderDataType": "dom-text-numeric",
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            var valor = o.NivelMax;
+                            if (valor == null) valor = "";
+                            boton = '<input type="text" class="form-control form-control-sm" value="' + valor + '" onchange="ActualizaValor(\'' + o.CodProd + '\',' + o.IdEmpresa + ',this.value,\'maximo\',\'' + o.CodBode +'\');" />';
+                            return boton;
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": true,
+                        "orderDataType": "dom-text", type: 'string', 
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            var valor = o.Ubicacion;
+                            if (valor == null) valor = "";
+                            boton = '<input type="text" class="form-control form-control-sm" value="' + valor + '" onchange="ActualizaValor(\'' + o.CodProd + '\',' + o.IdEmpresa + ',this.value,\'ubicacion\',\'' + o.CodBode +'\');" />';
+                            return boton;
+                        }
+                    }
+                ]
+            });
+            return table;
+        }
+        function VerProducto(codProducto, IdEmpresa) {
+            $("#datosBuscar").empty();
+            $('#ver-producto').modal('show');
+            $.ajax({
+                url: "/Producto/VistaProducto",
+                type: "Get",
+                data: { codProd: codProducto, IdEmpresa:IdEmpresa},
+                beforeSend: function () {
+                    $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+        function ActualizaValor(codProducto, IdEmpresa, valor, tipo, CodBode) {
+            $.ajax({
+                url: "/Producto/ActualizaNivelCritico",
+                type: "Post",
+                data: { codProd: codProducto, IdEmpresa: IdEmpresa, valor: valor, tipo: tipo, CodBode: CodBode},                
+                success: function (data) {
+                    if (data.Estado == "0") {
+                        $.notify(data.Mensaje, "success");
+                    }
+                    else {
+                        $.notify(data.Mensaje, "error");
+                    }
+                }
+            });
+        }
+    </script>
+</div>
+
+
+

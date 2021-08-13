@@ -1,0 +1,76 @@
+﻿/* CONTEO TOTAL DE ERRORES*/
+#warning {
+    margin: 15px;
+    padding: 7px;
+    text-indent: 5px;
+    border: 1px solid #b8c4e6;
+    color: #FF0000;
+    font-weight: bold;
+    padding-left: 25px;
+    background-repeat: no-repeat;
+    background-position: 3px center;
+    font-size: 12px;
+    background-color: #FFFFCC;
+    background-image: url(/images/alerta.png);
+    /*float:left;
+	position: fixed;*/
+}
+
+#warning {
+    display: none;
+    white-space: nowrap;
+}
+/* ETIQUETAS DE ERROR Y OK A NIVEL DE ELEMENTO*/
+em.error {
+    display: block;
+    height: auto;
+    background: url("/imagenes/validate/unchecked.gif") no-repeat 0px 0px;
+    padding-left: 15px;
+    font: 9px Verdana, Arial, Helvetica, sans-serif;
+    color: #ff5432;
+}
+
+em.success {
+    display: block;
+    height: auto;
+    background: url("/imagenes/validate/checked.gif") no-repeat 0px 0px;
+    padding-left: 15px;
+    font: 9px Verdana, Arial, Helvetica, sans-serif;
+    color: #336699;
+}
+
+input.error {
+    display: block;
+    height: auto;
+    font: inherit;
+}
+select.error {
+    display: block;
+    height: auto;
+    font: inherit;
+    font-size: inherit;
+}
+#contenedorMsjCargando {
+    z-index: 10005;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: white;
+    opacity: 0.7;
+}
+
+#mensajeCargando {
+    /*background-color: white;*/
+    /* width: 180px; */
+    text-align: center;
+    /* max-height: 90px; */
+    border-radius: 13px;
+    /* border: 1px solid #e3e3e3; */
+    overflow: hidden;
+    /* box-shadow: 0px 0px 5px black; */
+    z-index: 10006;
+    position: fixed;
+    left: 47%;
+    top: 29%;
+    /* padding: 4px 2px 4px 2px; */
+}

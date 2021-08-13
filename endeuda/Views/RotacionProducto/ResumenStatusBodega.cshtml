@@ -1,0 +1,300 @@
+﻿
+@{
+    ViewBag.Title = "Resumen Status Rotación por Bodega";
+}
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Resumen Status Rotación por Bodega</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Rotación</li>
+        <li class="breadcrumb-item active" aria-current="page">Resumen por Bodega</li>
+    </ol>
+</div>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <form name="frmBusqueda" id="frmBusqueda" method="post" action="">
+        <div class="form-inline my-2 my-lg-0">
+            <div class="col-auto">
+                @Html.DropDownList("CodBode", (SelectList)ViewData["listaBodega"], "--Seleccione Bodega--", htmlAttributes: new { @class = "form-control form-control-sm", multiple = "multiple" })
+            </div>           
+            
+        </div>
+    </form>    
+    <div class="form-inline my-2 mt-1">
+        <div class="col-auto"><button class="btn btn-info btn-sm justify-content-end" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button></div>
+    </div>
+</nav>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 1, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>BODEGA</th>
+                            <th>SIN ROTACIÓN</th>
+                            <th>BAJA ROTACIÓN</th>
+                            <th>MEDIA</th>
+                            <th>ALTA ROTACIÓN</th>
+                            <th>PRODUCTO NUEVO</th>
+                            <th>TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th style="text-align:right">Total:</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    <form name="frmReporteBodega" id="frmReporteBodega" method="post" action="/RotacionProducto/ListaPorBodega">
+        <input type="hidden" name="CodBode" id="CodBodeIr" value="" />
+        <input type="hidden" name="CodSubGr" id="CodSubGrIr" value="" />
+    </form>
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            AbrirMenu("ResumenStatusBodega");
+
+            $('#CodBode').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Bodega--'
+            });
+            $('#CodSubGr').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Sub Grupo--'
+            });
+
+            $('#frmBusqueda').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            if ($("#CodBode").val() != "") RefreshLista();
+        });
+        function IrReporteBodega(CodBode, CodSubGr) {
+            $("#CodSubGrIr").val(CodSubGr);
+            $("#CodBodeIr").val(CodBode);
+            $("#frmReporteBodega").submit();
+        }
+        function RefreshLista() {
+            $('#frmBusqueda').validate();
+            if ($('#frmBusqueda').valid() == true) {
+                mostrarCargando();
+                if ($.fn.DataTable.isDataTable('#grillaProductos')) {
+                    var table = initTableProducto();
+                    table.ajax.reload(function (json) { esconderCargando(); });
+                }
+                else {
+                    var table = initTableProducto();
+                }
+            }
+
+        }
+        function initTableProducto() {
+            var buttonCommon = {
+                text: 'Exportar a Excel',
+                title: 'Resumen Status Rotación por Bodega',
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)",
+                    format: {
+                        body: function (data, row, column, node) {
+                            var texto = node.innerText;
+                            return (column => 1) ?
+                                texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                                texto;
+                        }
+                    }
+                }
+            };
+            var table = $('#grillaProductos').DataTable({
+                //dom: '<"top"B<"#id">>rt<"bottom"lp><"clear">',
+                "paging": false,
+                buttons: [
+                    $.extend(true, {}, buttonCommon, {
+                        filename: "ResumenStatusRotacionBodegas"
+                    })
+                ],
+                columnDefs: [
+                    { targets: '_all', className: 'align-middle' },
+                    {
+                        targets: [1, 2, 3, 4, 5, 6],
+                        render: function (data) {
+                            var numFormt = "";
+                            if (data != null) {
+                                var num = data.toString();
+                                numFormt = SeparadorMiles(num);
+                            }
+                            return "$" + numFormt;
+                        }
+                    }
+                ],
+                "retrieve": true,
+                "initComplete": function (settings, json) {
+                    esconderCargando();
+                },
+                processing: true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/RotacionProducto/ResumenStatusBodega_Read/',
+                    "data": function (d) {
+                        d.CodBode = $("#CodBode").val();
+                    },
+                    "dataSrc": ""
+                },
+
+                columns: [
+                    { "data": "DesBode" },
+                    {
+                        mData: "TotalSinRotacion",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var numFormt = "";
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);   
+                            return '<a href="JavaScript:IrReporteBodega(\'' + row.CodBode + '\',\'600\')">$' + numFormt + '</a>'; 
+                        }
+                    }, 
+                    {
+                        mData: "TotalBajaRotacion",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var numFormt = "";
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                            return '<a href="JavaScript:IrReporteBodega(\'' + row.CodBode + '\',\'300\')">$' + numFormt + '</a>';
+                        }
+                    }, 
+                    {
+                        mData: "TotalMediaRotacion",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var numFormt = "";
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                            return '<a href="JavaScript:IrReporteBodega(\'' + row.CodBode + '\',\'400\')">$' + numFormt + '</a>';
+                        }
+                    }, 
+                    {
+                        mData: "TotalAltaRotacion",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var numFormt = "";
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                            return '<a href="JavaScript:IrReporteBodega(\'' + row.CodBode + '\',\'500\')">$' + numFormt + '</a>';
+                        }
+                    }, 
+                    {
+                        mData: "TotalProductoNuevo",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var numFormt = "";
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                            return '<a href="JavaScript:IrReporteBodega(\'' + row.CodBode + '\',\'4\')">$' + numFormt + '</a>';
+                        }
+                    }, 
+                    {
+                        mData: "TotalBodega",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var numFormt = "";
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                            return '<a href="JavaScript:IrReporteBodega(\'' + row.CodBode + '\',\'\')">$' + numFormt + '</a>';
+                        }
+                    }
+                ],
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+                    total = api.column(1).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    // Update footer
+                    $(api.column(1).footer()).html('$' + totalFormat);
+                    total = api.column(2).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    $(api.column(2).footer()).html('$' + totalFormat);
+                    total = api.column(3).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    $(api.column(3).footer()).html('$' + totalFormat);
+                    total = api.column(4).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    $(api.column(4).footer()).html('$' + totalFormat);
+                    total = api.column(5).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    $(api.column(5).footer()).html('$' + totalFormat);
+                    total = api.column(6).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    $(api.column(6).footer()).html('$' + totalFormat);
+                }
+            });
+
+            return table;
+        }
+        function ModalComprobanteModal(codProd, numOC) {
+            var tmpUrl = "/OrdenCompra/OrdenCompra";
+            $("#datosComprobante").empty();
+            $('#modal-comprobante').modal('show');
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: { codProd: codProd, numOC: numOC },
+                beforeSend: function () {
+                    $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosComprobante").empty();
+                    $("#datosComprobante").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+    </script>
+</div>
+
+

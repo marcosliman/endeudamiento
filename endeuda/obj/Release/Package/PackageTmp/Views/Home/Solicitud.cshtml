@@ -1,0 +1,165 @@
+﻿@{
+    ViewBag.Title = "Facturas";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h5 class="h5 mb-0 text-gray-800">Solicitud Material</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Solicitud Material</li>
+    </ol>
+</div>
+
+    <div class="row">
+        <div class="col-12">            
+            
+            <div class="invoice p-3 mb-3">              
+                <div class="row">
+                    <div class="col-12">
+                        <h4>
+                            <i class="fas fa-globe"></i> Maqsur Ltda.
+                            <small class="float-right">Solicitado: 15/09/2020</small>
+                        </h4>
+                    </div>
+                    <!-- /.col -->
+                </div>
+                <!-- info row -->
+                <div class="row invoice-info">
+                    <div class="col-sm-4 invoice-col">
+                        
+                        <address>
+                            Centro de Costo: <strong>Centro de Costo 1</strong><br>
+                            Bodega: <strong>BODEGA CENTRAL PUERTO VARAS</strong><br>
+                            Cliente: <strong>Cliente 1</strong><br>
+                            O.T: <strong>OT001</strong><br />
+                            Proyecto: <strong>PROYECTO CORFO</strong>
+                        </address>
+                    </div>
+                    <div class="col-sm-4 invoice-col">
+                        Solicitado por
+                        <address>
+                            <strong>Mecánico Fulano</strong><br>                            
+                            Email: mecanico@maqsur.cl
+                        </address>
+                    </div>                   
+                    <div class="col-sm-4 invoice-col">
+                        Aprobado por
+                        <address>
+                            <strong>Juan Aprobador</strong><br>                           
+                            Email: aprobador@maqsur.cl
+                        </address>
+                    </div>  
+                </div>                
+                <div class="row">
+                    <div class="col-12 table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Código</th>
+                                    <th>Material</th>
+                                    <th>Cant. Solicitada</th>
+                                    <th>Cant. Aprobada</th>
+                                    <th>Cant. Entregada</th>
+                                    <th>U.Medida</th>
+                                    <th>Precio Promedio</th>
+                                    <th>Total</th>
+                                    <th>Bodega</th>  
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>000000001694</td>
+                                    <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL</a></td>
+                                    <td>5</td>
+                                    <td>5</td>
+                                    <td>5</td>
+                                    <td>UND</td>
+                                    <td>$5.000</td>
+                                    <td>$25.000</td>
+                                    <td>Bodega 1</td>
+                                    <td><span class="badge badge-success">Entregado</span></td>
+                                </tr>
+                                <tr>
+                                    <td>000000003010</td>
+                                    <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE P/SEG. INT. CURVO</a></td>
+                                    <td>3</td>
+                                    <td>3</td>
+                                    <td>3</td>
+                                    <td>UND</td>
+                                    <td>$2.000</td>
+                                    <td>$6.000</td>
+                                    <td>Bodega 1</td>
+                                    <td><span class="badge badge-success">Entregado</span></td>
+                                </tr>
+                                <tr>
+                                    <td>000000006105</td>
+                                    <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL 7"</a></td>
+                                    <td>5</td>
+                                    <td>0</td>
+                                    <td>0</td>
+                                    <td>UND</td>
+                                    <td>$3.000</td>
+                                    <td>$15.000</td>
+                                    <td>Bodega 1</td>
+                                    <td><span class="badge badge-danger">Rechazado</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Total</th>
+                                    <th>$46.000</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>                   
+                </div>     
+                <div class="row no-print">
+                    <div class="col-12">
+                        <a href="#" rel="noopener" class="btn btn-default"><i class="fas fa-print"></i> Imprimir</a>
+                        <button type="button" class="btn btn-sm btn-success float-right" >
+                            <i class="far fa-check-circle"></i> Solicitar Retiro
+                        </button>
+                        <button type="button" class="btn btn-secondary float-right btn-sm" onclick="location.href='/Home/Inicio'" style="margin-right: 5px;">
+                            <i class="fas fa-redo"></i> Volver
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("PartDetalleMaterial", null)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    
+    $(document).ready(function () {
+        AbrirMenu('DashBoard1');
+       
+    })
+
+    </script>

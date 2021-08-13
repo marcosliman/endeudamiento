@@ -1,0 +1,87 @@
+﻿@model modelo.Models.Softland.iw_tprod
+@{
+    ViewBag.Title = "Detalle Pago";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">O.C(s) Pendientes para el producto <span class="text-bold">@Html.DisplayFor(model => model.DesProd)</span></h5>
+    <button type="button" class="close" onclick="CerrarModalhija()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="m-2">
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaComprobanteModal" data-order='[[ 1, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th>N° O.C</th>
+                        <th>Fecha</th>
+                        <th>Centro de Costo</th>
+                        <th>Proveedor</th>
+                    </tr>
+                </thead>
+                <tbody id="indexTbody">
+                    @if (ViewData["listaOrdenes"] != null)
+                    {
+                        foreach (var item in ViewData["listaOrdenes"] as List<modelo.Models.Softland.OW_vsnpTraeOCEncabezado>)
+                        {
+                            var keyAgrupada = item.NumOC.ToString();
+                            <tr>
+                                <td><a href="JavaScript:ModalComprobanteModal('@Model.CodProd','@item.NumOC')">@item.NumOC</a></td>
+                                <td>
+                                    @item.FechaOC.ToString("dd/MM/yyyy")
+                                </td>
+                                <td>@item.DescCC</td>
+                                <td>@item.NomAux</td>
+                            </tr>
+
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>    
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" onclick="CerrarModalhija()">Cerrar</button>
+</div>
+<script>
+    $(document).ready(function () {
+        window.top.esconderCargando();
+    });
+    function CerrarModalhija() {
+        $('#modal-ordencompra').modal('hide');
+    }
+    function ModalComprobanteModal(codProd, numOC) {
+        var tmpUrl = "/OrdenCompra/OrdenCompra";
+        $("#datosComprobante").empty();
+        $('#modal-comprobante').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { codProd: codProd, numOC: numOC },
+            beforeSend: function () {
+                $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosComprobante").empty();
+                $("#datosComprobante").html(data);
+                esconderCargando();
+            }
+        });
+    }
+</script>

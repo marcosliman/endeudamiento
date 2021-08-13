@@ -1,0 +1,145 @@
+﻿@model modelo.Models.Local.Empresa
+@{
+    ViewBag.Title = "Crear Empresa";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Ajax.BeginForm("Create", "Empresa", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success_dl",
+    OnFailure = "Failure_dl"
+
+}, new { id = "frmEdit" , @class = "form-horizontal"}))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IdEmpresa);
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nueva Empresa</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">       
+        <div class="ml-2">
+            <div class="form-group form-group-sm row">
+                <label for="RazonSocial" class="col-sm-3 col-form-label col-form-label-sm">Razón Social</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.RazonSocial, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">ID Tributario</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.IdTributario, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="BaseSoftland" class="col-sm-3 col-form-label col-form-label-sm">Base SoftLand</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.BaseSoftland, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="AliasEmpresa" class="col-sm-3 col-form-label col-form-label-sm">Alias Empresa</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.AliasEmpresa, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="CtaActivo" class="col-sm-3 col-form-label col-form-label-sm">Cuenta Activo</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.CtaActivo, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="CtaVentas" class="col-sm-3 col-form-label col-form-label-sm">Cuenta Ventas</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.CtaVentas, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="CtaGastos" class="col-sm-3 col-form-label col-form-label-sm">Cuenta Gastos</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.CtaGastos, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="CtaCosto" class="col-sm-3 col-form-label col-form-label-sm">Cuenta Costo</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.CtaCosto, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="CtaDevolucion" class="col-sm-3 col-form-label col-form-label-sm">Cuenta Devolución</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.CtaDevolucion, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="CodSubGrNuevo" class="col-sm-3 col-form-label col-form-label-sm">Cod.Sub-Grupo Nuevo</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.CodSubGrNuevo, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Estado</label>
+                <div class="col-6">
+                    @Html.CheckBoxFor(model => model.Activo, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                    <label class="" for="Activo">Activo</label>
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Tiene Bodega</label>
+                <div class="col-6">
+                    @Html.CheckBoxFor(model => model.TieneBodega, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+
+                </div>
+            </div>
+
+        </div>           
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm">Crear</button>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+       
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });       
+        window.top.esconderCargando();           
+    });
+    
+    function Success_dl(data) {        
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);            
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);           
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        $.notify(data.Message, "error");
+        $('#modal-registro').modal('hide');
+    }
+    function Success(data) {
+        if (data.Estado == "0") {
+            $.notify(data.Mensaje, "success");
+            RefreshLista();
+        }
+        else {
+            $.notify(data.Mensaje, "error");
+        }
+    }
+</script>

@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "Crear Cliente";
+}
+@{
+    Layout = "";
+}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="/img/logo/logo1.png" rel="icon">
+    <title>Endeudamiento - Acceso</title>
+    <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/notify.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+    <style>
+        .login-container {
+            margin-top: 5%;
+            margin-bottom: 5%;
+        }
+
+        .login-form-1 {
+            padding: 5%;
+            box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .login-form-1 h3 {
+            text-align: center;
+            color: #CB333B;
+        }
+
+        .login-container form {
+            padding: 10%;
+        }
+
+        .btnSubmit {
+            width: 50%;
+            border-radius: 1rem;
+            padding: 1.5%;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login-form-1 .btnSubmit {
+            font-weight: 600;
+            color: #fff;
+            background-color: #1F2A44;
+        }
+
+        .login-form-1 .ForgetPwd {
+            color: #0062cc;
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-login">
+    <!-- Login Content -->
+    <div class="container login-container">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6 login-form-1 card">
+                <div class="row">
+                    <div class="col-sm-12 text-center"><img src="~/img/logo/logo1.png" class="text-center" width="150" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12"><h3>Acceso Usuario</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        @using (Ajax.BeginForm("Autherize", "Home", new AjaxOptions
+                        {
+                            InsertionMode = InsertionMode.Replace,
+                            HttpMethod = "post",
+                            OnSuccess = "SuccessSol",
+                            OnFailure = "FailureSol"
+
+                        }, new { id = "frmAcceso" }))
+                        {
+                            <input type="hidden" name="tipoAcceso" id="tipoAcceso" value="1" />
+                            <div class="form-group">
+                                <input type="text" name="usuarioCuenta" id="usuarioCuenta" class="form-control" placeholder="Usuario *" value="" />
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="claveCuenta" id="claveCuenta" class="form-control" placeholder="Clave *" value="" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" class="btnSubmit" value="Ingresar" />
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="ModalCargaPagina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg " role="document">
+            <div class="modal-content">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+        </div>
+    </div>
+    <div class="" id="divCargando" data-keyboard="false" tabindex="-1">
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#frmAcceso").submit(function () { if ($('#frmAcceso').valid() == true) { mostrarCargando(); } })
+        })
+        function SuccessSol(data) {
+            $("#divErrorAcceso").empty();
+            if (data.result.Estado == "0") {
+                location.href = data.result.ToUrl;
+            }
+            else {
+                $.notify(data.result.Mensaje, "error");
+                esconderCargando();
+            }
+        }
+        function FailureSol(data) {
+            $.notify(data.Message, "error");
+        }
+        function mostrarCargando(mensaje, imagen) {
+            if (mensaje == null || mensaje == undefined) {
+                mensaje = "CARGANDO";
+            }
+            if (imagen == null || imagen == undefined || imagen == "") {
+                imagen = "/Images/loading.gif";
+            }
+            var altura = $(document).height();
+            var ancho = $(document).width();
+            $("#divCargando").append("<div id='contenedorMsjCargando' style='height:" + altura + "px;width:" + ancho + "px'><div>");
+            $("#divCargando").append("<div id='mensajeCargando' ><span  class='fa fa-spinner fa-spin fa-3x'></span ><p>" + mensaje + "</p></div>");
+
+        }
+        function esconderCargando() {
+            $("#contenedorMsjCargando").remove();
+            $("#mensajeCargando").remove();
+
+        }
+    </script>
+</body>
+
+</html>

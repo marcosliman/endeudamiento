@@ -1,0 +1,105 @@
+﻿@model modelo.Models.Softland.iw_tprod
+@{
+    ViewBag.Title = "Agregar Cuenta";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<script src="~/Librerias/jquery-barcode.min.js"></script>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Imprimir Ubicaciones</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row row-cols-1 row-cols-md-3">
+        <div class="col mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text text-center">R2F1</p>
+                    <p class="card-text text-center"><div id="barcodeTarget1" class="barcodeTarget text-center"></div></p>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text text-center">R2F2</p>
+                    <p class="card-text text-center"><div id="barcodeTarget2" class="barcodeTarget"></div></p>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card h-100">
+
+                <div class="card-body">
+                    <p class="card-text text-center">R3F1</p>
+                    <p class="card-text text-center"><div id="barcodeTarget3" class="barcodeTarget"></div></p>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text text-center">R3F2</p>
+                    <p class="card-text text-center"><div id="barcodeTarget4" class="barcodeTarget"></div></p>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text text-center">R4F1</p>
+                    <p class="card-text text-center"><div id="barcodeTarget5" class="barcodeTarget"></div></p>
+                </div>
+            </div>
+        </div>
+        <div class="col mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="card-text text-center">R4F2</p>
+                    <p class="card-text text-center"><div id="barcodeTarget6" class="barcodeTarget"></div></p>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    <button type="button" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm"><i class="fa fa-print"></i> Imprimir</button>
+</div>
+<script>
+    $(document).ready(function () {
+        generateBarcode("R2F1", "barcodeTarget1");
+        generateBarcode("R2F2", "barcodeTarget2");
+        generateBarcode("R3F1", "barcodeTarget3");
+        generateBarcode("R3F2", "barcodeTarget4");
+        generateBarcode("R4F1", "barcodeTarget5");
+        generateBarcode("R4F2", "barcodeTarget6");
+    });
+
+    function generateBarcode(codProd,id) {
+        var value = codProd;
+        var btype = "code128";
+        var renderer = "bmp";
+
+        var quietZone = false;
+
+        var settings = {
+            output: renderer,
+            bgColor: "#FFFFFF",
+            color: "#000000",
+            barWidth: 1,
+            barHeight: 50,
+            moduleSize: 50,
+            posX: 20,
+            posY: 10
+        };
+
+        $("#"+id).html("").show().barcode(value, btype, settings);
+
+    }
+</script>

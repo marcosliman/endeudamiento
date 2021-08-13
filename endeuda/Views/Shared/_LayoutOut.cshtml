@@ -1,0 +1,170 @@
+﻿
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.Title - MaqSur</title>
+    <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
+    @Styles.Render("~/Content/css")
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet">
+    <link href="~/Plantilla/ruang-admin/css/ruang-admin.min.css" rel="stylesheet">
+    <link href="~/Librerias/DataTables-1.10.21/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <link href="~/Librerias/selectmultiple/css/bootstrap-select.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            font-size: .90rem;
+        }
+
+        tr.group,
+        tr.group:hover {
+            background-color: #ddd !important;
+        }
+    </style>
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <script src="~/Scripts/popper.min.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Librerias/DatepickerUI/datepicker-es.js"></script>
+    <script src="~/Librerias/DataTables-1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="~/Librerias/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Librerias/selectmultiple/js/bootstrap-select.min.js"></script>
+    <script src="~/Librerias/selectmultiple/js/i18n/defaults-es_ES.min.js"></script>
+
+    <script>
+        function ExcelCommon() {
+            var buttonCommon = {
+                text: 'Exportar a Excel',
+                extend: 'exceltml5',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)",
+                }
+            };
+            return buttonCommon;
+        }
+        $(document).ready(function () {
+            $('.modal-dialog').draggable({
+                handle: ".modal-header"
+            });
+            var botonExcel = ExcelCommon();
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: '<"top"Bf<"#id">>rt<"bottom"lp><"clear">',
+                buttons: [
+                    $.extend(true, {}, botonExcel, {
+                    })
+                ],
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "decimal": ",",
+                    "thousands": "."
+                }
+            });
+            $.extend($.fn.dataTableExt.oStdClasses, {
+                "sFilterInput": "form-control form-control-sm",
+                "sLengthSelect": "form-control form-control-sm"
+            });
+
+
+
+            $('.selectpicker').selectpicker({ noneSelectedText: 'Seleccione' });
+            $.datepicker.setDefaults({
+                dateFormat: "dd-mm-yy",
+                buttonImageOnly: true,
+                buttonImage: "calendar.gif",
+                buttonText: "Calendar"
+            });
+        });
+        function SeparadorMiles(numero) {
+            var num = numero;
+            var splitStr = num.split('.');
+            var splitLeft = splitStr[0];
+            var splitRight = splitStr.length > 1 ? "," + splitStr[1] : '';
+            var regx = /(\d+)(\d{3})/;
+            while (regx.test(splitLeft)) {
+                splitLeft = splitLeft.replace(regx, '$1' + "." + '$2');
+            }
+            return splitLeft + splitRight;
+        }
+    </script>
+</head>
+<body id="page-top">
+    <div id="wrapper">
+        
+        <!-- Sidebar -->
+        
+        <div style="width:100%!important;">
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <!-- TopBar -->
+                    <div class="container-fluid1 align-content-center" id="container-wrapper">                       
+                        
+                        @RenderBody()
+
+                    </div>
+                    <!---Container Fluid-->
+                </div>
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>
+                                copyright &copy;
+                                <script>document.write(new Date().getFullYear());</script> - pie
+                                <b><a href="" target="_blank">...</a></b>
+                                <div class="version" id="version-ruangadmin"></div>
+                            </span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- Footer -->
+            </div>
+        </div>
+    </div>
+    <!-- Scroll to top -->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    
+        <script type="text/javascript" src="~/Librerias/highcharts/highcharts.js"></script>
+        <script type="text/javascript" src="~/Librerias/highcharts/highcharts-more.js"></script>
+        <script src="~/Librerias/highcharts/modules/exporting.js"></script>
+        <script src="~/Librerias/highcharts/modules/export-data.js"></script>
+        <script src="~/Plantilla/ruang-admin/js/ruang-admin.min.js"></script>
+
+        @RenderSection("scripts", required: false)
+        <script>
+            $(document).ready(function () {
+                $('#dataTable').DataTable({
+                    "columnDefs": [{
+                        "targets": 'no-sort',
+                        "orderable": false,
+                    }]
+                }); // ID From dataTable
+            });
+        </script>
+</body>
+</html>

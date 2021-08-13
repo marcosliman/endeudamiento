@@ -1,0 +1,200 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Rotación Producto</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Rotación Producto</li>
+    </ol>
+</div>
+
+<div class="row">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-body">                
+                <figure class="highcharts-figure">
+                    <div id="container" style="height:400px;"></div>
+                    <p class="highcharts-description" id="grafMapaArbol">
+
+                    </p>
+                    <button class="btn btn-info btn-sm justify-content-end float-right" type="button" onclick="location.href='/RotacionProducto/ListaGeneral'"><i class="fa fa-search"></i> Ver Reporte</button>
+                </figure>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+</div>
+<div class="row">
+    <div class="col-md-10">
+        
+        <div class="card">
+            <div class="card-body">      
+                <div class="row" id="cargaGraficoBodega">
+                    <button class="btn btn-info btn-sm justify-content-end float-right" type="button" onclick="CargaGraficosBodega()"><i class="fa fa-search"></i> Cargar Gráfico</button>
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        
+        AbrirMenu('RotacionProducto');
+        mostrarCargando();
+        $("#grafMapaArbol").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+        Highcharts.getJSON('/RotacionProducto/RotacionGeneral_Read', function (data) {
+
+            var points = [],
+                regionP,
+                regionVal,
+                regionI = 0,
+                countryP,
+                countryI,
+                causeP,
+                causeI,
+                region,
+                country,
+                cause,
+                causeName = {
+                    'Communicable & other Group I': 'Communicable diseases',
+                    'Noncommunicable diseases': 'Non-communicable diseases',
+                    TotalProducto: 'TotalProductos'
+                };
+
+            for (region in data) {
+
+                if (data.hasOwnProperty(region)) {
+                    var totalProd = SeparadorMiles(data[region].TotalProd.toString());
+                    var precioTotal = SeparadorMiles(data[region].TotalPrecio.toString());
+                    regionVal = 0;
+                    regionP = {
+                        id: 'id_' + regionI,
+                        name: data[region].DesSubGr + '<br> Total:' + totalProd + ' <br> $' + precioTotal,
+                        color: Highcharts.getOptions().colors[regionI]
+                    };
+                    countryI = 0;
+                    for (country in data[region].empresas) {
+
+                        if (data[region].empresas.hasOwnProperty(country)) {
+                           
+                            var totalProdEmpr = SeparadorMiles(data[region].empresas[country].TotalProductos.toString());
+                            var precioTotalEmpr = SeparadorMiles(data[region].empresas[country].TotalPrecio.toString());
+                            countryP = {
+                                id: regionP.id + '_' + countryI,
+                                name: data[region].empresas[country].Nombre + '<br> Total:' + totalProdEmpr + ' <br> $' + precioTotalEmpr,
+                                parent: regionP.id
+                            };
+                            points.push(countryP);
+                            causeI = 0;
+
+                            for (cause in data[region].empresas[country].grupos) {
+
+                                if (data[region].empresas[country].grupos.hasOwnProperty(cause)) {
+                                    var totalProdGr = SeparadorMiles(data[region].empresas[country].grupos[cause].TotalProductos.toString());
+                                    var precioTotalGr = SeparadorMiles(data[region].empresas[country].grupos[cause].TotalPrecio.toString());
+                                    causeP = {
+                                        id: countryP.id + '_' + causeI,
+                                        name: data[region].empresas[country].grupos[cause].Nombre + '<br> Total:' + totalProdGr + ' <br> $' + precioTotalGr,
+                                        parent: countryP.id,                                        
+                                        CodSubGr: data[region].empresas[country].grupos[cause].CodSubGr,
+                                        Empresa: data[region].empresas[country].Nombre,
+                                        GrupoEmpresa: data[region].empresas[country].grupos[cause].Nombre,
+                                        value: Math.round(+data[region].empresas[country].grupos[cause].TotalProductos)
+                                    };
+                                    regionVal += causeP.value;
+                                    points.push(causeP);
+                                    causeI = causeI + 1;
+                                }
+                            }
+                            countryI = countryI + 1;
+                        }
+                    }
+                    // regionP.value = Math.round(regionVal / countryI);
+                    regionP.value = regionVal;
+                    points.push(regionP);
+                    regionI = regionI + 1;
+                }
+            }
+            Highcharts.chart('container', {
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: ['viewFullscreen', 'printChart', 'downloadPNG', 'downloadPDF', 'downloadCSV']
+                        }
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        cursor: 'pointer',
+                        events: {
+                            click: function (event) {
+                                var nivel = this.rootNode.split("_");                                
+                                if (nivel.length == 3) {
+                                    location.href = '/RotacionProducto/ListaGeneral?CodSubGr=' + event.point.CodSubGr + '&Empresa=' + $.trim(event.point.Empresa) + '&GrupoEmpresa=' + $.trim(event.point.GrupoEmpresa)
+                                }                                
+                            }
+                        }
+                    }
+                },
+                series: [{
+                    type: 'treemap',
+                    layoutAlgorithm: 'squarified',
+                    allowDrillToNode: true,
+                    animationLimit: 1000,
+                    dataLabels: {
+                        enabled: false
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    levelIsConstant: false,
+                    levels: [{
+                        level: 1,
+                        dataLabels: {
+                            enabled: true
+                        },
+                        borderWidth: 3
+                    }],
+                    data: points
+                }],
+                tooltip: {
+                    headerFormat: '',
+                    pointFormat: '<span style="color:#000000">{point.name}</span>'
+                },
+                subtitle: {
+                    text: 'Haga Click en los grupos para profundizar'
+                },
+                title: {
+                    text: 'Status Rotación Bodegas Maqsur'
+                }
+            });
+            $("#grafMapaArbol").empty();
+            esconderCargando();
+        });
+        CargaGraficosBodega();
+    })
+    function CargaGraficosBodega() {
+        $.ajax({
+            
+            url: "/RotacionProducto/AjaxGraficoBodega/",
+            type: "Post",
+            data: {  },
+            beforeSend: function () {
+                $("#cargaGraficoBodega").html('<i class="fa fa-circle-notch fa-spin"></i>  Cargando...');
+                //mostrarCargando();
+            },
+            success: function (data) {
+                $("#cargaGraficoBodega").empty();
+                $("#cargaGraficoBodega").html(data);
+                //esconderCargando();
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,577 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <title>Bodega</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
+    <!-- datatable -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link href="~/Librerias/Buttons-1.6.2/css/buttons.dataTables.min.css" rel="stylesheet">
+    <link href="~/Librerias/Buttons-1.6.2/css/buttons.bootstrap4.min.css" rel="stylesheet">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/dist/css/adminlte.min.css">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+    <!-- Daterange picker -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/daterangepicker/daterangepicker.css">
+    <!-- Select2 -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/select2/css/select2.min.css">
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+    <!-- jQuery UI -->
+    <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet">
+    <link href="~/Content/Jquery.css" rel="stylesheet">
+    <link href="~/Librerias/bootstrap-datepicker/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link href="~/Librerias/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet">
+    <!-- Toastr -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/toastr/toastr.min.css">
+    <!-- jQuery 3.5.1 -->
+    @Scripts.Render("~/bundles/jquery")
+    <!-- jQuery UI 1.12.1 -->
+    @Scripts.Render("~/bundles/jqueryui")
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    @Scripts.Render("~/bundles/bootstrap")
+
+    <!-- daterangepicker -->
+    <script src="~/Plantilla/AdminLTE/plugins/moment/moment.min.js"></script>
+    <script src="~/Plantilla/AdminLTE/plugins/daterangepicker/daterangepicker.js"></script>
+    <!-- Summernote -->
+    <script src="~/Plantilla/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
+    <!-- overlayScrollbars -->
+    <script src="~/Plantilla/AdminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+
+    <!-- AdminLTE App -->
+    <script src="~/Plantilla/AdminLTE/dist/js/adminlte.js"></script>
+    <!-- AdminLTE -->
+    <script src="~/Plantilla/AdminLTE/dist/js/demo.js"></script>
+    <!-- AdminLTE highcharts -->
+
+    <script src="~/Librerias/highcharts/highcharts.js"></script>
+    <script src="~/Librerias/highcharts/highcharts-more.js"></script>
+    <script src="~/Librerias/highcharts/modules/data.js"></script>
+    <script src="~/Librerias/highcharts/modules/drilldown.js"></script>
+    <script src="~/Librerias/highcharts/modules/exporting.js"></script>
+    <script src="~/Librerias/highcharts/modules/export-data.js"></script>
+    <script src="~/Librerias/highcharts/modules/solid-gauge.js"></script>
+    <script src="~/Librerias/highcharts/modules/accessibility.js"></script>
+    <script src="~/Librerias/highcharts/modules/heatmap.js"></script>
+    <script src="~/Librerias/highcharts/modules/treemap.js"></script>
+    <script src="~/Scripts/notify.js"></script>
+    <style>
+        html, body {
+            font-size: .85rem;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        tr.group,
+        tr.group:hover {
+            background-color: #ddd !important;
+        }
+
+        .highcharts-figure, .highcharts-data-table table {
+            min-width: 320px;
+            max-width: 850px;
+            margin: 1em auto;
+            max-height: 500px;
+        }
+
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #EBEBEB;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+
+        .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+
+        .bg-azulmarca {
+            background: #1F2A44 !important;
+        }
+
+        .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active,
+        .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+            background-color: #1F2A44 !important;
+            color: #ffffff;
+        }
+
+        .sidebar-dark-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active,
+        .sidebar-light-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active {
+            border-color: #1F2A44;
+        }
+    </style>
+    <script>
+        function ExcelCommon() {
+            var buttonCommon = {
+                text: 'Exportar a Excel',
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)",
+                }
+            };
+            return buttonCommon;
+        }
+        function AbrirMenu(MenuNombre, nivel) {
+            if (nivel == 3) {
+                var $SIDEBAR_MENU = $('#sidebar-menu');
+                var submenu = $SIDEBAR_MENU.find('li[id="' + MenuNombre + '"]').parent('ul').parent('li');
+                submenu.parent('ul').parent('li').addClass('menu-open');
+                submenu.addClass('menu-open');
+                submenu.parents('li').find('a.menuPadre').addClass('active');
+                $SIDEBAR_MENU.find('li[id="' + MenuNombre + '"]').find('a').addClass('active');
+
+            }
+            else {
+                var $SIDEBAR_MENU = $('#sidebar-menu');
+                var menuSel = MenuNombre;
+                // check active menu
+                $SIDEBAR_MENU.find('ul[id="' + MenuNombre + '"]').parent('li').addClass('menu-open');
+                $SIDEBAR_MENU.find('ul[id="' + MenuNombre + '"]').parents('li').find('a.menuPadre').addClass('active');
+                $SIDEBAR_MENU.find('ul[id="' + MenuNombre + '"]').find('a').addClass('active');
+            }
+
+        }
+
+        $(document).ready(function () {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "3000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            $.datepicker.setDefaults({
+                language: "es"
+            });
+            Highcharts.setOptions({
+                credits: {
+                    enabled: false
+                },
+                lang: {
+                    drillUpText: "\u25c1 Volver {series.name}",
+                    "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                    "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    "weekdays": ["Domingo", "Lunes", "Martes", "Mi\u00e9rcoles", "Jueves", "Viernes", "S\u00e1bado"],
+                    "decimalPoint": ",", "thousandsSep": ".", "resetZoom": "Restablecer Zoom", "resetZoomTitle": "Restablecer Zoom 1:1"
+                }
+            });
+
+            $('[data-toggle="tooltip"]').tooltip()
+            $('.modal-dialog').draggable({
+                handle: ".modal-header"
+            });
+            var botonExcel = ExcelCommon();
+            $.extend(true, $.fn.dataTable.defaults, {
+                dom: '<"top"Bf<"#id">>rt<"bottom"lp><"clear">',
+                columnDefs: [
+                    { targets: '_all', className: 'align-middle' }
+                ],
+                buttons: [
+                    $.extend(true, {}, botonExcel, {
+                    })
+                ],
+                "language": {
+                    "sProcessing": "Procesando...",
+                    "sLengthMenu": "Mostrar _MENU_ registros",
+                    "sZeroRecords": "No se encontraron resultados",
+                    "sEmptyTable": "Ningún dato disponible en esta tabla",
+                    "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix": "",
+                    "sSearch": "Buscar:",
+                    "sUrl": "",
+                    "sInfoThousands": ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst": "Primero",
+                        "sLast": "Último",
+                        "sNext": "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    },
+                    "decimal": ",",
+                    "thousands": "."
+                }
+            });
+            $.extend($.fn.dataTableExt.oStdClasses, {
+                "sFilterInput": "form-control form-control-sm",
+                "sLengthSelect": "form-control form-control-sm"
+            });
+
+
+
+        });
+        function checkAllGeneral(ele, clase) {
+            var state = $(ele).is(':checked');
+            $('.' + clase).each(function () {
+                if (state == true && $(this).prop("disabled") != true) {
+                    $(this).prop("checked", true);
+                } else {
+                    $(this).prop("checked", false);
+                }
+            });
+        }
+
+        function SeparadorMiles(numero) {
+            var num = numero;
+            var splitStr = num.split('.');
+            var splitLeft = splitStr[0];
+            var splitRight = splitStr.length > 1 ? "," + splitStr[1] : '';
+            var regx = /(\d+)(\d{3})/;
+            while (regx.test(splitLeft)) {
+                splitLeft = splitLeft.replace(regx, '$1' + "." + '$2');
+            }
+            return splitLeft + splitRight;
+        }
+        function redondearDecimales(numero, decimales) {
+            numeroRegexp = new RegExp('\\d\\.(\\d){' + decimales + ',}');   // Expresion regular para numeros con un cierto numero de decimales o mas
+            if (numeroRegexp.test(numero)) {         // Ya que el numero tiene el numero de decimales requeridos o mas, se realiza el redondeo
+                return Number(numero.toFixed(decimales));
+            } else {
+                return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
+            }
+        }
+    </script>
+</head>
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+<body class="hold-transition sidebar-mini layout-fixed text-sm @ViewBag.MenuCollapse">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-dark bg-azulmarca">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                </li>
+            </ul>
+
+            <!-- Right navbar links -->
+
+            <ul class="navbar-nav ml-auto">
+                <!-- Messages Dropdown Menu -->
+                <!-- Notifications Dropdown Menu -->
+                <!--
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge">15</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">15 Notificaciones</span>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> 5 solicitudes por aprobar
+                            <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> 5 solicitudes para retiro
+                            <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-envelope mr-2"></i> 5 guias de salida finalizadas
+                            <span class="float-right text-muted text-sm">3 mins</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item dropdown-footer">Ver todas las Notificaciones</a>
+                    </div>
+                </li>
+                -->
+                <li class="topbar-divider d-none d-sm-block bg"></li>
+                <li class="nav-item dropdown no-arrow">
+                    <a class="nav-link dropdown-toggle bg-azulmarca" href="#" id="userDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <img class="img-profile rounded-circle bg-white" src="/img/boy.png" style="max-width: 20px">
+                        <span class="ml-2 d-none d-lg-inline text-white">@seguridad.Nombre</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Perfil
+                        </a>
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#logoutModal">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Main Sidebar Container -->
+        <aside class="main-sidebar sidebar-light-primary elevation-4">
+            <!-- Brand Logo -->
+            <a href="/Home/Inicio" class="brand-link bg-azulmarca">
+                <img src="/img/logo/logo2.png" alt="MaqSur" class="brand-image elevation-3" style="opacity: .8">
+                <span class="brand-text font-weight-light text-white">BODEGA</span>
+            </a>
+
+            <!-- Sidebar -->
+            <div class="sidebar os-host os-theme-light os-host-overflow os-host-overflow-y os-host-resize-disabled os-host-scrollbar-horizontal-hidden os-host-transition" id="sidebar-menu">
+                <div class="user-panel mt-1 pb-3 mb-1 d-flex">
+                    <div class="info">
+                    </div>
+                </div>
+                <nav class="mt-2">
+                    @Html.Raw("<ul class='nav nav-pills nav-sidebar flex-column nav-child-indent' data-widget='treeview' role='menu' data-accordion='false'>")
+
+                    @{
+                        foreach (var menu in seguridad.MenuUsuario.Where(c => c.NivelMenu == 1).OrderBy(c => c.OrdenMenu))
+                        {
+                            var existeHeader = seguridad.MenuUsuario.Where(h => h.NivelMenu == 0 && h.IdMenuPadre == menu.IdMenu).FirstOrDefault();
+                            if (existeHeader != null)
+                            {
+                                <text>
+                                    <li class="nav-header text-uppercase text-blue">@existeHeader.NombreMenu</li>
+                                </text>
+                            }
+                            <text>
+                                <li class="nav-item">
+                                    <a href="#" class="nav-link menuPadre" id="@menu.Nombre">
+                                        <i class="nav-icon @menu.Icono"></i>
+                                        <p class="">
+                                            @menu.NombreMenu
+                                            <i class="right fas fa-angle-left"></i>
+                                        </p>
+                                    </a>
+                            </text>
+                            foreach (var submenu in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == menu.IdMenu && x.NivelMenu == 2).OrderBy(c => c.OrdenMenu))
+                            {
+                                var existeMenu3 = seguridad.MenuUsuario.Where(h => h.NivelMenu == 3 && h.IdMenuPadre == submenu.IdMenu).Count();
+                                if (existeMenu3 > 0)
+                                {
+                                    <ul class="nav nav-treeview" id="@submenu.Nombre">
+                                        <li class="nav-item">
+                                            <a href="@submenu.UrlMenu" class="nav-link">
+                                                <i class="@submenu.Icono"></i>
+                                                <p>
+                                                    @submenu.NombreMenu
+                                                    <i class="right fas fa-angle-left"></i>
+                                                </p>
+                                            </a>
+                                            <ul class="nav nav-treeview">
+                                                @foreach (var menunivel3 in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == submenu.IdMenu && x.NivelMenu == 3).OrderBy(c => c.OrdenMenu))
+                                                {
+                                                    <li class="nav-item" id="@menunivel3.Nombre">
+                                                        <a href="@menunivel3.UrlMenu" class="nav-link">
+                                                            <i class="@menunivel3.Icono"></i>
+                                                            <p>@menunivel3.NombreMenu</p>
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <ul class="nav nav-treeview" id="@submenu.Nombre">
+                                        <li class="nav-item">
+                                            <a href="@submenu.UrlMenu" class="nav-link">
+                                                <i class="@submenu.Icono"></i>
+                                                <p>
+                                                    @submenu.NombreMenu
+                                                </p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+
+                            }
+
+                            @Html.Raw("</li>")
+                        }
+                    }
+                    </ul>
+            </nav>
+            <!-- /.sidebar-menu -->
+            <div class="user-panel mt-2 pb-3 mb-4 d-flex">
+                <div class="info">
+                </div>
+            </div>
+        </div>
+
+    </aside>
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabelLogout"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabelLogout">Ohh No!</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que quieres cerrar sesión?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Cancelar</button>
+                    <a href="/Login/LogOut" class="btn btn-primary">Salir</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+
+        <!-- /.content-header -->
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <br />
+                @RenderBody()
+            </div><!-- /.container-fluid -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <strong>Datos del Pie</strong>
+        ...
+        <div class="float-right d-none d-sm-inline-block">
+            <b>Version</b> 1.0
+        </div>
+    </footer>
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
+</div>
+<div class="" id="divCargando" data-keyboard="false" tabindex="-1">
+
+</div>
+<!-- jQuery Validate y Form Ajax-->
+@Scripts.Render("~/bundles/jqueryval")
+<script src="~/Librerias/jquery_validate/messages_es.js"></script>
+<!-- Select2 -->
+<script src="~/Plantilla/AdminLTE/plugins/select2/js/select2.full.min.js"></script>
+<script src="~/Plantilla/AdminLTE/plugins/select2/js/i18n/es.js"></script>
+<!-- Toastr -->
+<script src="~/Plantilla/AdminLTE/plugins/toastr/toastr.min.js"></script>
+<!-- DataTables -->
+<script src="~/Plantilla/AdminLTE/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="~/Plantilla/AdminLTE/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/Plantilla/AdminLTE/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+<script src="~/Plantilla/AdminLTE/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+
+<script src="~/Librerias/Buttons-1.6.2/js/dataTables.buttons.min.js"></script>
+
+<script src="~/Librerias/JSZip-2.5.0/jszip.min.js"></script>
+<script src="~/Librerias/pdfmake-0.1.36/pdfmake.min.js"></script>
+<script src="~/Librerias/pdfmake-0.1.36/vfs_fonts.js"></script>
+<script src="~/Librerias/Buttons-1.6.2/js/buttons.flash.min.js"></script>
+<script src="~/Librerias/Buttons-1.6.2/js/buttons.html5.min.js"></script>
+<script src="~/Librerias/Buttons-1.6.2/js/buttons.print.min.js"></script>
+<script src="~/Librerias/Buttons-1.6.2/js/buttons.colVis.min.js"></script>
+<script src="~/Librerias/Responsive-2.2.5/js/dataTables.responsive.min.js"></script>
+<script src="~/Librerias/Responsive-2.2.5/js/responsive.bootstrap.js"></script>
+<script src="~/Librerias/DataTables-1.10.21/js/dataTables.bootstrap4.min.js"></script>
+<script src="~/Librerias/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+<script src="~/Librerias/bootstrap-datepicker/locales/bootstrap-datepicker.es.min.js"></script>
+<script src="~/Librerias/DataTables-1.10.21/sorting/datetime-moment.js"></script>
+@RenderSection("scripts", required: false)
+<script>
+    $(document).ready(function () {
+        $('#dataTable').DataTable({
+            dom: 'Bfrtip',
+            responsive: true,
+            buttons: [
+                /*{
+                    extend: 'copy',
+                    text: "Copiar"
+                },*/
+                {
+                    extend: 'csv',
+                    text: "Csv"
+                },
+                {
+                    extend: 'print',
+                    text: "Imprimir"
+                },
+                'pdf', 'excelHtml5'
+            ],
+
+            "columnDefs": [{
+                "targets": 'no-sort',
+                "orderable": false
+            }]
+        }); // ID From dataTable
+    });
+    function mostrarCargando(mensaje, imagen) {
+        if (mensaje == null || mensaje == undefined) {
+            mensaje = "CARGANDO";
+        }
+        if (imagen == null || imagen == undefined || imagen == "") {
+            imagen = "/Images/loading.gif";
+        }
+        var altura = $(document).height();
+        var ancho = $(document).width();
+        $("#divCargando").append("<div id='contenedorMsjCargando' style='height:" + altura + "px;width:" + ancho + "px'><div>");
+        $("#divCargando").append("<div id='mensajeCargando' ><span  class='fa fa-spinner fa-spin fa-3x'></span ><p>" + mensaje + "</p></div>");
+
+    }
+    function esconderCargando() {
+        $("#contenedorMsjCargando").remove();
+        $("#mensajeCargando").remove();
+
+    }
+</script>
+</body>
+</html>

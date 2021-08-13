@@ -1,0 +1,299 @@
+﻿
+@{
+    ViewBag.Title = "Contactos";
+}
+<!-- Topbar -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo Contacto</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Email:</label>
+                        <input type="text" class="form-control" id="recipient-email">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="recipient-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Cargo:</label>
+                        <select class="form-control form-control-sm required" name="cargo">
+                            <option value="">--Seleccione--</option>
+                            <option value="0">Gerencia</option>
+                            <option value="1">Jefatura</option>
+                            <option value="1">Administrativo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="col-form-label">Clientes:</label>
+                        <select class="form-control form-control-sm selectpicker required" data-selected-text-format="count > 4" id="IdPerfil" multiple="multiple" name="IdPerfil">
+                            <option value="0">Cliente 1</option>
+                            <option value="1">Cliente 2</option>
+                            <option value="1">Cliente 3</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary">Crear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-light mb-3">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">Contactos</a>
+            </li>
+            <li class="nav-item flex-sm-fill text-sm-right">
+                <ul class="nav justify-content-end">
+                    <li class="nav-item">
+                        <div class="btn-group justify-content-end" role="group" aria-label="Basic example">
+                            <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-plus"></i> Nuevo Contacto</button>
+                            <button class="btn btn-outline-secondary btn-sm justify-content-end" data-toggle="modal" data-target="#ModalImportar"><i class="fa fa-upload"></i> Importar</button>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <!-- Row -->
+        <h5>Listado de Contactos</h5>
+        <div class="row">
+            <!-- Datatables -->
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    
+                    <div class="table-responsive p-3">
+                        <table class="table table-hover nowrap" width="100%" id="dataTable" data-order='[[ 6, "desc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="no-sort" width="10%">&nbsp;</th>
+                                    <th>Email</th>
+                                    <th>Nombres</th>
+                                    <th>Clientes</th>
+                                    <th>Cargo</th>
+                                    <th>Teléfono</th>
+                                    <th>Notificaciones</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>-c1@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>
+                                        <p>-Cliente 1</p>
+                                        <p>-Cliente 3</p>
+                                    </td>
+                                    <td>
+                                        <p>Gerencia</p>
+                                        <p>&nbsp;</p>
+                                    </td>
+                                    <td>444</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>-c2@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 1</td>
+                                    <td>Jefatura</td>
+                                    <td>555</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm justify-content-end" data-toggle="modal" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                        <button type="button" class="btn btn-info btn-sm text-nowrap"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                    <td>b@cto.cl</td>
+                                    <td>123456-8</td>
+                                    <td>Cliente 2</td>
+                                    <td>Administrativo</td>
+                                    <td>666</td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- DataTable with Hover -->
+
+        </div>
+    </div>
+</div>
+

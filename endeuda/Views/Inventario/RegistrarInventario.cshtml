@@ -1,0 +1,203 @@
+﻿@model modelo.Models.Local.ControlInventario
+@{
+    ViewBag.Title = "Control Inventario";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Control de Inventario</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Módulo Inventario</li>
+        <li class="breadcrumb-item active" aria-current="page">Control Inventario</li>
+    </ol>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Bodega Seleccionada</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <form method="post" action="#" name="frmBusqueda" id="frmBusqueda">
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-group">
+                        @Model.DesBode
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+@using (Ajax.BeginForm("AgregarProducto", "Inventario", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success_dl",
+    OnFailure = "Failure_dl"
+
+}, new { id = "frmRegistra", @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IdControlInventario);
+
+    <nav class="navbar navbar-light d-inline">
+        <div class="form-inline">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Ubicación</label>
+            <div class="col-auto">
+                <input type="text" class="form-control" placeholder="Ubicación" id="CodUbicacion" name="CodUbicacion" value="">
+            </div>
+
+        </div>
+        <div class="form-inline">
+
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Código</label>
+            <div class="col-auto">
+                <input type="text" class="form-control" placeholder="Cod. Producto" id="CodProducto" name="CodProducto" value="">
+            </div>
+            <div class="col-auto">
+                <button type="button" onclick="VerProductos()" class="btn btn-sm btn-success float-right"><i class="fa fa-check-circle"></i> Ver Produtos</button>
+            </div>
+            <!--
+            <div class="col-auto">
+                <input type="text" class="form-control" placeholder="Cantidad" id="newUbicacion" name="newUbicacion" value="">
+            </div>
+
+            <div class="col-auto"><button class="btn btn-info btn-sm justify-content-end" type="button" onclick="AgregarProducto()"><i class="fa fa-plus"></i> Agregar</button></div>
+            -->
+        </div>
+    </nav>
+}
+    <form name="frmProductos" id="frmProductos" method="post" action="/Inventario/DetRegistroInventario">
+        <input type="hidden" name="IdControlInventario" id="IdControlInventarioProd" value="@Model.IdControlInventario" />
+    </form>
+
+<div class="card">
+    <div class="card-body">
+       
+        <table class="table table-sm" id="tableContabiliza">
+            <thead>
+                <tr>
+                    <th>Ubicación</th>
+                    <th>Contabilizados</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Productos Contabilizados <b>R1F1</b></td>
+                    <td><span class="badge bg-warning">55%</span></td>
+                </tr>
+                <tr>
+                    <td>Update software</td>
+                    <td><span class="badge bg-warning">55%</span></td>
+                </tr>
+            </tbody>
+        </table>
+        
+
+    </div>
+</div>
+
+<script>
+    $.fn.delayPasteKeyUp = function (fn, ms) {
+        var timer = 0;
+        $(this).on("propertychange input", function () {
+            clearTimeout(timer);
+            timer = setTimeout(fn, ms);
+        });
+
+    };
+    function VerProductos() {
+        $("#frmProductos").submit();
+    }
+
+    $(document).ready(function () {
+        $("#CodUbicacion").focus();
+        $("#CodUbicacion").focus(function () { $("#CodUbicacion").val('') });
+        $("#CodUbicacion").delayPasteKeyUp(function () {
+            $("#CodProducto").focus();
+        }, 200);
+        $("#CodProducto").delayPasteKeyUp(function () {
+            $("#frmRegistra").submit();
+        }, 200);
+        AbrirMenu("ControlInventario");
+        initTable();
+    });
+    function AgregarProducto(codProducto) {
+        var cuenta = $("#cuentaProducto").val();
+        cuenta = parseInt(cuenta) + 1;
+        $("#cuentaProducto").val(cuenta);
+        $("#spanCuenta").text(cuenta);
+        $("#CodProducto").val('')
+    }
+    function Success_dl(data) {
+        if (data.Estado == "0") {
+            $("#CodProducto").val('');           
+            RefreshLista();
+        }
+        else if (data.Estado == "1") {
+            $("#CodUbicacion").focus();
+            $("#CodUbicacion").val(data.CodUbicacion);              
+            $("#CodProducto").val('');
+            $("#CodProducto").focus();
+        }
+        else {
+            $.notify(data.Mensaje, "error");
+        }
+    }
+    function Failure_dl(data) {
+        $.notify(data.Message, "error");
+    }
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+    function initTable() {
+        var buttonCommon = ExcelCommon();
+        var table = $('#tableContabiliza').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "ListaPerfiles"
+                })
+            ],
+            dom: 'rt',
+            "paging": false,
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Inventario/Productos_Read',
+                data: function (d) {
+                    d.IdControlInventario = $("#IdControlInventario").val();
+                },
+                "dataSrc": ""
+            },
+            
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": true,
+                    "mRender": function (o, type, row) {                                                                          
+                        return 'Productos Contabilizados <b>' + o.CodUbicacion+'</b>';
+                    }
+                },  
+                {
+                    "mData": null,
+                    "bSortable": true,
+                    "mRender": function (o, type, row) {
+                        return '<span class="badge bg-warning">' + o.Total+'</span>';
+                    }
+                }
+                
+            ]
+        });
+
+        return table;
+    }
+</script>
+
+
+
+

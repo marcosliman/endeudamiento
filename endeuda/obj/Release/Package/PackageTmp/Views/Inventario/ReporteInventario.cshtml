@@ -1,0 +1,112 @@
+﻿
+@{
+    ViewBag.Title = "Cuenta Flujo";
+}
+<div class="modal fade" id="ver-producto" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="datosBuscar">                                
+
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Reportes de Inventarios</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inventario</li>
+        <li class="breadcrumb-item active" aria-current="page">Reporte</li>
+    </ol>
+</div>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <div class="form-inline my-2 my-lg-0">
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option value="">MAQUINARIAS SUR LTDA.</option>
+            </select>
+        </div>
+        <div class="col-auto">
+            <select class="form-control form-control-sm">
+                <option value="BAB">BODEGA CENTRAL PUERTO VARAS</option>
+                <option value="BC">BODEGA CHONCHI</option>
+                <option value="BPA">BODEGA PUNTA ARENAS</option>
+                <option value="BAY">BODEGA AYSÉN</option>
+            </select>
+        </div>
+       
+        <div class="col-auto"><button class="btn btn-info btn-sm justify-content-end" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button></div>
+    </div>
+
+</nav>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 4, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="noExport"></th>
+                            <th>Empresa</th>
+                            <th>Bodega</th>
+                            <th>Fecha</th>
+                            <th>Stock Bodega</th>
+                            <th>Productos Contabilizados</th>
+                            <th>Diferencia</th>
+                            <th>Precio Bodega</th>
+                            <th>Precio Contabilizado</th>
+                            <th>Precio Diferencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><button class="btn btn-light btn-xs" onclick="location.href='/Inventario/DetReporteInventario'"><i class="fa fa-search"></i></button></td>
+                            <td>MAQUINARIAS SUR LTDA.</td>
+                            <td>BODEGA CENTRAL PUERTO VARAS</td>
+                            <td>28-11-2020</td>
+                            <td>13</td>
+                            <td>13</td>
+                            <td>0</td>
+                            <td>$100.000</td>
+                            <td>$100.000</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td><button class="btn btn-light btn-xs" onclick="location.href='/Inventario/DetReporteInventario'"><i class="fa fa-search"></i></button></td>
+                            <td>MAQUINARIAS SUR LTDA.</td>
+                            <td>BODEGA CENTRAL PUERTO VARAS</td>
+                            <td>27-11-2020</td>
+                            <td>15</td>
+                            <td>14</td>
+                            <td>1</td>
+                            <td>$120.000</td>
+                            <td>$119.000</td>
+                            <td>$1.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            AbrirMenu("ReporteInventario");
+            $('#grillaProductos').DataTable({
+                "columnDefs": [ {"targets": 0,
+                "orderable": false
+            } ]});
+        });
+        
+    </script>
+</div>
+
+
+

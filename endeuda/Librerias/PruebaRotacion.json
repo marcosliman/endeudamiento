@@ -1,0 +1,72 @@
+{
+  "2-BAJA ROTACION": {
+    "PUERTO VARAS": {
+      "Injuries": 47
+    },
+    "CHILOE": {
+      "Injuries": 10
+    },
+    "PTA ARENAS": {
+      "Injuries": 10
+    },
+    "PTO AYSEN": {
+      "Injuries": 15
+    }
+  },
+  "6-SIN ROTACION": {
+    "PUERTO VARAS": {
+      "Injuries": 47
+    },
+    "CHILOE": {
+      "Injuries": 10
+    },
+    "PTA ARENAS": {
+      "Injuries": 10
+    },
+    "PTO AYSEN": {
+      "Injuries": 31.6
+    }
+  },
+  "1-PRODUCTO NUEVO": {
+    "PUERTO VARAS": {
+      "Injuries": 47
+    },
+    "CHILOE": {
+      "Injuries": 10
+    },
+    "PTA ARENAS": {
+      "Injuries": 10
+    },
+    "PTO AYSEN": {
+      "Injuries": 1
+    }
+  },
+  "3-MEDIA": {
+    "PUERTO VARAS": {
+      "Injuries": 47
+    },
+    "CHILOE": {
+      "Injuries": 10
+    },
+    "PTA ARENAS": {
+      "Injuries": 10
+    },
+    "PTO AYSEN": {
+      "Injuries": 31
+    }
+  },
+  "4-ALTA ROTACION": {
+    "PUERTO VARAS": {
+      "Injuries": 47
+    },
+    "CHILOE": {
+      "Injuries": 10
+    },
+    "PTA ARENAS": {
+      "Injuries": 10
+    },
+    "PTO AYSEN": {
+      "Injuries": 3
+    }
+  }
+}

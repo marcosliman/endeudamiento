@@ -1,0 +1,14 @@
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\modelo.dll.config
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\modelo.dll
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\modelo.pdb
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\EntityFramework.dll
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\EntityFramework.SqlServer.dll
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\Newtonsoft.Json.dll
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\EntityFramework.xml
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\EntityFramework.SqlServer.xml
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\bin\Release\Newtonsoft.Json.xml
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.csprojAssemblyReference.cache
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.csproj.CoreCompileInputs.cache
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.csproj.CopyComplete
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.dll
+C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.pdb

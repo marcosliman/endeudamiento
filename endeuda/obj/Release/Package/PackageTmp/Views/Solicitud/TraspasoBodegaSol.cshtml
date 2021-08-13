@@ -1,0 +1,406 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+<!-- BS Stepper -->
+<link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
+<!-- BS-Stepper -->
+<script src="~/Plantilla/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<div class="modal fade" id="modal-buscar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+               
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="modal-difStock" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Productos con menos Stock</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger alert-dismissible">                        
+                        <h5><i class="icon fas fa-ban"></i> Alerta!</h5>
+                        Existen Productos con menos stock del solicitado, el sistema áctualizó la solicitud, ¿Desea Continuar?.
+                    </div>                    
+                    <div class="row">
+                        <div class="col-lg-12">
+
+                            <div class="card mb-4">
+                                <div class="card-body table-responsive">
+                                    <table class="table table-bordered table-hover dataTable dtr-inline border" width="100%" id="grillaCuenta" data-order='[[ 1, "desc" ]]'>
+                                        <thead class="thead-light">
+                                            <tr>
+                                                <th>Cod. Producto</th>
+                                                <th>Nombre Producto</th>
+                                                <th>Precio Promedio</th>
+                                                <th>Solicitado</th>
+                                                <th>Stock Actual</th>
+                                                <th>Actualizado</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="row_000000001694">
+                                                <td>000000001694</td>
+                                                <td>ALICATE UNIVERSAL</td>
+                                                <td>$5.000</td>
+                                                <td>10</td>
+                                                <td>5</td>
+                                                <td><input type="text" name="cantidad" id="cant_000000001694" value="5" class="form-control form-control-sm" /></td>
+                                                <td class="text-right">$25.000</td>
+                                            </tr>
+                                            <tr id="row_000000003010">
+                                                <td>000000003010</td>
+                                                <td>ALICATE P/SEG. INT. CURVO</td>
+                                                <td>$5.000</td>
+                                                <td>10</td>
+                                                <td>10</td>
+                                                <td><button class="btn btn-xs btn-success"><i class="fa fa-check-circle"></i></button></td>
+                                                <td class="text-right">$50.000</td>
+                                            </tr>
+                                            <tr id="row_000000006105">
+                                                <td>000000006105</td>
+                                                <td>ALICATE UNIVERSAL 7"</td>
+                                                <td>$5.000</td>
+                                                <td>10</td>
+                                                <td>10</td>
+                                                <td><button class="btn btn-xs btn-success"><i class="fa fa-check-circle"></i></button></td>
+                                                <td class="text-right">$50.000</td>
+                                            </tr>                                            
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="5"></th>
+                                                <th>Total</th>
+                                                <th class="text-right">$125.000</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
+                    <button type="button" onclick="location.href='/Solicitud/SolTraspasoEnviada'" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm">Enviar Solicitud</button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h5 class="h5 mb-0 text-gray-800">Solicitar Traspaso Entre Bodegas</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Solicitar</li>
+    </ol>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="bs-stepper" id="stepper1">
+            <div class="bs-stepper-header" role="tablist">
+                <!-- your steps here -->
+                <div class="step" data-target="#logins-part">
+                    <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger">
+                        <span class="bs-stepper-circle">1</span>
+                        <span class="bs-stepper-label">Centro de Costo</span>
+                    </button>
+                </div>
+                <div class="line"></div>
+                <div class="step" data-target="#information-part">
+                    <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
+                        <span class="bs-stepper-circle">2</span>
+                        <span class="bs-stepper-label">Producto(s)</span>
+                    </button>
+                </div>
+            </div>
+            <div class="bs-stepper-content">
+                <!-- your steps content here -->
+                <div id="logins-part" class="content" role="tabpanel" aria-labelledby="logins-part-trigger">
+
+                    <div class="ml-2">
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+                            <div class="col-sm-4">
+                                <select class="form-control form-control-sm">
+                                    <option value="">MAQUINARIAS SUR LTDA.</option>
+                                </select>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Centro de Costo</label>
+                            <div class="col-sm-4">
+                                <select class="form-control form-control-sm">
+                                    <option value="03-0013">BODEGA PTO VARAS</option>
+                                    <option value="03-0016">BODEGA PTA ARENAS</option>
+                                    <option value="03-0015">BODEGA AYSEN</option>
+                                    <option value="03-0014">BODEGA CHILOE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Bodega Origen</label>
+                            <div class="col-sm-4">
+                                <select class="form-control form-control-sm">
+                                    <option value="BAB">BODEGA CENTRAL PUERTO VARAS</option>
+                                    <option value="BC">BODEGA CHONCHI</option>
+                                    <option value="BPA">BODEGA PUNTA ARENAS</option>
+                                    <option value="BAY">BODEGA AYSÉN</option>
+                                </select>
+                            </div>
+                            <label for="inputEmail3" class="col-sm-2 col-form-label">Bodega Destino</label>
+                            <div class="col-sm-4">
+                                <select class="form-control form-control-sm">
+                                    <option value="BPA">BODEGA PUNTA ARENAS</option>
+                                    <option value="BAB">BODEGA CENTRAL PUERTO VARAS</option>
+                                    <option value="BC">BODEGA CHONCHI</option>
+                                    <option value="BAY">BODEGA AYSÉN</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" onclick="location.href='/Home/Inicio'" class="btn btn-secondary btn-sm" data-dismiss="modal">Volver</button>
+                        <button type="button" onclick="stepper1.next();" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Siguiente</button>
+                    </div>
+
+                </div>
+                <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+                    <input name="textMaterial" type="hidden" id="textMaterial" value="" />
+                    <div class="card card-outline card-info collapsed-card">
+                        <div class="card-header">
+                            <h3 class="card-title">MAQUINARIAS SUR LTDA. de <strong>BODEGA CENTRAL PUERTO VARAS</strong> hacia <strong>BODEGA PUNTA ARENAS</strong></h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-2 col-form-label">Centro de Costo:</label>
+                                <div class="col-sm-4">
+                                    BODEGA PTO VARAS
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control form-control-sm" name="codproducto" id="codProductoBus" placeholder="Cod. Producto" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" class="form-control form-control-sm" name="nomProducto" id="nomProductoBus" placeholder="Nombre Producto" />
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="button" class="btn btn-primary btn-sm" onclick="BuscarProducto()">Buscar</button>
+                                </div>
+
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                    <div class="card" id="divSeleccionados">
+                        <div class="card-header"><h3 class="card-title">Materiales Seleccionados</h3></div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Material</th>
+                                                <th>Cantidad</th>
+                                                <th>U.Medida</th>
+                                                <th>Precio Promedio</th>
+                                                <th>Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="bodySeleccion"></tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Total <input type="hidden" name="txtSumTotal" id="txtSumTotal" value="0" /></th>
+                                                <th id="sumTotal"></th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-info btn-sm" onclick="stepper1.previous()">Anterior</button>
+                        <button type="button" data-toggle="modal" data-target="#modal-difStock" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Enviar Solicitud</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("../Home/PartDetalleMaterial", null)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalStock" tabindex="-1" role="dialog" aria-labelledby="modalStock" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detalle Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("../Home/PartDetalleStock", null)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var dataCliente = [
+        {
+            id: 0,
+            text: 'AGRICOLA EL ARCHIVO SPA'
+        },
+        {
+            id: 1,
+            text: 'AGENCIA DE VIAJES TURAVION SPA'
+        },
+        {
+            id: 2,
+            text: 'SOLUCIONES RELONCAVI SPA'
+        },
+        {
+            id: 3,
+            text: 'MARFLEX SPA'
+        },
+        {
+            id: 4,
+            text: 'BANCO BICE'
+        }
+    ];
+    
+    $(document).ready(function () {
+        $("#addMaterial").hide();
+        $("#divSeleccionados").hide();
+        
+        $('#selectCliente').select2({
+            placeholder: 'Busque Cliente',
+            language: "es",
+            //minimumInputLength: 3,
+            data: dataCliente
+
+        });
+        
+        AbrirMenu('DashBoard1');
+        window.stepper1 = new Stepper(document.querySelector('#stepper1'), { linear: true });
+    })
+
+    function AgregarMaterial(codProduct) {
+        var nomProducto = $("#row_" + codProduct).find('.des-producto').text();
+        var precioProd = $("#row_" + codProduct).find('.precio-producto').text();
+        precioProd = precioProd.replace("$", "").replace(",", ".")
+        var registro = "";
+        var cantidad = $("#cant_" + codProduct).val()
+        cantidad = cantidad.replace(",",".")
+        var total = parseInt(cantidad) * parseFloat(precioProd);
+        var sumActual = $("#txtSumTotal").val();
+        sumActual = parseFloat(sumActual) + parseFloat(total);
+        $("#txtSumTotal").val(sumActual);
+        $("#sumTotal").empty();
+
+        var totalFormat = "";
+        if (total != null) {
+            var num = total.toString();
+            totalFormat = "$" + SeparadorMiles(num);
+        }
+        var sumFormat = "";
+        if (sumActual != null) {
+            var num = sumActual.toString();
+            sumFormat = "$" + SeparadorMiles(num);
+        }
+        if (precioProd != null) {
+            var num = precioProd.toString();
+            precioProd = "$" + SeparadorMiles(num);
+        }
+        $("#sumTotal").append(sumFormat);
+        registro += "<tr><td>" + codProduct + "</td><td>" + nomProducto + "</td><td>" + cantidad + "</td><td>UND</td>";
+        registro += "<td>" + precioProd+"</td><td>" + totalFormat + "</td>";
+        registro += '<td><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></button></td></tr > ';
+        $("#textMaterial").val("")
+        $("#txtCantidad").val("")
+        $("#addMaterial").hide();
+        $("#divSeleccionados").show();
+        $("#bodySeleccion").append(registro);
+        $("#tdMaterial").empty();
+        $("#row_" + codProduct).hide();
+    }
+    function CancelMaterial() {
+        $("#textMaterial").val("")
+        $("#txtCantidad").val("")
+        $("#addMaterial").hide();
+        $("#tdMaterial").empty();
+    }
+    function BuscarProducto() {
+        $("#datosBuscar").empty();
+        $('#modal-buscar').modal('show');        
+        $.ajax({
+            url: "/Solicitud/BuscarProducto",
+            type: "Get",
+            data: { IdEmpresa: $("#IdEmpresa").val(),  nomProducto: $("#nomProductoBus").val(), codProducto: $("#codProductoBus").val() },
+            beforeSend: function () {
+                $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosBuscar").empty();
+                $("#datosBuscar").html(data);
+                esconderCargando();
+            }
+        });
+    }
+</script>

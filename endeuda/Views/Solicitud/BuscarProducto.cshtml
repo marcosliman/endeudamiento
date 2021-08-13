@@ -1,0 +1,226 @@
+﻿@{
+    ViewBag.Title = "Agregar Cuenta";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Agregar Producto</h5>
+    <button type="button" class="close" onclick="CerrarModal()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="ml-2">
+        <div class="form-group form-group-sm row">
+            <label for="CodCuenta" class="col-sm-3 col-form-label col-form-label-sm">Bodega</label>
+            <div class="col-6">
+                BODEGA CENTRAL PUERTO VARAS
+            </div>
+        </div>
+        <div class="form-group form-group-sm row">
+            <label for="CodCuenta" class="col-sm-3 col-form-label col-form-label-sm">Cod. Producto</label>
+            <div class="col-6">
+                <input type="text" name="CodProducto" id="CodProducto" class="form-control form-control-sm required" autocomplete="off" value="@ViewBag.CodProducto" />
+            </div>
+        </div>
+        <div class="form-group form-group-sm row">
+            <label for="NombreCuenta" class="col-sm-3 col-form-label col-form-label-sm">Des. Producto</label>
+            <div class="col-6">
+                <input type="text" name="NomProducto" id="NomProducto" class="form-control form-control-sm required" autocomplete="off" value="@ViewBag.NomProducto" />
+            </div>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <div class="card mb-4">
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaCuenta" data-order='[[ 3, "desc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Cod. Producto</th>
+                                <th>Nombre Producto</th>
+                                <th>Precio Promedio</th>
+                                <th>Stock Bodega</th>
+                                <th>Stock Otras Bodegas</th>
+                                <th>Cantidad Requerida</th>
+                                <th>Cantidad Retiro</th>
+                                <th class="noExport" width="5%">Agregar</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" onclick="CerrarModal()">Cerrar</button>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        var tableCuenta = initTableCuenta();
+        tableCuenta.columns.adjust();       
+        window.top.esconderCargando();
+    });
+    function CerrarModal() {
+        $('#modal-buscar').modal('hide');
+    }
+    function initTableCuenta() {
+        var table = $('#grillaCuenta').DataTable({
+            dom: '<"top"B<"#id">>rt<"bottom"lp><"clear">',
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [2],
+                    render: function (data) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return "$"+numFormt;
+                    }
+                },
+                {
+                    targets: [3],
+                    render: function (data) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            //"searching": false,
+            "retrieve": true,
+            processing: true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Producto/Productos_Read/' ,
+                "data": function (d) {
+                    d.IdEmpresa = 1;
+                },
+                "dataSrc": ""
+            },
+            buttons: [],
+            columns: [
+                { "data": "CodProd" },
+                {
+                    "sClass": "des-producto",
+                    "mData": null,                    
+                    "mRender": function (data, type, row) {                        
+                        return data.DesProd;
+                    }
+
+                },
+                {
+                    "sClass": "precio-producto",    
+                    "mData": "Precio"
+                },                
+                { "data": "Stock" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';                        
+                        boton = '<a href="#" class="alert-link"><i class="fa fa-search">Ver</i></a>';                        
+                        return boton;
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        if (o.Stock > 0) {
+                            boton = '<input type="text" name="cantidad" id="cant_' + o.CodProd + '" value="" class="form-control form-control-sm" />';
+                        }                       
+
+                        return boton;
+                    }
+                },  
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        if (o.Stock > 0) {
+                            boton = '<input type="text" name="cantidadr" id="cantr_' + o.CodProd + '" value="" class="form-control form-control-sm" />';
+                        }
+
+                        return boton;
+                    }
+                },  
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        if (o.Stock > 0) {
+                            boton = '<button class="btn btn-xs btn-secondary" onclick="AgregarMaterial(\'' + o.CodProd + '\')"><i class="fa fa-plus">Agregar</i></button>';
+                        }
+                        return boton;
+                    }
+                }
+
+            ]
+        });
+        $('#CodProducto').on('keyup', function () {
+            table.columns(0).search(this.value).draw();
+        });
+        if ($('#CodProducto').val() != "") {
+            table.columns(0).search($('#CodProducto').val()).draw();
+        }
+        $('#NomProducto').on('keyup', function () {
+            table.columns(1).search(this.value).draw();
+        });
+        if ($('#NomProducto').val() != "") {
+            table.columns(1).search($('#NomProducto').val()).draw();
+        }
+        
+        table.columns.adjust();
+        return table;
+    }
+    function AgregarCuenta(codCuenta) {
+        $.ajax({
+            url: '/Softland/AgregarCuentaProg',
+            data: { codCuenta: codCuenta, IdProgramacion: $("#IdProgramacionCuenta").val(), IdEmpresa: $("#IdEmpresaCuenta").val() },
+            type: 'POST',
+            beforeSend: function () {
+               // mostrarCargando();
+            },
+            success: function (data) {
+                esconderCargando();
+                if (data.Estado == "0") {
+                    console.log(codCuenta)
+                    var id = "row_" + codCuenta;
+                    var oTable = $('#grillaCuenta').DataTable();
+                    //oTable.rows('#' + id).remove();
+                    var rows = oTable.rows('#' + id).remove().draw(false);
+                    toastr.success(data.Mensaje);
+                    RefrescaAsiento();
+                }
+                else {
+                    toastr.error(data.Mensaje);
+                }
+            },
+            error: function (error) {
+                toastr.error("Error");
+            }
+        })
+    }
+</script>

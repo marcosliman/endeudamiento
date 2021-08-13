@@ -1,0 +1,223 @@
+﻿
+@{
+    ViewBag.Title = "Control Inventario";
+}
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("../Home/PartDetalleMaterial", null)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Control de Inventario</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Módulo Inventario</li>
+        <li class="breadcrumb-item active" aria-current="page">Reporte Inventario</li>
+    </ol>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Indicadores Bodega <strong>BODEGA CENTRAL PUERTO VARAS</strong></h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="row m-1" id="datosIndicadores">
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="info-box btn-outline-primary btn btn-xs btnIndicador active" id="indicadorAll" onclick="FiltrarDias(-1,0,'indicadorAll')">
+                    <span class="info-box-icon"><i class="fas fa-dollar-sign"></i></span>
+                    <div class="info-box-content text-left">
+                        <span class="info-box-text">Total</span>
+                        <span class="info-box-number">$100.000</span>
+                        <span class="info-box-text">
+                            4 Productos
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="info-box btn-outline-success btn btn-xs btnIndicador" id="indicador3160" onclick="FiltrarDias(31,60,'indicador3160')">
+                    <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <div class="info-box-content text-left">
+                        <span class="info-box-text">Contabilizados </span>
+                        <span class="info-box-number">$65.000</span>
+                        <span class="info-box-text">
+                            3 Productos
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-12">
+                <div class="info-box btn-outline-danger btn btn-xs btnIndicador" id="indicador31" onclick="FiltrarDias(1,30,'indicador31')">
+                    <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <div class="info-box-content text-left">
+                        <span class="info-box-text">No Contabilizados </span>
+                        <span class="info-box-number">$30.000</span>
+                        <span class="info-box-text">
+                            1 Producto
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-12 ">
+                <div class="info-box btn-outline-success btn btn-xs btnIndicador" id="indicadorNoVencido" onclick="FiltrarDias(0,0,'indicadorNoVencido')">
+                    <span class="info-box-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                    <div class="info-box-content text-left">
+                        <span class="info-box-text">Con Diferencia</span>
+                        <span class="info-box-number">$5.000</span>
+                        <span class="info-box-text">
+                            1 Producto
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Materiales Contabilizados</h3>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Material</th>
+                        <th>Ubicación</th>
+                        <th>Stock Bodega</th>
+                        <th>Cant. Contabilizada</th>
+                        <th>Diferencia</th>
+                        <th>U.Medida</th>
+                        <th>Precio Promedio</th>
+                        <th>Total Contabilizado</th>
+                        <th>Total Stock</th>
+                        <th>Diferencia</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>000000001694</td>
+                        <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL</a></td>
+                        <td>R22F4</td>
+                        <td>5</td>
+                        <td>5</td>
+                        <td>0</td>
+                        <td>UND</td>
+                        <td>$5.000</td>
+                        <td>$25.000</td>
+                        <td>$25.000</td>
+                        <td>$0</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>000000003010</td>
+                        <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE P/SEG. INT. CURVO</a></td>
+                        <td>R6F2</td>
+                        <td>3</td>
+                        <td>3</td>
+                        <td>0</td>
+                        <td>UND</td>
+                        <td>$5.000</td>
+                        <td>$15.000</td>
+                        <td>$15.000</td>
+                        <td>$0</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>000000006105</td>
+                        <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL 7"</a></td>
+                        <td></td>
+                        <td>6</td>
+                        <td>5</td>
+                        <td class="bg-danger">1</td>
+                        <td>UND</td>
+                        <td>$5.000</td>
+                        <td>$25.000</td>
+                        <td>$30.000</td>
+                        <td class="bg-danger">$5.000</td>
+                        
+                    </tr>
+                    <tr>
+                        <td>000000006106</td>
+                        <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE DE PUNTA</a></td>
+                        <td>R14F3</td>
+                        <td>6</td>
+                        <td>0</td>
+                        <td class="bg-danger">6</td>
+                        <td>UND</td>
+                        <td>$5.000</td>
+                        <td>$0</td>
+                        <td>$30.000</td>
+                        <td class="bg-danger">$5.000</td>
+                       
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>Total</th>
+                        <th>$65.000</th>
+                        <th>$100.000</th>
+                        <th class="nowrap">$10.000 (15%)</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="button" class="btn btn-secondary" onclick="location.href='/Inventario/RegistrarInventario'" style="margin-right: 5px;">
+            <i class="fas fa-redo"></i> Volver
+        </button>
+        
+        <button type="button" class="btn btn-secondary float-right" style="margin-right: 5px;">
+            <i class="fas fa-file-excel"></i> Exportar
+        </button>
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("ReporteInventario");
+        $('#grillaEmpresa').DataTable();
+    });
+    function AgregarProducto() {
+        var cuenta = $("#cuentaProducto").val();
+        cuenta = parseInt(cuenta) + 1;
+        $("#cuentaProducto").val(cuenta);
+        $("#spanCuenta").text(cuenta);
+        $("#newUbicacion").val('')
+    }
+</script>
+
+
+
+

@@ -1,0 +1,138 @@
+﻿@model modelo.Models.Local.Usuario
+@{
+    ViewBag.Title = "Crear Usuario";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<script src="~/Librerias/jquery_validate/jquery.Rut.js"></script>
+<script src="~/Librerias/jquery_validate/additional-methods.min.js"></script>
+@using (Ajax.BeginForm("Create", "Usuario", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success_dl",
+    OnFailure = "Failure_dl"
+
+}, new { id = "frmEdit", @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IdUsuario);
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Nuevo Usuario</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="ml-2">
+            <div class="form-group form-group-sm row">
+                <label for="RutUsuario" class="col-sm-3 col-form-label col-form-label-sm">Rut</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.RutUsuario, new { htmlAttributes = new { @class = "form-control form-control-sm required noEdit rut" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="RazonSocial" class="col-sm-3 col-form-label col-form-label-sm">Nombres</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.NombreUsuario, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="RazonSocial" class="col-sm-3 col-form-label col-form-label-sm">Apellidos</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.ApellidoUsuario, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="RazonSocial" class="col-sm-3 col-form-label col-form-label-sm">Correo</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.CorreoElectronico, new { htmlAttributes = new { @class = "form-control form-control-sm required noEdit", @autocomplete = "off" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="RazonSocial" class="col-sm-3 col-form-label col-form-label-sm">Clave</label>
+                <div class="col-6">
+                    @Html.EditorFor(model => model.Clave, new { htmlAttributes = new { @class = "form-control form-control-sm required", @type = "password", @autocomplete = "off" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="inputEmail3" class="col-sm-3 col-form-label col-form-label-sm">Perfiles</label>
+                <div class="col-sm-6 required">
+                    <select class="form-control form-control-sm select2 required" data-selected-text-format="count > 2" id="perfiles" multiple="multiple" name="perfiles">
+                        @if (ViewData["listaPerfiles"] != null)
+                        {
+                            foreach (var item in ViewData["listaPerfiles"] as List<modelo.ViewModel.RetornoGenerico>)
+                            {
+                                var select = "";
+                                if (item.Seleccionado == true)
+                                { select = " Selected "; }
+                                <option value="@item.Id" @select>@item.Nombre</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Estado</label>
+                <div class="col-6">
+                    @Html.CheckBoxFor(model => model.Activo, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                    <label class="" for="Activo">Activo</label>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm">Crear</button>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+        $("#RutUsuario").Rut({ format_on: 'keyup' });
+        $("#RutUsuario").Rut({ format_on: 'keyup' });
+        $.validator.addMethod("rut", function (value, element) {
+            return this.optional(element) || $.Rut.validar(value);
+        }, "Este campo debe ser un rut valido.");
+        /*$("#RutUsuario").rut({ formatOn: 'keyup', validateOn: 'keyup' })
+            .on('rutInvalido', function () {
+                $(this).parents(".control-group").addClass("error")
+            })
+            .on('rutValido', function () {
+                $(this).parents(".control-group").removeClass("error")
+            });*/
+        if ($("#IdUsuario").val() > 0) {
+            $("#Clave").removeClass("required");
+            $(".noEdit").prop("readonly", true);
+        }
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        $('#perfiles').select2({
+            theme: 'bootstrap4'
+        })
+        window.top.esconderCargando();
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        toastr.error(data.Mensaje);
+        $('#modal-registro').modal('hide');
+    }
+
+</script>

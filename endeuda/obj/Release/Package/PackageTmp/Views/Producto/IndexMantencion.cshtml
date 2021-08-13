@@ -1,0 +1,218 @@
+﻿@{
+    ViewBag.Title = "Mantención de Productos";
+    var IdEmpresaPrincipal=tesoreria.Helper.Constantes.IdEmpresaPrincipal;
+}
+<input type="hidden" name="IdEmpresaBusqueda" id="IdEmpresaBusqueda" value="@IdEmpresaPrincipal" />
+<div class="modal fade" id="edit-producto" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosBuscar">
+                                
+            </div>            
+        </div>
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Mantención de Productos</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Opciones Producto</li>
+        <li class="breadcrumb-item active" aria-current="page">Mantención Producto</li>
+    </ol>
+</div>
+<div class="card m-0" style="background-color: #e3f2fd;">
+    <div class="row">
+        <div class="col-md-9">
+            <form class="card-body mb-0">
+                <div class="form-row">
+
+                    <div class="col-auto mt-1">
+                        <select class="form-control form-control-sm" name="CodSubGrupo" id="CodSubGrupo">
+                            <option value="">--Seleccione Sub-Grupo--</option>
+                        </select>
+                    </div>
+                    <div class="col-auto mt-1">
+                        <select class="form-control form-control-sm" name="CodGrupo" id="CodGrupoBus" style="width:350px">
+                            <option value="">--Seleccione Grupo--</option>
+                        </select>
+                    </div>
+                    <div class="col-auto mt-1">
+                        @Html.DropDownList("IdEstado", (SelectList)ViewData["ListaEstados"], "--Seleccione Estado--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-auto mt-1">
+                        <input type="text" class="form-control form-control-sm" placeholder="Cod Producto" id="CodProducto" name="CodProducto" value="">
+                    </div>
+                    <div class="col-auto mt-1">
+                        <input type="text" class="form-control form-control-sm me-2" style="width:350px" placeholder="Nombre Producto" id="NombreProducto" name="NombreProducto" value="">
+                    </div>
+
+                </div>
+
+            </form>
+        </div>
+        <div class="col-md-3 justify-content-end text-right">
+            <form class="card-body mb-0">
+                <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+                    <button class="btn btn-info btn-sm" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                    <button class="btn btn-primary btn-sm ml-1 justify-content-end" type="button" onclick="EditProducto(0,0,0)"><i class="fa fa-plus"></i> Nuevo Producto</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 1, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Cod Producto</th>
+                            <th>Producto</th>
+                            <th>Sub-Grupo</th>
+                            <th>Grupo</th>
+                            <th>Cod U.Medida</th>
+                            <th>U.Medida</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+   
+    <script>
+        $(document).ready(function () {
+            $('#CodGrupoBus').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Grupo--'
+            });
+            AbrirMenu("MantencionProducto");          
+            RefreshLista();
+            $("#IdEmpresaBusqueda").change(function () { cambioEmpresabusqueda(this.value); })
+            cambioEmpresabusqueda($("#IdEmpresaBusqueda").val());
+        });
+        function RefreshLista() {
+            if ($.fn.DataTable.isDataTable('#grillaProductos')) {
+                var table = initTableCuenta();
+                table.ajax.reload(function (json) {  },false);
+            }
+            else {
+                var table = initTableCuenta();
+            }
+        }
+        function cambioEmpresabusqueda(IdEmpresa) {
+            $("#CodSubGrupo").empty();
+            $("#CodSubGrupo").append('<option value="">--Seleccione Sub-Grupo--</option>');
+            $.ajax({
+                url: "/Producto/ObtenerListaSubGrupo",
+                type: "Post",
+                data: { idEmpresa: IdEmpresa },
+                success: function (data) {
+                    var length = Object.keys(data).length;
+                    for (var i = 0; i < length; i++) {
+                        $("#CodSubGrupo").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                    };
+                }
+            });
+            //Grupo
+            $("#CodGrupoBus").empty();
+            $("#CodGrupoBus").append('<option value="">--Seleccione Grupo--</option>');
+            $.ajax({
+                url: "/Producto/ObtenerListaGrupo",
+                type: "Post",
+                data: { idEmpresa: IdEmpresa },
+                success: function (data) {
+                    var length = Object.keys(data).length;
+                    for (var i = 0; i < length; i++) {
+                        $("#CodGrupoBus").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                    };
+                }
+            });
+        }
+        function initTableCuenta() {
+            var table = $('#grillaProductos').DataTable({
+                //dom: '<"top"B<"#id">>rt<"bottom"lp><"clear">',
+                columnDefs: [
+                    { targets: '_all', className: 'align-middle' }
+                ],
+                "retrieve": true,
+                processing: true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/Producto/MantencionProductos_Read/',
+                    "data": function (d) {
+                        d.IdEmpresa = $("#IdEmpresaBusqueda").val();
+                        d.CodProducto = $("#CodProducto").val();
+                        d.NombreProducto = $("#NombreProducto").val();
+                        d.CodSubGrupo = $("#CodSubGrupo").val();
+                        d.CodGrupo = $("#CodGrupo").val();
+                        d.IdEstado = $("#IdEstado").val();
+                    },
+                    "dataSrc": ""
+                },
+                //buttons: [],
+                columns: [
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-light btn-xs" onclick="EditProducto(\'' + o.CodProd + '\',' + o.IdEmpresa+',0)"><i class="fa fa-edit"></i></button>';                            
+                            return boton;
+                        }
+                    },
+                    { "data": "CodProd" },
+                    { "data": "DesProd" },                    
+                    { "data": "DesSubGr" },
+                    { "data": "DesGrupo" },                    
+                    { "data": "CodUMed" },
+                    { "data": "DesUMed" },
+                    { "data": "Estado" }
+
+                ]
+            });
+            return table;
+        }
+        function EditProducto(codProducto, IdEmpresa,vista) {
+            $("#datosBuscar").empty();
+            $('#edit-producto').modal('show');
+            tmpUrl = "/Producto/EditProducto";
+            if (codProducto == 0) {
+                tmpUrl = "/Producto/CrearProducto";
+            }
+            if (vista == 1) {
+                tmpUrl = "/Producto/VistaProducto";
+            }
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: { codProd: codProducto, IdEmpresa: IdEmpresa },
+                beforeSend: function () {
+                    $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+    </script>
+</div>
+
+
+

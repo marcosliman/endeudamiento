@@ -1,0 +1,254 @@
+﻿@model modelo.Models.Softland.iw_tprod
+@{
+    ViewBag.Title = "Detalle Pago";
+    var TitlePag = "Salidas";
+    var TitleOrigen = "Origen";
+    var TitleDestino = "Destino";
+    var noVisibles = "0,8,9";
+    if (ViewBag.Tipo == "E")
+    {
+        TitleOrigen = "Destino";
+        TitleDestino = "Origen";
+        TitlePag = "Entradas";
+    }
+    if (ViewBag.Tipo == "")
+    {
+        TitleOrigen = "Destino";
+        TitleDestino = "Destino/Origen";
+        noVisibles = "7";
+        TitlePag = "Movimientos";
+    }
+
+}
+
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">@TitlePag del producto <span class="text-bold">@Html.DisplayFor(model => model.DesProd)</span></h5>
+    <button type="button" class="close" onclick="CerrarModalhija()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="ml-2" id="divFiltroMov">
+        <div class="form-group form-group-sm row">
+            <label for="CodCuenta" class="col-sm-3 col-form-label col-form-label-sm">Tipo Movimiento</label>
+            <div class="col-6">
+                <select name="TipoMov" id="TipoMov" class="form-control form-control-sm">
+                    <option value="">--Todos--</option>
+                    <option value="E">Entradas</option>
+                    <option value="S">Salidas</option>
+                </select>               
+            </div>
+        </div>
+    </div>
+    <div class="m-2">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaDetalleMov" data-order='[[ 2, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Guía</th>
+                            <th>Fecha</th>
+                            <th>Concepto</th>
+                            <th>Bodega</th>
+                            <th>@TitleDestino</th>
+                            <th>Detalle</th>
+                            <th>Cantidad</th>
+                            <th>Ingresada</th>
+                            <th>Despachada</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="7" style="text-align:right">Total:</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" onclick="CerrarModalhija()">Cerrar</button>
+</div>
+<script>
+    $(document).ready(function () {
+        $.fn.dataTable.moment('DD/MM/YYYY');
+        window.top.esconderCargando();
+        initTableDetalle();
+        var tipoMov = "@ViewBag.Tipo";
+        if (tipoMov != "") {
+            $("#divFiltroMov").hide();
+        }
+        
+    });
+    function initTableDetalle() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Movimientos Producto @Model.DesProd',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column > 5) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
+        var table = $('#grillaDetalleMov').DataTable({
+            //dom: '<"top"B<"#id">>rt<"bottom"lp><"clear">',
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "MovimientosProducto"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                { "visible": false, "targets": [@noVisibles] },
+                {
+                    targets: [6],
+                    render: function (data) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return  numFormt;
+                    }
+                },
+                {
+                    targets: [2],
+                    render: function (data) {
+                        var fecha = data;
+                        if (fecha != "" && fecha != null) {                          
+                            fecha = fecha.replace('/Date(', '').replace(')/', '');
+                            var expDate = new Date(parseInt(fecha));
+                            var dateLocal = expDate.toLocaleDateString().replace(/[-]/g,'/').split("/");                            
+                            var dia = (dateLocal[0].length ==1) ? "0" + dateLocal[0] : dateLocal[0];
+                            var mes = (dateLocal[1].length==1) ? "0" + dateLocal[1] : dateLocal[1];
+                            var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                            return fechaES;
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                }
+            ],
+            "retrieve": true,
+            "initComplete": function (settings, json) {
+                esconderCargando();
+            },
+            processing: true,
+            'ajax': {
+                "type": "POST",
+                "url": '/RotacionProducto/ListMovProducto_Read/',
+                "data": function (d) {
+                    d.CodProd = "@Model.CodProd";
+                    d.Codbode = "@ViewBag.CodBode";
+                    d.tipo = "@ViewBag.Tipo";
+                },
+                "dataSrc": ""
+            },
+
+            columns: [
+
+                { "data": "Tipo" },
+                { "data": "Folio" },
+                { "data": "Fecha" },               
+                { "data": "DesCodDr" },
+                { "data": "DesBode" },
+                { "data": "Destino" },
+                { "data": "Glosa" },
+                { "data": "Cantidad" },
+                { "data": "CantIngresada" },
+                { "data": "cantDespachada" }
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
+
+                // Total over all pages
+                total = api.column(7).data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotal = api.column(7, { page: 'current' }).data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                // Update footer
+                $(api.column(7).footer()).html('' + pageTotalFormat + ' (' + totalFormat + ' total)');
+
+                //ingresada
+                total = api.column(8).data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                pageTotal = api.column(8, { page: 'current' }).data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());                
+                $(api.column(8).footer()).html('' + pageTotalFormat + ' (' + totalFormat + ' total)');
+
+                //despachada
+                total = api.column(9).data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                pageTotal = api.column(9, { page: 'current' }).data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                $(api.column(9).footer()).html('' + pageTotalFormat + ' (' + totalFormat + ' total)');
+            }
+        });
+        $('#TipoMov').on('change', function () {
+            table.columns(0).search(this.value).draw();
+        });
+        return table;
+    }
+    function CerrarModalhija() {
+        $('#modal-detalle').modal('hide');
+    }
+
+</script>

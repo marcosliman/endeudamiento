@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewBag.Title = "Control Inventario";
+}
+
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Control de Inventario</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Módulo Inventario</li>
+        <li class="breadcrumb-item active" aria-current="page">Control Inventario</li>
+    </ol>
+</div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Selección de bodega</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        @using (Ajax.BeginForm("CreaInventario", "Inventario", new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "post",
+            OnSuccess = "Success_dl",
+            OnFailure = "Failure_dl"
+
+        }, new { id = "frmCrea", @class = "form-horizontal" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-auto">
+                    <div class="form-group">
+                        @Html.DropDownList("IdEmpresa", (SelectList)ViewData["listaEmpresa"], null, htmlAttributes: new { @class = "form-control form-control-sm required", @style = "height:35px" })
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="form-group">
+                        @Html.DropDownList("CodBode", (SelectList)ViewData["listaBodega"], "--Seleccione Bodega--", htmlAttributes: new { @class = "form-control form-control-sm required", @style = "height:35px" })
+                    </div>
+                </div>
+                <div class="col-auto"><button class="btn btn-info btn-sm justify-content-end mt-1" style="height:35px" type="submit"><i class="fa fa-chevron-right"></i><i class="fa fa-chevron-right"></i> Continuar</button></div>
+
+            </div>
+        }
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="card mb-4">
+                        <div class="card-body table-responsive">
+                            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[3, "desc" ]]'>
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th class="no-sort" width="10%">&nbsp;</th>
+                                        <th>Empresa</th>
+                                        <th>Bodega</th>
+                                        <th>Fecha</th>
+                                        <th>Productos Contabilizados</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+<form name="frmContinuar" id="frmContinuar" method="post" action="/Inventario/RegistrarInventario">
+    <input type="hidden" name="IdControlInventario" id="IdControlInventario" value="" />
+</form>
+
+<!-- DataTable with Hover -->
+<script>
+    $(document).ready(function () {
+        AbrirMenu("ControlInventario");
+        $('#formInventario').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        initTable();
+    });
+    function ContinuarControl(IdControlInventario) {
+        $("#IdControlInventario").val(IdControlInventario);
+        $("#frmContinuar").submit();
+    }
+    function Success_dl(data) {
+        if (data.Estado == "0") {
+            $("#IdControlInventario").val(data.IdControlInventario);
+            $("#frmContinuar").submit();
+        }
+        else {
+            $.notify(data.Mensaje, "error");
+        }
+    }
+    function Failure_dl(data) {
+        $.notify(data.Message, "error");
+    }
+    function initTable() {
+        var buttonCommon = ExcelCommon();
+        var table = $('#grillaEmpresa').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "ListaPerfiles"
+                })
+            ],
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Inventario/ControlesInventario_Read',
+                "data": function (d) {
+
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+
+                {
+                    targets: [3],
+                    render: function (data) {
+                        var fecha = data;
+                        fecha = fecha.replace('/Date(', '').replace(')/', '');
+                        var expDate = new Date(parseInt(fecha));
+                        return expDate.toLocaleDateString();
+                    }
+                }
+            ],
+            columns: [
+
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';                        
+                        boton = '<button class="btn btn-primary btn-xs" onclick="ContinuarControl(' + o.IdControlInventario + ')"><i class="fa fa-edit"></i></button> ';                                                                           
+                        return boton;
+                    }
+                },
+                { "data": "RazonSocial" },
+                { "data": "DesBode" },
+                { "data": "FechaRegistro" },
+                { "data": "CantidadTotal" }
+            ]
+        });
+
+        return table;
+    }
+</script>
+
+
+
+

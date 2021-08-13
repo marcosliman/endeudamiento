@@ -1,0 +1,201 @@
+﻿@{
+    /**/
+    ViewBag.Title = "Facturas";
+}
+<div class="modal fade" id="entrega-material" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Entrega de Materiales</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <h5><i class="icon fas fa-info"></i>Información</h5>
+                        El solicitante debe entregarle el código asociado a la solicitud que desea retirar.
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Código para Entrega</label>
+                        <div class="col-sm-4">
+                            <input type="text" name="CodCuenta" id="CodCuenta" class="form-control form-control-sm required" autocomplete="off" value="" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+                <button type="button" onclick="location.href='/Home/EntregarSol'" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm">Continuar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h5 class="h5 mb-0 text-gray-800">Detalle Solicitud de Material</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Detalle Solicitud</li>
+    </ol>
+</div>
+<div class="alert alert-success">
+    <h5><i class="icon fas fa-check"></i>Nro Guía (Softland): GS-00012345</h5>
+    Solicitud Finalizada.
+</div>
+<div class="row">
+    <div class="col-12">
+
+        <div class="invoice p-3 mb-3">
+            <div class="row">
+                <div class="col-12">
+                    <h4>
+                        <i class="fas fa-globe"></i> Maqsur Ltda.
+                        <small class="float-right">Solicitado: @DateTime.Now.ToShortDateString()</small>
+                    </h4>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- info row -->
+            <div class="row invoice-info">
+                <div class="col-sm-4 invoice-col">
+
+                    <address>
+                        Centro de Costo: <strong>Centro de Costo 1</strong><br>
+                        Bodega: <strong>BODEGA CENTRAL PUERTO VARAS</strong><br>
+                        Cliente: <strong>Cliente 1</strong><br>
+                        O.T: <strong>OT001</strong>
+                    </address>
+                </div>
+                <div class="col-sm-4 invoice-col">
+                    Solicitado por
+                    <address>
+                        <strong>Mecánico Fulano</strong><br>
+                        Email: mecanico@maqsur.cl
+                    </address>
+                </div>
+                <div class="col-sm-4 invoice-col">
+                    Aprobado por
+                    <address>
+                        <strong>Juan Aprobador</strong><br>
+                        Email: aprobador@maqsur.cl
+                    </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12 table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Material</th>
+                                <th>Cant. Aprobada</th>
+                                <th>Cant. Entregada</th>
+                                <th>U.Medida</th>
+                                <th>Precio Promedio</th>
+                                <th>Total</th>  
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>000000001694</td>
+                                <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL</a></td>
+                                <td>5</td>
+                                <td>5</td>
+                                <td>UND</td>
+                                <td>$5.000</td>
+                                <td>$25.000</td>
+                            </tr>
+                            <tr>
+                                <td>000000003010</td>
+                                <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE P/SEG. INT. CURVO</a></td>
+                                <td>3</td>
+                                <td>3</td>
+                                <td>UND</td>
+                                <td>$5.000</td>
+                                <td>$15.000</td>
+                            </tr>
+                            <tr>
+                                <td>000000006105</td>
+                                <td><a href='#' data-toggle='modal' data-target='#exampleModal'>ALICATE UNIVERSAL 7"</a></td>
+                                <td>5</td>
+                                <td>5</td>
+                                <td>UND</td>
+                                <td>$5.000</td>
+                                <td>$25.000</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th>Total</th>
+                                <th>$65.000</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="row no-print">
+                <div class="col-12">
+                    <a href="#" rel="noopener" class="btn btn-default"><i class="fas fa-print"></i> Imprimir</a>
+                    <a href="#" rel="noopener" class="btn btn-default"><i class="fas fa-print"></i> Imprimir Guía de Salida</a>                    
+                    <button type="button" class="btn btn-secondary float-right" onclick="location.href='/Home/Bodeguero'" style="margin-right: 5px;">
+                        <i class="fas fa-redo"></i> Volver
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("../Home/PartDetalleMaterial", null)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalStock" tabindex="-1" role="dialog" aria-labelledby="modalStock" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Detalle Stock</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @Html.Partial("../Home/PartDetalleStock", null)
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        AbrirMenu('DashBoard3');        
+    })
+
+</script>

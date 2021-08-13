@@ -1,0 +1,193 @@
+﻿@model modelo.Models.Softland.OW_vsnpTraeOCEncabezado
+@{
+    ViewBag.Title = "Detalle Pago";
+    double sumaDebe = 0;
+    double sumaHaber = 0;
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<div class="modal fade" id="modal-comprobante" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Orden de Compra @Model.NumOC</h5>
+    <button type="button" class="close" onclick="CerrarModalhijaCE()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="m-2 cuerpoPDF" id="paraPrint">
+    <div class="card">
+        <div class="card-body">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th width="34%" class="col-auto">
+                            <img src="~/img/logo/logo1.png" width="150" />
+                        </th>
+                        <th width="33%" class="col-auto">
+                           MAQUINARIAS SUR LTDA.<br />
+                           RUT: 77.324.900-8<br />
+                           GIRO: ARRIENDO DE MAQUINARIAS<br />
+                        </th>
+                        <th width="33%" class="col-auto">
+                            <table width="100%">
+                                <thead>
+                                    <tr>
+                                        <th align="right" class="text-right">N°:</th>
+                                        <td align="left" class="text-left">@Model.NumOC</td>
+                                    </tr>                                    
+                                    <tr>
+                                        <th align="right" class="text-right">Estado:</th>
+                                        <td align="left" class="text-left">APROBADA</td>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+
+            <p class="text-center">La empresa MAQUINARIA SUR LTDA. le agradece de antemano la prestación de los productos y/o servicios detallados a continuación </p>
+            <table class="table table-hover dataTable dtr-inline table-sm small table-bordered">
+                <thead>
+                    <tr style="background: #1F2A44 !important;color:white">
+                        <th>FECHA EMISIÓN</th>
+                        <th>FECHA ENTREGA</th>
+                        <th>N° REQUISICIÓN</th>
+                        <th>COND. DE VENTA</th>
+                        <th>AREA DE NEGOCIOS</th>
+                        <th>CENTRO DE COSTO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.FechaOC.ToString("dd/MM/yyyy")</td>
+                        <td>@Model.FecFinalOC.ToString("dd/MM/yyyy")</td>
+                        <td>@Model.NumReq</td>
+                        <td>@Model.CveDes</td>
+                        <td>@Model.DesArn</td>
+                        <td>@Model.DescCC</td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr style="background: #1F2A44 !important;color:white">
+                        <th colspan="2">COMPRADOR</th>
+                        <th colspan="2">PRIMER APROBADOR</th>
+                        <th colspan="2">SEGUNDO APROBADOR</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2">@Model.Nombre</td>
+                        <td colspan="2">@Model.Apro</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr style="background: #1F2A44 !important;color:white">
+                        <th colspan="2">PROVEEDOR</th>
+                        <th>RUT</th>
+                        <th colspan="2">SEGUNDO APROBADOR</th>
+                        <th>TELÉFONO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2">@Model.NomAux</td>
+                        <td>@Model.RutAux</td>
+                        <td colspan="2">@Model.DirAux</td>
+                        <td>@Model.FonAux1</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover dataTable dtr-inline table-sm small table-bordered" width="100%" id="grillaEgresosModal" data-order='[[ 1, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th>CANTIDAD</th>
+                        <th>U.M.</th>
+                        <th>CODIGO</th>
+                        <th>DESCRIPCION</th>
+                        <th>PRECIO UN</th>
+                        <th>VALOR TOTAL</th>                        
+                    </tr>
+                </thead>
+                <tbody id="indexTbody">
+                    @if (ViewData["listaDetalle"] != null)
+                    {
+                        foreach (var item in ViewData["listaDetalle"] as List<modelo.Models.Softland.OW_vsnpTraeOCDetalle>)
+                        {
+                            sumaDebe = (item.ValorTotal == null) ? sumaDebe + 0 : sumaDebe + (double)item.ValorTotal;
+                            var bgVerde = (ViewBag.CodProd == item.CodProd) ? "bg-success" : "";
+                            <tr class="@bgVerde">
+                                <td>@item.Cantidad</td>
+                                <td>@item.CodUMed</td>
+                                <td>@item.CodProd</td>
+                                <td>@item.DetProd</td>
+                                <td class="text-right">@(String.Format("{0:N0}", item.PrecioUnit))</td>
+                                <td class="text-right">@(String.Format("{0:N0}", item.ValorTotal))</td>
+                            </tr>
+
+                        }
+                    }
+
+                </tbody>
+                <tfoot>
+                    <tr class="border-0">
+                        <th colspan="6"></th>
+                    </tr>
+                    <tr>
+                        <th colspan="3">OBSERVACIONES</th>  
+                        <th></th>
+                        <th class="text-right">Sub Total Neto $</th>
+                        <th class="text-right">$@(String.Format("{0:N0}",Model.SubTotalOC))</th>
+                    </tr>
+                    <tr>
+                        <th colspan="3" rowspan="2" width="50%">@Model.ObservOC</th> 
+                        <th></th>
+                        <th class="text-right">IVA $</th>
+                        <th class="text-right">$@(String.Format("{0:N0}", (Model.ValorTotOC-Model.SubTotalOC)))</th>
+                    </tr>
+                    <tr>
+                        
+                        <th></th>
+                        <th class="text-right">Total $</th>
+                        <th class="text-right">$@(String.Format("{0:N0}", Model.ValorTotOC))</th>
+                    </tr>
+                </tfoot>
+            </table>
+            
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-sm" onclick="Imprimir()"><i class="fa fa-print"></i> Imprimir</button>
+    <button type="button" class="btn btn-secondary btn-sm" onclick="CerrarModalhijaCE()">Cerrar</button>
+</div>
+<script>
+    $(document).ready(function () {
+        window.top.esconderCargando();
+    });
+    function CerrarModalhijaCE() {
+        $('#modal-comprobante').modal('hide');
+        $('#modal-comprobanteHist').modal('hide');
+    }
+    function Imprimir() {
+        var mode ="iframe";
+        var close;
+        var extraCss;
+        var print = "";
+        var keepAttr;
+        var headElements = '<meta charset="utf-8" />';
+        var options = { mode: mode, popClose: close, extraCss: extraCss, retainAttr: keepAttr, extraHead: headElements };
+        $('#paraPrint').printArea(options);
+    }
+</script>

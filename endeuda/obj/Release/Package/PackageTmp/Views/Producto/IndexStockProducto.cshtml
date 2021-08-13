@@ -1,0 +1,376 @@
+﻿
+@{
+    ViewBag.Title = "Cuenta Flujo";
+}
+<div class="modal fade" id="modal-detalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Stock de Productos MAQUINARIAS SUR LTDA.</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Opciones Producto</li>
+        <li class="breadcrumb-item active" aria-current="page">Stock Producto</li>
+    </ol>
+</div>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <form name="frmBusqueda" id="frmBusqueda" method="post" action="">
+        <div class="form-inline my-2 my-lg-0">
+            <div class="col-auto">
+                @Html.DropDownList("CodBode", (SelectList)ViewData["listaBodega"], "--Seleccione Bodega--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+            </div>
+
+            <div class="col-auto">
+                <select class="form-control select2" data-selected-text-format="count > 2" id="CodSubGr" multiple="multiple" name="CodSubGr">
+                    @if (ViewData["listaSubGrupo"] != null)
+                    {
+                        foreach (var item in ViewData["listaSubGrupo"] as List<modelo.ViewModel.RetornoGenerico>)
+                        {
+                            var select = "";
+                            if (item.Seleccionado == true)
+                            { select = " Selected "; }
+                            <option value="@item.ValorString" @select>@item.Nombre.Split('-')[1]</option>
+                        }
+                    }
+                </select>
+
+            </div>
+            <div class="col-auto">
+                <select class="form-control select2" style="height:35px" data-selected-text-format="count > 2" id="Empresa" multiple="multiple" name="Empresa">
+                    @if (ViewData["listaEmpresaGrupo"] != null)
+                    {
+                        foreach (var item in ViewData["listaEmpresaGrupo"] as List<modelo.ViewModel.RetornoGenerico>)
+                        {
+                            var select = "";
+                            if (item.Seleccionado == true)
+                            { select = " Selected "; }
+                            <option value="@item.ValorString" @select>@item.Nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-auto">
+                <select class="form-control select2" style="height:35px" data-selected-text-format="count > 2" id="GrupoEmpresa" multiple="multiple" name="GrupoEmpresa">
+                    @if (ViewData["listaGrupo"] != null)
+                    {
+                        foreach (var item in ViewData["listaGrupo"] as List<modelo.ViewModel.RetornoGenerico>)
+                        {
+                            var select = "";
+                            if (item.Seleccionado == true)
+                            { select = " Selected "; }
+                            <option value="@item.ValorString" @select>@item.Nombre</option>
+                        }
+                    }
+                </select>
+            </div>
+
+        </div>
+    </form>
+    <div class="form-inline my-2 mt-1">
+        <div class="col-auto"><button class="btn btn-info btn-sm justify-content-end" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button></div>
+    </div>
+</nav>
+<div class="row">
+    <!-- Datatables -->
+    <div class="col-lg-12">
+
+        <div class="card mb-4">
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaProductos" data-order='[[ 4, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Bodega</th>
+                            <th>Sub-Grupo</th>
+                            <th>Empresa</th>
+                            <th>Grupo</th>
+                            <th>Cod.Producto</th>
+                            <th>Producto</th>
+                            <th>U.Medida</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Total</th>
+                            <th>Ult.Entrada</th>
+                            <th>Ult.Proveedor</th>
+                            <th>Ult.Salida</th>
+                            <th>Ult.OC</th>
+                            <th>Ult.NumReq</th>
+                            <th>Ult.Solicita</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="9" style="text-align:right">Total:</th>
+                            <th colspan="7"></th>
+
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+
+
+        </div>
+    </div>
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            $.fn.dataTable.moment('DD/MM/YYYY');
+            AbrirMenu("StockProducto");
+
+            $('#CodBode').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Bodega--'
+            });
+            $('#CodSubGr').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Sub Grupo--'
+            });
+            $('#Empresa').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Empresa--'
+            });
+            $('#GrupoEmpresa').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Grupo--'
+            });
+            $('#frmBusqueda').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            if ($("#CodBode").val() != "") RefreshLista();
+        });
+        function RefreshLista() {
+            $('#frmBusqueda').validate();
+            if ($('#frmBusqueda').valid() == true) {
+                mostrarCargando();
+                if ($.fn.DataTable.isDataTable('#grillaProductos')) {
+                    var table = initTableProducto();
+                    table.ajax.reload(function (json) { esconderCargando(); });
+                }
+                else {
+                    var table = initTableProducto();
+                }
+            }
+
+        }
+        function initTableProducto() {
+            var buttonCommon = {
+                text: 'Exportar a Excel',
+                title: 'Status Rotación por Bodega',
+                extend: 'excelHtml5',
+                exportOptions: {
+                    columns: "thead th:not(.noExport)",
+                    format: {
+                        body: function (data, row, column, node) {
+                            var texto = node.innerText;
+                            return (column === 8 || column === 9) ?
+                                texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                                texto;
+                        }
+                    }
+                }
+            };
+            var table = $('#grillaProductos').DataTable({
+                //dom: '<"top"B<"#id">>rt<"bottom"lp><"clear">',
+                buttons: [
+                    $.extend(true, {}, buttonCommon, {
+                        filename: "StatusRotacionBodegas"
+                    })
+                ],
+                columnDefs: [
+                    { targets: '_all', className: 'align-middle' },
+                    {
+                        targets: [8, 9],
+                        render: function (data) {
+                            var numFormt = "";
+                            if (data != null) {
+                                var num = data.toString();
+                                numFormt = SeparadorMiles(num);
+                            }
+                            return "$" + numFormt;
+                        }
+                    },
+                    {
+                        targets: [10, 12],
+                        render: function (data) {
+                            var fecha = data;
+                            if (fecha != "" && fecha != null) {
+                                fecha = fecha.replace('/Date(', '').replace(')/', '');
+                                var expDate = new Date(parseInt(fecha));
+                                var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                                var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                                var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                                var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                                return fechaES;
+                            }
+                            else {
+                                return "";
+                            }
+                        }
+                    }
+                ],
+                "retrieve": true,
+                "initComplete": function (settings, json) {
+                    esconderCargando();
+                },
+                processing: true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/RotacionProducto/ListaProductosBodega_Read/',
+                    "data": function (d) {
+                        d.CodBode = $("#CodBode").val();
+                        d.CodSubGr = $("#CodSubGr").val();
+                        d.Empresa = $("#Empresa").val()
+                        d.GrupoEmpresa = $("#GrupoEmpresa").val();
+                    },
+                    "dataSrc": ""
+                },
+
+                columns: [
+                    { "data": "DesBode" },
+                    { "data": "DesSubGr" },
+                    { "data": "Empresa" },
+                    { "data": "GrupoEmpresa" },
+                    {
+                        mData: "CodProd",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+
+                            return '<a href="JavaScript:DetalleMovimiento(\'' + data + '\',\'\',\'' + row.CodBode + '\')">' + data + '</a>';
+                        }
+                    },
+                    { "data": "DesProd" },
+                    { "data": "CodUMed" },
+                    { "data": "Stock" },
+                    { "data": "costo" },
+                    { "data": "Total" },
+                    {
+                        mData: "UltimaEntrada",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var fecha = data;
+                            if (fecha != "" && fecha != null) {
+                                fecha = fecha.replace('/Date(', '').replace(')/', '');
+                                var expDate = new Date(parseInt(fecha));
+                                var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                                var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                                var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                                var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                                fecha = fechaES;
+                            }
+                            else {
+                                fecha = "";
+                            }
+                            return '<a href="JavaScript:DetalleMovimiento(\'' + row.CodProd + '\',\'E\',\'' + row.CodBode + '\')">' + fecha + '</a>';
+                        }
+                    },
+                    { "data": "NombreProveedor" },
+                    {
+                        mData: "UltimaSalida",
+                        bSortable: true,
+                        mRender: function (data, type, row, full) {
+                            var fecha = data;
+                            if (fecha != "" && fecha != null) {
+                                fecha = fecha.replace('/Date(', '').replace(')/', '');
+                                var expDate = new Date(parseInt(fecha));
+                                var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                                var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                                var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                                var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                                fecha = fechaES;
+                            }
+                            else {
+                                fecha = "";
+                            }
+                            return '<a href="JavaScript:DetalleMovimiento(\'' + row.CodProd + '\',\'S\',\'' + row.CodBode + '\')">' + fecha + '</a>';
+                        }
+                    },
+                    { "data": "UltimaOC" },
+                    { "data": "UltimoNumReq" },
+                    { "data": "UltimoSolicitante" }
+                ],
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    // Total over all pages
+                    total = api
+                        .column(9)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api
+                        .column(9, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    // Update footer
+                    $(api.column(9).footer()).html(
+                        '$' + pageTotalFormat + ' ( $' + totalFormat + ' total)'
+                    );
+                }
+            });
+
+            return table;
+        }
+        function ModalComprobanteModal(codProd, numOC) {
+            var tmpUrl = "/OrdenCompra/OrdenCompra";
+            $("#datosComprobante").empty();
+            $('#modal-comprobante').modal('show');
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: { codProd: codProd, numOC: numOC },
+                beforeSend: function () {
+                    $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosComprobante").empty();
+                    $("#datosComprobante").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+        function DetalleMovimiento(codProd, tipo, CodBode) {
+            var tmpUrl = "/RotacionProducto/DetalleMovProducto";
+            $("#datosComprobante").empty();
+            $('#modal-detalle').modal('show');
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: { codProd: codProd, tipo: tipo, codBode: CodBode },
+                beforeSend: function () {
+                    $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosComprobante").empty();
+                    $("#datosComprobante").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+    </script>
+</div>
+
+

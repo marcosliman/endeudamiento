@@ -1,0 +1,115 @@
+﻿@model modelo.Models.Local.SolicitudCreacionProducto
+@{
+    ViewBag.Title = "Rechazar Solicitud";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Rechazar Creación de Producto</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@using (Ajax.BeginForm("RechazarCreacion", "Producto", new AjaxOptions
+{
+    OnBegin = "mostrarCargando",
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success_dl",
+    OnFailure = "Failure_dl"
+
+}, new { id = "frmRechazo", @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IdSolicitudCreacion);    
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-outline card-info collapsed-card">
+                <div class="card-header">
+                    <h3 class="card-title">Producto:@Model.NombreProducto </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-body table-responsive">                    
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Nombre Producto</label>
+                        <div class="col-sm-6">
+                            @Model.NombreProducto
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Grupo</label>
+                        <div class="col-sm-6">
+                            @ViewBag.DesGrupo
+                    </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-3 col-form-label">Unidad de Medida</label>
+                        <div class="col-sm-6">
+                            @ViewBag.DesUMed
+                    </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group row">
+        <label for="CodGrupo" class="col-sm-3 col-form-label">Categoría Rechazo</label>
+        <div class="col-sm-6">
+            @Html.DropDownList("IdCategoriaRechazo", (SelectList)ViewData["listaCategorias"], "--Seleccione--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-3 col-form-label">Motivo</label>
+        <div class="col-sm-6">
+            <textarea name="MotivoRechazo" id="MotivoRechazo" class="form-control form-control-sm"></textarea>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" onclick="CancelarRechazo()">Cancelar</button>
+    <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-danger btn-sm">Rechazar</button>
+</div>
+}
+<script>
+    $(document).ready(function () {
+
+        $('#frmRechazo').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        window.top.esconderCargando();
+    });
+    function CancelarRechazo() {
+        editaMaterial($("#IdSolicitudCreacion").val());
+    }
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            $('#crear-material').modal('hide');
+            $.notify(data.Mensaje, "success");            
+            CargaSolicitudes();
+        }
+        else {
+            $.notify(data.Mensaje, "error");
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        $.notify(data.Message, "error");
+    }
+
+</script>
