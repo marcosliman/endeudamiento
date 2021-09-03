@@ -29,3 +29,16 @@ C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.Co
 C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.CopyComplete
 C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.dll
 C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.pdb
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\modelo.dll.config
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\modelo.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\modelo.pdb
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\EntityFramework.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\Newtonsoft.Json.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\EntityFramework.xml
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\bin\Debug\Newtonsoft.Json.xml
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csproj.CoreCompileInputs.cache
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csproj.CopyComplete
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.pdb

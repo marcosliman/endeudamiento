@@ -295,13 +295,17 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
-
+            <div class="row justify-content-end">
+                <a href="~/Pdf/Carpeta Tributaria Soluciones Reloncaví 06.07.2021.pdf" style="color:#ddd;" download="Términos y Condiciones">
+                    <h6><i class="far fa-file-pdf"></i> Términos y Condiciones </h6>
+                </a>
+            </div>
             <!-- Right navbar links -->
 
             <ul class="navbar-nav ml-auto">
                 <!-- Messages Dropdown Menu -->
                 <!-- Notifications Dropdown Menu -->
-                <!--
+
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
@@ -311,24 +315,24 @@
                         <span class="dropdown-item dropdown-header">15 Notificaciones</span>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 5 solicitudes por aprobar
+                            <i class="fas fa-envelope mr-2"></i> 5 Tareas Pendientes
                             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 5 solicitudes para retiro
+                            <i class="fas fa-envelope mr-2"></i> 5 Promesas por Vencer
                             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 5 guias de salida finalizadas
+                            <i class="fas fa-envelope mr-2"></i> 5 Cuotas por Vencer
                             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">Ver todas las Notificaciones</a>
                     </div>
                 </li>
-                -->
+
                 <li class="topbar-divider d-none d-sm-block bg"></li>
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle bg-azulmarca" href="#" id="userDropdown" role="button" data-toggle="dropdown"
@@ -357,7 +361,7 @@
             <!-- Brand Logo -->
             <a href="/Home/Inicio" class="brand-link bg-azulmarca">
                 <img src="/img/logo/logo2.png" alt="MaqSur" class="brand-image elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light text-white">ENDEUDAMIENTO</span>
+                <span class="brand-text font-weight-light text-white">COBRANZAS</span>
             </a>
 
             <!-- Sidebar -->
@@ -368,70 +372,77 @@
                 </div>
                 <nav class="mt-2">
                     <ul class='nav nav-pills nav-sidebar flex-column nav-child-indent' data-widget='treeview' role='menu' data-accordion='false'>
-                        <li class="nav-item menu-open">
-                            <a href="#" class="nav-link menuPadre active" id="Dashboard">
-                                <i class="nav-icon fab fa-fw fa-wpforms"></i>
-                                <p class="">
-                                    Dashboard
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
+                        @{
+                            foreach (var menu in seguridad.MenuUsuario.Where(c => c.NivelMenu == 1).OrderBy(c => c.OrdenMenu))
+                            {
+                                var existeHeader = seguridad.MenuUsuario.Where(h => h.NivelMenu == 0 && h.IdMenuPadre == menu.IdMenu).FirstOrDefault();
+                                if (existeHeader != null)
+                                {
+                                    <text>
+                                        <li class="nav-header text-uppercase text-blue">@existeHeader.NombreMenu</li>
+                                    </text>
+                                }
+                                <text>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link menuPadre" id="@menu.Nombre">
+                                            <i class="nav-icon @menu.Icono" style='color:royalblue'></i>
+                                            <p class="">
+                                                @menu.NombreMenu
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
+                                </text>
+                                foreach (var submenu in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == menu.IdMenu && x.NivelMenu == 2).OrderBy(c => c.OrdenMenu))
+                                {
+                                    var existeMenu3 = seguridad.MenuUsuario.Where(h => h.NivelMenu == 3 && h.IdMenuPadre == submenu.IdMenu).Count();
+                                    if (existeMenu3 > 0)
+                                    {
+                                        <ul class="nav nav-treeview" id="@submenu.Nombre">
+                                            <li class="nav-item">
+                                                <a href="@submenu.UrlMenu" class="nav-link">
+                                                    <i class="@submenu.Icono"></i>
+                                                    <p>
+                                                        @submenu.NombreMenu
+                                                        <i class="right fas fa-angle-left"></i>
+                                                    </p>
+                                                </a>
+                                                <ul class="nav nav-treeview">
+                                                    @foreach (var menunivel3 in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == submenu.IdMenu && x.NivelMenu == 3).OrderBy(c => c.OrdenMenu))
+                                                    {
+                                                        <li class="nav-item" id="@menunivel3.Nombre">
+                                                            <a href="@menunivel3.UrlMenu" class="nav-link">
+                                                                <i class="@menunivel3.Icono"></i>
+                                                                <p>@menunivel3.NombreMenu</p>
+                                                            </a>
+                                                        </li>
+                                                    }
 
-                            <ul class="nav nav-treeview" id="Solicitante">
-                                <li class="nav-item">
-                                    <a href="/Home/Inicio" class="nav-link active">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Inicio
-                                        </p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-header text-uppercase">Usuarios</li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link menuPadre" id="AdminUsuario">
-                                <i class="nav-icon fab fa-fw fa-wpforms "></i>
-                                <p class="">
-                                    Administración Usuarios
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <ul class="nav nav-treeview" id="@submenu.Nombre">
+                                            <li class="nav-item">
+                                                <a href="@submenu.UrlMenu" class="nav-link">
+                                                    <i class="@submenu.Icono"></i>
+                                                    <p>
+                                                        @submenu.NombreMenu
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    }
 
-                            <ul class="nav nav-treeview" id="Perfiles" style="display: none;">
-                                <li class="nav-item">
-                                    <a href="/Perfil/Index" onclick="mostrarCargando()" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Perfiles
-                                        </p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview" id="Usuarios" style="display: none;">
-                                <li class="nav-item">
-                                    <a href="/Usuario/Index" onclick="mostrarCargando()" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Usuarios
-                                        </p>
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="nav nav-treeview" id="Permisos" style="display: none;">
-                                <li class="nav-item">
-                                    <a href="/Perfil/Permisos" onclick="mostrarCargando()" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>
-                                            Permisos
-                                        </p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
-            <!-- /.sidebar-menu -->
+                                }
+
+                                @Html.Raw("</li>")
+                            }
+                        }
+                </ul>
+            </nav>
+
             <div class="user-panel mt-2 pb-3 mb-4 d-flex">
                 <div class="info">
                 </div>
@@ -474,8 +485,7 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        <strong>Datos del Pie</strong>
-        ...
+        Desarrollado por <strong><a href="http://www.solucionesreloncavi.cl/" target="_blank">Soluciones Reloncavi SPA.</a></strong>
         <div class="float-right d-none d-sm-inline-block">
             <b>Version</b> 1.0
         </div>

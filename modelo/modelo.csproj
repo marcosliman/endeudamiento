@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Local\Contrato.cs" />
     <Compile Include="Models\Local\Estado.cs" />
     <Compile Include="Models\Local\Empresa.cs" />
     <Compile Include="Models\SoftLandContext.cs" />

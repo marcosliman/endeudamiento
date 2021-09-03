@@ -154,11 +154,11 @@ namespace tesoreria.Controllers
             }
             else
             {
-                var empresas = (from t in db.Empresa
-                                where t.Activo == true
-                                select new RetornoGenerico { Id = t.IdEmpresa, Nombre = t.RazonSocial }).OrderBy(c => c.Id).ToList();
-                SelectList listaEmpresa = new SelectList(empresas.OrderBy(c => c.Nombre), "Id", "Nombre", 1);
-                ViewData["listaEmpresa"] = listaEmpresa;
+                //var empresas = (from t in db.Empresa
+                //                where t.Activo == true
+                //                select new RetornoGenerico { Id = t.IdEmpresa, Nombre = t.RazonSocial }).OrderBy(c => c.Id).ToList();
+                //SelectList listaEmpresa = new SelectList(empresas.OrderBy(c => c.Nombre), "Id", "Nombre", 1);
+                //ViewData["listaEmpresa"] = listaEmpresa;
                 return View();
             }
 

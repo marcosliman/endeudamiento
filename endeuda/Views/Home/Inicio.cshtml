@@ -1,170 +1,85 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
 }
-<div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Dashboard</h5>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-    </ol>
-</div>
+<h5 class="h5 mb-0 text-gray-800">Demos un vistaso al desarrollo de los contratos y endeudamiento de todas las empresas.</h5>
+<br />
 
-<div class="row" id="carga-pendientes">
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box btn btn-outline-info" onclick="location.href='/Home/IndexG'">
-            <span class="info-box-icon bg-info"><i class="far fa fa-plus"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text text-left">Contrato Leasing</span>
-                <span class="info-box-number"></span>
-            </div>
 
-        </div>
-
-    </div>
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box btn btn-outline-info" onclick="location.href='/Solicitud/TraspasoBodegaSol'">
-            <span class="info-box-icon bg-info"><i class="far fa fa-plus"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text text-left">Nuevo Crédito</span>
-                <span class="info-box-number"></span>
-            </div>
-
-        </div>
-
-    </div>
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-primary"><i class="far fa fa-paper-plane"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text text-left">Por Aprobar</span>
-                <span class="info-box-number text-left">10</span>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-warning"><i class="far fa fa-barcode"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Por Retirar</span>
-                <span class="info-box-number">10</span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-danger"><i class="far fa fa-ban"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Rechazadas</span>
-                <span class="info-box-number">5</span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-
-</div>
-<div class="modal fade" id="modal-ticket" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ticket de Confirmación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+<div class="card">
+    <div class="card card-outline card-info collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">Filtros</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="alert alert-success">
-                    <h5><i class="icon fas fa-check"></i>Nro: XY-1234</h5>
-                    Solicitud enviada con éxito. este número será solicitado por el encargado de bodega para poder retirar los materiales.
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-auto">
+                    <select name="empresa" class="form-control">
+                        <option>--Seleccione Empresa--</option>
+                        <option value="1">Todas</option>
+                        <option value="2">MAQSUR S.A.</option>
+                        <option value="3">BIOMASA</option>
+                        <option value="3">TECSUR</option>
+                        <option value="3">MQS</option>
+                        <option value="3">NOK</option>
+                    </select>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <div class="col-auto">
+                    <select name="banco" class="form-control">
+                        <option>--Seleccione Banco--</option>
+                        <option value="1">Todas</option>
+                        <option value="2">BCI</option>
+                        <option value="3">SANTANDER</option>
+                        <option value="3">SCOTIABANK</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select name="anio" class="form-control">
+                        <option>--Seleccione Año--</option>
+                        <option value="1">2021</option>
+                        <option value="2">2022</option>
+                        <option value="3">2023</option>
+                        <option value="4">2024</option>
+                        <option value="5">2025</option>
+                        <option value="6">2026</option>
+                        <option value="7">2027</option>
+                        <option value="8">2028</option>
+                        <option value="9">2029</option>
+                        <option value="10">2030</option>
+                        <option value="11">2031</option>
+                        <option value="12">2032</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select name="empresa" class="form-control">
+                        <option>--Seleccione Mes--</option>
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <div class="card">
-            <div class="card-header border-transparent">
-                <h3 class="card-title">Últimas Solicitudes</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 1, "asc" ]]' >
-                        <thead>
-                            <tr>
-                                <th>Código Sol.</th>
-                                <th>Códio Retiro</th>
-                                <th>Fecha</th>                                
-                                <th>Cliente</th>
-                                <th>O.T</th>
-                                <th>Proyecto</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                                                   
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.table-responsive -->
-            </div>
-            <!-- /.card-body -->
-            <div class="card-footer clearfix">
-                <a href="/Home/IndexG" class="btn btn-sm btn-info float-left">Nueva Solicitud</a>
-                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Ver Todas</a>
-            </div>
-            <!-- /.card-footer -->
-        </div>
-        <!-- /.card -->
-    </div>
-    <div class="col-md-4">
-        <!-- PRODUCT LIST -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Últimos Materiales Solicitadossssssss</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <ul class="products-list product-list-in-card pl-2 pr-2" id="SolMateriales">
-                   
-
-                </ul>
-            </div>
-
-            <div class="card-footer text-center">
-                <a href="javascript:void(0)" class="uppercase">Ver Todos los Materiales</a>
-            </div>
-
-        </div>
-
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="card direct-chat direct-chat-primary">
-            <div class="card-header">
-                <h3 class="card-title">Stock Materiales</h3>
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Deuda Vigente por Entidad Financiera</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -172,87 +87,418 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="card card-widget widget-user-2" id="stockMaterial">
-                    <div class="widget-user-header bg-warning">
-                        <div class="widget-user-image">
-                            <img class="img-circle elevation-2" src="/img/alicate.jpg" alt="User Avatar">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-cobranza" style="height: 200px;background-color: transparent;" data-highcharts-chart="15">
+
+                            </div>
                         </div>
-                        <h3 class="widget-user-username">Alicate PLano</h3>
-                        <h5 class="widget-user-desc">Herramientas Generales</h5>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
+
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-cobranza', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                accessibility: {
+                                    point: {
+                                        valueSuffix: '%'
+                                    }
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        // colors: pieColors,
+                                        dataLabels: {
+                                            enabled: false,
+                                            format: '{point.percentage:.1f} %',
+                                            distance: -50,
+                                            filter: {
+                                                property: 'percentage',
+                                                operator: '>',
+                                                value: 4
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Share',
+                                    data: [
+                                        { name: 'BCI', y: 46 },
+                                        { name: 'SANTANDER', y: 19 },
+                                        { name: 'CHILE', y: 8 },
+                                        { name: 'ESTADO', y: 7 },
+                                        { name: 'SECURITY', y: 2 },
+                                        { name: 'SCOTIABANK', y: 11 },
+                                        { name: 'ITAÚ', y: 5 },
+                                        { name: 'BICE', y: 2 },
+
+
+                                    ]
+                                }]
+                            });
+                        </script>
                     </div>
-                    <div class="card-footer p-0">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 1 <span class="float-right badge bg-primary">15</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 2 <span class="float-right badge bg-warning">5</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 3 <span class="float-right badge bg-primary">12</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 4 <span class="float-right badge bg-danger">0</span>
-                                </a>
-                            </li>
-                        </ul>
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Entidad Financiera</th>
+                                        <th>Monto Ch$</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>BCI</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>SANTANDER</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>SCOTIABANK</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <!-- /.widget-user -->
+
+
             </div>
-            <div class="card-footer">
-                <form action="#" method="post">
-                    <div class="input-group">
-                        <select class="form-control select2" name="selectMaterial" id="selectMaterial">
-                            <option value=""></option>
-                        </select>
+        </div>
+        <div class="card">
+            <div class="card-header" style="background-color:lightgray">
+                <h3 class="card-title">Total de Créditos</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <figure class="highcharts-figure" ">
+                    <div id="chartEstadistico"></div>
+
+                </figure>
+                <script>
+                    Highcharts.chart('chartEstadistico', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: ['2021', '2022', '2023', '2024', '2025']
+                        },
+                        yAxis: {
+                            allowDecimals: true,
+                            min: 0,
+                            title: {
+                                text: 'MM$'
+                            },
+                            stackLabels: {
+                                enabled: true,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: ( // theme
+                                        Highcharts.defaultOptions.title.style &&
+                                        Highcharts.defaultOptions.title.style.color
+                                    ) || 'gray'
+                                }
+                            }
+                        },
+                        /*legend: {
+                            align: 'top',
+                            x: -0,
+                            verticalAlign: 'bottom',
+                            y: 0,
+                            floating: true,
+                            backgroundColor:
+                                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                            borderColor: '#CCC',
+                            borderWidth: 0,
+                            shadow: false
+                        },*/
+                        tooltip: {
+                            headerFormat: '<b>{point.x}</b><br/>',
+                            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                        },
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal',
+                                dataLabels: {
+                                    enabled: true
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Deuda Estructurada (Capital)',
+                            data: [1200000, 1400000, 1300000, 1150000, 1060000]
+                        }, {
+                            name: 'Deuda Leasing (Capital)',
+                            data: [1100000, 1300000, 1200000, 900000, 700000]
+                        }]
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Deuda completa por Empresa</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-deudacompleta" style="height: 200px;background-color: transparent;" data-highcharts-chart="15">
+
+                            </div>
+                        </div>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
+
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-deudacompleta', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                accessibility: {
+                                    point: {
+                                        valueSuffix: '%'
+                                    }
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        // colors: pieColors,
+                                        dataLabels: {
+                                            enabled: false,
+                                            format: '{point.percentage:.1f} %',
+                                            distance: -50,
+                                            filter: {
+                                                property: 'percentage',
+                                                operator: '>',
+                                                value: 4
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Share',
+                                    data: [
+                                        { name: 'MAQSUR S.A.', y: 15 },
+                                        { name: 'BIOMASA', y: 20 },
+                                        { name: 'TECSUR', y: 20 },
+                                        { name: 'MQS', y: 18 },
+                                        { name: 'NOK', y: 27 },
+
+                                    ]
+                                }]
+                            });
+                        </script>
                     </div>
-                </form>
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Empresa</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Monto</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>MAQSUR S.A.</td>
+                                        <th>$15.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>BIOMASA</td>
+                                        <th>$20.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>TECSUR</td>
+                                        <th>$20.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>MQS</td>
+                                        <th>$18.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>NOK</td>
+                                        <th>$27.000.000</th>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
         </div>
-    </div>
-    <div class="col-auto">
-        <div class="callout callout-warning">
-            <p>Si el material deseado no existe puede solicitar la creación de este. <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" onclick="abreMaterial()">Solicitar Creación Material</button></p>
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Resumen de deuda</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-consolidado" style="height: 100%;background-color: transparent;" data-highcharts-chart="15">
+
+                            </div>
+                        </div>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
+
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-consolidado', {
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                xAxis: {
+                                    categories: ['2021', '2022', '2023', '2024', '2025']
+                                },
+                                yAxis: {
+                                    min: 0,
+                                    title: {
+                                        text: 'Total consolidado'
+                                    }
+                                },
+                                legend: {
+                                    reversed: true
+                                },
+                                plotOptions: {
+                                    series: {
+                                        stacking: 'normal'
+                                    }
+                                },
+                                series: [{
+                                    name: 'Cuota Leasing',
+                                    data: [1000000, 1600000, 1250000, 700000, 600000]
+                                }, {
+                                    name: 'Cuota Amortización',
+                                    data: [1000000, 900000, 1250000, 600000, 200000]
+                                }, {
+                                    name: 'Gasto Financiero',
+                                    data: [200000, 150000, 80000, 20000, 50000]
+                                }]
+                            });
+                        </script>
+                    </div>
+
+                </div>
+
+
+            </div>
         </div>
+
     </div>
 </div>
 
-<div class="modal fade" id="crear-material" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id="datosBuscar">
-                
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @Html.Partial("PartDetalleMaterial", null)
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script>
     var data = [
         {

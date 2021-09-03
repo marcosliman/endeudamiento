@@ -250,6 +250,7 @@
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PerfilController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ContratoController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -2842,6 +2843,10 @@
     <Content Include="Views\Administracion\IndexCategoriaRechazo.cshtml" />
     <Content Include="Views\Administracion\CreateCategoriaRechazo.cshtml" />
     <Content Include="Views\Home\creaProyecto.cshtml" />
+    <Content Include="Views\Contrato\RegistrarContratoLeasing.cshtml" />
+    <Content Include="Views\Contrato\ModalRegistrarActivo.cshtml" />
+    <Content Include="Views\Contrato\Plantilla_Endeudamiento.xlsx" />
+    <Content Include="Views\Contrato\RegistrarContratoCredito.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
