@@ -1,0 +1,303 @@
+﻿@{
+    ViewBag.Title = "Reporte";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Reporte </h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Consolidado Deuda por Créditos Estructurados con o sin Garantía..</h6>
+<br />
+
+<div class="row">
+            <div class="col-md-12">
+                <div class="card card-outline card-info collapsed-card">
+
+                        <div class="card-header">
+                            <h3 class="card-title">Detalle</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <label for="inputEmail3" class="col-lg-12 col-form-label">Consolidado Deuda por Créditos</label>
+                            <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                            <div class="row justify-content-end">
+                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="far fa-download"></i> Exportar .XLS</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="no-sort" width="3%">&nbsp;</th>
+                                            <th>Empresa</th>
+                                            <th>Banco</th>
+                                            <th>Deuda Inicial</th>
+                                            <th>Garantía</th>
+                                            <th>N° Crédito</th>
+                                            <th>Tasa (%)</th>
+                                            <th>Cuota Mes</th>
+                                            <th>Capital Pagado (cierre mes anterior)</th>
+                                            <th>Saldo Insoluto</th>
+                                            <th>Fecha de Inicio</th>
+                                            <th>Fecha de Término</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>Santander</td>
+                                            <td>360,000,000.00</td>
+                                            <td>Biomasa IV</td>
+                                            <td>18,568,283.00</td>
+                                            <td>5.5%</td>
+                                            <td>7,076,642.00</td>
+                                            <td>147,210,830.00</td>
+                                            <td>212,780,170.00</td>
+                                            <td>25-07-2018</td>
+                                            <td>10-07-2023</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>BCI</td>
+                                            <td>300,000,000.00</td>
+                                            <td>Orion III</td>
+                                            <td>D0609020094</td>
+                                            <td>4.9%</td>
+                                            <td>5,800,331.00</td>
+                                            <td>211,037,375.00</td>
+                                            <td>88,962,625.00</td>
+                                            <td>19-03-2018</td>
+                                            <td>18-10-2022</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>BCI</td>
+                                            <td>1,440,000,000.00</td>
+                                            <td>Terreno</td>
+                                            <td>D06005021535</td>
+                                            <td>6.2%</td>
+                                            <td>15,219,943.00</td>
+                                            <td>521,786,232.00</td>
+                                            <td>918,213,768.00</td>
+                                            <td>10-11-2015</td>
+                                            <td>10-10-2027</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>BCI</td>
+                                            <td>577,500,000.00</td>
+                                            <td>Terreno y Of.</td>
+                                            <td>D0609020238</td>
+                                            <td>5.6%</td>
+                                            <td>5,876,376.00</td>
+                                            <td>84,810,037.00</td>
+                                            <td>492,689,963.00</td>
+                                            <td>02-01-2019</td>
+                                            <td>06-12-2030</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>BCI</td>
+                                            <td>620,000,000.00</td>
+                                            <td>Terreno Pta.</td>
+                                            <td>D0609020284</td>
+                                            <td>5.7%</td>
+                                            <td>6,357,603.00</td>
+                                            <td>77,428,036.00</td>
+                                            <td>542,571,964.00</td>
+                                            <td>17-04-2019</td>
+                                            <td>15-04-2031</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <th>Total</th>
+                                            <td>4,337,500,000.00</td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <th>Total</th>
+                                            <td>3,159,023,023.00</td>
+                                            <td></td>
+                                            <td></td>
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                </div>
+</div>
+
+
+            @*
+                <!-- DataTable with Hover -->
+                <script>
+                    $(document).ready(function () {
+                        AbrirMenu("LibroVentas");
+                        $('#grillaEmpresa').DataTable();
+                        moment.locale('es');
+                        $('#fecha').daterangepicker({
+                            autoUpdateInput: false,
+                            "locale": {
+                                format: "DD/MM/YYYY",
+                                "separator": " - ",
+                                "applyLabel": "Aplicar",
+                                "cancelLabel": "Limpiar",
+                                "fromLabel": "DE",
+                                "toLabel": "HASTA",
+                                "customRangeLabel": "Personalizar",
+                                "daysOfWeek": [
+                                    "Dom",
+                                    "Lun",
+                                    "Mar",
+                                    "Mie",
+                                    "Jue",
+                                    "Vie",
+                                    "Sáb"
+                                ],
+                                "monthNames": [
+                                    "Enero",
+                                    "Febrero",
+                                    "Marzo",
+                                    "Abril",
+                                    "Mayo",
+                                    "Junio",
+                                    "Julio",
+                                    "Agosto",
+                                    "Septiembre",
+                                    "Octubre",
+                                    "Noviembre",
+                                    "Diciembre"
+                                ],
+                                "firstDay": 1
+                            }
+                        });
+
+                        $('#fecha').on('apply.daterangepicker', function (ev, picker) {
+                            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                            //RefreshLista();
+                        });
+
+
+                        $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
+                            $(this).val('');
+                            //RefreshLista();
+                        });
+                        $('#selectEmpresa').select2({
+                            placeholder: '---Seleccione Empresa---',
+                            language: "es",
+                            allowClear: true,
+                        });
+
+                    });
+                    function RefreshLista() {
+                        var table = initTable();
+                        table.ajax.reload(function (json) { });
+                    }
+                    function initTable() {
+                        var table = $('#grillaEmpresa').DataTable({
+                            "scrollX": true,
+                            "retrieve": true,
+                            'ajax': {
+                                "type": "POST",
+                                "url": '/Vencidas/Vencidas_Read/0',
+                                "data": function (d) {
+
+                                },
+                                "dataSrc": ""
+                            },
+                            columns: [
+
+                                {
+                                    "mData": null,
+                                    "bSortable": false,
+                                    "mRender": function (o, type, row) {
+                                        var boton = '';
+                                        boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
+                                        return boton;
+                                    }
+                                },
+                                { "data": "Sociedad" },
+                                { "data": "RutCliente" },
+                                { "data": "Cliente" },
+                                { "data": "Emisión" },
+                                { "data": "Vencimiento" },
+                                { "data": "Factura" },
+                                { "data": "Monto" },
+                                {
+                                    "mData": null,
+                                    "bSortable": false,
+                                    "mRender": function (o, type, row) {
+                                        var estado = 'NO';
+                                        if (o.Activo == true) {
+                                            estado = "SI";
+                                        }
+                                        return estado;
+                                    }
+                                }
+                            ]
+                        });
+
+                        return table;
+                    }
+
+                </script>
+                <script>
+                    $(document).ready(function () {
+
+                        $('#frmEdit').validate({
+                            debug: false,
+                            errorElement: "em",
+                            errorContainer: $("#warning")
+                        });
+                        $('#perfiles').select2({
+                            theme: 'bootstrap4'
+                        })
+                        window.top.esconderCargando();
+                    });
+
+                    function Success_dl(data) {
+                        esconderCargando();
+                        if (data.Estado == "0") {
+                            toastr.success(data.Mensaje);
+                            $('#modal-registro').modal('hide');
+                            RefreshLista();
+                        }
+                        else {
+                            toastr.error(data.Mensaje);
+                        }
+                    }
+                    function Failure_dl(data) {
+                        esconderCargando();
+                        toastr.error(data.Mensaje);
+                        $('#modal-registro').modal('hide');
+                    }
+
+                </script>
+            *@
+
+
+<div class="modal fade" id="crear" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalDetalleLeasing", null)
+    </div>
+</div>

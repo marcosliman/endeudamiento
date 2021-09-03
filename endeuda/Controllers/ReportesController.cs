@@ -8,18 +8,18 @@ using modelo.Models.Local;
 using modelo.ViewModel;
 namespace tesoreria.Controllers
 {
-    public class AmortizacionesController : Controller
+    public class ReportesController : Controller
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         // GET: Contrato
-        public ActionResult Leasing()
+        public ActionResult ConsolidadoDeudaLeasing()
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
-            else if (seguridad != null && !seguridad.TienePermiso("Leasing", Helper.TipoAcceso.Acceder))
+            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaLeasing", Helper.TipoAcceso.Acceder))
             {
                 return RedirectToAction("Inicio", "Home");
             }
@@ -28,13 +28,13 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
-        public ActionResult OtrosCreditos()
+        public ActionResult ConsolidadoDeudaOtrosCreditos()
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
-            else if (seguridad != null && !seguridad.TienePermiso("OtrosCreditos", Helper.TipoAcceso.Acceder))
+            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaOtrosCreditos", Helper.TipoAcceso.Acceder))
             {
                 return RedirectToAction("Inicio", "Home");
             }
@@ -43,16 +43,6 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
-        public ActionResult ModalDetalleLeasing()
-        {
-            if (seguridad == null)
-            {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else
-            {
-                return View();
-            }
-        }
+        
     }
 }

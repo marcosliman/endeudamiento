@@ -1,0 +1,324 @@
+﻿@{
+    ViewBag.Title = "Reporte";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Reporte </h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Consolidado Deuda Leasing.</h6>
+<br />
+
+<div class="row">
+            <div class="col-md-12">
+                <div class="card card-outline card-info collapsed-card">
+
+                        <div class="card-header">
+                            <h3 class="card-title">Detalle</h3>
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <label for="inputEmail3" class="col-lg-12 col-form-label">Consolidado Deuda Leasing</label>
+                            <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                            <div class="row justify-content-end">
+                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="far fa-download"></i> Exportar .XLS</button>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="no-sort" width="3%">&nbsp;</th>
+                                            <th>Empresa</th>
+                                            <th>Institución</th>
+                                            <th>Tipo Activo</th>
+                                            <th>Núm. Ope./Contrato</th>
+                                            <th>Bien Adquirido</th>
+                                            <th>Total Rentas</th>
+                                            <th>Inicio</th>
+                                            <th>Op. Compra</th>
+                                            <th>Monto Inicial Deuda</th>
+                                            <th>Tasa Anual</th>
+                                            <th>Tipo Moneda</th>
+                                            <th>Cuota Neta</th>
+                                            <th>IVA</th>
+                                            <th>Cuota Bruta</th>
+                                            <th>Saldo Insoluto</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>Itaú</td>
+                                            <td>Maquinaria</td>
+                                            <td>44007</td>
+                                            <td>3 generadores</td>
+                                            <td>49</td>
+                                            <td>01-07-2017</td>
+                                            <td>01-07-2021</td>
+                                            <td>61,224,950.00</td>
+                                            <td>5,5%</td>
+                                            <td>$</td>
+                                            <td>1,394,154.00</td>
+                                            <td>264,889.00</td>
+                                            <td>1,659,043.00</td>
+                                            <td>264,265,004.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>TEQSUR S.A.</td>
+                                            <td>Scotiabank</td>
+                                            <td>Maquinaria</td>
+                                            <td>6004385</td>
+                                            <td>2 compresoras</td>
+                                            <td>37</td>
+                                            <td>01-07-2018</td>
+                                            <td>01-07-2021</td>
+                                            <td>32,767,515.00</td>
+                                            <td>6,4%</td>
+                                            <td>$</td>
+                                            <td>974,961.00</td>
+                                            <td>185,243.00</td>
+                                            <td>1,160,204.00</td>
+                                            <td>41,052,147.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>Scotiabank</td>
+                                            <td>Maquinaria</td>
+                                            <td>6013744</td>
+                                            <td>2 camiones</td>
+                                            <td>49</td>
+                                            <td>02-07-2017</td>
+                                            <td>02-07-2021</td>
+                                            <td>139,084,381.00</td>
+                                            <td>5,4%</td>
+                                            <td>$</td>
+                                            <td>3,160,459.00</td>
+                                            <td>600,487.00</td>
+                                            <td>3,760,946.00</td>
+                                            <td>2,235,454.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>MAQSUR Maquinarias S.A.</td>
+                                            <td>BCI</td>
+                                            <td>Maquinaria</td>
+                                            <td>81917</td>
+                                            <td>26 compresoras</td>
+                                            <td>49</td>
+                                            <td>05-01-2017</td>
+                                            <td>05-07-2021</td>
+                                            <td>40,448,007.00</td>
+                                            <td>6,5%</td>
+                                            <td>$</td>
+                                            <td>4,610,131.00</td>
+                                            <td>875,925.00</td>
+                                            <td>5,486,056.00</td>
+                                            <td>9,152,057.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>MAQSUR S.A.</td>
+                                            <td>BCI</td>
+                                            <td>Maquinaria</td>
+                                            <td>65634</td>
+                                            <td>1 generador 4 gruas</td>
+                                            <td>49</td>
+                                            <td>05-01-2017</td>
+                                            <td>05-07-2021</td>
+                                            <td>15,195,196.00</td>
+                                            <td>6,5%</td>
+                                            <td>$</td>
+                                            <td>1,788,620.00</td>
+                                            <td>339,838.00</td>
+                                            <td>2,128,458.00</td>
+                                            <td>6,244,114.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <th>Total</th>
+                                            <td>45,758,233.00</td>
+                                        </tr>
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+
+                </div>
+</div>
+
+
+            @*
+                <!-- DataTable with Hover -->
+                <script>
+                    $(document).ready(function () {
+                        AbrirMenu("LibroVentas");
+                        $('#grillaEmpresa').DataTable();
+                        moment.locale('es');
+                        $('#fecha').daterangepicker({
+                            autoUpdateInput: false,
+                            "locale": {
+                                format: "DD/MM/YYYY",
+                                "separator": " - ",
+                                "applyLabel": "Aplicar",
+                                "cancelLabel": "Limpiar",
+                                "fromLabel": "DE",
+                                "toLabel": "HASTA",
+                                "customRangeLabel": "Personalizar",
+                                "daysOfWeek": [
+                                    "Dom",
+                                    "Lun",
+                                    "Mar",
+                                    "Mie",
+                                    "Jue",
+                                    "Vie",
+                                    "Sáb"
+                                ],
+                                "monthNames": [
+                                    "Enero",
+                                    "Febrero",
+                                    "Marzo",
+                                    "Abril",
+                                    "Mayo",
+                                    "Junio",
+                                    "Julio",
+                                    "Agosto",
+                                    "Septiembre",
+                                    "Octubre",
+                                    "Noviembre",
+                                    "Diciembre"
+                                ],
+                                "firstDay": 1
+                            }
+                        });
+
+                        $('#fecha').on('apply.daterangepicker', function (ev, picker) {
+                            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                            //RefreshLista();
+                        });
+
+
+                        $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
+                            $(this).val('');
+                            //RefreshLista();
+                        });
+                        $('#selectEmpresa').select2({
+                            placeholder: '---Seleccione Empresa---',
+                            language: "es",
+                            allowClear: true,
+                        });
+
+                    });
+                    function RefreshLista() {
+                        var table = initTable();
+                        table.ajax.reload(function (json) { });
+                    }
+                    function initTable() {
+                        var table = $('#grillaEmpresa').DataTable({
+                            "scrollX": true,
+                            "retrieve": true,
+                            'ajax': {
+                                "type": "POST",
+                                "url": '/Vencidas/Vencidas_Read/0',
+                                "data": function (d) {
+
+                                },
+                                "dataSrc": ""
+                            },
+                            columns: [
+
+                                {
+                                    "mData": null,
+                                    "bSortable": false,
+                                    "mRender": function (o, type, row) {
+                                        var boton = '';
+                                        boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
+                                        return boton;
+                                    }
+                                },
+                                { "data": "Sociedad" },
+                                { "data": "RutCliente" },
+                                { "data": "Cliente" },
+                                { "data": "Emisión" },
+                                { "data": "Vencimiento" },
+                                { "data": "Factura" },
+                                { "data": "Monto" },
+                                {
+                                    "mData": null,
+                                    "bSortable": false,
+                                    "mRender": function (o, type, row) {
+                                        var estado = 'NO';
+                                        if (o.Activo == true) {
+                                            estado = "SI";
+                                        }
+                                        return estado;
+                                    }
+                                }
+                            ]
+                        });
+
+                        return table;
+                    }
+
+                </script>
+                <script>
+                    $(document).ready(function () {
+
+                        $('#frmEdit').validate({
+                            debug: false,
+                            errorElement: "em",
+                            errorContainer: $("#warning")
+                        });
+                        $('#perfiles').select2({
+                            theme: 'bootstrap4'
+                        })
+                        window.top.esconderCargando();
+                    });
+
+                    function Success_dl(data) {
+                        esconderCargando();
+                        if (data.Estado == "0") {
+                            toastr.success(data.Mensaje);
+                            $('#modal-registro').modal('hide');
+                            RefreshLista();
+                        }
+                        else {
+                            toastr.error(data.Mensaje);
+                        }
+                    }
+                    function Failure_dl(data) {
+                        esconderCargando();
+                        toastr.error(data.Mensaje);
+                        $('#modal-registro').modal('hide');
+                    }
+
+                </script>
+            *@
