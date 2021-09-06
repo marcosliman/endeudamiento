@@ -43,7 +43,41 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        
         public ActionResult ModalDetalleLeasing()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public ActionResult ModalDetalleOtrosCreditos()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public ActionResult ModalContratoLeasingOrigen()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public ActionResult ModalContratoCreditoOrigen()
         {
             if (seguridad == null)
             {

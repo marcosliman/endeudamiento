@@ -109,10 +109,12 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th></th>
                                             <th align="center">Corriente</th>
                                             <th align="center" colspan="4">No Corriente</th>
                                         </tr>
                                         <tr>
+                                            <th class="no-sort" width="3%">&nbsp;</th>
                                             <th class="no-sort" width="3%">&nbsp;</th>
                                             <th>Nombre Acreedor</th>
                                             <th>Número</th>
@@ -127,7 +129,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button"  data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Préstamo Bano Santander</td>
                                             <td>18568223</td>
                                             <td>$</td>
@@ -139,7 +142,8 @@
                                             <td>212,780,170.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Préstamo Bano Santander</td>
                                             <td>19776556</td>
                                             <td>$</td>
@@ -151,7 +155,8 @@
                                             <td>260,118,109.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Préstamo Bano Santander</td>
                                             <td>21013144</td>
                                             <td>$</td>
@@ -163,7 +168,8 @@
                                             <td>1,175,328,191.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Préstamo  Banco BCI</td>
                                             <td>20094</td>
                                             <td>$</td>
@@ -175,7 +181,8 @@
                                             <td>88,962,625.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Préstamo  Banco BCI</td>
                                             <td>21535</td>
                                             <td>$</td>
@@ -347,8 +354,13 @@
             *@
 
 
-<div class="modal fade" id="crear" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+<div class="modal fade" id="verdetalle" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         @Html.Partial("ModalDetalleOtrosCreditos", null)
+    </div>
+</div>
+<div class="modal fade" id="vercontratoorigen" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalContratoCreditoOrigen", null)
     </div>
 </div>

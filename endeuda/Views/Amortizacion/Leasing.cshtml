@@ -109,10 +109,12 @@
                                             <th></th>
                                             <th></th>
                                             <th></th>
+                                            <th></th>
                                             <th align="center">Corriente</th>
                                             <th align="center" colspan="4">No Corriente</th>
                                         </tr>
                                         <tr>
+                                            <th class="no-sort" width="3%">&nbsp;</th>
                                             <th class="no-sort" width="3%">&nbsp;</th>
                                             <th>Nombre Acreedor</th>
                                             <th>Número</th>
@@ -127,8 +129,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>
-                                            <button class="btn btn-info btn-sm" type="button"  data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Leasing  Banco BCI</td>
                                             <td>81917</td>
                                             <td>$</td>
@@ -140,7 +142,8 @@
                                             <td>4736173.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Leasing  Banco BCI</td>
                                             <td>66853</td>
                                             <td>$</td>
@@ -152,7 +155,8 @@
                                             <td>10244786.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Leasing  Banco BCI</td>
                                             <td>68632</td>
                                             <td>$</td>
@@ -164,7 +168,8 @@
                                             <td>65124476.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Leasing  Banco BCI</td>
                                             <td>68632</td>
                                             <td>$</td>
@@ -176,7 +181,8 @@
                                             <td>4724990.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Leasing Banco Chile</td>
                                             <td>9944601</td>
                                             <td>$</td>
@@ -188,7 +194,8 @@
                                             <td>42534459.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Leasing Banco Chile</td>
                                             <td>9973438</td>
                                             <td>$</td>
@@ -200,7 +207,8 @@
                                             <td>58716250.00</td>
                                         </tr>
                                         <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
                                             <td>Leasing Banco Chile</td>
                                             <td>9954785</td>
                                             <td>$</td>
@@ -371,8 +379,13 @@
             *@
 
 
-<div class="modal fade" id="crear" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+<div class="modal fade" id="verdetalle" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         @Html.Partial("ModalDetalleLeasing", null)
+    </div>
+</div>
+<div class="modal fade" id="vercontratoorigen" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalContratoLeasingOrigen", null)
     </div>
 </div>
