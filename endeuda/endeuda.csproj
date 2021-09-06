@@ -2854,9 +2854,12 @@
     <Content Include="Views\Amortizacion\OtrosCreditos.cshtml" />
     <Content Include="Views\Amortizacion\ModalDetalleOtrosCreditos.cshtml" />
     <Content Include="Views\Reportes\ConsolidadoDeudaLeasing.cshtml" />
-    <Content Include="Views\Reportes\ConsolidadoDeudaOtrosCreditos.cshtml" />
+    <Content Include="Views\Reportes\ConsolidadoDeudaCreditosCon.cshtml" />
     <Content Include="Views\Amortizacion\ModalContratoLeasingOrigen.cshtml" />
     <Content Include="Views\Amortizacion\ModalContratoCreditoOrigen.cshtml" />
+    <Content Include="Views\Reportes\ConsolidadoDeudaCreditosCapital.cshtml" />
+    <Content Include="Views\Reportes\ConsolidadoDeudaCreditosSin.cshtml" />
+    <Content Include="Views\Reportes\ConsolidadoDeudaLeasingTipoActivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

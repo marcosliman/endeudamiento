@@ -17,7 +17,7 @@
         </div>
         <div class="card-body">
             <div class="row">
-                <div class="col-auto">
+                <div class="col-sm-2">
                     <select name="empresa" class="form-control">
                         <option>--Seleccione Empresa--</option>
                         <option value="1">Todas</option>
@@ -28,7 +28,7 @@
                         <option value="3">NOK</option>
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="col-sm-2">
                     <select name="banco" class="form-control">
                         <option>--Seleccione Banco--</option>
                         <option value="1">Todas</option>
@@ -37,7 +37,7 @@
                         <option value="3">SCOTIABANK</option>
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="col-sm-2">
                     <select name="anio" class="form-control">
                         <option>--Seleccione Año--</option>
                         <option value="1">2021</option>
@@ -54,7 +54,7 @@
                         <option value="12">2032</option>
                     </select>
                 </div>
-                <div class="col-auto">
+                <div class="col-sm-2">
                     <select name="empresa" class="form-control">
                         <option>--Seleccione Mes--</option>
                         <option value="1">Enero</option>
@@ -76,10 +76,235 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-6">
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" style="background-color:lightgrey">
+                    <h3 class="card-title">Deuda Vigente por Entidad Financiera</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                                <div id="chart-cobranza" style="height: 200px;background-color: transparent;" data-highcharts-chart="15">
+
+                                </div>
+                            </div>
+                            <script>
+                                // Make monochrome colors
+                                /* var pieColors = (function () {
+                                        var colors = [],
+                                            base = Highcharts.getOptions().colors[0],
+                                            i;
+
+                                        for (i = 0; i < 10; i += 1) {
+                                            // Start out with a darkened base color (negative brighten), and end
+                                            // up with a much brighter color
+                                            colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                        }
+                                        return colors;
+                                    }());
+                                    */
+                                // Build the chart
+                                Highcharts.chart('chart-cobranza', {
+                                    chart: {
+                                        plotBackgroundColor: null,
+                                        plotBorderWidth: null,
+                                        plotShadow: false,
+                                        type: 'pie'
+                                    },
+                                    exporting: {
+                                        enabled: false
+                                    },
+                                    title: {
+                                        text: ''
+                                    },
+                                    credits: {
+                                        enabled: false
+                                    },
+                                    tooltip: {
+                                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                    },
+                                    accessibility: {
+                                        point: {
+                                            valueSuffix: '%'
+                                        }
+                                    },
+                                    plotOptions: {
+                                        pie: {
+                                            allowPointSelect: true,
+                                            cursor: 'pointer',
+                                            // colors: pieColors,
+                                            dataLabels: {
+                                                enabled: false,
+                                                format: '{point.percentage:.1f} %',
+                                                distance: -50,
+                                                filter: {
+                                                    property: 'percentage',
+                                                    operator: '>',
+                                                    value: 4
+                                                }
+                                            }
+                                        }
+                                    },
+                                    series: [{
+                                        name: 'Share',
+                                        data: [
+                                            { name: 'BCI', y: 46 },
+                                            { name: 'SANTANDER', y: 19 },
+                                            { name: 'CHILE', y: 8 },
+                                            { name: 'ESTADO', y: 7 },
+                                            { name: 'SECURITY', y: 2 },
+                                            { name: 'SCOTIABANK', y: 11 },
+                                            { name: 'ITAÚ', y: 5 },
+                                            { name: 'BICE', y: 2 },
+
+
+                                        ]
+                                    }]
+                                });
+                            </script>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th rowspan="2">Entidad Financiera</th>
+                                            <th>Monto Ch$</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>BCI</td>
+                                            <th>$2.000.000</th>
+                                        </tr>
+                                        <tr>
+                                            <td>SANTANDER</td>
+                                            <th>$2.000.000</th>
+                                        </tr>
+                                        <tr>
+                                            <td>SCOTIABANK</td>
+                                            <th>$2.000.000</th>
+                                        </tr>
+                                        <tr>
+                                            <td>BBVA</td>
+                                            <th>$2.000.000</th>
+                                        </tr>
+                                        <tr>
+                                            <td>ESTADO</td>
+                                            <th>$2.000.000</th>
+                                        </tr>
+                                        <tr>
+                                            <td>SECURITY</td>
+                                            <th>$2.000.000</th>
+                                        </tr>
+                                        <tr>
+                                            <td>BICE</td>
+                                            <th>$2.000.000</th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header" style="background-color:lightgray">
+                    <h3 class="card-title">Total de Créditos</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <figure class="highcharts-figure" ">
+                        <div id="chartEstadistico"></div>
+
+                    </figure>
+                    <script>
+                        Highcharts.chart('chartEstadistico', {
+                            chart: {
+                                type: 'column'
+                            },
+                            title: {
+                                text: ''
+                            },
+                            xAxis: {
+                                categories: ['2021', '2022', '2023', '2024', '2025']
+                            },
+                            yAxis: {
+                                allowDecimals: true,
+                                min: 0,
+                                title: {
+                                    text: 'MM$'
+                                },
+                                stackLabels: {
+                                    enabled: true,
+                                    style: {
+                                        fontWeight: 'bold',
+                                        color: ( // theme
+                                            Highcharts.defaultOptions.title.style &&
+                                            Highcharts.defaultOptions.title.style.color
+                                        ) || 'gray'
+                                    }
+                                }
+                            },
+                            /*legend: {
+                                align: 'top',
+                                x: -0,
+                                verticalAlign: 'bottom',
+                                y: 0,
+                                floating: true,
+                                backgroundColor:
+                                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                                borderColor: '#CCC',
+                                borderWidth: 0,
+                                shadow: false
+                            },*/
+                            tooltip: {
+                                headerFormat: '<b>{point.x}</b><br/>',
+                                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                            },
+                            plotOptions: {
+                                column: {
+                                    stacking: 'normal',
+                                    dataLabels: {
+                                        enabled: true
+                                    }
+                                }
+                            },
+                            series: [{
+                                name: 'Deuda Estructurada (Capital)',
+                                data: [1200000, 1400000, 1300000, 1150000, 1060000]
+                            }, {
+                                name: 'Deuda Leasing (Capital)',
+                                data: [1100000, 1300000, 1200000, 900000, 700000]
+                            }]
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+</div>
+<div class="row">
+    <div class="col-md-12">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Deuda Vigente por Entidad Financiera</h3>
+                <h3 class="card-title">Deuda Leasing por Institución Financiera</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -88,197 +313,93 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
-                            <div id="chart-cobranza" style="height: 200px;background-color: transparent;" data-highcharts-chart="15">
-
-                            </div>
-                        </div>
-                        <script>
-                            // Make monochrome colors
-                            /* var pieColors = (function () {
-                                    var colors = [],
-                                        base = Highcharts.getOptions().colors[0],
-                                        i;
-
-                                    for (i = 0; i < 10; i += 1) {
-                                        // Start out with a darkened base color (negative brighten), and end
-                                        // up with a much brighter color
-                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
-                                    }
-                                    return colors;
-                                }());
-                                */
-                            // Build the chart
-                            Highcharts.chart('chart-cobranza', {
-                                chart: {
-                                    plotBackgroundColor: null,
-                                    plotBorderWidth: null,
-                                    plotShadow: false,
-                                    type: 'pie'
-                                },
-                                exporting: {
-                                    enabled: false
-                                },
-                                title: {
-                                    text: ''
-                                },
-                                credits: {
-                                    enabled: false
-                                },
-                                tooltip: {
-                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                },
-                                accessibility: {
-                                    point: {
-                                        valueSuffix: '%'
-                                    }
-                                },
-                                plotOptions: {
-                                    pie: {
-                                        allowPointSelect: true,
-                                        cursor: 'pointer',
-                                        // colors: pieColors,
-                                        dataLabels: {
-                                            enabled: false,
-                                            format: '{point.percentage:.1f} %',
-                                            distance: -50,
-                                            filter: {
-                                                property: 'percentage',
-                                                operator: '>',
-                                                value: 4
-                                            }
-                                        }
-                                    }
-                                },
-                                series: [{
-                                    name: 'Share',
-                                    data: [
-                                        { name: 'BCI', y: 46 },
-                                        { name: 'SANTANDER', y: 19 },
-                                        { name: 'CHILE', y: 8 },
-                                        { name: 'ESTADO', y: 7 },
-                                        { name: 'SECURITY', y: 2 },
-                                        { name: 'SCOTIABANK', y: 11 },
-                                        { name: 'ITAÚ', y: 5 },
-                                        { name: 'BICE', y: 2 },
-
-
-                                    ]
-                                }]
-                            });
-                        </script>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th rowspan="2">Entidad Financiera</th>
-                                        <th>Monto Ch$</th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>BCI</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                    <tr>
-                                        <td>SANTANDER</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                    <tr>
-                                        <td>SCOTIABANK</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Bancos</th>
+                                    <th>Obligación CP</th>
+                                    <th>Obligación LP</th>
+                                    <th>Totales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>BCI</th>
+                                    <td>898,830,908.00</td>
+                                    <td>1,658,429,374.00</td>
+                                    <td>2,557,260,281.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BBVA</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>CORPBANCA</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>CHILE</th>
+                                    <td>351,695,868.00</td>
+                                    <td>341,041,234.00</td>
+                                    <td>692,737,102.00</td>
+                                </tr>
+                                <tr>
+                                    <th>ESTADO</th>
+                                    <td>265,070,141.00</td>
+                                    <td>543,150,043.00</td>
+                                    <td>808,220,183.00</td>
+                                </tr>
+                                <tr>
+                                    <th>ITAÚ</th>
+                                    <td>49,019,314.00</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>SANTANDER</th>
+                                    <td>308,880,861.00</td>
+                                    <td>785,370,783.00</td>
+                                    <td>1,094,251,644.00</td>
+                                </tr>
+                                <tr>
+                                    <th>SCOTIABANK</th>
+                                    <td>197,963,087.00</td>
+                                    <td>219,052,208.00</td>
+                                    <td>417,015,295.00</td>
+                                </tr>
+                                <tr>
+                                    <th>SECURITY</th>
+                                    <td>171,889,690.00</td>
+                                    <td>144,538,790.00</td>
+                                    <td>316,428,481.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BICE</th>
+                                    <td>116,253,525.00</td>
+                                    <td>238,363,231.00</td>
+                                    <td>354,616,757.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BICE</th>
+                                    <th>2,359,603,394.00</th>
+                                    <th>3,929,945,663.00</th>
+                                    <th>6,289,549,057.00</th>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-
-
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-header" style="background-color:lightgray">
-                <h3 class="card-title">Total de Créditos</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <figure class="highcharts-figure" ">
-                    <div id="chartEstadistico"></div>
-
-                </figure>
-                <script>
-                    Highcharts.chart('chartEstadistico', {
-                        chart: {
-                            type: 'column'
-                        },
-                        title: {
-                            text: ''
-                        },
-                        xAxis: {
-                            categories: ['2021', '2022', '2023', '2024', '2025']
-                        },
-                        yAxis: {
-                            allowDecimals: true,
-                            min: 0,
-                            title: {
-                                text: 'MM$'
-                            },
-                            stackLabels: {
-                                enabled: true,
-                                style: {
-                                    fontWeight: 'bold',
-                                    color: ( // theme
-                                        Highcharts.defaultOptions.title.style &&
-                                        Highcharts.defaultOptions.title.style.color
-                                    ) || 'gray'
-                                }
-                            }
-                        },
-                        /*legend: {
-                            align: 'top',
-                            x: -0,
-                            verticalAlign: 'bottom',
-                            y: 0,
-                            floating: true,
-                            backgroundColor:
-                                Highcharts.defaultOptions.legend.backgroundColor || 'white',
-                            borderColor: '#CCC',
-                            borderWidth: 0,
-                            shadow: false
-                        },*/
-                        tooltip: {
-                            headerFormat: '<b>{point.x}</b><br/>',
-                            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-                        },
-                        plotOptions: {
-                            column: {
-                                stacking: 'normal',
-                                dataLabels: {
-                                    enabled: true
-                                }
-                            }
-                        },
-                        series: [{
-                            name: 'Deuda Estructurada (Capital)',
-                            data: [1200000, 1400000, 1300000, 1150000, 1060000]
-                        }, {
-                            name: 'Deuda Leasing (Capital)',
-                            data: [1100000, 1300000, 1200000, 900000, 700000]
-                        }]
-                    });
-                </script>
             </div>
         </div>
     </div>
+</div>
+<div class="row">
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
@@ -411,6 +532,8 @@
 
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
                 <h3 class="card-title">Resumen de deuda</h3>
@@ -493,7 +616,88 @@
 
             </div>
         </div>
-
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Consolidado por Tipo de Deuda</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Tipo Deuda</th>
+                                    <th>2020</th>
+                                    <th>2021</th>
+                                    <th>2022</th>
+                                    <th>2023</th>
+                                    <th>2024</th>
+                                    <th>2025</th>
+                                    <th>2026</th>
+                                    <th>-</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Deuda Estructurada (capital)</th>
+                                    <td>0</td>
+                                    <td>885.00</td>
+                                    <td>2,206.00</td>
+                                    <td>2,122.00</td>
+                                    <td>1,842.00</td>
+                                    <td>1,535.00</td>
+                                    <td>1,073.00</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>Deuda Estructurada (cuota)</th>
+                                    <td>0</td>
+                                    <td>1,155.00</td>
+                                    <td>2,677.00</td>
+                                    <td>2,472.00</td>
+                                    <td>2,094.00</td>
+                                    <td>1,705.00</td>
+                                    <td>1,172.00</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>Deuda Leasing (cuota)</th>
+                                    <td>0</td>
+                                    <td>1,410.00</td>
+                                    <td>2,290.00</td>
+                                    <td>1,690.00</td>
+                                    <td>890.00</td>
+                                    <td>314.00</td>
+                                    <td>266.00</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>Deuda Leasing (capital)</th>
+                                    <td>0</td>
+                                    <td>1,284.00</td>
+                                    <td>2,119.00</td>
+                                    <td>1,600.00</td>
+                                    <td>848.00</td>
+                                    <td>292.00</td>
+                                    <td>254.00</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -28,13 +28,43 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
-        public ActionResult ConsolidadoDeudaOtrosCreditos()
+        public ActionResult ConsolidadoDeudaCreditosCon()
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
-            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaOtrosCreditos", Helper.TipoAcceso.Acceder))
+            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaCreditosCon", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public ActionResult ConsolidadoDeudaCreditosSin()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaCreditosSin", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public ActionResult ConsolidadoDeudaCreditosCapital()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaCreditosCapital", Helper.TipoAcceso.Acceder))
             {
                 return RedirectToAction("Inicio", "Home");
             }
@@ -44,5 +74,20 @@ namespace tesoreria.Controllers
             }
         }
         
+        public ActionResult ConsolidadoDeudaLeasingTipoActivo()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaCreditosCapital", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }
