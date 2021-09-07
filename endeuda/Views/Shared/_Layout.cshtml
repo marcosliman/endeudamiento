@@ -531,26 +531,18 @@
 @RenderSection("scripts", required: false)
 <script>
     $(document).ready(function () {
-        $('#dataTable').DataTable({
-            dom: 'Bfrtip',
-            responsive: true,
+        $('.dataTable').DataTable({
+            dom: 'Bfrt',
+            paginate: false,
             buttons: [
-                /*{
-                    extend: 'copy',
-                    text: "Copiar"
-                },*/
                 {
-                    extend: 'csv',
-                    text: "Csv"
-                },
-                {
-                    extend: 'print',
-                    text: "Imprimir"
-                },
-                'pdf', 'excelHtml5'
+                    extend: 'excelHtml5',
+                    text: "Expotar a Excel"
+                }
             ],
-
-            "columnDefs": [{
+            "columnDefs": [
+                { targets: '_all', className: 'align-middle' },
+                {
                 "targets": 'no-sort',
                 "orderable": false
             }]
