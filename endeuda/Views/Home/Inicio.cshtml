@@ -89,7 +89,7 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
                             <div id="chart-cobranza" style="height:300px;background-color: transparent;" data-highcharts-chart="15">
 
@@ -143,11 +143,11 @@
                                         dataLabels: {
                                             enabled: true,
                                             format: '{point.percentage:.1f} %',
-                                            distance: -50,
+                                            distance: 20,
                                             filter: {
                                                 property: 'percentage',
                                                 operator: '>',
-                                                value: 4
+                                                value: 1
                                             }
                                         }
                                     }
@@ -170,45 +170,34 @@
                             });
                         </script>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="table-responsive">
                             <table class="table table-bordered table-sm">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">Entidad Financiera</th>
-                                        <th>Monto Ch$</th>
+                                        <th><p style="color:black;font-size:10px;">Entidad Financiera</p></th>
+                                        <th><p style="color:black;font-size:10px;">BCI</p></th>
+                                        <th><p style="color:black;font-size:10px;">SANTANDER</p></th>
+                                        <th><p style="color:black;font-size:10px;">SCOTIABANK</p></th>
+                                        <th><p style="color:black;font-size:10px;">BBVA</p></th>
+                                        <th><p style="color:black;font-size:10px;">ESTADO</p></th>
+                                        <th><p style="color:black;font-size:10px;">SECURITY</p></th>
+                                        <th><p style="color:black;font-size:10px;">BICE</p></th>
 
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>BCI</td>
-                                        <th>$2.000.000</th>
+                                        <th><p style="color:black;font-size:10px;">Monto Ch$</p></th>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
                                     </tr>
-                                    <tr>
-                                        <td>SANTANDER</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                    <tr>
-                                        <td>SCOTIABANK</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                    <tr>
-                                        <td>BBVA</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                    <tr>
-                                        <td>ESTADO</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                    <tr>
-                                        <td>SECURITY</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
-                                    <tr>
-                                        <td>BICE</td>
-                                        <th>$2.000.000</th>
-                                    </tr>
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -262,6 +251,9 @@
                                 }
                             }
                         },
+                        credits: {
+                            enabled: false
+                        },
                         /*legend: {
                             align: 'top',
                             x: -0,
@@ -298,8 +290,8 @@
             </div>
         </div>
     </div>
-
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -412,9 +404,9 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-12">
                         <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
-                            <div id="chart-deudacompleta" style="height: 200px;background-color: transparent;" data-highcharts-chart="15">
+                            <div id="chart-deudacompleta" style="height: 300px;background-color: transparent;" data-highcharts-chart="15">
 
                             </div>
                         </div>
@@ -451,7 +443,7 @@
                                     enabled: false
                                 },
                                 tooltip: {
-                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                    pointFormat: '<b>{point.percentage:.1f}%</b>'
                                 },
                                 accessibility: {
                                     point: {
@@ -464,19 +456,19 @@
                                         cursor: 'pointer',
                                         // colors: pieColors,
                                         dataLabels: {
-                                            enabled: false,
+                                            enabled: true,
                                             format: '{point.percentage:.1f} %',
-                                            distance: -50,
+                                            distance: 20,
                                             filter: {
                                                 property: 'percentage',
                                                 operator: '>',
-                                                value: 4
+                                                value: 1
                                             }
                                         }
                                     }
                                 },
                                 series: [{
-                                    name: 'Share',
+                                    name: 'Monto',
                                     data: [
                                         { name: 'MAQSUR S.A.', y: 15 },
                                         { name: 'BIOMASA', y: 20 },
@@ -489,46 +481,33 @@
                             });
                         </script>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-12">
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">Empresa</th>
-                                    </tr>
-                                    <tr>
-                                        <th>Monto</th>
-
+                                        <th><p style="color:black;font-size:10px;">Empresa</p></th>
+                                        <th><p style="color:black;font-size:10px;">MAQSUR S.A.</p></th>
+                                        <th><p style="color:black;font-size:10px;">BIOMASA</p></th>
+                                        <th><p style="color:black;font-size:10px;">TECSUR</p></th>
+                                        <th><p style="color:black;font-size:10px;">MQS</p></th>
+                                        <th><p style="color:black;font-size:10px;">NOK</p></th>
+                                        <th><p style="color:black;font-size:10px;">TOTAL</p></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>MAQSUR S.A.</td>
-                                        <th>$15,000,000.00</th>
+                                        <th><p style="color:black;font-size:10px;">Monto</p></th>
+                                        <th><p style="color:black;font-size:10px;">$15,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$20,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$20,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$18,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$27,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$100,000,000.00</p></th>
                                     </tr>
-                                    <tr>
-                                        <td>BIOMASA</td>
-                                        <th>$20,000,000.00</th>
-                                    </tr>
-                                    <tr>
-                                        <td>TECSUR</td>
-                                        <th>$20,000,000.00</th>
-                                    </tr>
-                                    <tr>
-                                        <td>MQS</td>
-                                        <th>$18,000,000.00</th>
-                                    </tr>
-                                    <tr>
-                                        <td>NOK</td>
-                                        <th>$27,000,000.00</th>
-                                    </tr>
-                                <th>
-                                <td>TOTAL</td>
-                                <th>$100,000,000.00</th>
-                                </th>
 
                                 </tbody>
-                            </table>
+                            </table>    
                         </div>
                     </div>
                 </div>
@@ -582,23 +561,38 @@
                                     enabled: false
                                 },
                                 tooltip: {
-                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                    headerFormat: '<b>{point.x}</b><br/>',
+                                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
                                 },
                                 xAxis: {
                                     categories: ['2021', '2022', '2023', '2024', '2025']
                                 },
                                 yAxis: {
+                                    allowDecimals: true,
                                     min: 0,
                                     title: {
-                                        text: 'Total consolidado'
+                                        text: 'MM$'
+                                    },
+                                    stackLabels: {
+                                        enabled: true,
+                                        style: {
+                                            fontWeight: 'bold',
+                                            color: ( // theme
+                                                Highcharts.defaultOptions.title.style &&
+                                                Highcharts.defaultOptions.title.style.color
+                                            ) || 'gray'
+                                        }
                                     }
                                 },
-                                legend: {
-                                    reversed: true
-                                },
+                                //legend: {
+                                //    reversed: true
+                                //},
                                 plotOptions: {
-                                    series: {
-                                        stacking: 'normal'
+                                    column: {
+                                        stacking: 'normal',
+                                        dataLabels: {
+                                            enabled: true
+                                        }
                                     }
                                 },
                                 series: [{

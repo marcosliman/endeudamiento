@@ -89,5 +89,21 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        
+        public ActionResult ActivosFinanciados()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("ActivosFinanciados", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }

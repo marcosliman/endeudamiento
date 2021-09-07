@@ -2864,6 +2864,7 @@
     <Content Include="Views\Contrato\ModalEditarContratoLeasing.cshtml" />
     <Content Include="Views\Contrato\ModalEditarContratoCredito.cshtml" />
     <Content Include="Views\Contrato\ModalContratoLeasingOrigen.cshtml" />
+    <Content Include="Views\Reportes\ActivosFinanciados.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
