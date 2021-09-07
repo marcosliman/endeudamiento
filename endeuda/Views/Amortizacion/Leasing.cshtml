@@ -29,7 +29,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select name="empresa" class="form-control">
                                     <option value="0">---Seleccione Empresa---</option>
                                     <option value="1">MAQSUR S.A.</option>
@@ -39,7 +39,7 @@
                                     <option value="3">NOK</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select name="anio" class="form-control">
                                     <option>--Seleccione Año--</option>
                                     <option value="1">2021</option>
@@ -56,7 +56,7 @@
                                     <option value="12">2032</option>
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <select name="empresa" class="form-control">
                                     <option>--Seleccione Mes--</option>
                                     <option value="1">Enero</option>
@@ -73,8 +73,16 @@
                                     <option value="12">Diciembre</option>
                                 </select>
                             </div>
-                            <div class="row justify-content-end">
-                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Generar detalle</button>
+                            <div class="col-md-2">
+
+                            </div>
+                            <div class="col-md-2">
+
+                            </div>
+                            <div class="col-md-2">
+                                <div class="row justify-content-end">
+                                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Generar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -83,153 +91,158 @@
         </div>
 
 <div class="row">
-            <div class="col-md-12">
-                <div class="card card-outline card-info collapsed-card">
-
-                        <div class="card-header">
-                            <h3 class="card-title">Detalle</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <label for="inputEmail3" class="col-lg-12 col-form-label">MAQSUR S.A.</label>
-                            <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
-                            <div class="row justify-content-end">
-                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="far fa-download"></i> Exportar Comprobante Contable de Ajuste</button>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th align="center">Corriente</th>
-                                            <th align="center" colspan="4">No Corriente</th>
-                                        </tr>
-                                        <tr>
-                                            <th class="no-sort" width="3%">&nbsp;</th>
-                                            <th class="no-sort" width="3%">&nbsp;</th>
-                                            <th>Nombre Acreedor</th>
-                                            <th>Número</th>
-                                            <th>Moneda</th>
-                                            <th>Tasa de Interés</th>
-                                            <th>Total</th>
-                                            <th>De 1 a 3 años (M$)</th>
-                                            <th>De 3 a 5 años (M$)</th>
-                                            <th>5 a más años (M$)</th>
-                                            <th>Total (M$)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                            <td>Leasing  Banco BCI</td>
-                                            <td>81917</td>
-                                            <td>$</td>
-                                            <td>0.53%</td>
-                                            <td>4736173.00</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>4736173.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                            <td>Leasing  Banco BCI</td>
-                                            <td>66853</td>
-                                            <td>$</td>
-                                            <td>0.48%</td>
-                                            <td>10244786.00</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>10244786.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                            <td>Leasing  Banco BCI</td>
-                                            <td>68632</td>
-                                            <td>$</td>
-                                            <td>0.63%</td>
-                                            <td>65124476.00</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>65124476.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                            <td>Leasing  Banco BCI</td>
-                                            <td>68632</td>
-                                            <td>$</td>
-                                            <td>0.62%</td>
-                                            <td>4724990.00</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>4724990.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                            <td>Leasing Banco Chile</td>
-                                            <td>9944601</td>
-                                            <td>$</td>
-                                            <td>0.43%</td>
-                                            <td>22769901.00</td>
-                                            <td>25135511.00</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>42534459.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                            <td>Leasing Banco Chile</td>
-                                            <td>9973438</td>
-                                            <td>$</td>
-                                            <td>0.39%</td>
-                                            <td>24381074.00</td>
-                                            <td>34355176.00</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>58716250.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                            <td>Leasing Banco Chile</td>
-                                            <td>9954785</td>
-                                            <td>$</td>
-                                            <td>0.31%</td>
-                                            <td>12059994.00</td>
-                                            <td>21105714.00</td>
-                                            <td>0</td>
-                                            <td>0</td>
-                                            <td>3315708.00</td>
-                                        </tr>
-
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Detalle</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
+            </div>
+            <div class="card-body">
+                <label for="inputEmail3" class="col-lg-12 col-form-label">MAQSUR S.A.</label>
+                <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="far fa-download"></i> Exportar Comprobante Contable de Ajuste</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th align="center">Corriente</th>
+                                <th align="center" colspan="4">No Corriente</th>
+                            </tr>
+                            <tr>
+                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th>Nombre Acreedor</th>
+                                <th>Número</th>
+                                <th>Moneda</th>
+                                <th>Tasa de Interés</th>
+                                <th>Total</th>
+                                <th>De 1 a 3 años (M$)</th>
+                                <th>De 3 a 5 años (M$)</th>
+                                <th>5 a más años (M$)</th>
+                                <th>Total (M$)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                                <td>Leasing  Banco BCI</td>
+                                <td>81917</td>
+                                <td>$</td>
+                                <td>0.53%</td>
+                                <td>4736173.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>4736173.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-file-contract"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                                <td>Leasing  Banco BCI</td>
+                                <td>66853</td>
+                                <td>$</td>
+                                <td>0.48%</td>
+                                <td>10244786.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>10244786.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                                <td>Leasing  Banco BCI</td>
+                                <td>68632</td>
+                                <td>$</td>
+                                <td>0.63%</td>
+                                <td>65124476.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>65124476.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                                <td>Leasing  Banco BCI</td>
+                                <td>68632</td>
+                                <td>$</td>
+                                <td>0.62%</td>
+                                <td>4724990.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>4724990.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                                <td>Leasing Banco Chile</td>
+                                <td>9944601</td>
+                                <td>$</td>
+                                <td>0.43%</td>
+                                <td>22769901.00</td>
+                                <td>25135511.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>42534459.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                                <td>Leasing Banco Chile</td>
+                                <td>9973438</td>
+                                <td>$</td>
+                                <td>0.39%</td>
+                                <td>24381074.00</td>
+                                <td>34355176.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>58716250.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#vercontratoorigen"><i class="far fa-book-open"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                                <td>Leasing Banco Chile</td>
+                                <td>9954785</td>
+                                <td>$</td>
+                                <td>0.31%</td>
+                                <td>12059994.00</td>
+                                <td>21105714.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>3315708.00</td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 </div>
 
+<script>
+    $(document).ready(function () {
+        AbrirMenu("Leasing");
+    });
+</script>
 
             @*
                 <!-- DataTable with Hover -->

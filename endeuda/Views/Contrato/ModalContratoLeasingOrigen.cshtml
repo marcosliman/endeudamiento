@@ -1,0 +1,215 @@
+﻿
+@{
+    ViewBag.Title = "Contrato Origen";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Contrato Origen</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="ml-2">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">MAQSUR S.A.</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Nro. Contrato</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">268974-2563</p></label>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">BCI</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">1.5 %</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">23.0 %</p></label>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">49</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">01-01-2019</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">01-07-2031</p></label>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-6 col-form-label">A continuación el detalle del financiamiento:</label>
+            </div>
+
+            <div class="form-group row">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Item</th>
+                                <th><p font-size:6px;">Nro Activo</p></th>
+                                <th><p font-size:6px;">Familia</p></th>
+                                <th><p font-size:6px;">Descripcion</p></th>
+                                <th><p font-size:6px;">Clasif. Cuenta</p></th>
+                                <th><p font-size:6px;">Monto</p></th>
+                                <th><p font-size:6px;">Modelo</p></th>
+                                <th><p font-size:6px;">Año</p></th>
+                                <th><p font-size:6px;">Marca</p></th>
+                                <th><p font-size:6px;">Proveedo</p>r</th>
+                                <th><p font-size:6px;">Factura</p></th>
+                                <th><p font-size:6px;">Motor y Chasis</p></th>
+                                <th><p font-size:6px;">Patente</p></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><p font-size:6px;">0253</p></td>
+                                <td><p font-size:6px;">Maquinaria</p></td>
+                                <td><p font-size:6px;">Volquete Volvo</p></td>
+                                <td><p font-size:6px;">01-582-256-52</p></td>
+                                <td><p font-size:6px;">100,000.00</p></td>
+                                <td><p font-size:6px;">V34</p></td>
+                                <td><p font-size:6px;">2019</p></td>
+                                <td><p font-size:6px;">Volvo</p></td>
+                                <td><p font-size:6px;">Inversiones SAC</p></td>
+                                <td><p font-size:6px;">2569887</p></td>
+                                <td><p font-size:6px;">Volvo V34 Diesel</p></td>
+                                <td><p font-size:6px;">1247NH</p></td>
+
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><p font-size:8px;">0653</p></td>
+                                <td><p font-size:8px;">Maquinaria</p></td>
+                                <td><p font-size:8px;">Volquete Volvo</p></td>
+                                <td><p font-size:8px;">01-582-256-52</p></td>
+                                <td><p font-size:8px;">180,000.00</p></td>
+                                <td><p font-size:8px;">H34</p></td>
+                                <td><p font-size:8px;">2018</p></td>
+                                <td><p font-size:8px;">Volvo</p></td>
+                                <td><p font-size:8px;">Inversiones SAC</p></td>
+                                <td><p font-size:8px;">6769832</p></td>
+                                <td><p font-size:8px;">Volvo h34 Diesel</p></td>
+                                <td><p font-size:8px;">1337NH</p></td>
+
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>Total</td>
+                                <th>280,000.00</th>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+
+
+
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-6 col-form-label">Archivo procesado:</label>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Monto Total</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">23,256,268.00</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Archivo</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">Cronograma.xlsx</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Filas procesadas</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">42</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Resultado</label>
+                <label for="inputEmail3" class="col-sm-10 col-form-label"><p style="color:blue;font-size:10px;">Los montos registrados inicialmente son consistentes con la data procesada en el archivo.</p></label>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-6 col-form-label">Documentos cargados:</label>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort" width="3%">Item</th>
+                            <th><p font-size:8px;">Orden de Compra (Banco)</p></th>
+                            <th><p font-size:8px;">Orden de Compra</p></th>
+                            <th><p font-size:8px;">Factura del Proveedor</p></th>
+                            <th><p font-size:8px;">Acta de Entrega</p></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><a href="">Orden124875-BCI.pdf</a></td>
+                            <td><a href="">Orden-2514-202107.docx</a></td>
+                            <td><a href="">Folio-458268.img</a></td>
+                            <td><a href="">ActaEntrega-458268.pdf</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><a href="">Orden125275-BCI.pdf</a></td>
+                            <td><a href="">Orden-2714-202107.docx</a></td>
+                            <td><a href="">Folio-235268.jpge</a></td>
+                            <td><a href="">ActaEntrega-255418.pdf</a></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        $('#perfiles').select2({
+            theme: 'bootstrap4'
+        })
+        window.top.esconderCargando();
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        toastr.error(data.Mensaje);
+        $('#modal-registro').modal('hide');
+    }
+
+</script>

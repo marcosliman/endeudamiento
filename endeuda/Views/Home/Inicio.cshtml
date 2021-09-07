@@ -77,227 +77,227 @@
 </div>
 <div class="row">
 
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header" style="background-color:lightgrey">
-                    <h3 class="card-title">Deuda Vigente por Entidad Financiera</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Deuda Vigente por Entidad Financiera</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
-                                <div id="chart-cobranza" style="height: 200px;background-color: transparent;" data-highcharts-chart="15">
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-cobranza" style="height: 200px;background-color: transparent;" data-highcharts-chart="15">
 
-                                </div>
                             </div>
-                            <script>
-                                // Make monochrome colors
-                                /* var pieColors = (function () {
-                                        var colors = [],
-                                            base = Highcharts.getOptions().colors[0],
-                                            i;
+                        </div>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
 
-                                        for (i = 0; i < 10; i += 1) {
-                                            // Start out with a darkened base color (negative brighten), and end
-                                            // up with a much brighter color
-                                            colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
-                                        }
-                                        return colors;
-                                    }());
-                                    */
-                                // Build the chart
-                                Highcharts.chart('chart-cobranza', {
-                                    chart: {
-                                        plotBackgroundColor: null,
-                                        plotBorderWidth: null,
-                                        plotShadow: false,
-                                        type: 'pie'
-                                    },
-                                    exporting: {
-                                        enabled: false
-                                    },
-                                    title: {
-                                        text: ''
-                                    },
-                                    credits: {
-                                        enabled: false
-                                    },
-                                    tooltip: {
-                                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-                                    },
-                                    accessibility: {
-                                        point: {
-                                            valueSuffix: '%'
-                                        }
-                                    },
-                                    plotOptions: {
-                                        pie: {
-                                            allowPointSelect: true,
-                                            cursor: 'pointer',
-                                            // colors: pieColors,
-                                            dataLabels: {
-                                                enabled: false,
-                                                format: '{point.percentage:.1f} %',
-                                                distance: -50,
-                                                filter: {
-                                                    property: 'percentage',
-                                                    operator: '>',
-                                                    value: 4
-                                                }
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-cobranza', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                                },
+                                accessibility: {
+                                    point: {
+                                        valueSuffix: '%'
+                                    }
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        // colors: pieColors,
+                                        dataLabels: {
+                                            enabled: false,
+                                            format: '{point.percentage:.1f} %',
+                                            distance: -50,
+                                            filter: {
+                                                property: 'percentage',
+                                                operator: '>',
+                                                value: 4
                                             }
                                         }
-                                    },
-                                    series: [{
-                                        name: 'Share',
-                                        data: [
-                                            { name: 'BCI', y: 46 },
-                                            { name: 'SANTANDER', y: 19 },
-                                            { name: 'CHILE', y: 8 },
-                                            { name: 'ESTADO', y: 7 },
-                                            { name: 'SECURITY', y: 2 },
-                                            { name: 'SCOTIABANK', y: 11 },
-                                            { name: 'ITAÚ', y: 5 },
-                                            { name: 'BICE', y: 2 },
-
-
-                                        ]
-                                    }]
-                                });
-                            </script>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th rowspan="2">Entidad Financiera</th>
-                                            <th>Monto Ch$</th>
-
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>BCI</td>
-                                            <th>$2.000.000</th>
-                                        </tr>
-                                        <tr>
-                                            <td>SANTANDER</td>
-                                            <th>$2.000.000</th>
-                                        </tr>
-                                        <tr>
-                                            <td>SCOTIABANK</td>
-                                            <th>$2.000.000</th>
-                                        </tr>
-                                        <tr>
-                                            <td>BBVA</td>
-                                            <th>$2.000.000</th>
-                                        </tr>
-                                        <tr>
-                                            <td>ESTADO</td>
-                                            <th>$2.000.000</th>
-                                        </tr>
-                                        <tr>
-                                            <td>SECURITY</td>
-                                            <th>$2.000.000</th>
-                                        </tr>
-                                        <tr>
-                                            <td>BICE</td>
-                                            <th>$2.000.000</th>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header" style="background-color:lightgray">
-                    <h3 class="card-title">Total de Créditos</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <figure class="highcharts-figure" ">
-                        <div id="chartEstadistico"></div>
-
-                    </figure>
-                    <script>
-                        Highcharts.chart('chartEstadistico', {
-                            chart: {
-                                type: 'column'
-                            },
-                            title: {
-                                text: ''
-                            },
-                            xAxis: {
-                                categories: ['2021', '2022', '2023', '2024', '2025']
-                            },
-                            yAxis: {
-                                allowDecimals: true,
-                                min: 0,
-                                title: {
-                                    text: 'MM$'
+                                    }
                                 },
-                                stackLabels: {
-                                    enabled: true,
-                                    style: {
-                                        fontWeight: 'bold',
-                                        color: ( // theme
-                                            Highcharts.defaultOptions.title.style &&
-                                            Highcharts.defaultOptions.title.style.color
-                                        ) || 'gray'
-                                    }
-                                }
-                            },
-                            /*legend: {
-                                align: 'top',
-                                x: -0,
-                                verticalAlign: 'bottom',
-                                y: 0,
-                                floating: true,
-                                backgroundColor:
-                                    Highcharts.defaultOptions.legend.backgroundColor || 'white',
-                                borderColor: '#CCC',
-                                borderWidth: 0,
-                                shadow: false
-                            },*/
-                            tooltip: {
-                                headerFormat: '<b>{point.x}</b><br/>',
-                                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-                            },
-                            plotOptions: {
-                                column: {
-                                    stacking: 'normal',
-                                    dataLabels: {
-                                        enabled: true
-                                    }
-                                }
-                            },
-                            series: [{
-                                name: 'Deuda Estructurada (Capital)',
-                                data: [1200000, 1400000, 1300000, 1150000, 1060000]
-                            }, {
-                                name: 'Deuda Leasing (Capital)',
-                                data: [1100000, 1300000, 1200000, 900000, 700000]
-                            }]
-                        });
-                    </script>
+                                series: [{
+                                    name: 'Share',
+                                    data: [
+                                        { name: 'BCI', y: 46 },
+                                        { name: 'SANTANDER', y: 19 },
+                                        { name: 'CHILE', y: 8 },
+                                        { name: 'ESTADO', y: 7 },
+                                        { name: 'SECURITY', y: 2 },
+                                        { name: 'SCOTIABANK', y: 11 },
+                                        { name: 'ITAÚ', y: 5 },
+                                        { name: 'BICE', y: 2 },
+
+
+                                    ]
+                                }]
+                            });
+                        </script>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th rowspan="2">Entidad Financiera</th>
+                                        <th>Monto Ch$</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>BCI</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>SANTANDER</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>SCOTIABANK</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>BBVA</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>ESTADO</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>SECURITY</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                    <tr>
+                                        <td>BICE</td>
+                                        <th>$2.000.000</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
+
+
             </div>
         </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgray">
+                <h3 class="card-title">Amortización de la Deuda</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <figure class="highcharts-figure" ">
+                    <div id="chartEstadistico"></div>
+
+                </figure>
+                <script>
+                    Highcharts.chart('chartEstadistico', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: ['2021', '2022', '2023', '2024', '2025']
+                        },
+                        yAxis: {
+                            allowDecimals: true,
+                            min: 0,
+                            title: {
+                                text: 'MM$'
+                            },
+                            stackLabels: {
+                                enabled: true,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: ( // theme
+                                        Highcharts.defaultOptions.title.style &&
+                                        Highcharts.defaultOptions.title.style.color
+                                    ) || 'gray'
+                                }
+                            }
+                        },
+                        /*legend: {
+                            align: 'top',
+                            x: -0,
+                            verticalAlign: 'bottom',
+                            y: 0,
+                            floating: true,
+                            backgroundColor:
+                                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                            borderColor: '#CCC',
+                            borderWidth: 0,
+                            shadow: false
+                        },*/
+                        tooltip: {
+                            headerFormat: '<b>{point.x}</b><br/>',
+                            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                        },
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal',
+                                dataLabels: {
+                                    enabled: true
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Deuda Estructurada (Capital)',
+                            data: [1200000, 1400000, 1300000, 1150000, 1060000]
+                        }, {
+                            name: 'Deuda Leasing (Capital)',
+                            data: [1100000, 1300000, 1200000, 900000, 700000]
+                        }]
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
 
 </div>
 <div class="row">
@@ -403,7 +403,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Deuda completa por Empresa</h3>
+                <h3 class="card-title">Endeudamiento Grupo MAQSUR</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -504,24 +504,28 @@
                                 <tbody>
                                     <tr>
                                         <td>MAQSUR S.A.</td>
-                                        <th>$15.000.000</th>
+                                        <th>$15,000,000.00</th>
                                     </tr>
                                     <tr>
                                         <td>BIOMASA</td>
-                                        <th>$20.000.000</th>
+                                        <th>$20,000,000.00</th>
                                     </tr>
                                     <tr>
                                         <td>TECSUR</td>
-                                        <th>$20.000.000</th>
+                                        <th>$20,000,000.00</th>
                                     </tr>
                                     <tr>
                                         <td>MQS</td>
-                                        <th>$18.000.000</th>
+                                        <th>$18,000,000.00</th>
                                     </tr>
                                     <tr>
                                         <td>NOK</td>
-                                        <th>$27.000.000</th>
+                                        <th>$27,000,000.00</th>
                                     </tr>
+                                <th>
+                                <td>TOTAL</td>
+                                <th>$100,000,000.00</th>
+                                </th>
 
                                 </tbody>
                             </table>
@@ -536,7 +540,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Resumen de deuda</h3>
+                <h3 class="card-title">Resumen Estructura de Deuda del Grupo MAQSUR</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -622,7 +626,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Consolidado por Tipo de Deuda</h3>
+                <h3 class="card-title">Consolidado por Tipo de Deuda MM$</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -644,7 +648,6 @@
                                     <th>2024</th>
                                     <th>2025</th>
                                     <th>2026</th>
-                                    <th>-</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -657,7 +660,6 @@
                                     <td>1,842.00</td>
                                     <td>1,535.00</td>
                                     <td>1,073.00</td>
-                                    <td>-</td>
                                 </tr>
                                 <tr>
                                     <th>Deuda Estructurada (cuota)</th>
@@ -668,7 +670,6 @@
                                     <td>2,094.00</td>
                                     <td>1,705.00</td>
                                     <td>1,172.00</td>
-                                    <td>-</td>
                                 </tr>
                                 <tr>
                                     <th>Deuda Leasing (cuota)</th>
@@ -679,7 +680,6 @@
                                     <td>890.00</td>
                                     <td>314.00</td>
                                     <td>266.00</td>
-                                    <td>-</td>
                                 </tr>
                                 <tr>
                                     <th>Deuda Leasing (capital)</th>
@@ -690,7 +690,6 @@
                                     <td>848.00</td>
                                     <td>292.00</td>
                                     <td>254.00</td>
-                                    <td>-</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -702,69 +701,68 @@
 </div>
 
 
-
 <script>
-    var data = [
-        {
-            id: 0,
-            text: 'Alicate PLano'
-        },
-        {
-            id: 1,
-            text: 'Alicate Universal'
-        },
-        {
-            id: 2,
-            text: 'Alicate Punta Redonda '
-        },
-        {
-            id: 3,
-            text: 'Destornillador estrella'
-        },
-        {
-            id: 4,
-            text: 'Destornillador Plano'
-        }
-    ];
-    $(document).ready(function () {
-        $('#grillaProductos').DataTable({
-            "searching": false,
-            buttons: [],
-        });
-        AbrirMenu('Solicitante');
-        $("#stockMaterial").hide();
-        $('#selectMaterial').select2({
-            placeholder: 'Busque Material',
-            language: "es",
-            minimumInputLength: 3,
-            data: data
-            /*ajax: {
-                url: '/Producto/Productos_Read/',
-                dataType: 'json'
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-            }*/
-        });
-        $('#selectMaterial').on('select2:select', function (e) {
-            var data = e.params.data;
-            $("#stockMaterial").show();
-            $('#selectMaterial').val(null).trigger('change');
-        });
-    })
-
-    function abreMaterial() {
-        $("#datosBuscar").empty();
-        $('#crear-material').modal('show');
-        tmpUrl = "/Home/SolicitudCreaMaterial";
-        $.ajax({
-            url: tmpUrl,
-            type: "Get",
-            data: {},
-            success: function (data) {
-                $("#datosBuscar").empty();
-                $("#datosBuscar").html(data);
-                esconderCargando();
+        var data = [
+            {
+                id: 0,
+                text: 'Alicate PLano'
+            },
+            {
+                id: 1,
+                text: 'Alicate Universal'
+            },
+            {
+                id: 2,
+                text: 'Alicate Punta Redonda '
+            },
+            {
+                id: 3,
+                text: 'Destornillador estrella'
+            },
+            {
+                id: 4,
+                text: 'Destornillador Plano'
             }
-        });
-    }
+        ];
+        $(document).ready(function () {
+            $('#grillaProductos').DataTable({
+                "searching": false,
+                buttons: [],
+            });
+            AbrirMenu('Solicitante');
+            $("#stockMaterial").hide();
+            $('#selectMaterial').select2({
+                placeholder: 'Busque Material',
+                language: "es",
+                minimumInputLength: 3,
+                data: data
+                /*ajax: {
+                    url: '/Producto/Productos_Read/',
+                    dataType: 'json'
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                }*/
+            });
+            $('#selectMaterial').on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#stockMaterial").show();
+                $('#selectMaterial').val(null).trigger('change');
+            });
+        })
+
+        function abreMaterial() {
+            $("#datosBuscar").empty();
+            $('#crear-material').modal('show');
+            tmpUrl = "/Home/SolicitudCreaMaterial";
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: {},
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
 
 </script>

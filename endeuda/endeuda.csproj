@@ -2860,6 +2860,10 @@
     <Content Include="Views\Reportes\ConsolidadoDeudaCreditosCapital.cshtml" />
     <Content Include="Views\Reportes\ConsolidadoDeudaCreditosSin.cshtml" />
     <Content Include="Views\Reportes\ConsolidadoDeudaLeasingTipoActivo.cshtml" />
+    <Content Include="Views\Contrato\ContratoBuscar.cshtml" />
+    <Content Include="Views\Contrato\ModalEditarContratoLeasing.cshtml" />
+    <Content Include="Views\Contrato\ModalEditarContratoCredito.cshtml" />
+    <Content Include="Views\Contrato\ModalContratoLeasingOrigen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
