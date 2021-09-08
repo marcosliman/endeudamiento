@@ -1,0 +1,194 @@
+﻿@{
+    ViewBag.Title = "Detalle Pago";
+    double sumaDebe = 0;
+    double sumaHaber = 0;
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+<div class="modal fade" id="modal-comprobante" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Comprobante de Egreso</h5>
+    <button type="button" class="close" onclick="CerrarModalhijaCE()">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="m-2 cuerpoPDF" id="paraPrint">
+    <div class="card">
+        <div class="card-body">
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th width="34%" class="col-auto">
+                            MAQUINARIAS SUR S.A<br>
+                            RUTA 5 SUR KM 1009 PARCELACION LA LAJA S/N OF.1             <br>
+                            ARRIENDO DE MAQUINARIAS                                     <br>
+                            PUERTO VARAS                  <br>
+                            PUERTO VARAS                  <br>
+                            65 2263601
+                        </th>
+                        <th width="33%" class="col-auto">
+                            <img src="~/img/logo/logo1.png" width="150" />
+                        </th>
+                        <th class="col-auto" width="33%">
+                            <table width="100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-right" align="right">Cpte:</th>
+                                        <td class="text-left" align="left">00017239</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-right" align="right">Área de negocios:</th>
+                                        <td class="text-left" align="left">PUERTO VARAS</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-right" align="right">Tipo:</th>
+                                        <td class="text-left" align="left">EGRESO</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-right" align="right">Fecha:</th>
+                                        <td class="text-left" align="left">19/08/2021</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-right" align="right">Estado:</th>
+                                        <td class="text-left" align="left">VIGENTE</td>
+                                    </tr>
+                                </thead>
+                            </table>
+
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+
+            <dl class="row">
+                <dt class="col-sm-4">
+                </dt>
+                <dd class="col-sm-4 text-center font-weight-bold"><u>COMPROBANTE EGRESO</u><br /><em class="small"><strong>Pago CxP Maqsur Maquinarias SA</strong></em></dd>
+                <dt class="col-sm-4">
+
+                </dt>
+            </dl>
+            <table class="table table-hover dataTable dtr-inline table-sm small" width="100%" id="grillaEgresosModal" data-order='[[ 1, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th>CUENTA</th>
+                        <th>DESCRIPCION</th>
+                        <th>C.COSTO</th>
+                        <th>AUXILIAR</th>
+                        <th>TD</th>
+                        <th>N°DOCTO</th>
+                        <th>DR</th>
+                        <th>N°REFER.</th>
+                        <th class="text-right">DEBE</th>
+                        <th class="text-right">HABER</th>
+                        <th>DESCRIPCION</th>
+                    </tr>
+                </thead>
+                <tbody id="indexTbody">
+                    <tr>
+                        <td>2-1-10-02</td>
+                        <td>CUENTAS POR PAGAR EERR                                      </td>
+                        <td></td>
+                        <td>76.016.402-K</td>
+                        <td>TB</td>
+                        <td>17239</td>
+                        <td>TB</td>
+                        <td>14193</td>
+                        <td class="text-right">5.000.000</td>
+                        <td class="text-right"></td>
+                        <td>Pago CxP Maqsur Maquinarias SA</td>
+                    </tr>
+                    <tr>
+                        <td>1-1-02-04</td>
+                        <td>CUENTA CORRIENTE BANCO CHILE 73-62-443254                   </td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="text-right"></td>
+                        <td class="text-right">5.000.000</td>
+                        <td>Pago CxP Maqsur Maquinarias SA</td>
+                    </tr>
+
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th colspan="3">TOTAL GENERAL</th>
+                        <th class="text-right">5.000.000</th>
+                        <th class="text-right">5.000.000</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <br /><br /><br /><br />
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th class="border-bottom border-dark col-auto" width="30%"></th>
+                        <th width="50%" class="col-auto" style="width:40%">&nbsp;</th>
+                        <th class="border-bottom border-dark" width="30%" class="col-auto"></th>
+                    </tr>
+                    <tr>
+                        <th align="center" class="text-center">JOSE NEFTALI BARRIA BARRIENTOS</th>
+                        <th></th>
+                        <th align="center" class="text-center">Encargado Dpto. Contabilidad</th>
+                    </tr>
+                </thead>
+            </table>
+            <br />
+            <table width="100%">
+                <thead>
+                    <tr>
+                        <th width="33%" class="col-auto"></th>
+                        <th width="33%" class="col-auto"></th>
+                        <th width="33%" class="col-auto text-right small">@DateTime.Now.ToString("dddd"), @DateTime.Now.Day de @DateTime.Now.ToString("MMMM") de @DateTime.Now.ToString("Y")</th>
+                    </tr>
+
+                </thead>
+            </table>
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-sm" onclick="Imprimir()"><i class="fa fa-print"></i> Imprimir</button>
+    <button type="button" class="btn btn-secondary btn-sm" onclick="CerrarModalhijaCE()">Cerrar</button>
+</div>
+<script>
+    $(document).ready(function () {
+        window.top.esconderCargando();
+        $('#modal-comprobante').on('hidden.bs.modal', function (e) {
+            $('body').addClass("modal-open")
+        });
+    });
+    function CerrarModalhijaCE() {
+        $('#modal-comprobante').modal('hide');
+        $('#modal-comprobanteHist').modal('hide');
+    }
+    function Imprimir() {
+        var mode = "iframe";
+        var close;
+        var extraCss;
+        var print = "";
+        var keepAttr;
+        var headElements = '<meta charset="utf-8" />';
+        var options = { mode: mode, popClose: close, extraCss: extraCss, retainAttr: keepAttr, extraHead: headElements };
+        $('#paraPrint').printArea(options);
+    }
+</script>

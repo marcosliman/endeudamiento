@@ -5,6 +5,13 @@
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
 <div class="modal-content">
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Detalle de Leasing</h5>
@@ -29,7 +36,6 @@
                             <th>Amortización</th>
                             <th>Saldo Insoluto</th>
                             <th>Comp. de Egre.</th>
-                            <th class="no-sort" width="3%">&nbsp;</th>
                         </tr>
                         <tr>
                             <th></th>
@@ -42,6 +48,7 @@
                             <th></th>
                             <th></th>
                             <th>103,081,339.00</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -56,8 +63,7 @@
                             <td>365,940.00</td>
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
-                            <td>23458</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00017239</a></td>
 
                         </tr>
                         <tr>
@@ -72,7 +78,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>85248</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -87,7 +93,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>87925</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -102,7 +108,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>80562</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -117,7 +123,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>84127</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -132,7 +138,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>82699</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -147,7 +153,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>87418</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -162,7 +168,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>89002</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -177,7 +183,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>88524</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -192,7 +198,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>80526</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -207,7 +213,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>79428</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -222,7 +228,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>74186</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -237,7 +243,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>75418</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr><tr>
                             <td>0</td>
@@ -251,7 +257,7 @@
                             <td>1,929,755.00</td>
                             <td>101,151,584</td>
                             <td>12548</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
                         
 
                         </tr>
@@ -300,5 +306,23 @@
         toastr.error(data.Mensaje);
         $('#modal-registro').modal('hide');
     }
-
+    function ModalComprobanteModal(IdProgramacion, nroComprobante) {
+        var tmpUrl = "/Amortizacion/ComprobanteEgreso";
+        $("#datosComprobante").empty();
+        $('#modal-comprobante').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { IdProgramacion: IdProgramacion, nroComprobante: nroComprobante },
+            beforeSend: function () {
+                $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosComprobante").empty();
+                $("#datosComprobante").html(data);
+                esconderCargando();
+            }
+        });
+    }
 </script>

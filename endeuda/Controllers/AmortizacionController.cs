@@ -88,5 +88,10 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public ActionResult ComprobanteEgreso()
+        {
+            return View();            
+        }
+        
     }
 }

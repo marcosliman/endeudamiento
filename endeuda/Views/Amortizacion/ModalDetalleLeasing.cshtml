@@ -5,6 +5,13 @@
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
 <div class="modal-content">
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Detalle de Leasing</h5>
@@ -31,7 +38,6 @@
                             <th>Factura</th>
                             <th>Comp. de Cont.</th>
                             <th>Comp. de Egre.</th>
-                            <th class="no-sort" width="3%">&nbsp;</th>
                         </tr>
                         <tr>
                             <th></th>
@@ -46,8 +52,7 @@
                             <th>103,081,339.00</th>
                             <th></th>
                             <th></th>
-                            <th></th>
-                            <th></th>
+                            <th></th>                          
                         </tr>
                     </thead>
                     <tbody>
@@ -64,8 +69,8 @@
                             <td>101,151,584</td>
                             <td>235856</td>
                             <td>89526</td>
-                            <td>23458</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00017239</a></td>
+                            
                         
                         </tr>
                         <tr>
@@ -82,7 +87,7 @@
                             <td>1487596</td>
                             <td>89502</td>
                             <td>14274</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -99,7 +104,7 @@
                             <td>124741</td>
                             <td>80510</td>
                             <td>200645</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -116,7 +121,7 @@
                             <td>235856</td>
                             <td>89526</td>
                             <td>23458</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -133,7 +138,7 @@
                             <td>125421</td>
                             <td>78965</td>
                             <td>23112</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -150,7 +155,7 @@
                             <td>1421985</td>
                             <td>798523</td>
                             <td>1245</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -167,7 +172,7 @@
                             <td>259875</td>
                             <td>78451</td>
                             <td>6455</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -184,7 +189,7 @@
                             <td>74859</td>
                             <td>79652</td>
                             <td>4565</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -201,7 +206,7 @@
                             <td>1542863</td>
                             <td>85648</td>
                             <td>74102</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -218,7 +223,7 @@
                             <td>12456</td>
                             <td>85235</td>
                             <td>42563</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -235,7 +240,7 @@
                             <td>14758</td>
                             <td>800256</td>
                             <td>1245</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -252,7 +257,7 @@
                             <td>98653</td>
                             <td>80425</td>
                             <td>235648</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -269,7 +274,7 @@
                             <td>245227</td>
                             <td>124158</td>
                             <td>85246</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
                         <tr>
@@ -286,7 +291,7 @@
                             <td>98746</td>
                             <td>785478</td>
                             <td>1242258</td>
-                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
+                            
 
                         </tr>
 
@@ -334,5 +339,23 @@
         toastr.error(data.Mensaje);
         $('#modal-registro').modal('hide');
     }
-
+    function ModalComprobanteModal(IdProgramacion, nroComprobante) {
+        var tmpUrl = "/Amortizacion/ComprobanteEgreso";
+        $("#datosComprobante").empty();
+        $('#modal-comprobante').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { IdProgramacion: IdProgramacion, nroComprobante: nroComprobante },
+            beforeSend: function () {
+                $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosComprobante").empty();
+                $("#datosComprobante").html(data);
+                esconderCargando();
+            }
+        });
+    }
 </script>
