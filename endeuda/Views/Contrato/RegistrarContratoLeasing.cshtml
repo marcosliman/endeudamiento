@@ -62,143 +62,178 @@
                     }, new { id = "frmEdit", @class = "form-horizontal" }))
                     {
                         @Html.AntiForgeryToken()
-                    <div class="ml-2">
-
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-3 col-form-label">Empresa</label>
-                            <label for="inputEmail3" class="col-sm-3 col-form-label">MAQSUR S.A.</label>
-                            <label for="inputEmail3" class="col-sm-3 col-form-label">Nro. Contrato</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
-                            <div class="col-sm-2">
-                                <select class="form-control form-control-sm">
-                                    <option value="">--Seleccione Banco--</option>
-                                    <option>BCI</option>
-                                    <option>SANTANDER</option>
-                                    <option>SCOTIABANK</option>
-                                </select>
-                            </div>
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
-                            </div>
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
-                            </div>
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
-                            </div>
-                            <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
-                            <div class="col-sm-2">
-                                <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="inputEmail3" class="col-sm-6 col-form-label">A continuación registre el detalle del financiamiento:</label>
-
-                        </div>
-                        <div class="form-group row">
-                            <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                                <div class="form-inline my-2 my-lg-0">
-                                    <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="fa fa-plus"></i>Nuevo Cliente</button>
-                                </div>
-                            </nav>
-                            <div class="align-content-lg-start">
-                                <div class="form-inline my-2 my-lg-0">
-                                    <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="fa fa-plus"></i> Nuevo Activo</button>
+                        <div class="card">
+                            <div class="card-header" style="background-color:white">
+                                <h3 class="card-title">Datos Generales</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <div class="table-responsive mt-1">
-                                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                                    <thead class="thead-light">
-                                        <tr>
-                                            <th class="no-sort" width="3%">&nbsp;</th>
-                                            <th>Nro Activo</th>
-                                            <th>Familia</th>
-                                            <th>Descripcion</th>
-                                            <th>Clasif. Cuenta</th>
-                                            <th>Monto</th>
-                                            <th>Modelo</th>
-                                            <th>Año</th>
-                                            <th>Marca</th>
-                                            <th>Proveedor</th>
-                                            <th>Factura</th>
-                                            <th>Motor y Chasis</th>
-                                            <th>Patente</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
-                                            <td>0253</td>
-                                            <td>Maquinaria</td>
-                                            <td>Volquete Volvo</td>
-                                            <td>01-582-256-52</td>
-                                            <td>100,000.00</td>
-                                            <td>V34</td>
-                                            <td>2019</td>
-                                            <td>Volvo</td>
-                                            <td>Inversiones SAC</td>
-                                            <td>2569887</td>
-                                            <td>Volvo V34 Diesel</td>
-                                            <td>1247NH</td>
-                                            <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
-                                            <td>0653</td>
-                                            <td>Maquinaria</td>
-                                            <td>Volquete Volvo</td>
-                                            <td>01-582-256-52</td>
-                                            <td>180,000.00</td>
-                                            <td>H34</td>
-                                            <td>2018</td>
-                                            <td>Volvo</td>
-                                            <td>Inversiones SAC</td>
-                                            <td>6769832</td>
-                                            <td>Volvo h34 Diesel</td>
-                                            <td>1337NH</td>
-                                            <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td> </td>
-                                            <th>Total</th>
-                                            <td>280,000.00</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-
-                                    </tbody>
-                                </table>
-
-
-
-
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Licitación</label>
+                                    <div class="col-sm-2">
+                                        <select class="form-control form-control-sm">
+                                            <option value="0">---Seleccione Licitación---</option>
+                                            <option value="1">LEASING0001</option>
+                                            <option value="2">LEASING0002</option>
+                                            <option value="3">LEASING0003</option>
+                                            <option value="3">LEASING0004</option>
+                                            <option value="3">LEASING0005</option>
+                                        </select>
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Sustento</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-sm" name="Sustento" id="Sustento" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+                                    <div class="col-sm-2">
+                                        <select class="form-control form-control-sm">
+                                            <option value="0">---Seleccione Empresa---</option>
+                                            <option value="1">MAQSUR S.A.</option>
+                                            <option value="2">BIOMASA</option>
+                                            <option value="3">TECSUR</option>
+                                            <option value="3">MQS</option>
+                                            <option value="3">NOK</option>
+                                        </select>
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Nro. Contrato</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
+                                    <div class="col-sm-2">
+                                        <select class="form-control form-control-sm">
+                                            <option value="">--Seleccione Banco--</option>
+                                            <option>BCI</option>
+                                            <option>SANTANDER</option>
+                                            <option>SCOTIABANK</option>
+                                        </select>
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="card">
+                            <div class="card-header" style="background-color:white">
+                                <h3 class="card-title">Registrar Activos</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                                        <div class="form-inline my-2 my-lg-0">
+                                            <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="fa fa-plus"></i>Nuevo Activo</button>
+                                        </div>
+                                    </nav>
+                                    <div class="table-responsive mt-1">
+                                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th class="no-sort" width="3%">&nbsp;</th>
+                                                    <th>Nro Activo</th>
+                                                    <th>Familia</th>
+                                                    <th>Descripcion</th>
+                                                    <th>Clasif. Cuenta</th>
+                                                    <th>Monto</th>
+                                                    <th>Modelo</th>
+                                                    <th>Año</th>
+                                                    <th>Marca</th>
+                                                    <th>Proveedor</th>
+                                                    <th>Factura</th>
+                                                    <th>Motor y Chasis</th>
+                                                    <th>Patente</th>
+                                                    <th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                                    <td>0253</td>
+                                                    <td>Maquinaria</td>
+                                                    <td>Volquete Volvo</td>
+                                                    <td>01-582-256-52</td>
+                                                    <td>100,000.00</td>
+                                                    <td>V34</td>
+                                                    <td>2019</td>
+                                                    <td>Volvo</td>
+                                                    <td>Inversiones SAC</td>
+                                                    <td>2569887</td>
+                                                    <td>Volvo V34 Diesel</td>
+                                                    <td>1247NH</td>
+                                                    <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                                    <td>0653</td>
+                                                    <td>Maquinaria</td>
+                                                    <td>Volquete Volvo</td>
+                                                    <td>01-582-256-52</td>
+                                                    <td>180,000.00</td>
+                                                    <td>H34</td>
+                                                    <td>2018</td>
+                                                    <td>Volvo</td>
+                                                    <td>Inversiones SAC</td>
+                                                    <td>6769832</td>
+                                                    <td>Volvo h34 Diesel</td>
+                                                    <td>1337NH</td>
+                                                    <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td> </td>
+                                                    <th>Total</th>
+                                                    <td>280,000.00</td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="card-footer">
                             <button type="button" onclick="location.href='/Home/Inicio'" class="btn btn-secondary btn-sm" data-dismiss="modal">Volver</button>
                             <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Siguiente</button>
@@ -208,7 +243,7 @@
                 <div id="amortizacion-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header" style="background-color:lightgrey">
+                            <div class="card-header" style="background-color:white">
                                 <h3 class="card-title">Cargar archivo</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool">
@@ -230,7 +265,7 @@
                     </div>
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header" style="background-color:lightgrey">
+                            <div class="card-header" style="background-color:white">
                                 <h3 class="card-title">Resultado de la validación</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -320,7 +355,7 @@
                 <div id="documentos-part" class="content" role="tabpanel" aria-labelledby="documentos-part-trigger">
 
                         <div class="card">
-                            <div class="card-header" style="background-color:lightgrey">
+                            <div class="card-header" style="background-color:white">
                                 <h3 class="card-title">Archivos del proyecto: Se registraron dos (02) activos.</h3>
                                 <div class="card-tools">
                                     <button type="button" class="btn btn-tool">
@@ -412,7 +447,7 @@
                             </div>
                             <div class="card-footer">
                                 <button type="button" class="btn btn-info btn-sm" onclick="stepper1.previous()">Anterior</button>
-                                    <button type="button" onclick="solicitudVerifica()" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Enviar Solicitud</button>
+                                    <button type="button" onclick="solicitudVerifica()" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Guardar Contrato</button>
                             </div>
                         </div>
 

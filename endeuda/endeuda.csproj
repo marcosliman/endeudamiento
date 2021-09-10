@@ -246,6 +246,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\LicitacionController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\AmortizacionController.cs" />
     <Compile Include="Controllers\EmpresaController.cs" />
@@ -2866,6 +2867,11 @@
     <Content Include="Views\Contrato\ModalContratoLeasingOrigen.cshtml" />
     <Content Include="Views\Reportes\ActivosFinanciados.cshtml" />
     <Content Include="Views\Amortizacion\ComprobanteEgreso.cshtml" />
+    <Content Include="Views\Licitacion\RegistrarLicitacion.cshtml" />
+    <Content Include="Views\Licitacion\ModalRegistrarOferta.cshtml" />
+    <Content Include="Views\Licitacion\ModalRegistrarActivo.cshtml" />
+    <Content Include="Views\Reportes\ModalEstadoActivo.cshtml" />
+    <Content Include="Views\Reportes\CuotasPagadas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

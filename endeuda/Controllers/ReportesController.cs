@@ -105,5 +105,31 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public ActionResult CuotasPagadas()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("CuotasPagadas", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public ActionResult ModalEstadoActivo()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }

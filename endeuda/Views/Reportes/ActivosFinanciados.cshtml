@@ -51,27 +51,12 @@
                         </div>
 
                         <div class="col-sm-2">
-                            <select name="empresa" class="form-control">
-                                <option>--Seleccione Mes--</option>
-                                <option value="1">Enero</option>
-                                <option value="2">Febrero</option>
-                                <option value="3">Marzo</option>
-                                <option value="4">Abril</option>
-                                <option value="5">Mayo</option>
-                                <option value="6">Junio</option>
-                                <option value="7">Julio</option>
-                                <option value="8">Agosto</option>
-                                <option value="9">Septiembre</option>
-                                <option value="10">Octubre</option>
-                                <option value="11">Noviembre</option>
-                                <option value="12">Diciembre</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-2">
                             <input type="text" class="form-control" id="nombrearchivo" placeholder="Número de Activo">
                         </div>
                         <div class="col-sm-2">
-                            
+                        </div>
+                        <div class="col-sm-2">
+
                         </div>
                         <div class="col-sm-2">
                             <div class="row justify-content-end">
@@ -94,8 +79,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Consolidado Deuda Leasing</label>
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
@@ -111,12 +95,14 @@
                                 <th>Inicio</th>
                                 <th>Monto Inicial Deuda</th>
                                 <th>Tasa Anual</th>
-                                <th>Moneda</th>
+                                <th width="3%">Moneda</th>
+                                <th>Seguro</th>
+                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>005289</td>
                                 <td>Compresora</td>
                                 <th>Equipos</th>
@@ -128,9 +114,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>Itaú - 2515489</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>2</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>256325</td>
                                 <td>Terreno A123</td>
                                 <td>Terrenos y Construcciones</td>
@@ -142,9 +130,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BCI - 142225</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>3</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>10258</td>
                                 <td>Compresora</td>
                                 <td>Maquinaria</td>
@@ -156,9 +146,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BCI - 001428</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>4</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>025365</td>
                                 <td>V786</td>
                                 <td>Embarcaciones</td>
@@ -170,9 +162,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>Itaú - 147745</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>5</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>78452</td>
                                 <td>N87JU87</td>
                                 <td>Vehículos</td>
@@ -184,9 +178,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>Scotiabank - 9965804</td>
+                                <td>De Baja</td>
                             </tr>
                             <tr>
-                                <td>6</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>005289</td>
                                 <td>Compresora</td>
                                 <th>Equipos</th>
@@ -198,9 +194,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>Scotiabank - 14254441</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>7</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>256325</td>
                                 <td>Terreno A123</td>
                                 <td>Terrenos y Construcciones</td>
@@ -212,9 +210,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BBVA - 742245</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>8</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>10258</td>
                                 <td>Compresora</td>
                                 <td>Maquinaria</td>
@@ -226,9 +226,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BBVA - 203158</td>
+                                <td>De Baja</td>
                             </tr>
                             <tr>
-                                <td>9</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>025365</td>
                                 <td>V786</td>
                                 <td>Embarcaciones</td>
@@ -240,9 +242,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BCI - 00142785</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>10</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>78452</td>
                                 <td>N87JU87</td>
                                 <td>Vehículos</td>
@@ -254,9 +258,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>Itaú - 9865852</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>11</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>005289</td>
                                 <td>Compresora</td>
                                 <th>Equipos</th>
@@ -268,9 +274,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>Santander - 352586</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>12</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>256325</td>
                                 <td>Terreno A123</td>
                                 <td>Terrenos y Construcciones</td>
@@ -282,9 +290,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BCI - 42457813</td>
+                                <td>De Baja</td>
                             </tr>
                             <tr>
-                                <td>13</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>10258</td>
                                 <td>Compresora</td>
                                 <td>Maquinaria</td>
@@ -296,9 +306,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BCI - 852546</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>14</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>025365</td>
                                 <td>V786</td>
                                 <td>Embarcaciones</td>
@@ -310,9 +322,11 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BBVA - 471478</td>
+                                <td>Activo</td>
                             </tr>
                             <tr>
-                                <td>15</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#estadoactivo"><i class="far fa-eye"></i></button></td>
                                 <td>78452</td>
                                 <td>N87JU87</td>
                                 <td>Vehículos</td>
@@ -324,6 +338,8 @@
                                 <td>61,224,950.00</td>
                                 <td>5,5%</td>
                                 <td>$</td>
+                                <td>BBVA - 0012489</td>
+                                <td>Activo</td>
                             </tr>
                         </tbody>
                     </table>
@@ -334,155 +350,162 @@
     </div>
 </div>
 
+<div class="modal fade" id="estadoactivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalEstadoActivo", null)
+    </div>
+</div>
+
+
 <script>
-        $(document).ready(function () {
-            AbrirMenu("ConsolidadoDeudaLeasing");
-        });
+    $(document).ready(function () {
+        AbrirMenu("ActivosFinanciados");
+    });
 </script>
 
-    @*
-        <!-- DataTable with Hover -->
-        <script>
-            $(document).ready(function () {
-                AbrirMenu("LibroVentas");
-                $('#grillaEmpresa').DataTable();
-                moment.locale('es');
-                $('#fecha').daterangepicker({
-                    autoUpdateInput: false,
-                    "locale": {
-                        format: "DD/MM/YYYY",
-                        "separator": " - ",
-                        "applyLabel": "Aplicar",
-                        "cancelLabel": "Limpiar",
-                        "fromLabel": "DE",
-                        "toLabel": "HASTA",
-                        "customRangeLabel": "Personalizar",
-                        "daysOfWeek": [
-                            "Dom",
-                            "Lun",
-                            "Mar",
-                            "Mie",
-                            "Jue",
-                            "Vie",
-                            "Sáb"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                });
-
-                $('#fecha').on('apply.daterangepicker', function (ev, picker) {
-                    $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-                    //RefreshLista();
-                });
-
-
-                $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
-                    $(this).val('');
-                    //RefreshLista();
-                });
-                $('#selectEmpresa').select2({
-                    placeholder: '---Seleccione Empresa---',
-                    language: "es",
-                    allowClear: true,
-                });
-
+@*
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            AbrirMenu("LibroVentas");
+            $('#grillaEmpresa').DataTable();
+            moment.locale('es');
+            $('#fecha').daterangepicker({
+                autoUpdateInput: false,
+                "locale": {
+                    format: "DD/MM/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Aplicar",
+                    "cancelLabel": "Limpiar",
+                    "fromLabel": "DE",
+                    "toLabel": "HASTA",
+                    "customRangeLabel": "Personalizar",
+                    "daysOfWeek": [
+                        "Dom",
+                        "Lun",
+                        "Mar",
+                        "Mie",
+                        "Jue",
+                        "Vie",
+                        "Sáb"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
             });
-            function RefreshLista() {
-                var table = initTable();
-                table.ajax.reload(function (json) { });
-            }
-            function initTable() {
-                var table = $('#grillaEmpresa').DataTable({
-                    "scrollX": true,
-                    "retrieve": true,
-                    'ajax': {
-                        "type": "POST",
-                        "url": '/Vencidas/Vencidas_Read/0',
-                        "data": function (d) {
 
-                        },
-                        "dataSrc": ""
+            $('#fecha').on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                //RefreshLista();
+            });
+
+
+            $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                //RefreshLista();
+            });
+            $('#selectEmpresa').select2({
+                placeholder: '---Seleccione Empresa---',
+                language: "es",
+                allowClear: true,
+            });
+
+        });
+        function RefreshLista() {
+            var table = initTable();
+            table.ajax.reload(function (json) { });
+        }
+        function initTable() {
+            var table = $('#grillaEmpresa').DataTable({
+                "scrollX": true,
+                "retrieve": true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/Vencidas/Vencidas_Read/0',
+                    "data": function (d) {
+
                     },
-                    columns: [
+                    "dataSrc": ""
+                },
+                columns: [
 
-                        {
-                            "mData": null,
-                            "bSortable": false,
-                            "mRender": function (o, type, row) {
-                                var boton = '';
-                                boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
-                                return boton;
-                            }
-                        },
-                        { "data": "Sociedad" },
-                        { "data": "RutCliente" },
-                        { "data": "Cliente" },
-                        { "data": "Emisión" },
-                        { "data": "Vencimiento" },
-                        { "data": "Factura" },
-                        { "data": "Monto" },
-                        {
-                            "mData": null,
-                            "bSortable": false,
-                            "mRender": function (o, type, row) {
-                                var estado = 'NO';
-                                if (o.Activo == true) {
-                                    estado = "SI";
-                                }
-                                return estado;
-                            }
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
+                            return boton;
                         }
-                    ]
-                });
-
-                return table;
-            }
-
-        </script>
-        <script>
-            $(document).ready(function () {
-
-                $('#frmEdit').validate({
-                    debug: false,
-                    errorElement: "em",
-                    errorContainer: $("#warning")
-                });
-                $('#perfiles').select2({
-                    theme: 'bootstrap4'
-                })
-                window.top.esconderCargando();
+                    },
+                    { "data": "Sociedad" },
+                    { "data": "RutCliente" },
+                    { "data": "Cliente" },
+                    { "data": "Emisión" },
+                    { "data": "Vencimiento" },
+                    { "data": "Factura" },
+                    { "data": "Monto" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var estado = 'NO';
+                            if (o.Activo == true) {
+                                estado = "SI";
+                            }
+                            return estado;
+                        }
+                    }
+                ]
             });
 
-            function Success_dl(data) {
-                esconderCargando();
-                if (data.Estado == "0") {
-                    toastr.success(data.Mensaje);
-                    $('#modal-registro').modal('hide');
-                    RefreshLista();
-                }
-                else {
-                    toastr.error(data.Mensaje);
-                }
-            }
-            function Failure_dl(data) {
-                esconderCargando();
-                toastr.error(data.Mensaje);
-                $('#modal-registro').modal('hide');
-            }
+            return table;
+        }
 
-        </script>
-    *@
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $('#frmEdit').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            $('#perfiles').select2({
+                theme: 'bootstrap4'
+            })
+            window.top.esconderCargando();
+        });
+
+        function Success_dl(data) {
+            esconderCargando();
+            if (data.Estado == "0") {
+                toastr.success(data.Mensaje);
+                $('#modal-registro').modal('hide');
+                RefreshLista();
+            }
+            else {
+                toastr.error(data.Mensaje);
+            }
+        }
+        function Failure_dl(data) {
+            esconderCargando();
+            toastr.error(data.Mensaje);
+            $('#modal-registro').modal('hide');
+        }
+
+    </script>
+*@
