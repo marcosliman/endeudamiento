@@ -2872,6 +2872,7 @@
     <Content Include="Views\Licitacion\ModalRegistrarActivo.cshtml" />
     <Content Include="Views\Reportes\ModalEstadoActivo.cshtml" />
     <Content Include="Views\Reportes\CuotasPagadas.cshtml" />
+    <Content Include="Views\Reportes\ControlActivoCodigoInterno.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,415 @@
+﻿@{
+    ViewBag.Title = "Reporte";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Reporte</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Control de Activos por Código Interno</h6>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-outline card-info collapsed-card">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Filtros</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <select name="empresa" class="form-control">
+                                <option>--Seleccione Empresa--</option>
+                                <option value="1">Todas</option>
+                                <option value="2">MAQSUR S.A.</option>
+                                <option value="3">BIOMASA</option>
+                                <option value="3">TECSUR</option>
+                                <option value="3">MQS</option>
+                                <option value="3">NOK</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <select name="banco" class="form-control">
+                                <option>--Seleccione Banco--</option>
+                                <option value="1">Todas</option>
+                                <option value="2">BCI</option>
+                                <option value="3">SANTANDER</option>
+                                <option value="3">SCOTIABANK</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="nombrearchivo" placeholder="Número de Contrato">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="nombrearchivo" placeholder="Número de Licitación">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="nombrearchivo" placeholder="Número de Activo">
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="row justify-content-end">
+                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-cog"></i> Generar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Detalle</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%">Item</th>
+                                <th>Código Temporal</th>
+                                <th>Descripción</th>
+                                <th>Empresa</th>
+                                <th>Entidad Financiera</th>
+                                <th>Contrato Asociado</th>
+                                <th>Número de Licitación</th>
+                                <th>Número Interno</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>001258</td>
+                                <td>Compresora</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>Itaú</td>
+                                <th>002856</th>
+                                <td>00235</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>001448</td>
+                                <td>Compresora</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BBVA</td>
+                                <th>200452</th>
+                                <td>00047</td>
+                                <td>1542698</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>Itaú</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>016878</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>Itaú</td>
+                                <th>032856</th>
+                                <td>05425</td>
+                                <td>258462</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>BCI</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>6</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>BCI</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>7</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>SECURITY</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>8</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>SCOTIABANK</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>SCOTIABANK</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>10</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>SCOTIABANK</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>11</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>SCOTIABANK</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>12</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>SANTANDER</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>13</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>SANTANDER</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>BBVA</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>15</td>
+                                <td>003478</td>
+                                <td>Volvo V654</td>
+                                <td>TECSUR S.A.</td>
+                                <td>BBVA</td>
+                                <th>003356</th>
+                                <td>00125</td>
+                                <td>-</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="estadoactivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalEstadoActivo", null)
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("ActivosFinanciados");
+    });
+</script>
+
+@*
+    <!-- DataTable with Hover -->
+    <script>
+        $(document).ready(function () {
+            AbrirMenu("LibroVentas");
+            $('#grillaEmpresa').DataTable();
+            moment.locale('es');
+            $('#fecha').daterangepicker({
+                autoUpdateInput: false,
+                "locale": {
+                    format: "DD/MM/YYYY",
+                    "separator": " - ",
+                    "applyLabel": "Aplicar",
+                    "cancelLabel": "Limpiar",
+                    "fromLabel": "DE",
+                    "toLabel": "HASTA",
+                    "customRangeLabel": "Personalizar",
+                    "daysOfWeek": [
+                        "Dom",
+                        "Lun",
+                        "Mar",
+                        "Mie",
+                        "Jue",
+                        "Vie",
+                        "Sáb"
+                    ],
+                    "monthNames": [
+                        "Enero",
+                        "Febrero",
+                        "Marzo",
+                        "Abril",
+                        "Mayo",
+                        "Junio",
+                        "Julio",
+                        "Agosto",
+                        "Septiembre",
+                        "Octubre",
+                        "Noviembre",
+                        "Diciembre"
+                    ],
+                    "firstDay": 1
+                }
+            });
+
+            $('#fecha').on('apply.daterangepicker', function (ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                //RefreshLista();
+            });
+
+
+            $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                //RefreshLista();
+            });
+            $('#selectEmpresa').select2({
+                placeholder: '---Seleccione Empresa---',
+                language: "es",
+                allowClear: true,
+            });
+
+        });
+        function RefreshLista() {
+            var table = initTable();
+            table.ajax.reload(function (json) { });
+        }
+        function initTable() {
+            var table = $('#grillaEmpresa').DataTable({
+                "scrollX": true,
+                "retrieve": true,
+                'ajax': {
+                    "type": "POST",
+                    "url": '/Vencidas/Vencidas_Read/0',
+                    "data": function (d) {
+
+                    },
+                    "dataSrc": ""
+                },
+                columns: [
+
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
+                            return boton;
+                        }
+                    },
+                    { "data": "Sociedad" },
+                    { "data": "RutCliente" },
+                    { "data": "Cliente" },
+                    { "data": "Emisión" },
+                    { "data": "Vencimiento" },
+                    { "data": "Factura" },
+                    { "data": "Monto" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var estado = 'NO';
+                            if (o.Activo == true) {
+                                estado = "SI";
+                            }
+                            return estado;
+                        }
+                    }
+                ]
+            });
+
+            return table;
+        }
+
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $('#frmEdit').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            $('#perfiles').select2({
+                theme: 'bootstrap4'
+            })
+            window.top.esconderCargando();
+        });
+
+        function Success_dl(data) {
+            esconderCargando();
+            if (data.Estado == "0") {
+                toastr.success(data.Mensaje);
+                $('#modal-registro').modal('hide');
+                RefreshLista();
+            }
+            else {
+                toastr.error(data.Mensaje);
+            }
+        }
+        function Failure_dl(data) {
+            esconderCargando();
+            toastr.error(data.Mensaje);
+            $('#modal-registro').modal('hide');
+        }
+
+    </script>
+*@

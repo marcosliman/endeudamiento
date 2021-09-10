@@ -131,5 +131,21 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        
+        public ActionResult ControlActivoCodigoInterno()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("ControlActivoCodigoInterno", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }
