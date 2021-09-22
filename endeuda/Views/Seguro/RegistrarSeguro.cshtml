@@ -1,0 +1,273 @@
+﻿@{
+    ViewBag.Title = "Registrar Póliza de Seguro";
+}
+<!-- BS Stepper -->
+<link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
+<!-- BS-Stepper -->
+<script src="~/Plantilla/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<div class="modal fade" id="modal-buscar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h5 class="h5 mb-0 text-gray-800">Nueva Póliza de Seguro<h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<div class="card">
+    <div class="card card-outline card-info collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">Datos Generales</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+            <div class="col-sm-2">
+                <select class="form-control form-control-sm">
+                    <option value="0">---Seleccione Empresa---</option>
+                    <option value="1">MAQSUR S.A.</option>
+                    <option value="2">BIOMASA</option>
+                    <option value="3">TECSUR</option>
+                    <option value="4">MQS</option>
+                    <option value="5">NOK</option>
+                </select>
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Número Poliza</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="NumeroPoliza" id="NumeroPoliza" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Seguro</label>
+            <div class="col-sm-2">
+                <select class="form-control form-control-sm">
+                    <option value="0">---Seleccione Tipo de Seguro---</option>
+                    <option value="1">Tipo 1</option>
+                    <option value="2">Tipo 2</option>
+                    <option value="3">Tipo 3</option>
+                    <option value="4">Tipo 4</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row">
+
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa aseguradora</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="Aseguradora" id="Aseguradora" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Monto asegurado</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="MontoAsegurado" id="MontoAsegurado" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Prima mensual</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="PrimaMensual" id="PrimaMensual" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Número pagos</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="NumeroPagos" id="NumeroPagos" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de moneda</label>
+            <div class="col-sm-2">
+                <select class="form-control form-control-sm">
+                    <option value="0">---Seleccione Tipo de moneda---</option>
+                    <option value="1">USD</option>
+                    <option value="2">CLP</option>
+                </select>
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha venc. seguro</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="FechaFinSeguro" id="FechaFinSeguro" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Beneficiario</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="Beneficiario" id="Beneficiario" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">RUT beneficiario</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="RutBeneficiario" id="RutBeneficiario" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha envío bancos</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="FechaEnvioBanco" id="FechaEnvioBanco" />
+            </div>
+        </div>
+    </div>    
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Carga Documentaria</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación cargue los documentos que correspondan a la Póliza</label>
+        </div>
+        <div class="row">
+            <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Contrato</label>
+            <div class="col-3">
+                <div class="col-sm-auto col-form-label">
+                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                </div>
+            </div>
+            <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Otros Documentos</label>
+            <div class="col-3">
+                <div class="col-sm-auto col-form-label">
+                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                </div>
+            </div>
+            <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Otros Documentos</label>
+            <div class="col-3">
+                <div class="col-sm-auto col-form-label">
+                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                </div>
+            </div>
+            <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Otros Documentos</label>
+            <div class="col-3">
+                <div class="col-sm-auto col-form-label">
+                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Búsqueda de Activos</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de activos cubiertos por la Póliza</label>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-1">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-1 my-lg-0">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Buscar Activo</button>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-sm-10">
+            </div>
+            <div class="col-sm-1">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-1 my-lg-0">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Carga Masiva</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="table-responsive mt-1">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort" width="3%">&nbsp;</th>
+                        <th>Nro Activo</th>
+                        <th>Familia</th>
+                        <th>Descripcion</th>
+                        <th>Clasif. Cuenta</th>
+                        <th>Monto</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Marca</th>
+                        <th>Proveedor</th>
+                        <th>Factura</th>
+                        <th>Motor y Chasis</th>
+                        <th>Patente</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                        <td>0253</td>
+                        <td>Maquinaria</td>
+                        <td>Volquete Volvo</td>
+                        <td>01-582-256-52</td>
+                        <td>100,000.00</td>
+                        <td>V34</td>
+                        <td>2019</td>
+                        <td>Volvo</td>
+                        <td>Inversiones SAC</td>
+                        <td>2569887</td>
+                        <td>Volvo V34 Diesel</td>
+                        <td>1247NH</td>
+                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                        <td>0653</td>
+                        <td>Maquinaria</td>
+                        <td>Volquete Volvo</td>
+                        <td>01-582-256-52</td>
+                        <td>180,000.00</td>
+                        <td>H34</td>
+                        <td>2018</td>
+                        <td>Volvo</td>
+                        <td>Inversiones SAC</td>
+                        <td>6769832</td>
+                        <td>Volvo h34 Diesel</td>
+                        <td>1337NH</td>
+                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td> </td>
+                        <th>Total</th>
+                        <td>280,000.00</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="crearactivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalBuscarActivo", null)
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("RegistrarSeguro");
+    });
+</script>

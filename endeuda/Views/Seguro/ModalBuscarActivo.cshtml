@@ -1,0 +1,235 @@
+﻿
+@{
+    ViewBag.Title = "Registrar Activo";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Buscar activo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card-body">
+            <div class="table-responsive mt-1">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Agregar</th>
+                            <th>Núm. Poliza</th>
+                            <th>Nro Activo</th>
+                            <th>Familia</th>
+                            <th>Descripcion</th>
+                            <th>Clasif. Cuenta</th>
+                            <th>Monto</th>
+                            <th>Modelo</th>
+                            <th>Año</th>
+                            <th>Marca</th>
+                            <th>Proveedor</th>
+                            <th>Factura</th>
+                            <th>Motor y Chasis</th>
+                            <th>Patente</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td>0525-85632</td>
+                            <td>0253</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>100,000.00</td>
+                            <td>V34</td>
+                            <td>2019</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>2569887</td>
+                            <td>Volvo V34 Diesel</td>
+                            <td>1247NH</td>
+
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="cbox1" value="first_checkbox"></td>
+                            <td></td>
+                            <td>0653</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>180,000.00</td>
+                            <td>H34</td>
+                            <td>2018</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>6769832</td>
+                            <td>Volvo h34 Diesel</td>
+                            <td>1337NH</td>
+
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="cbox1" value="first_checkbox"></td>
+                            <td></td>
+                            <td>0253</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>100,000.00</td>
+                            <td>V34</td>
+                            <td>2019</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>2569887</td>
+                            <td>Volvo V34 Diesel</td>
+                            <td>1247NH</td>
+
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>325-8545-622</td>
+                            <td>0653</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>180,000.00</td>
+                            <td>H34</td>
+                            <td>2018</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>6769832</td>
+                            <td>Volvo h34 Diesel</td>
+                            <td>1337NH</td>
+
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>215485-5236</td>
+                            <td>0253</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>100,000.00</td>
+                            <td>V34</td>
+                            <td>2019</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>2569887</td>
+                            <td>Volvo V34 Diesel</td>
+                            <td>1247NH</td>
+
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="cbox1" value="first_checkbox"></td>
+                            <td></td>
+                            <td>0653</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>180,000.00</td>
+                            <td>H34</td>
+                            <td>2018</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>6769832</td>
+                            <td>Volvo h34 Diesel</td>
+                            <td>1337NH</td>
+
+                        </tr>
+                        <tr>
+                            <td><input type="checkbox" id="cbox1" value="first_checkbox"></td>
+                            <td></td>
+                            <td>0253</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>100,000.00</td>
+                            <td>V34</td>
+                            <td>2019</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>2569887</td>
+                            <td>Volvo V34 Diesel</td>
+                            <td>1247NH</td>
+
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>258-52654-89</td>
+                            <td>0653</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>180,000.00</td>
+                            <td>H34</td>
+                            <td>2018</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>6769832</td>
+                            <td>Volvo h34 Diesel</td>
+                            <td>1337NH</td>
+
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>12354-582-69</td>
+                            <td>0253</td>
+                            <td>Maquinaria</td>
+                            <td>Volquete Volvo</td>
+                            <td>01-582-256-52</td>
+                            <td>100,000.00</td>
+                            <td>V34</td>
+                            <td>2019</td>
+                            <td>Volvo</td>
+                            <td>Inversiones SAC</td>
+                            <td>2569887</td>
+                            <td>Volvo V34 Diesel</td>
+                            <td>1247NH</td>
+
+                        </tr>
+                        
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        $('#perfiles').select2({
+            theme: 'bootstrap4'
+        })
+        window.top.esconderCargando();
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        toastr.error(data.Mensaje);
+        $('#modal-registro').modal('hide');
+    }
+
+</script>

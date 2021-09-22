@@ -1,0 +1,296 @@
+﻿@{
+    ViewBag.Title = "Buscar Poliza de Seguro";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Buscar Pólizas de Seguro</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar las pólizas de seguro de todas las empresas.</h6>
+<br />
+
+
+<div class="row">
+    <div class="card col-lg-12">
+        <div class="card card-outline card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Empresa---</option>
+                            <option value="1">MAQSUR S.A.</option>
+                            <option value="2">BIOMASA</option>
+                            <option value="3">TECSUR</option>
+                            <option value="3">MQS</option>
+                            <option value="3">NOK</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Aseguradora---</option>
+                            <option value="1">Aseguradora 1</option>
+                            <option value="2">Aseguradora 2</option>
+                            <option value="3">Aseguradora 3</option>
+                            <option value="3">Aseguradora 4</option>
+                            <option value="3">Aseguradora 5</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Tipo---</option>
+                            <option value="1">Tipo 1</option>
+                            <option value="2">Tipo 2</option>
+                            <option value="3">Tipo 3</option>
+                            <option value="3">Tipo 4</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" id="nombrearchivo" placeholder="Número Póliza">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row justify-content-end">
+                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Detalle</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th class="no-sort" width="3%">Item</th>
+                                <th>Número Poliza</th>
+                                <th>Empresa</th>
+                                <th>Aseguradora</th>
+                                <th>Tipo</th>
+                                <th>Monto</th>
+                                <th>Prima Mensual</th>
+                                <th>Moneda</th>
+                                <th>Núm. pagos</th>
+                                <th>Fecha Venc.</th>
+                                <th>Beneficiario</th>
+                                <th>RUT Benef.</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
+                                <td>1</td>
+                                <td>15963582</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BCI</td>
+                                <td>Tipo 1</td>
+                                <td>256,859,547.00</td>
+                                <td>500,200.00</td>
+                                <td>USD</td>
+                                <td>48</td>
+                                <td>01-06-2031</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+
+                            </tr>
+                            <tr>
+
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
+                                <td>2</td>
+                                <td>15963582</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BCI</td>
+                                <td>Tipo 1</td>
+                                <td>256,859,547.00</td>
+                                <td>500,200.00</td>
+                                <td>USD</td>
+                                <td>48</td>
+                                <td>01-06-2031</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+
+                            </tr>
+                            <tr>
+
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
+                                <td>3</td>
+                                <td>15963582</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BCI</td>
+                                <td>Tipo 1</td>
+                                <td>256,859,547.00</td>
+                                <td>500,200.00</td>
+                                <td>USD</td>
+                                <td>48</td>
+                                <td>01-06-2031</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+
+                            </tr>
+                            <tr>
+
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
+                                <td>4</td>
+                                <td>15963582</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BCI</td>
+                                <td>Tipo 1</td>
+                                <td>256,859,547.00</td>
+                                <td>500,200.00</td>
+                                <td>USD</td>
+                                <td>48</td>
+                                <td>01-06-2031</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+
+                            </tr>
+                            <tr>
+
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
+                                <td>5</td>
+                                <td>15963582</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BCI</td>
+                                <td>Tipo 1</td>
+                                <td>256,859,547.00</td>
+                                <td>500,200.00</td>
+                                <td>USD</td>
+                                <td>48</td>
+                                <td>01-06-2031</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+
+                            </tr>
+                            <tr>
+
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
+                                <td>6</td>
+                                <td>15963582</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BCI</td>
+                                <td>Tipo 1</td>
+                                <td>256,859,547.00</td>
+                                <td>500,200.00</td>
+                                <td>USD</td>
+                                <td>48</td>
+                                <td>01-06-2031</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+
+                            </tr>
+                            <tr>
+
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
+                                <td>7</td>
+                                <td>15963582</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>BCI</td>
+                                <td>Tipo 1</td>
+                                <td>256,859,547.00</td>
+                                <td>500,200.00</td>
+                                <td>USD</td>
+                                <td>48</td>
+                                <td>01-06-2031</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="verdetalle" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+
+</div>
+<div class="modal fade" id="vercontratoorigen" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("SeguroBuscar");
+    });
+</script>
+@*
+    <script>
+        $(document).ready(function () {
+            $('#grillaProductos').DataTable({
+                "searching": false,
+                buttons: [],
+            });
+            AbrirMenu('ContratoBuscar');
+            $("#stockMaterial").hide();
+            $('#selectMaterial').select2({
+                placeholder: 'Busque Material',
+                language: "es",
+                minimumInputLength: 3,
+                data: data
+                /*ajax: {
+                    url: '/Producto/Productos_Read/',
+                    dataType: 'json'
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                }*/
+            });
+            $('#selectMaterial').on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#stockMaterial").show();
+                $('#selectMaterial').val(null).trigger('change');
+            });
+        })
+
+        function abreMaterial() {
+            $("#datosBuscar").empty();
+            $('#crear-material').modal('show');
+            tmpUrl = "/Home/SolicitudCreaMaterial";
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: {},
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+
+    </script>
+*@

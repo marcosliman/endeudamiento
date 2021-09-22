@@ -246,6 +246,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\SeguroController.cs" />
     <Compile Include="Controllers\LicitacionController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
     <Compile Include="Controllers\AmortizacionController.cs" />
@@ -2873,6 +2874,9 @@
     <Content Include="Views\Reportes\ModalEstadoActivo.cshtml" />
     <Content Include="Views\Reportes\CuotasPagadas.cshtml" />
     <Content Include="Views\Reportes\ControlActivoCodigoInterno.cshtml" />
+    <Content Include="Views\Seguro\RegistrarSeguro.cshtml" />
+    <Content Include="Views\Seguro\ModalBuscarActivo.cshtml" />
+    <Content Include="Views\Seguro\SeguroBuscar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
