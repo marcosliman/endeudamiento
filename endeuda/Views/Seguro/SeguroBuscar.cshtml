@@ -78,7 +78,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Detalle</h3>
+                <h3 class="card-title">Detalle de pólizas y activos</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -86,144 +86,333 @@
                 </div>
             </div>
             <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-sm-1">
+                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                            <div class="form-inline my-1 my-lg-0">
+                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Generar Envío Banco</button>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="col-sm-10">
+                    </div>
+                    <div class="col-sm-1">
+                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                            <div class="form-inline my-1 my-lg-0">
+                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Carga Masiva</button>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort" width="3%">&nbsp;</th>
-                                <th class="no-sort" width="3%">Item</th>
-                                <th>Número Poliza</th>
-                                <th>Empresa</th>
+                                <th>Num. Poliza</th>
+                                <th>Tipo Seguro</th>
                                 <th>Aseguradora</th>
-                                <th>Tipo</th>
-                                <th>Monto</th>
-                                <th>Prima Mensual</th>
+                                <th>Monto Aseg.</th>
+                                <th>Prima Men.</th>
+                                <th>Num. Pagos</th>
                                 <th>Moneda</th>
-                                <th>Núm. pagos</th>
-                                <th>Fecha Venc.</th>
+                                <th>Venc. Seguro</th>
                                 <th>Beneficiario</th>
-                                <th>RUT Benef.</th>
+                                <th>RUT Ben.</th>
+                                <th>Fecha Env. Banco</th>
+                                <th>Empresa</th>
+                                <th>Cod. Interno</th>
+                                <th>Tipo Activo</th>
+                                <th>Estado</th>
+                                <th>Descripcion</th>
+                                <th>Patente</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Motor</th>
+                                <th>Chasis</th>
+                                <th>Año</th>
+                                <th>Grupo</th>
+                                <th>Sub-grupo</th>
+                                <th>Val. Compra</th>
+                                <th>Fec. Ing.</th>
+                                <th>Glosa</th>
+                                <th>Fec. Baja</th>
+                                <th>Leasing</th>
+                                <th>Término Leas.</th>
 
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
-                                <td>1</td>
-                                <td>15963582</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>BCI</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
                                 <td>Tipo 1</td>
-                                <td>256,859,547.00</td>
-                                <td>500,200.00</td>
-                                <td>USD</td>
-                                <td>48</td>
-                                <td>01-06-2031</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
                                 <td>XXXXXXXXXX</td>
                                 <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
 
                             </tr>
                             <tr>
-
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
-                                <td>2</td>
-                                <td>15963582</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>BCI</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
                                 <td>Tipo 1</td>
-                                <td>256,859,547.00</td>
-                                <td>500,200.00</td>
-                                <td>USD</td>
-                                <td>48</td>
-                                <td>01-06-2031</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
                                 <td>XXXXXXXXXX</td>
                                 <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>NOKS S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
 
                             </tr>
                             <tr>
-
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
-                                <td>3</td>
-                                <td>15963582</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>BCI</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
                                 <td>Tipo 1</td>
-                                <td>256,859,547.00</td>
-                                <td>500,200.00</td>
-                                <td>USD</td>
-                                <td>48</td>
-                                <td>01-06-2031</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
                                 <td>XXXXXXXXXX</td>
                                 <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>NOKS S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
 
                             </tr>
                             <tr>
-
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
-                                <td>4</td>
-                                <td>15963582</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>BCI</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
                                 <td>Tipo 1</td>
-                                <td>256,859,547.00</td>
-                                <td>500,200.00</td>
-                                <td>USD</td>
-                                <td>48</td>
-                                <td>01-06-2031</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
                                 <td>XXXXXXXXXX</td>
                                 <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>TEQS S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
 
                             </tr>
                             <tr>
-
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
-                                <td>5</td>
-                                <td>15963582</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>BCI</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
                                 <td>Tipo 1</td>
-                                <td>256,859,547.00</td>
-                                <td>500,200.00</td>
-                                <td>USD</td>
-                                <td>48</td>
-                                <td>01-06-2031</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
                                 <td>XXXXXXXXXX</td>
                                 <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>BIOFISH S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
 
                             </tr>
                             <tr>
-
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
-                                <td>6</td>
-                                <td>15963582</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>BCI</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
                                 <td>Tipo 1</td>
-                                <td>256,859,547.00</td>
-                                <td>500,200.00</td>
-                                <td>USD</td>
-                                <td>48</td>
-                                <td>01-06-2031</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
                                 <td>XXXXXXXXXX</td>
                                 <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>MAQSUR S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
 
                             </tr>
                             <tr>
-
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="fa fa-eye"></i></button></td>
-                                <td>7</td>
-                                <td>15963582</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>BCI</td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
                                 <td>Tipo 1</td>
-                                <td>256,859,547.00</td>
-                                <td>500,200.00</td>
-                                <td>USD</td>
-                                <td>48</td>
-                                <td>01-06-2031</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
                                 <td>XXXXXXXXXX</td>
                                 <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>NOKS S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
+
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                                <td>256-896-652</td>
+                                <td>Tipo 1</td>
+                                <td>Aseguradora 1</td>
+                                <td>18,250,000.00</td>
+                                <td>750,000.00</td>
+                                <td>12</td>
+                                <td>CLP</td>
+                                <td>30-09-2022</td>
+                                <td>XXXXXXXXXX</td>
+                                <td>YYYYYYYYYY</td>
+                                <td>01-09-2021</td>
+                                <td>BIOM S.A.</td>
+                                <td>00253</td>
+                                <td>Maquinaria</td>
+                                <td>Activo</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>Volvo</td>
+                                <td>V2</td>
+                                <td>Diesel v2</td>
+                                <td>A233</td>
+                                <td>2010</td>
+                                <td>A</td>
+                                <td>A1</td>
+                                <td>2,500,000.00</td>
+                                <td>08/05/2012</td>
+                                <td>Operativo</td>
+                                <td></td>
+                                <td>05849</td>
+                                <td>01-08-2031</td>
 
                             </tr>
                         </tbody>
