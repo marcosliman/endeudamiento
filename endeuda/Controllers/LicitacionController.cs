@@ -28,6 +28,21 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public ActionResult LicitacionBuscar()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("LicitacionBuscar", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
         public ActionResult ModalRegistrarActivo()
         {
             if (seguridad == null)
@@ -40,6 +55,18 @@ namespace tesoreria.Controllers
             }
         }
         public ActionResult ModalRegistrarOferta()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public ActionResult ModalEditarLicitacion()
         {
             if (seguridad == null)
             {

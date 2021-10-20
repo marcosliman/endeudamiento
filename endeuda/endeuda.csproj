@@ -247,6 +247,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ActivoController.cs" />
+    <Compile Include="Controllers\MutuoController.cs" />
     <Compile Include="Controllers\SeguroController.cs" />
     <Compile Include="Controllers\LicitacionController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
@@ -2881,6 +2882,13 @@
     <Content Include="Views\Activo\ControlInterno.cshtml" />
     <Content Include="Views\Seguro\ModalCargaMasiva.cshtml" />
     <Content Include="Views\Activo\ModalCargaMasivaA.cshtml" />
+    <Content Include="Views\Activo\ControlInternoBuscar.cshtml" />
+    <Content Include="Views\Mutuo\MutuoGestion.cshtml" />
+    <Content Include="Views\Licitacion\LicitacionBuscar.cshtml" />
+    <Content Include="Views\Licitacion\ModalEditarLicitacion.cshtml" />
+    <Content Include="Views\Mutuo\ModalRegistrarAbono.cshtml" />
+    <Content Include="Views\Mutuo\MutuoInicio.cshtml" />
+    <Content Include="Views\Mutuo\ModalDetalleDeuda.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

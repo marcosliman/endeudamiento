@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewBag.Title = "Registrar Abono";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar Abono</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad que Financia </label>
+                    <div class="col-sm-2">
+                        <select class="form-control form-control-sm">
+                            <option value="1">MAQSUR S.A.</option>
+                            <option value="2">BIOMASA</option>
+                            <option value="3">TECSUR</option>
+                            <option value="4">MQS</option>
+                            <option value="5">NOK</option>
+                        </select>
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad que Receptora del Financiamiento </label>
+                    <div class="col-sm-2">
+                        <select class="form-control form-control-sm">
+                            <option value="1">EMPRESA A</option>
+                            <option value="2">EMPRESA B</option>
+                            <option value="3">EMPRESA C</option>
+                            <option value="4">EMPRESA D</option>
+                            <option value="5">EMPRESA E</option>
+                            <option value="5">EMPRESA F</option>
+                            <option value="5">EMPRESA G</option>
+                            <option value="5">EMPRESA H</option>
+                        </select>
+                    </div>
+                    
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Monto a Abonar ($)</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="MontoAbonar" id="MontoAbonar" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha de Abono</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="FechaAbono" id="FechaAbono" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-11">
+                    </div>
+                    <div class="col-sm-1">
+                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                            <div class="form-inline my-1 my-lg-0">
+                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal"><i class="fa fa-plus"></i>    Añadir Nuevo Abono</button>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    </div>
+
+</div>
+@*
+    <script>
+        $(document).ready(function () {
+
+            $('#frmEdit').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            $('#perfiles').select2({
+                theme: 'bootstrap4'
+            })
+            window.top.esconderCargando();
+        });
+
+        function Success_dl(data) {
+            esconderCargando();
+            if (data.Estado == "0") {
+                toastr.success(data.Mensaje);
+                $('#modal-registro').modal('hide');
+                RefreshLista();
+            }
+            else {
+                toastr.error(data.Mensaje);
+            }
+        }
+        function Failure_dl(data) {
+            esconderCargando();
+            toastr.error(data.Mensaje);
+            $('#modal-registro').modal('hide');
+        }
+
+    </script>*@

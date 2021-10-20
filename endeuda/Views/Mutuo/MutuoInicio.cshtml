@@ -1,0 +1,360 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+<h5 class="h5 mb-0 text-gray-800">Demos un vistaso al desarrollo de los mutuos.</h5>
+<br />
+
+
+<div class="card">
+    <div class="card card-outline card-info collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">Filtros</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <select name="empresa" class="form-control">
+                        <option>--Seleccione Empresa--</option>
+                        <option value="1">Todas</option>
+                        <option value="2">MAQSUR S.A.</option>
+                        <option value="3">BIOMASA</option>
+                        <option value="3">TECSUR</option>
+                        <option value="3">MQS</option>
+                        <option value="3">NOK</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Deuda Vigente por Entidad Receptora</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-cobranza" style="height:300px;background-color: transparent;" data-highcharts-chart="15">
+
+                            </div>
+                        </div>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
+
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-cobranza', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '<b>{point.x} CLP, </b> {point.percentage:.1f}%</b>'
+                                },
+                                accessibility: {
+                                    point: {
+                                        valueSuffix: '%'
+                                    }
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        // colors: pieColors,
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '{point.x:.1f} CLP',
+                                            distance: 20,
+                                            filter: {
+                                                property: 'percentage',
+                                                operator: '>',
+                                                value: 1
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Monto',
+                                    data: [
+                                        { name: 'EMPRESA A', x: 46000000 ,y: 46 },
+                                        { name: 'EMPRESA B', x: 19000000 ,y: 19 },
+                                        { name: 'EMPRESA C', x: 8000000 ,y: 8 },
+                                        { name: 'EMPRESA D', x: 7000000 ,y: 7 },
+                                        { name: 'EMPRESA E', x: 2000000 ,y: 2 },
+                                        { name: 'EMPRESA F', x: 11000000 ,y: 11 },
+                                        { name: 'EMPRESA G', x: 5000000 ,y: 5 },
+                                        { name: 'EMPRESA H', x: 2000000 ,y: 2 },
+                                    ]
+                                }]
+                            });
+                        </script>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Deuda y Saldos Vigentes.</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">Entidad Financiera</p></th>
+                                <th><p style="color:black;font-size:10px;">Entidad Receptora</p></th>
+                                <th><p style="color:black;font-size:10px;">Saldo ($)</p></th>
+                                <th><p style="color:black;font-size:10px;">Deuda ($)</p></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">MAQSUR SA</p></th>
+                                <td><p style="color:black;font-size:10px;">EMPRESA A</p></td>
+                                <td><p style="color:black;font-size:10px;">$100.000.000</p></td>
+                                <td><p style="color:black;font-size:10px;">$200.000.000</p></td>
+                            </tr>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">MAQSUR SA</p></th>
+                                <td><p style="color:black;font-size:10px;">EMPRESA B</p></td>
+                                <td><p style="color:black;font-size:10px;">$50.000.000</p></td>
+                                <td><p style="color:black;font-size:10px;">$170.000.000</p></td>
+                            </tr>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">MAQSUR SA</p></th>
+                                <td><p style="color:black;font-size:10px;">EMPRESA C</p></td>
+                                <td><p style="color:black;font-size:10px;">$80.000.000</p></td>
+                                <td><p style="color:black;font-size:10px;">$25.000.000</p></td>
+                            </tr>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">MAQSUR SA</p></th>
+                                <td><p style="color:black;font-size:10px;">EMPRESA D</p></td>
+                                <td><p style="color:black;font-size:10px;">$35.000.000</p></td>
+                                <td><p style="color:black;font-size:10px;">$15.000.000</p></td>
+                            </tr>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">MAQSUR SA</p></th>
+                                <td><p style="color:black;font-size:10px;">EMPRESA E</p></td>
+                                <td><p style="color:black;font-size:10px;">$55.000.000</p></td>
+                                <td><p style="color:black;font-size:10px;">$75.000.000</p></td>
+                            </tr>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">MAQSUR SA</p></th>
+                                <td><p style="color:black;font-size:10px;">EMPRESA F</p></td>
+                                <td><p style="color:black;font-size:10px;">$55.000.000</p></td>
+                                <td><p style="color:black;font-size:10px;">$75.000.000</p></td>
+                            </tr>
+                            <tr>
+                                <th><p style="color:black;font-size:10px;">MAQSUR SA</p></th>
+                                <td><p style="color:black;font-size:10px;">EMPRESA G</p></td>
+                                <td><p style="color:black;font-size:10px;">$55.000.000</p></td>
+                                <td><p style="color:black;font-size:10px;">$75.000.000</p></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgray">
+                <h3 class="card-title">Amortización de la Deuda</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <figure class="highcharts-figure" ">
+                    <div id="chartEstadistico"></div>
+
+                </figure>
+                <script>
+                    Highcharts.chart('chartEstadistico', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: ['EMPRESA A', 'EMPRESA B', 'EMPRESA C', 'EMPRESA D', 'EMPRESA E', 'EMPRESA F', 'EMPRESA G', 'EMPRESA H']
+                        },
+                        yAxis: {
+                            allowDecimals: true,
+                            min: 0,
+                            title: {
+                                text: 'MM$'
+                            },
+                            stackLabels: {
+                                enabled: true,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: ( // theme
+                                        Highcharts.defaultOptions.title.style &&
+                                        Highcharts.defaultOptions.title.style.color
+                                    ) || 'gray'
+                                }
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        /*legend: {
+                            align: 'top',
+                            x: -0,
+                            verticalAlign: 'bottom',
+                            y: 0,
+                            floating: true,
+                            backgroundColor:
+                                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                            borderColor: '#CCC',
+                            borderWidth: 0,
+                            shadow: false
+                        },*/
+                        tooltip: {
+                            headerFormat: '<b>{point.x}</b><br/>',
+                            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                        },
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal',
+                                dataLabels: {
+                                    enabled: true
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Total de Deuda',
+                            data: [12000000, 14000000, 13000000, 11500000, 10600000, 24000000, 12500000, 18000000]
+                        }, {
+                            name: 'Total de Abonos',
+                            data: [11000000, 13000000, 12000000, 9000000, 700000, 350000, 600000, 0]
+                        }]
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+        var data = [
+            {
+                id: 0,
+                text: 'Alicate PLano'
+            },
+            {
+                id: 1,
+                text: 'Alicate Universal'
+            },
+            {
+                id: 2,
+                text: 'Alicate Punta Redonda '
+            },
+            {
+                id: 3,
+                text: 'Destornillador estrella'
+            },
+            {
+                id: 4,
+                text: 'Destornillador Plano'
+            }
+        ];
+        $(document).ready(function () {
+            $('#grillaProductos').DataTable({
+                "searching": false,
+                buttons: [],
+            });
+            AbrirMenu('MutuoInicio');
+            $("#stockMaterial").hide();
+            $('#selectMaterial').select2({
+                placeholder: 'Busque Material',
+                language: "es",
+                minimumInputLength: 3,
+                data: data
+                /*ajax: {
+                    url: '/Producto/Productos_Read/',
+                    dataType: 'json'
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                }*/
+            });
+            $('#selectMaterial').on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#stockMaterial").show();
+                $('#selectMaterial').val(null).trigger('change');
+            });
+        })
+
+        function abreMaterial() {
+            $("#datosBuscar").empty();
+            $('#crear-material').modal('show');
+            tmpUrl = "/Home/SolicitudCreaMaterial";
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: {},
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+
+</script>

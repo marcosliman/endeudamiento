@@ -1,0 +1,307 @@
+﻿
+@{
+    ViewBag.Title = "Editar Licitación";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar Licitación</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card card-outline card-info collapsed-card">
+                <div class="card-header">
+                    <h3 class="card-title">Datos Generales</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Empresa</label>
+                    <div class="col-sm-3">
+                        <select class="form-control form-control-sm">
+                            <option value="0">---Seleccione Empresa---</option>
+                            <option value="1">MAQSUR S.A.</option>
+                            <option value="2">BIOMASA</option>
+                            <option value="3">TECSUR</option>
+                            <option value="4">MQS</option>
+                            <option value="5">NOK</option>
+                        </select>
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Autogenerado</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="Autogenerado" id="Autogenerado" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Tipo de Financiamiento</label>
+                    <div class="col-sm-3">
+                        <select class="form-control form-control-sm">
+                            <option value="0">---Seleccione Financiamiento---</option>
+                            <option value="1">Leasing</option>
+                            <option value="2">Estructurado con Garantía</option>
+                            <option value="3">Estructurado sin Garantía</option>
+                            <option value="4">Capital de Trabajo - Bullet</option>
+                        </select>
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Monto a Financiar</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="MontoFinanciar" id="MontoFinanciar" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Registro de Activos</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de activos a financiar</label>
+                </div>
+                <div class="form-group row">
+                    <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                        <div class="form-inline my-2 my-lg-0">
+                            <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Nuevo Activo</button>
+                        </div>
+                    </nav>
+                </div>
+                <div class="table-responsive mt-1">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th>Nro Activo</th>
+                                <th>Familia</th>
+                                <th>Descripcion</th>
+                                <th>Clasif. Cuenta</th>
+                                <th>Monto</th>
+                                <th>Modelo</th>
+                                <th>Año</th>
+                                <th>Marca</th>
+                                <th>Proveedor</th>
+                                <th>Factura</th>
+                                <th>Motor y Chasis</th>
+                                <th>Patente</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                <td>0253</td>
+                                <td>Maquinaria</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>100,000.00</td>
+                                <td>V34</td>
+                                <td>2019</td>
+                                <td>Volvo</td>
+                                <td>Inversiones SAC</td>
+                                <td>2569887</td>
+                                <td>Volvo V34 Diesel</td>
+                                <td>1247NH</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-eye"></i></button></td>
+                                <td>0653</td>
+                                <td>Maquinaria</td>
+                                <td>Volquete Volvo</td>
+                                <td>01-582-256-52</td>
+                                <td>180,000.00</td>
+                                <td>H34</td>
+                                <td>2018</td>
+                                <td>Volvo</td>
+                                <td>Inversiones SAC</td>
+                                <td>6769832</td>
+                                <td>Volvo h34 Diesel</td>
+                                <td>1337NH</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td> </td>
+                                <th>Total</th>
+                                <td>280,000.00</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Registro de Ofertas</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de las ofertas recibidas</label>
+                </div>
+                <div class="form-group row">
+                    <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                        <div class="form-inline my-2 my-lg-0">
+                            <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearoferta"><i class="fa fa-plus"></i>Nueva Oferta</button>
+                        </div>
+                    </nav>
+                </div>
+                <div class="table-responsive mt-1">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th>Entidad Financiera</th>
+                                <th>Tasa Mensual Ofrecida</th>
+                                <th>Tasa Anual Ofrecida</th>
+                                <th>Plazo (meses)</th>
+                                <th class="no-sort" width="3%"></th>
+                                <th class="no-sort" width="3%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearoferta"><i class="far fa-eye"></i></button></td>
+                                <td>BCI</td>
+                                <td>4.5 %</td>
+                                <td>25.00 %</td>
+                                <td>49</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-upload"></i></button></td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearoferta"><i class="far fa-eye"></i></button></td>
+                                <td>ITAÚ</td>
+                                <td>4.5 %</td>
+                                <td>25.00 %</td>
+                                <td>49</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-upload"></i></button></td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearoferta"><i class="far fa-eye"></i></button></td>
+                                <td>SCOTIABANK</td>
+                                <td>4.5 %</td>
+                                <td>25.00 %</td>
+                                <td>49</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-upload"></i></button></td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearoferta"><i class="far fa-eye"></i></button></td>
+                                <td>SECURITY</td>
+                                <td>4.5 %</td>
+                                <td>25.00 %</td>
+                                <td>49</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-upload"></i></button></td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearoferta"><i class="far fa-eye"></i></button></td>
+                                <td>BBVA</td>
+                                <td>4.5 %</td>
+                                <td>25.00 %</td>
+                                <td>49</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-upload"></i></button></td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearoferta"><i class="far fa-eye"></i></button></td>
+                                <td>SANTANDER</td>
+                                <td>4.5 %</td>
+                                <td>25.00 %</td>
+                                <td>49</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-upload"></i></button></td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        $('#perfiles').select2({
+            theme: 'bootstrap4'
+        })
+        window.top.esconderCargando();
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        toastr.error(data.Mensaje);
+        $('#modal-registro').modal('hide');
+    }
+
+</script>
+<div class="modal fade" id="crearactivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalRegistrarActivo", null)
+    </div>
+</div>
+<div class="modal fade" id="crearoferta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalRegistrarOferta", null)
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("Leasing");
+    });
+</script>
