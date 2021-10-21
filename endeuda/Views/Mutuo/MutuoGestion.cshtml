@@ -1,9 +1,22 @@
-﻿@{
+﻿<!doctype html>
+@{
     ViewBag.Title = "Gestionar Mutuos";
 }
 @{
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
 }
+<div class="modal fade" id="ModalDetalleDeuda" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-detalledeuda" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 80%;">
+        @Html.Partial("ModalDetalleDeuda", null)
+
+    </div>
+</div>
+<div class="modal fade" id="ModalRegistrarAbono" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-registrarabono" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 80%;">
+        @Html.Partial("ModalRegistrarAbono", null)
+
+    </div>
+</div>
 
 <div class="d-sm-flex align-items-center justify-content-between">
     <h5 class="h5 mb-0 text-gray-800">Gestionar Mutuos</h5>
@@ -161,8 +174,8 @@
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort" width="3%">&nbsp;</th>
-                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th class="no-sort" width="3%"><i class="fa fa-info"></i></th>
+                                <th class="no-sort" width="3%"><i class="fas fa-cash-register"></i></th>
                                 <th>Empresa Financiera</th>
                                 <th>Empresa Receptora</th>
                                 <th>Monto ($)</th>
@@ -174,8 +187,8 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verdetalle"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#verregistrarabono"><i class="fa fa-money-bill"></i></button></td>
+                                <td><button type="button" class="btn btn-primary" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="fa fa-info"></i></button></td>
+                                <td><button type="button" class="btn btn-primary bg-green" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
                                 <td>MAQSUR SA</td>
                                 <td>EMPRESA A</td>
                                 <td>34,000,000,000</td>
@@ -269,15 +282,6 @@
 
         </div>
     </div>
-</div>
-
-
-<div class="modal fade" id="verdetalle" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    @Html.Partial("ModalDetalleDeuda", null)
-</div>
-
-<div class="modal fade" id="verregistrarabono" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    @Html.Partial("ModalRegistrarAbono", null)
 </div>
 
 
