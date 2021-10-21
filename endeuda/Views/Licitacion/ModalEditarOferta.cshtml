@@ -1,13 +1,13 @@
 ﻿
 @{
-    ViewBag.Title = "Registrar Oferta";
+    ViewBag.Title = "Editar Oferta";
 }
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
 <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Nueva Oferta</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Editar Oferta</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -33,9 +33,24 @@
                 </div>
             </div>
             <div class="form-group form-group-sm row">
-                <div class="col-sm-auto col-form-label">
-                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
-                </div>
+                <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort" width="3%">Item</th>
+                            <th>Adjunto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><a href="">Oferta00001.pdf</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><a href="">Oferta00011.pdf</a></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

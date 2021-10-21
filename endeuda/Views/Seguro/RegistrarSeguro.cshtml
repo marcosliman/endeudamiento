@@ -16,11 +16,12 @@
 </div>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h5 class="h5 mb-0 text-gray-800">Nueva Póliza de Seguro<h5>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
-    </ol>
+    <h5 class="h5 mb-0 text-gray-800">
+        Nueva Póliza de Seguro<h5>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+            </ol>
 </div>
 <div class="card">
     <div class="card card-outline card-info collapsed-card">
@@ -108,7 +109,7 @@
                 <input type="text" class="form-control form-control-sm" name="FechaEnvioBanco" id="FechaEnvioBanco" />
             </div>
         </div>
-    </div>    
+    </div>
 </div>
 
 <div class="card">
@@ -224,7 +225,7 @@
             <div class="col-sm-1">
                 <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
                     <div class="form-inline my-1 my-lg-0">
-                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Buscar Activo</button>
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalBuscarActivo"><i class="fa fa-plus"></i>Buscar Activo</button>
                     </div>
                 </nav>
             </div>
@@ -242,7 +243,7 @@
             <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                 <thead class="thead-light">
                     <tr>
-                        <th class="no-sort" width="3%">&nbsp;</th>
+                        <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
                         <th>Cod. Interno</th>
                         <th>Tipo Activo</th>
                         <th>Estado</th>
@@ -261,12 +262,12 @@
                         <th>Fec. Baja</th>
                         <th>Leasing</th>
                         <th>Término Leas.</th>
-                        <th class="no-sort" width="3%">&nbsp;</th>
+                        <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
                         <td>00253</td>
                         <td>Maquinaria</td>
                         <td>Activo</td>
@@ -288,7 +289,7 @@
                         <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                     </tr>
                     <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
+                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
                         <td>00258</td>
                         <td>Maquinaria</td>
                         <td>Activo</td>
@@ -316,11 +317,18 @@
     </div>
 </div>
 
-<div class="modal fade" id="crearactivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+<div class="modal fade" id="ModalBuscarActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         @Html.Partial("ModalBuscarActivo", null)
     </div>
 </div>
+
+<div class="modal fade" id="ModalVerActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        @Html.Partial("ModalVerActivo", null)
+    </div>
+</div>
+
 
 <div class="modal fade" id="cargamasiva" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

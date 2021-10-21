@@ -77,5 +77,41 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+
+        public ActionResult CargarDocOferta()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public ActionResult ModalEditarOferta()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
+        public ActionResult ModalVerActivo()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }

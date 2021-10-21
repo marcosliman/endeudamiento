@@ -2889,6 +2889,12 @@
     <Content Include="Views\Mutuo\ModalRegistrarAbono.cshtml" />
     <Content Include="Views\Mutuo\MutuoInicio.cshtml" />
     <Content Include="Views\Mutuo\ModalDetalleDeuda.cshtml" />
+    <Content Include="Views\Licitacion\CargarDocOferta.cshtml" />
+    <Content Include="Views\Licitacion\ModalEditarOferta.cshtml" />
+    <Content Include="Views\Licitacion\ModalVerActivo.cshtml" />
+    <Content Include="Views\Seguro\ModalVerActivo.cshtml" />
+    <Content Include="Views\Seguro\ModalEditarSeguro.cshtml" />
+    <Content Include="Views\Activo\ModalVerActivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
