@@ -2895,6 +2895,7 @@
     <Content Include="Views\Seguro\ModalVerActivo.cshtml" />
     <Content Include="Views\Seguro\ModalEditarSeguro.cshtml" />
     <Content Include="Views\Activo\ModalVerActivo.cshtml" />
+    <Content Include="Views\Mutuo\ModalProyectarAbono.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

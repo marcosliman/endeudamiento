@@ -75,6 +75,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
 
     <div class="col-md-6">
@@ -204,6 +205,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">
@@ -426,7 +428,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgray">
-                <h3 class="card-title">Amortización de la Deuda</h3>
+                <h3 class="card-title">Resumen Estructura de Deuda según Categoria y Empresa (MM$)</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -447,7 +449,7 @@
                             text: ''
                         },
                         xAxis: {
-                            categories: ['2021', '2022', '2023', '2024', '2025']
+                            categories: ['MAQSUR S.A.', 'BIOMASA', 'TECSUR', 'MQS', 'NOK']
                         },
                         yAxis: {
                             allowDecimals: true,
@@ -494,11 +496,16 @@
                             }
                         },
                         series: [{
-                            name: 'Deuda Estructurada (Capital)',
-                            data: [1200000, 1400000, 1300000, 1150000, 1060000]
-                        }, {
-                            name: 'Deuda Leasing (Capital)',
-                            data: [1100000, 1300000, 1200000, 900000, 700000]
+                            name: 'Deuda Estructurada con Garantía',
+                            data: [3764, 473, 124, 2507, 0]
+                        },
+                        {
+                            name: 'Deuda Estructurada sin Garantía',
+                            data: [470, 0, 0, 0, 101]
+                        },
+                        {
+                            name: 'Deuda Fogape',
+                            data: [2958, 125, 0, 0, 0]
                         }]
                     });
                 </script>
@@ -606,6 +613,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-6">
         <div class="card">
@@ -831,6 +839,7 @@
         </div>
     </div>
 </div>
+
 <div class="row">
     <div class="col-md-12">
         <div class="card">

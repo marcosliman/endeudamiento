@@ -67,5 +67,16 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public ActionResult ModalProyectarAbono()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }
