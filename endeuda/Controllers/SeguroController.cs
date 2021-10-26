@@ -90,5 +90,17 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+
+        public ActionResult ModalVerSeguro()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 }
