@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.Title = "Registrar Siniestro";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Registrar Siniestro</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Activo con siniestro</label>
+                    <div class="col-sm-3">
+                        <select name="activo" class="form-control">
+                            <option value="0">---Seleccione Activo---</option>
+                            <option value="1">Activo 1</option>
+                            <option value="2">Activo 2</option>
+                            <option value="3">Activo 3</option>
+                            <option value="4">Activo 4</option>
+                            <option value="5">Activo 5</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Número de Liquidación</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="NumeroLiquidacion" id="NumeroLiquidacion" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Monto de Liquidación</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="MontoLiquidacion" id="MontoLiquidacion" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha de siniestro</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="FechaSiniestro" id="FechaSiniestro" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Motivo</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="FechaSiniestro" id="FechaSiniestro" />
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header" style="background-color:lightblue">
+                                <h3 class="card-title">Archivos relacionados con el siniestro</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <select name="empresa" class="form-control">
+                                            <option value="0">---Seleccione Documento---</option>
+                                            <option value="1">Liquidación</option>
+                                            <option value="2">Documento 1</option>
+                                            <option value="3">Documento 2</option>
+                                            <option value="4">Documento 3</option>
+                                            <option value="8">Otros</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="col-sm-auto col-form-label">
+                                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <select name="empresa" class="form-control">
+                                            <option value="0">---Seleccione Documento---</option>
+                                            <option value="1">Liquidación</option>
+                                            <option value="2">Documento 1</option>
+                                            <option value="3">Documento 2</option>
+                                            <option value="4">Documento 3</option>
+                                            <option value="8">Otros</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="col-sm-auto col-form-label">
+                                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <select name="empresa" class="form-control">
+                                            <option value="0">---Seleccione Documento---</option>
+                                            <option value="1">Liquidación</option>
+                                            <option value="2">Documento 1</option>
+                                            <option value="3">Documento 2</option>
+                                            <option value="4">Documento 3</option>
+                                            <option value="8">Otros</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="col-sm-auto col-form-label">
+                                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <select name="empresa" class="form-control">
+                                            <option value="0">---Seleccione Documento---</option>
+                                            <option value="1">Liquidación</option>
+                                            <option value="2">Documento 1</option>
+                                            <option value="3">Documento 2</option>
+                                            <option value="4">Documento 3</option>
+                                            <option value="8">Otros</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="col-sm-auto col-form-label">
+                                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                    </div>
+                    <div class="col-sm-2">
+                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                            <div class="form-inline my-1 my-lg-0">
+                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal"><i class="fa fa-plus"></i>Añadir Siniestro</button>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    </div>
+
+</div>
+@*
+    <script>
+        $(document).ready(function () {
+
+            $('#frmEdit').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            $('#perfiles').select2({
+                theme: 'bootstrap4'
+            })
+            window.top.esconderCargando();
+        });
+
+        function Success_dl(data) {
+            esconderCargando();
+            if (data.Estado == "0") {
+                toastr.success(data.Mensaje);
+                $('#modal-registro').modal('hide');
+                RefreshLista();
+            }
+            else {
+                toastr.error(data.Mensaje);
+            }
+        }
+        function Failure_dl(data) {
+            esconderCargando();
+            toastr.error(data.Mensaje);
+            $('#modal-registro').modal('hide');
+        }
+
+    </script>*@

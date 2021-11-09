@@ -13,13 +13,13 @@ namespace tesoreria.Controllers
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         // GET: Contrato
-        public ActionResult Leasing()
+        public ActionResult AmortizacionLeasing()
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
-            else if (seguridad != null && !seguridad.TienePermiso("Leasing", Helper.TipoAcceso.Acceder))
+            else if (seguridad != null && !seguridad.TienePermiso("AmortizacionLeasing", Helper.TipoAcceso.Acceder))
             {
                 return RedirectToAction("Inicio", "Home");
             }

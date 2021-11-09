@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Buscar Activos";
+    ViewBag.Title = "Deudas Relacionadas";
 }
 @{
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
@@ -12,7 +12,7 @@
         <li class="breadcrumb-item active" aria-current="page">Inicio</li>
     </ol>
 </div>
-<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los activos de todas las empresas.</h6>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los préstamos entre empresas relacionadas.</h6>
 <br />
 
 
@@ -80,19 +80,12 @@
             </div>
             <div class="card-body">
                 <div class="form-group row">
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaActivo"><i class="fa fa-plus"></i>Nuevo Activo</button>
-                            </div>
-                        </nav>
-                    </div>
-                    <div class="col-sm-10">
+                    <div class="col-sm-11">
                     </div>
                     <div class="col-sm-1">
                         <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
                             <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva</button>
+                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#cargamasiva"><i class="fa fa-plus"></i>Carga Masiva</button>
                             </div>
                         </nav>
                     </div>
@@ -101,7 +94,7 @@
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                                <th class="no-sort" width="3%">&nbsp;</th>
                                 <th>Num. Interno</th>
                                 <th>Capacidad</th>
                                 <th>Descripción</th>
@@ -127,14 +120,12 @@
                                 <th>Poliza</th>
                                 <th>Num. Endose</th>
                                 <th>Fec. Solicitud</th>
-                                <th>Emp. Propietaria</th>
-                                <th>Tipo Propiedad</th>
-                                <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
+                                <th class="no-sort" width="3%">&nbsp;</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -160,12 +151,10 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td>MAQSUR S.A.C.</td>
-                                <td>Propio</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -191,12 +180,10 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td></td>
-                                <td>Leasing</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -222,12 +209,10 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td></td>
-                                <td>Leasing</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -253,12 +238,10 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td></td>
-                                <td>Leasing</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -284,12 +267,10 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td></td>
-                                <td>Leasing</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -315,12 +296,10 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td>NOKS</td>
-                                <td>Propio</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -346,12 +325,10 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td>BIOMASA</td>
-                                <td>Propio</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
                                 <td>6298</td>
                                 <td>COMPRESOR 190 CFM</td>
                                 <td>Compresor</td>
@@ -377,8 +354,6 @@
                                 <td>11035524</td>
                                 <td>4</td>
                                 <td></td>
-                                <td></td>
-                                <td>Leasing</td>
                                 <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
                             </tr>
                         </tbody>
@@ -391,18 +366,13 @@
     </div>
 </div>
 
-<div class="modal fade" id="ModalCargaMasivaA" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalCargaMasivaA", null)
-    </div>
-</div>
 
-<div class="modal fade" id="ModalVerActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalVerActivo", null)
-    </div>
+<div class="modal fade" id="cargamasiva" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    @Html.Partial("ModalCargaMasivaA", null)
 </div>
+<div class="modal fade" id="vercontratoorigen" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
 
+</div>
 
 <script>
     $(document).ready(function () {

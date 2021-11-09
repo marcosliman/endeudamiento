@@ -105,6 +105,17 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public ActionResult ModalCalcularPrepago()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                return View();
+            }
+        }
         public ActionResult CuotasPagadas()
         {
             if (seguridad == null)

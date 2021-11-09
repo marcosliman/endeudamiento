@@ -2853,7 +2853,7 @@
     <Content Include="Views\Contrato\ModalRegistrarActivo.cshtml" />
     <Content Include="Views\Contrato\Plantilla_Endeudamiento.xlsx" />
     <Content Include="Views\Contrato\RegistrarContratoCredito.cshtml" />
-    <Content Include="Views\Amortizacion\Leasing.cshtml" />
+    <Content Include="Views\Amortizacion\AmortizacionLeasing.cshtml" />
     <Content Include="Views\Amortizacion\ModalDetalleLeasing.cshtml" />
     <Content Include="Views\Amortizacion\OtrosCreditos.cshtml" />
     <Content Include="Views\Amortizacion\ModalDetalleOtrosCreditos.cshtml" />
@@ -2898,6 +2898,9 @@
     <Content Include="Views\Mutuo\ModalProyectarAbono.cshtml" />
     <Content Include="Views\Licitacion\ModalVerLicitacion.cshtml" />
     <Content Include="Views\Seguro\ModalVerSeguro.cshtml" />
+    <Content Include="Views\Seguro\ModalAgregarSiniestro.cshtml" />
+    <Content Include="Views\Mutuo\PrestamoRelacionadas.cshtml" />
+    <Content Include="Views\Reportes\ModalCalcularPrepago.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
