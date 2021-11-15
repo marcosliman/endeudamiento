@@ -6,7 +6,7 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Buscar Activos</h5>
+    <h5 class="h5 mb-0 text-gray-800">Préstamos entre Relacioandas</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Inicio</li>
@@ -15,7 +15,7 @@
 <h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los préstamos entre empresas relacionadas.</h6>
 <br />
 
-
+@*
 <div class="row">
     <div class="card col-lg-12">
         <div class="card card-outline card-info collapsed-card">
@@ -66,12 +66,12 @@
         </div>
     </div>
 </div>
-
+*@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Detalle de activos</h3>
+                <h3 class="card-title">Por Cobrar</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -79,282 +79,248 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="form-group row">
-                    <div class="col-sm-11">
-                    </div>
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#cargamasiva"><i class="fa fa-plus"></i>Carga Masiva</button>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPorCobrar" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort" width="3%">&nbsp;</th>
-                                <th>Num. Interno</th>
-                                <th>Capacidad</th>
-                                <th>Descripción</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Motor</th>
-                                <th>Serie</th>
-                                <th>Año</th>
-                                <th>Valor</th>
-                                <th>G/D</th>
-                                <th>Mes/Año</th>
-                                <th>Fec. Cobro</th>
-                                <th>CC MQS S.A.</th>
-                                <th>CC MQS SUR S.A.</th>
-                                <th>Num. Factura</th>
-                                <th>Valor Factura</th>
-                                <th>Operación/Contrato Leas.</th>
-                                <th>Patente</th>
-                                <th>Fec. Patente</th>
-                                <th>Leasing</th>
-                                <th>Banco</th>
-                                <th>Descripción</th>
-                                <th>Poliza</th>
-                                <th>Num. Endose</th>
-                                <th>Fec. Solicitud</th>
-                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th>Cuentas por Cobrar</th>
+                                <th>Maquinaria Sur Ltda.</th>
+                                <th>Biomasa S.A.</th>
+                                <th>Maqsur Maquinarias S.A.</th>
+                                <th>Maqsur Naviera S.A.</th>
+                                <th>Astilleros Chiloe</th>
+                                <th>Tecsur S.A.</th>
+                                <th>Nok S.A.</th>
+                                <th>Pronet SpA</th>
+                                <th>Biomasa Fish Service </th>
+                                <th>Inmobiliaria Maqsur</th>
+                                <th>Asesur</th>
+                                <th>Paso Andino</th>
+                                <th>Total CxC</th>                          
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Maquinarias Sur Ltda.</td>
+                                <td>0</td>
+                                <td>713,391,161.00</td>
+                                <td>494,655,132.00</td>
+                                <td>0</td>
+                                <td>8,364,281.00</td>
+                                <td>460,874,347.00</td>
+                                <td>18,959,032.00</td>
+                                <td>14,265,933.00</td>
+                                <td>708,618,536.00</td>
+                                <td>26,374,404.00</td>
+                                <td>0</td>
+                                <td>6,938,561.00</td>
+                                <td>2,452,441,387.00</td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Biomasa S.A.</td>
+                                <td>496,145,245.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>158,497,621.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>654,642,866.00</td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Biosub</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Maqsur Maquinarias S.A.</td>
+                                <td>664,383.00</td>
+                                <td>17,740,025.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>68,632,263.00</td>
+                                <td>4,365,668.00</td>
+                                <td>5,158,323.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>96,560,662.00</td>
+                            </tr>                          
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Maqsur Naviera S.A.</td>
+                                <td>0</td>
+                                <td>54,442,500.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>54,442,500.00</td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Astilleros Chiloe</td>
+                                <td>7,211.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>7,211.00</td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Tecsur S.A.</td>
+                                <td>5,950,000.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>37,594,278.00</td>
+                                <td>0</td>
+                                <td>23,226,476.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>66,770,754.00</td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Nok S.A.</td>
+                                <td>0</td>
+                                <td>9,663,444.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>210,600.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>9,874,044.00</td>
                             </tr>
                             <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#crearactivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Pronet SpA</td>
+                                <td>100.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>100.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Biomasa Fish Service</td>
+                                <td>0</td>
+                                <td>314,845,415.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>314,845,415.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Inmobiliaria del sur</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Paso Andino</td>
+                                <td>1,000,000.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1,000,000.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleCobrar"><i class="far fa-eye"></i></button></td>
+                                <td>Asesur</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
                             </tr>
                         </tbody>
                     </table>
@@ -366,17 +332,281 @@
     </div>
 </div>
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Por Pagar</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPorPagar" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%">&nbsp;</th>
+                                <th>Cuentas por Pagar</th>
+                                <th>Maquinaria Sur Ltda.</th>
+                                <th>Biomasa S.A.</th>
+                                <th>Maqsur Maquinarias S.A.</th>
+                                <th>Maqsur Naviera S.A.</th>
+                                <th>Astilleros Chiloe</th>
+                                <th>Tecsur S.A.</th>
+                                <th>Nok S.A.</th>
+                                <th>Pronet SpA</th>
+                                <th>Biomasa Fish Service </th>
+                                <th>Inmobiliaria Maqsur</th>
+                                <th>Asesur</th>
+                                <th>Paso Andino</th>
+                                <th>Total CxP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Maquinarias Sur Ltda.</td>
+                                <td>0</td>
+                                <td>496,145,245.00</td>
+                                <td>664,384.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>5,950,000.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1,000,000.00</td>
+                                <td>503,759,629.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Biomasa S.A.</td>
+                                <td>713,391,062.00</td>
+                                <td>0</td>
+                                <td>17,740,025.00</td>
+                                <td>54,442,500.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>9,663,444.00</td>
+                                <td>0</td>
+                                <td>314,845,415.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1,110,082,446.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Biosub</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Maqsur Maquinarias S.A.</td>
+                                <td>494,655,128.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>494,655,128.00</td>
+                            </tr>
+                            
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Maqsur Naviera S.A.</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Astilleros Chiloe</td>
+                                <td>8,364,281.00</td>
+                                <td>0</td>
+                                <td>68,632,263.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>37,594,278.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>114,590,822.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Tecsur S.A.</td>
+                                <td>460,874,749.00</td>
+                                <td>0</td>
+                                <td>4,365,668.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>210,600.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>465,451,017.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Nok S.A.</td>
+                                <td>18,959,031.00</td>
+                                <td>0</td>
+                                <td>5,158,323.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>23,226,476.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>47,343,830.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Pronet SpA</td>
+                                <td>14,265,933.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>14,265,933.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Biomasa Fish Service</td>
+                                <td>708,618,354.00</td>
+                                <td>158,497,621.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>867,115,975.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Inmobiliaria del sur</td>
+                                <td>26,374,403.67</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>26,374,403.67</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Paso Andino</td>
+                                <td>6,938,561.00</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>6,938,561.00</td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetallePagar"><i class="far fa-eye"></i></button></td>
+                                <td>Asesur</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-<div class="modal fade" id="cargamasiva" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    @Html.Partial("ModalCargaMasivaA", null)
+            </div>
+
+        </div>
+    </div>
 </div>
-<div class="modal fade" id="vercontratoorigen" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+<div class="modal fade" id="ModalDetalleCobrar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+
+</div>
+<div class="modal fade" id="ModalDetallePagar" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
 
 </div>
 
 <script>
     $(document).ready(function () {
-        AbrirMenu("ControlInterno");
+        AbrirMenu("PrestamoRelacionadas");
     });
 </script>
 @*

@@ -45,6 +45,22 @@ namespace tesoreria.Controllers
             }
         }
 
+        public ActionResult PrestamoRelacionadas()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("PrestamoRelacionadas", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
         public ActionResult ModalRegistrarAbono()
         {
             if (seguridad == null)
