@@ -415,6 +415,44 @@
                 @Html.Partial("ModalRegistrarActivo", null)
             </div>
         </div>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Registro de Cambios</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLog" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%">Item</th>
+                                <th><p font-size:8px;">Fecha de Edición</p></th>
+                                <th><p font-size:8px;">Usuario</p></th>
+                                <th><p font-size:8px;">Descripción</p></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>11/11/2021 15:23:00</td>
+                                <td>>mliman</td>
+                                <td>Cambios realizados en: Contrato</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>14/11/2021 09:25:00</td>
+                                <td>cortega</td>
+                                <td>Cambios realizados en: Amortizaciones</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>

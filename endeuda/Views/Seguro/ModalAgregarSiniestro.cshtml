@@ -39,15 +39,66 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha de siniestro</label>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha Declaración</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control form-control-sm" name="FechaSiniestro" id="FechaSiniestro" />
+                        <input type="text" class="form-control form-control-sm" name="FechaDeclaracion" id="FechaDeclaracion" />
                     </div>
-                    <label for="inputEmail3" class="col-sm-3 col-form-label">Motivo</label>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Número de Siniestro</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control form-control-sm" name="FechaSiniestro" id="FechaSiniestro" />
+                        <input type="text" class="form-control form-control-sm" name="NumeroSiniestro" id="NumeroSiniestro" />
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha de Siniestro</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="FechaSiniestro" id="FechaSiniestro" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Detalle de Siniestro</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="DetalleSiniestro" id="DetalleSiniestro" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Reclamada</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="PerdidaReclamada" id="PerdidaReclamada" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Determinada</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="PerdidaDeterminada" id="PerdidaDeterminada" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Estado de Siniestro</label>
+                    <div class="col-sm-3">
+                        <select name="activo" class="form-control">
+                            <option value="0">---Seleccione Estado---</option>
+                            <option value="1">Declarado</option>
+                            <option value="2">Entrega Documentación</option>
+                            <option value="3">Liquidación</option>
+                            <option value="4">Pago Indemnización</option>
+                        </select>
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Liquidador</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="Liquidador" id="Liquidador" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Infraseguro</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="Infraseguro" id="Infraseguro" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Deducible</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="Deducible" id="Deducible" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Indemnización</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="Indemnizacion" id="Indemnizacion" />
+                    </div>
+                </div>
+
                 <div class="card-body">
                     <div class="col-md-12">
                         <div class="card">
@@ -64,11 +115,13 @@
                                     <div class="col-3">
                                         <select name="empresa" class="form-control">
                                             <option value="0">---Seleccione Documento---</option>
-                                            <option value="1">Liquidación</option>
-                                            <option value="2">Documento 1</option>
-                                            <option value="3">Documento 2</option>
-                                            <option value="4">Documento 3</option>
-                                            <option value="8">Otros</option>
+                                            <option value="1">Informe de Liquidación</option>
+                                            <option value="2">Certificado de Anotaciones Vigentes del Equipo Siniestrado</option>
+                                            <option value="3">Copia de Factura de Compra del Equipo Siniestrado</option>
+                                            <option value="4">Cotización a Nuevo</option>
+                                            <option value="5">Presupuesto de Reparación</option>
+                                            <option value="6">Bitácora de Mantención</option>
+                                            <option value="7">Licencia y Contrato de Trabajo del Operador de la Maq.</option>
                                         </select>
                                     </div>
                                     <div class="col-3">
@@ -79,11 +132,13 @@
                                     <div class="col-3">
                                         <select name="empresa" class="form-control">
                                             <option value="0">---Seleccione Documento---</option>
-                                            <option value="1">Liquidación</option>
-                                            <option value="2">Documento 1</option>
-                                            <option value="3">Documento 2</option>
-                                            <option value="4">Documento 3</option>
-                                            <option value="8">Otros</option>
+                                            <option value="1">Informe de Liquidación</option>
+                                            <option value="2">Certificado de Anotaciones Vigentes del Equipo Siniestrado</option>
+                                            <option value="3">Copia de Factura de Compra del Equipo Siniestrado</option>
+                                            <option value="4">Cotización a Nuevo</option>
+                                            <option value="5">Presupuesto de Reparación</option>
+                                            <option value="6">Bitácora de Mantención</option>
+                                            <option value="7">Licencia y Contrato de Trabajo del Operador de la Maq.</option>
                                         </select>
                                     </div>
                                     <div class="col-3">
@@ -96,11 +151,13 @@
                                     <div class="col-3">
                                         <select name="empresa" class="form-control">
                                             <option value="0">---Seleccione Documento---</option>
-                                            <option value="1">Liquidación</option>
-                                            <option value="2">Documento 1</option>
-                                            <option value="3">Documento 2</option>
-                                            <option value="4">Documento 3</option>
-                                            <option value="8">Otros</option>
+                                            <option value="1">Informe de Liquidación</option>
+                                            <option value="2">Certificado de Anotaciones Vigentes del Equipo Siniestrado</option>
+                                            <option value="3">Copia de Factura de Compra del Equipo Siniestrado</option>
+                                            <option value="4">Cotización a Nuevo</option>
+                                            <option value="5">Presupuesto de Reparación</option>
+                                            <option value="6">Bitácora de Mantención</option>
+                                            <option value="7">Licencia y Contrato de Trabajo del Operador de la Maq.</option>
                                         </select>
                                     </div>
                                     <div class="col-3">
@@ -111,11 +168,49 @@
                                     <div class="col-3">
                                         <select name="empresa" class="form-control">
                                             <option value="0">---Seleccione Documento---</option>
-                                            <option value="1">Liquidación</option>
-                                            <option value="2">Documento 1</option>
-                                            <option value="3">Documento 2</option>
-                                            <option value="4">Documento 3</option>
-                                            <option value="8">Otros</option>
+                                            <option value="1">Informe de Liquidación</option>
+                                            <option value="2">Certificado de Anotaciones Vigentes del Equipo Siniestrado</option>
+                                            <option value="3">Copia de Factura de Compra del Equipo Siniestrado</option>
+                                            <option value="4">Cotización a Nuevo</option>
+                                            <option value="5">Presupuesto de Reparación</option>
+                                            <option value="6">Bitácora de Mantención</option>
+                                            <option value="7">Licencia y Contrato de Trabajo del Operador de la Maq.</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="col-sm-auto col-form-label">
+                                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <select name="empresa" class="form-control">
+                                            <option value="0">---Seleccione Documento---</option>
+                                            <option value="1">Informe de Liquidación</option>
+                                            <option value="2">Certificado de Anotaciones Vigentes del Equipo Siniestrado</option>
+                                            <option value="3">Copia de Factura de Compra del Equipo Siniestrado</option>
+                                            <option value="4">Cotización a Nuevo</option>
+                                            <option value="5">Presupuesto de Reparación</option>
+                                            <option value="6">Bitácora de Mantención</option>
+                                            <option value="7">Licencia y Contrato de Trabajo del Operador de la Maq.</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="col-sm-auto col-form-label">
+                                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <select name="empresa" class="form-control">
+                                            <option value="0">---Seleccione Documento---</option>
+                                            <option value="1">Informe de Liquidación</option>
+                                            <option value="2">Certificado de Anotaciones Vigentes del Equipo Siniestrado</option>
+                                            <option value="3">Copia de Factura de Compra del Equipo Siniestrado</option>
+                                            <option value="4">Cotización a Nuevo</option>
+                                            <option value="5">Presupuesto de Reparación</option>
+                                            <option value="6">Bitácora de Mantención</option>
+                                            <option value="7">Licencia y Contrato de Trabajo del Operador de la Maq.</option>
                                         </select>
                                     </div>
                                     <div class="col-3">
