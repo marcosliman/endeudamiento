@@ -72,10 +72,6 @@
             font-size: .85rem;
         }
 
-        .dropdown-toggle::after {
-            display: none;
-        }
-
         tr.group,
         tr.group:hover {
             background-color: #ddd !important;
@@ -134,6 +130,27 @@
         .sidebar-dark-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active,
         .sidebar-light-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active {
             border-color: #1F2A44;
+        }
+
+        .modal.modal-fullscreen .modal-dialog {
+            width: 95vw;
+            margin: 10;
+            padding: 10;
+            max-width: none;
+        }
+
+        .modal.modal-fullscreen .modal-content {
+            border-radius: 0;
+            border: none;
+        }
+
+        .modal.modal-fullscreen .modal-body {
+            overflow-y: auto;
+        }
+
+        .os-scrollbar {
+            background: #1F2A44 !important;
+            opacity: 0.5;
         }
     </style>
     <script>
@@ -262,6 +279,37 @@
             });
         }
 
+        function DateDatatable(fecha) {
+            if (fecha != "" && fecha != null) {
+                fecha = fecha.replace('/Date(', '').replace(')/', '');
+                var expDate = new Date(parseInt(fecha));
+                var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                return fechaES;
+            }
+            else {
+                return "";
+            }
+        }
+        function DateDatatableTime(fecha) {
+            if (fecha != "" && fecha != null) {
+                fecha = fecha.replace('/Date(', '').replace(')/', '');
+                var expDate = new Date(parseInt(fecha));
+                var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                var dateLocalTime = expDate.toLocaleTimeString().split(":");
+                fechaES = fechaES + " " + dateLocalTime[0] + ":" + dateLocalTime[1];
+                return fechaES;
+            }
+            else {
+                return "";
+            }
+        }
+
         function SeparadorMiles(numero) {
             var num = numero;
             var splitStr = num.split('.');
@@ -361,7 +409,7 @@
             <!-- Brand Logo -->
             <a href="/Home/Inicio" class="brand-link bg-azulmarca">
                 <img src="/img/logo/logo2.png" alt="MaqSur" class="brand-image elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light text-white">COBRANZAS</span>
+                <span class="brand-text font-weight-light text-white">ENDEUDAMIENTO</span>
             </a>
 
             <!-- Sidebar -->

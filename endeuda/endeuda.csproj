@@ -246,6 +246,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\FuncionesGeneralesController.cs" />
     <Compile Include="Controllers\ActivoController.cs" />
     <Compile Include="Controllers\MutuoController.cs" />
     <Compile Include="Controllers\SeguroController.cs" />
@@ -2879,7 +2880,7 @@
     <Content Include="Views\Seguro\RegistrarSeguro.cshtml" />
     <Content Include="Views\Seguro\ModalBuscarActivo.cshtml" />
     <Content Include="Views\Seguro\SeguroBuscar.cshtml" />
-    <Content Include="Views\Activo\ControlInterno.cshtml" />
+    <Content Include="Views\Activo\_ControlInterno.cshtml" />
     <Content Include="Views\Seguro\ModalCargaMasiva.cshtml" />
     <Content Include="Views\Activo\ModalCargaMasivaA.cshtml" />
     <Content Include="Views\Activo\ControlInternoBuscar.cshtml" />
@@ -2901,6 +2902,7 @@
     <Content Include="Views\Seguro\ModalAgregarSiniestro.cshtml" />
     <Content Include="Views\Mutuo\PrestamoRelacionadas.cshtml" />
     <Content Include="Views\Reportes\ModalCalcularPrepago.cshtml" />
+    <Content Include="Views\Activo\ControlInterno.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

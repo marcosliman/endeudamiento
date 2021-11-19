@@ -1,145 +1,152 @@
 ﻿
+@model modelo.ViewModel.ActivoViewModel
 @{
     ViewBag.Title = "Detalle del Activo";
-}
-@{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
-<div class="modal-content">
+
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Detalle del Activo</h5>
+        <h5 class="modal-title" id="addActivo">Detalle del Activo</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
-        <div class="ml-2">
-            <div class="form-group form-group-sm row">
-                <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Número de Activo</label>
-                <div class="col-6">
-                    <input type="text" class="form-control" id="nombrearchivo" placeholder="Ingrese el identificador del activo">
+    <div class="card-body">
+        @using (Ajax.BeginForm("GrabarActivo", "Activo", new AjaxOptions
+        {
+            OnBegin = "mostrarCargando",
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "post",
+            OnSuccess = "Success",
+            OnFailure = "Failure"
+
+        }, new { id = "frmActivo" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="idActivo" id="idActivo" value="@Model.IdActivo" />
+            <div class="ml-2">
+                <div class="form-group form-group-sm row">
+                    <label for="numeroInterno" class="col-sm-3 col-form-label col-form-label-sm">Número de Activo</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm required number" name="numeroInterno" id="numeroInterno" placeholder="Ingrese el identificador del activo" value="@Model.NumeroInterno">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="codSoftland" class="col-sm-3 col-form-label col-form-label-sm required">Código Softland</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="codSoftland" id="codSoftland" placeholder="Ingrese Código Softland" value="@Model.CodSoftland">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Descripción</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="descripcion" id="descripcion" placeholder="Ingrese una descripción del activo" value="@Model.Descripcion">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="capacidad" class="col-sm-3 col-form-label col-form-label-sm">Capacidad</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="capacidad" id="capacidad" placeholder="Ingrese una capacidad del activo" value="@Model.Capacidad">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="marca" class="col-sm-3 col-form-label col-form-label-sm">Marca</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="marca" id="marca" placeholder="Ingrese marca del activo" value="@Model.Marca">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="modelo" class="col-sm-3 col-form-label col-form-label-sm">Modelo</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="modelo" id="modelo" placeholder="Ingrese modelo del activo" value="@Model.Modelo">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Número Motor</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="motor" id="motor" placeholder="Ingrese número motor del activo" value="@Model.Motor">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="serie" class="col-sm-3 col-form-label col-form-label-sm">Número Serie</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="serie" id="serie" placeholder="Ingrese número de serie del activo" value="@Model.Serie">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="anio" class="col-sm-3 col-form-label col-form-label-sm">Año</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm digits" name="anio" id="anio" placeholder="Ingrese Año del activo" value="@Model.Anio">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="valor" class="col-sm-3 col-form-label col-form-label-sm">Valor($)</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm number numberMiles" name="valor" id="valor" placeholder="Ingrese valor del activo" value="@Model.Valor">
+                    </div>
                 </div>
             </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Familia de Activo</label>
-                <div class="col-6">
-                     <input type="text" class="form-control" id="usuario" placeholder="Ingrese la familia de activo">
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Descripción</label>
-                <div class="col-6">
-                     <textarea class="form-control" name="textarea" rows="1">Ingrese una descripción del activo</textarea>
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="fecha" class="col-sm-3 col-form-label col-form-label-sm">Clasificación de Cuenta</label>
-                <div class="col-6">
-                    <select class="form-control form-control-sm">
-                        <option value="">--Seleccione Cuenta--</option>
-                        <option>01-2526-05</option>
-                        <option>01-2527-05</option>
-                        <option>01-2528-05</option>
-                        <option>01-2529-05</option>
-                        <option>01-2530-05</option>
-                        <option>01-2531-05</option>
-                        <option>01-2532-05</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Monto (M$)</label>
-                <div class="col-6">
-                    <input type="text" class="form-control" id="usuario" placeholder="Ingrese el monto en Ch$">
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Modelo</label>
-                <div class="col-6">
-                        <input type="text" class="form-control" id="usuario" placeholder="Ingrese el modelo del activo">
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Año</label>
-                <div class="col-6">
-                        <input type="text" class="form-control" id="usuario" placeholder="Ingrese el año de producción">
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Marca</label>
-                <div class="col-6">
-                        <input type="text" class="form-control" id="usuario" placeholder="Ingrese la marca del activo">
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Proveedor</label>
-                <div class="col-6">
-                    <select class="form-control form-control-sm">
-                        <option value="">--Seleccione Proveedor--</option>
-                        <option>Inversiones SAC</option>
-                        <option>Maquinarias LATAM</option>
-                        <option>Maquinarias del Sur</option>
-                        <option>Consorcio Limán</option>
-                        <option>CRFT SAC</option>
-                        <option>Contratistas SAC</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Factura</label>
-                <div class="col-6">
-                        <input type="text" class="form-control" id="usuario" placeholder="Ingrese la factura correspondiente">
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Motor y Chasis</label>
-                <div class="col-6">
-                        <input type="text" class="form-control" id="usuario" placeholder="Ingrese el detalle del motor y chasis">
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Patente</label>
-                <div class="col-6">
-                        <input type="text" class="form-control" id="usuario" placeholder="Ingrese el número de patente">
-                </div>
-            </div>
-        </div>
+        }
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary btn-sm">Crear</button>
+        <button type="button" id="btnGrabar" class="btn btn-primary btn-sm" onclick="GrabarActivo();">@Model.TituloBoton</button>
     </div>
 
-</div>
 <script>
     $(document).ready(function () {
 
-        $('#frmEdit').validate({
+        $('#frmActivo').validate({
             debug: false,
             errorElement: "em",
-            errorContainer: $("#warning")
+            errorContainer: $("#warning"),
+            rules: {
+                numeroInterno: { required: true, number: true },
+                descripcion: { required: true },
+                valor: { number: true },
+                anio: { digits: true }
+            }
         });
-        $('#perfiles').select2({
-            theme: 'bootstrap4'
-        })
-        window.top.esconderCargando();
     });
 
-    function Success_dl(data) {
-        esconderCargando();
-        if (data.Estado == "0") {
-            toastr.success(data.Mensaje);
-            $('#modal-registro').modal('hide');
+    function GrabarActivo() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$,]/g, '').replace(/[$.]/g, ''))
+        });
+
+        if ($('#frmActivo').valid()) {
+            $.ajax({
+                type: 'POST',
+                url: '/Activo/GrabarActivo/',
+                data: $("#frmActivo").serialize(),
+                success: function (data) {
+                    Success(data);
+                },
+                failure: function (data) {
+                    Failure(data);
+                }
+            })
+        }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
+    }
+
+    function Success(data) {
+        if (data.result.Estado == "0") {
+            toastr.success(data.result.Mensaje);
+            $('#ModalAddActivo').modal('hide');
             RefreshLista();
+
         }
         else {
-            toastr.error(data.Mensaje);
+            toastr.error(data.result.Mensaje);
         }
     }
-    function Failure_dl(data) {
-        esconderCargando();
-        toastr.error(data.Mensaje);
-        $('#modal-registro').modal('hide');
+
+    function Failure(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
     }
 
 </script>

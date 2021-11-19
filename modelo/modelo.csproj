@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Local\Activo.cs" />
     <Compile Include="Models\Local\Contrato.cs" />
     <Compile Include="Models\Local\Estado.cs" />
     <Compile Include="Models\Local\Empresa.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Models\Softland\OW_vsnpTraeOCDetalle.cs" />
     <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\ActivoViewModel.cs" />
     <Compile Include="ViewModel\EmpresaRotacionViewModel.cs" />
     <Compile Include="ViewModel\GraficosViewModel.cs" />
     <Compile Include="ViewModel\StockBodegaViewModel.cs" />

@@ -20,5 +20,6 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.UsuarioPerfil> UsuarioPerfil { get; set; }
         public System.Data.Entity.DbSet<Local.Empresa> Empresa { get; set; }       
         public System.Data.Entity.DbSet<Local.Estado> Estado { get; set; }
+        public System.Data.Entity.DbSet<Local.Activo> Activo { get; set; }
     }
 }

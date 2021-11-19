@@ -1,12 +1,9 @@
 ﻿@{
     ViewBag.Title = "Buscar Activos";
 }
-@{
-    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
-}
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Buscar Activos</h5>
+    <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Inicio</li>
@@ -30,29 +27,10 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-2">
-                        <select name="empresa" class="form-control">
-                            <option value="0">---Seleccione Empresa---</option>
-                            <option value="1">MAQSUR S.A.</option>
-                            <option value="2">BIOMASA</option>
-                            <option value="3">TECSUR</option>
-                            <option value="3">MQS</option>
-                            <option value="3">NOK</option>
-                        </select>
+                        <input type="text" class="form-control form-control-sm" name="numeroActivo" id="numeroActivoB" placeholder="Número Activo">
                     </div>
                     <div class="col-md-2">
-                        <select name="empresa" class="form-control">
-                            <option value="0">---Seleccione Tipo---</option>
-                            <option value="1">Tipo 1</option>
-                            <option value="2">Tipo 2</option>
-                            <option value="3">Tipo 3</option>
-                            <option value="3">Tipo 4</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control" id="nombrearchivo" placeholder="Número Activo">
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control" id="nombrearchivo" placeholder="Código Interno">
+                        <input type="text" class="form-control form-control-sm" name="codigoInterno" id="codigoInternoB" placeholder="Código Interno">
                     </div>
                     <div class="col-md-2">
                     </div>
@@ -92,16 +70,18 @@
                     <div class="col-sm-1">
                         <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
                             <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Nuevo Activo</button>
+                                <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo" data-toggle="modal" data-target="#ModalAddActivo"><i class="fa fa-plus"></i>Nuevo Activo</button>
+                                <!--<button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnMasivo" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva Activo</button> -->
                             </div>
                         </nav>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivo" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                                <th class="noExport"></th>
+                                <th class="noExport"></th>
                                 <th>Num. Interno</th>
                                 <th>Cod. Softland</th>
                                 <th>Capacidad</th>
@@ -112,285 +92,9 @@
                                 <th>Serie</th>
                                 <th>Año</th>
                                 <th>Valor</th>
-                                <th>G/D</th>
-                                <th>Mes/Año</th>
-                                <th>Fec. Cobro</th>
-                                <th>CC MQS S.A.</th>
-                                <th>CC MQS SUR S.A.</th>
-                                <th>Num. Factura</th>
-                                <th>Valor Factura</th>
-                                <th>Operación/Contrato Leas.</th>
-                                <th>Patente</th>
-                                <th>Fec. Patente</th>
-                                <th>Leasing</th>
-                                <th>Banco</th>
-                                <th>Descripción</th>
-                                <th>Poliza</th>
-                                <th>Num. Endose</th>
-                                <th>Fec. Solicitud</th>
-                                <th>Emp. Propietaria</th>
-                                <th>Tipo Propiedad</th>
-                                <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>6298</td>
-                                <td>S-6298</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td>MAQSUR S.A.C.</td>
-                                <td>Propio</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>6299</td>
-                                <td>S-6299</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td></td>
-                                <td>Leasing</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>6277</td>
-                                <td>S-6277</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td></td>
-                                <td>Leasing</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>7203</td>
-                                <td>S-7203</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td></td>
-                                <td>Leasing</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>7214</td>
-                                <td>S-7214</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td></td>
-                                <td>Leasing</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>7322</td>
-                                <td>S-7322</td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td>NOKS</td>
-                                <td>Propio</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>9865</td>
-                                <td></td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td>BIOMASA</td>
-                                <td>Propio</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>9925</td>
-                                <td></td>
-                                <td>COMPRESOR 190 CFM</td>
-                                <td>Compresor</td>
-                                <td>Atlas Copco</td>
-                                <td>XAS 97DD HH</td>
-                                <td>12008041</td>
-                                <td>APP454750</td>
-                                <td>2017</td>
-                                <td>7,462,439.00</td>
-                                <td>737872</td>
-                                <td>21-09-2017</td>
-                                <td></td>
-                                <td>2-B-6298</td>
-                                <td>2-B-6298</td>
-                                <td>311377</td>
-                                <td></td>
-                                <td>73394</td>
-                                <td></td>
-                                <td></td>
-                                <td>MAQSUR LTDA</td>
-                                <td>BCI</td>
-                                <td>8 COMPRESORES ATLAS COPCO 15 DOOSAN</td>
-                                <td>11035524</td>
-                                <td>4</td>
-                                <td></td>
-                                <td></td>
-                                <td>Leasing</td>
-                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                            </tr>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
 
@@ -399,67 +103,156 @@
         </div>
     </div>
 </div>
-
+<!--
 <div class="modal fade" id="ModalCargaMasivaA" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalCargaMasivaA", null)
     </div>
 </div>
-
-<div class="modal fade" id="ModalVerActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalVerActivo", null)
+-->
+<div class="modal fade" id="ModalAddActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosActivo"></div>
+        </div>
     </div>
 </div>
 
 
 <script>
     $(document).ready(function () {
+        //$.fn.dataTable.moment('DD/MM/YYYY');
         AbrirMenu("ControlInterno");
+        RefreshLista();
     });
-</script>
-@*
-    <script>
-        $(document).ready(function () {
-            $('#grillaProductos').DataTable({
-                "searching": false,
-                buttons: [],
-            });
-            AbrirMenu('ContratoBuscar');
-            $("#stockMaterial").hide();
-            $('#selectMaterial').select2({
-                placeholder: 'Busque Material',
-                language: "es",
-                minimumInputLength: 3,
-                data: data
-                /*ajax: {
-                    url: '/Producto/Productos_Read/',
-                    dataType: 'json'
-                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                }*/
-            });
-            $('#selectMaterial').on('select2:select', function (e) {
-                var data = e.params.data;
-                $("#stockMaterial").show();
-                $('#selectMaterial').val(null).trigger('change');
-            });
-        })
 
-        function abreMaterial() {
-            $("#datosBuscar").empty();
-            $('#crear-material').modal('show');
-            tmpUrl = "/Home/SolicitudCreaMaterial";
-            $.ajax({
-                url: tmpUrl,
-                type: "Get",
-                data: {},
-                success: function (data) {
-                    $("#datosBuscar").empty();
-                    $("#datosBuscar").html(data);
-                    esconderCargando();
+    function RefreshLista() {
+        //$('#grillaActivo').empty();
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'ACTIVOS ',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)"
+            }
+        };
+        var table = $('#grillaActivo').DataTable({
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Activo/ListaActivo_Read/',
+                "data": function (d) {
+                    d.numeroActivo = $('#numeroActivoB').val();
+                    d.codigoActivo = $('#codigoInternoB').val();
+                },
+                "dataSrc": ""
+            },
+            /*columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [5, 6],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
                 }
-            });
-        }
+            ],*/
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Activos",
+                    sheetName: "Activos"
+                })
+            ],
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        // if (o.Editable == true) {
+                        boton = '<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#ModalAddActivo" onclick="EditActivo(' + o.IdActivo + ')"><i class="fa fa-edit"></i></a> ';
+                        //}
+                        return boton;
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        // if (o.Editable == true) {
+                        boton += '<a class="btn btn-danger btn-sm" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="fa fa-trash"></i></a> ';
+                        //}
+                        return boton;
+                    }
+                },
+                { "data": "NumeroInterno" },
+                { "data": "CodSoftland" },
+                { "data": "Capacidad" },
+                { "data": "Descripcion" },
+                { "data": "Marca" },
+                { "data": "Modelo" },
+                { "data": "Motor" },
+                { "data": "Serie" },
+                { "data": "Anio" },
+                { "data": "Valor" }
+            ]
+        });
+        $("#grillaActivo").dataTable().fnDestroy();
+        return table;
+    }
 
-    </script>
-*@
+    function EditActivo(idActivo) {
+        //$("#datosMovimiento").empty();
+        $('#ModalAddActivo').modal('show');
+        $.ajax({
+            url: "/Activo/ModalVerActivo",
+            type: "Post",
+            data: { IdActivo: idActivo },
+            beforeSend: function () {
+                $("#datosActivo").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosActivo").empty();
+                $("#datosActivo").html(data);
+            }
+        });
+    }
+
+    function EliminarActivo(idActivo) {
+        $('#idActivo').val(idActivo);
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                type: 'POST',
+                url: '/Activo/EliminarActivo',
+                data: { idActivo: idActivo},
+                success: function (data) {
+                    Success_dl(data);
+                },
+                failure: function (data) {
+                    Failure_dl(data);
+                }
+            })
+        }
+    }
+
+    function Success_dl(data) {
+        if (data.result.Estado == "0") {
+            toastr.success(data.result.Mensaje);
+            RefreshLista();
+
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
+    }
+</script>
