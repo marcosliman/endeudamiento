@@ -26,6 +26,12 @@
             <input type="hidden" name="idActivo" id="idActivo" value="@Model.IdActivo" />
             <div class="ml-2">
                 <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Empresa</label>
+                    <div class="col-6">
+                        @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
                     <label for="numeroInterno" class="col-sm-3 col-form-label col-form-label-sm">Número de Activo</label>
                     <div class="col-6">
                         <input type="text" class="form-control form-control-sm required number" name="numeroInterno" id="numeroInterno" placeholder="Ingrese el identificador del activo" value="@Model.NumeroInterno">
@@ -35,6 +41,12 @@
                     <label for="codSoftland" class="col-sm-3 col-form-label col-form-label-sm required">Código Softland</label>
                     <div class="col-6">
                         <input type="text" class="form-control form-control-sm" name="codSoftland" id="codSoftland" placeholder="Ingrese Código Softland" value="@Model.CodSoftland">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Familia de Activo</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="familia" id="familia" placeholder="Ingrese la familia de activo" value="@Model.Familia">
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -50,6 +62,27 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
+                    <label for="fecha" class="col-sm-3 col-form-label col-form-label-sm">Clasificación de Cuenta</label>
+                    <div class="col-6">
+                        <select class="form-control form-control-sm" name="idCuenta" id="idCuenta">
+                            <option value="">--Seleccione Cuenta--</option>
+                            <option value="1">01-2526-05</option>
+                            <option value="2">01-2527-05</option>
+                            <option value="3">01-2528-05</option>
+                            <option value="4">01-2529-05</option>
+                            <option value="5">01-2530-05</option>
+                            <option value="6">01-2531-05</option>
+                            <option value="7">01-2532-05</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="valor" class="col-sm-3 col-form-label col-form-label-sm">Valor($)</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm number numberMiles" name="valor" id="valor" placeholder="Ingrese valor del activo" value="@Model.Valor">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
                     <label for="marca" class="col-sm-3 col-form-label col-form-label-sm">Marca</label>
                     <div class="col-6">
                         <input type="text" class="form-control form-control-sm" name="marca" id="marca" placeholder="Ingrese marca del activo" value="@Model.Marca">
@@ -62,9 +95,27 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
-                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Número Motor</label>
+                    <label for="anio" class="col-sm-3 col-form-label col-form-label-sm">Año</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm" name="motor" id="motor" placeholder="Ingrese número motor del activo" value="@Model.Motor">
+                        <input type="text" class="form-control form-control-sm digits" name="anio" id="anio" placeholder="Ingrese Año del activo" value="@Model.Anio">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Proveedor</label>
+                    <div class="col-6">
+                        @Html.DropDownList("idProveedor", (SelectList)ViewData["listaProveedor"], "--Seleccione Proveedor--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Factura</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" name="numeroFactura" id="numeroFactura" placeholder="Ingrese la factura correspondiente" value="@Model.NumeroFactura">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Motor y Chasis</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="motorChasis" id="motorChasis" placeholder="Ingrese número motor y chasis" value="@Model.MotorChasis">
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -74,15 +125,9 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
-                    <label for="anio" class="col-sm-3 col-form-label col-form-label-sm">Año</label>
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Patente</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm digits" name="anio" id="anio" placeholder="Ingrese Año del activo" value="@Model.Anio">
-                    </div>
-                </div>
-                <div class="form-group form-group-sm row">
-                    <label for="valor" class="col-sm-3 col-form-label col-form-label-sm">Valor($)</label>
-                    <div class="col-6">
-                        <input type="text" class="form-control form-control-sm number numberMiles" name="valor" id="valor" placeholder="Ingrese valor del activo" value="@Model.Valor">
+                        <input type="text" class="form-control" name="patente" id="patente" placeholder="Ingrese el número de patente" value="@Model.Patente">
                     </div>
                 </div>
             </div>
@@ -101,6 +146,7 @@
             errorElement: "em",
             errorContainer: $("#warning"),
             rules: {
+                idEmpresa: { required: true },
                 numeroInterno: { required: true, number: true },
                 descripcion: { required: true },
                 valor: { number: true },

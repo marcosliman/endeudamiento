@@ -1,0 +1,438 @@
+﻿@model modelo.ViewModel.LicitacionViewModel
+@{
+    ViewBag.Title = "Registrar Licitacion";
+}
+<!-- BS Stepper -->
+<link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
+<!-- BS-Stepper -->
+<script src="~/Plantilla/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<div class="modal fade" id="modal-buscar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h5 class="h5 mb-0 text-gray-800">
+        Nueva Licitación<h5>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+            </ol>
+</div>
+@using (Ajax.BeginForm("GrabarLicitacion", "Licitacion", new AjaxOptions
+{
+    OnBegin = "mostrarCargando",
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success",
+    OnFailure = "Failure"
+
+}, new { id = "frmLicitacion" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="idLicitacion" id="idLicitacion" value="@Model.IdLicitacion" />
+    <div class="card">
+        <div class="card card-outline card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Datos Generales</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-3 col-form-label">Empresa</label>
+                <div class="col-sm-3">
+                    @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                </div>
+                <label for="inputEmail3" class="col-sm-3 col-form-label">Autogenerado</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control form-control-sm" name="Autogenerado" id="Autogenerado" readonly value="@Model.Autogenerado" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-3 col-form-label">Tipo de Financiamiento</label>
+                <div class="col-sm-3">
+                    @Html.DropDownList("idTipoFinanciamiento", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                </div>
+                <label for="inputEmail3" class="col-sm-3 col-form-label">Monto a Financiar</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control form-control-sm numberMiles required" name="Monto" id="Monto" value="@Model.Monto" />
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="Volver();">Volver</button>
+            <button type="button" id="btnGenerar" class="btn btn-primary btn-sm" onclick="GrabarLicitacion();">Grabar Licitación</button>
+        </div>
+    </div>
+}
+@if (Model.ExisteLicitacion == "S")
+{
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Registro de Activos</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de activos a financiar</label>
+            </div>
+            <div class="form-group row">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-2 my-lg-0">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnAsociarActivo" onclick="AsociarActivo()" data-toggle="modal" data-target="#ModalAsociarActivo"><i class="fa fa-plus"></i>Añadir Activo</button>
+                    </div>
+                </nav>
+            </div>
+            <div class="table-responsive mt-1">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacioActivo" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort noExport">Acción</th>
+                            <th>Nro Activo</th>
+                            <th>Familia</th>
+                            <th>Descripcion</th>
+                            <th>Clasif. Cuenta</th>
+                            <th>Monto</th>
+                            <th>Modelo</th>
+                            <th>Año</th>
+                            <th>Marca</th>
+                            <th>Proveedor</th>
+                            <th>Factura</th>
+                            <th>Motor y Chasis</th>
+                            <th>Patente</th>
+                        </tr>
+                    </thead><tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Registro de Ofertas</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de las ofertas recibidas</label>
+            </div>
+            <div class="form-group row">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-2 my-lg-0">
+                        <button class="btn btn-primary btn-sm justify-content-end" id="btnOferta" data-toggle="modal" data-target="#ModalRegistrarOferta" type="button" onclick="AddOferta(0)"><i class="fa fa-plus"></i>Nueva Oferta</button>
+                    </div>
+                </nav>
+            </div>
+            <div class="table-responsive mt-1">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaOferta" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort noExport">Acción</th>
+                            <th>Entidad Financiera</th>
+                            <th>Tasa Mensual Ofrecida</th>
+                            <th>Tasa Anual Ofrecida</th>
+                            <th>Plazo (meses)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="ModalAsociarActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosActivo"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalRegistrarOferta" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosOferta"></div>
+        </div>
+    </div>
+</div>
+
+<form name="frmLicitacionAcc" id="frmLicitacionAcc" method="post">
+    <input type="hidden" name="idLicitacion" id="idLicitacionAcc" />
+</form>
+<script>
+    $(document).ready(function () {
+        AbrirMenu("RegistrarLicitacion");
+        initTableActivo();
+        initTableOferta();
+
+        $('#frmLicitacion').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning"),
+            rules: {
+                idEmpresa: { required: true },
+                IdTipoFinanciamiento: { required: true },
+                Monto: { required: true, digits: true },
+            }
+        });
+    });
+
+    function GrabarLicitacion() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''))
+        });
+
+        if ($('#frmLicitacion').valid()) {
+            $.ajax({
+                type: 'POST',
+                url: '/Licitacion/GrabarLicitacion/',
+                data: $("#frmLicitacion").serialize(),
+                success: function (data) {
+                    Success(data);
+                },
+                failure: function (data) {
+                    Failure(data);
+                }
+            })
+        }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
+    }
+
+    function Success(data) {
+        if (data.result.Estado == "0") {
+            toastr.success(data.result.Mensaje);
+            Refresh(data.result.idLicitacion);
+            //setTimeout(function () { Refresh(data.result.idLicitacion); }, 3000);
+            //esconderCargando();
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+        }
+    }
+
+    function Failure(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
+    }
+
+    function Refresh(idLicitacion) {
+        //alert(idLicitacion);
+        $('#idLicitacionAcc').val(idLicitacion);
+        $("#frmLicitacionAcc").attr("action", "/Licitacion/AddLicitacion");
+        $("#frmLicitacionAcc").submit();
+    }
+
+    function Volver() {
+        url = '/Licitacion/RegistrarLicitacion/';
+        location.href = url;
+    }
+
+    function AsociarActivo() {
+        $.ajax({
+            url: "/Licitacion/ModalAsociarActivo",
+            type: "Post",
+            data: { idLicitacion: $("#idLicitacion").val()},
+            beforeSend: function () {
+                $("#datosActivo").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosActivo").empty();
+                $("#datosActivo").html(data);
+            }
+        });
+    }
+
+    function EliminarActivo(idLicitacionActivo) {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                url: "/Licitacion/DeleteAsociacionActivo",
+                type: "Post",
+                data: {
+                    idLicitacionActivo: idLicitacionActivo
+                },
+                success: function (data) {
+                    toastr.success(data.Mensaje);
+                    RefreshListaActivo();
+                },
+                failure: function (data) {
+                    toastr.error(data.Mensaje);
+                }
+            });
+        }
+    }
+
+    function initTableActivo() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'ACTIVOS ',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)"
+            }
+        };
+        var table = $('#grillaLicitacioActivo').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Activos",
+                    sheetName: "Activos"
+                })
+            ],
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Licitacion/ListaActivoLicitacion_Read/',
+                "data": function (d) {
+                    d.idLicitacion = "@Model.IdLicitacion";
+                },
+                "dataSrc": ""
+            },
+
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        // if (o.Editable == true) {
+                        var acciones = '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarActivo(' + o.IdLicitacionActivo + ')"><i class="far fa-trash-alt"></i></button>';
+                        //}
+                        return acciones;
+                    }
+                },
+                { "data": "NumeroInterno" },
+                { "data": "Familia" },
+                { "data": "Descripcion" },
+                { "data": "NombreCuenta" },
+                { "data": "Valor" },
+                { "data": "Modelo" },
+                { "data": "Anio" },
+                { "data": "Marca" },
+                { "data": "NombreProveedor" },
+                { "data": "NumeroFactura" },
+                { "data": "MotorChasis" },
+                { "data": "Patente" }
+            ]
+        });
+        return table;
+    }
+
+
+    function initTableOferta() {
+        var table = $('#grillaOferta').DataTable({
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Licitacion/ListaLicitacionOferta_Read/',
+                "data": function (d) {
+                    d.idLicitacion = $('#idLicitacion').val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [4],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalRegistrarOferta" onclick="AddOferta(' + o.IdLicitacionOferta + ')"><i class="fa fa-edit"></i></button> ';
+                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarOferta(' + o.IdLicitacionOferta + ')"><i class="far fa-trash-alt"></i></button> ';
+                        return boton;
+                    }
+                },
+                { "data": "NombreBanco" },
+                { "data": "TasaMensual" },
+                { "data": "TasaAnual" },
+                { "data": "Plazo" }
+            ]
+        });
+
+        return table;
+    }
+
+    function AddOferta(idLicitacionOferta) {
+        $.ajax({
+            url: "/Licitacion/ModalRegistrarOferta",
+            type: "Post",
+            data: {
+                idLicitacionOferta: idLicitacionOferta,
+                idLicitacion: $("#idLicitacion").val()
+            },
+            beforeSend: function () {
+                $("#datosOferta").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosOferta").empty();
+                $("#datosOferta").html(data);
+            }
+        });
+    }
+
+    function EliminarOferta(idLicitacionOferta) {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                url: "/Licitacion/DeleteLicitacionOferta",
+                type: "Post",
+                data: {
+                    idLicitacionOferta: idLicitacionOferta
+                },
+                success: function (data) {
+                    toastr.success(data.Mensaje);
+                    RefreshListaOferta();
+                },
+                failure: function (data) {
+                    toastr.error(data.Mensaje);
+                }
+            });
+        }
+    }
+
+    function RefreshListaActivo() {
+        //$('#grillaParcela').empty();
+        var table = initTableActivo();
+        table.ajax.reload(function (json) { });
+    }
+
+    function RefreshListaOferta() {
+        //$('#grillaParcela').empty();
+        var table = initTableOferta();
+        table.ajax.reload(function (json) { });
+    }
+</script>

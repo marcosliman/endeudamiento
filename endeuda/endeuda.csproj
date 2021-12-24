@@ -2903,6 +2903,13 @@
     <Content Include="Views\Mutuo\PrestamoRelacionadas.cshtml" />
     <Content Include="Views\Reportes\ModalCalcularPrepago.cshtml" />
     <Content Include="Views\Activo\ControlInterno.cshtml" />
+    <Content Include="Views\Licitacion\AddLicitacion.cshtml" />
+    <Content Include="Views\Licitacion\ModalAsociarActivo.cshtml" />
+    <Content Include="Views\Contrato\RegistrarContrato.cshtml" />
+    <Content Include="Views\Contrato\AddContratoLeasing.cshtml" />
+    <Content Include="Views\Contrato\AddAmortizacion.cshtml" />
+    <Content Include="Views\Contrato\AddDocumentoLeasing.cshtml" />
+    <Content Include="Views\Contrato\ModalAsociarActivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

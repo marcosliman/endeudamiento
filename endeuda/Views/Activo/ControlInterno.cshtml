@@ -82,9 +82,11 @@
                             <tr>
                                 <th class="noExport"></th>
                                 <th class="noExport"></th>
+                                <th>Empresa</th>
                                 <th>Num. Interno</th>
                                 <th>Cod. Softland</th>
                                 <th>Capacidad</th>
+                                <th>Familia</th>
                                 <th>Descripción</th>
                                 <th>Marca</th>
                                 <th>Modelo</th>
@@ -92,6 +94,24 @@
                                 <th>Serie</th>
                                 <th>Año</th>
                                 <th>Valor</th>
+                                <th>G/D</th>
+                                <th>Mes/Año</th>
+                                <th>Fec. Cobro</th>
+                                <th>CC MQS S.A.</th>
+                                <th>CC MQS SUR S.A.</th>
+                                <th>Num. Factura</th>
+                                <th>Valor Factura</th>
+                                <th>Operación/Contrato Leas.</th>
+                                <th>Patente</th>
+                                <th>Fec. Patente</th>
+                                <th>Leasing</th>
+                                <th>Banco</th>
+                                <th>Descripción</th>
+                                <th>Poliza</th>
+                                <th>Num. Endose</th>
+                                <th>Fec. Solicitud</th>
+                                <th>Emp. Propietaria</th>
+                                <th>Tipo Propiedad</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -141,6 +161,12 @@
             }
         };
         var table = $('#grillaActivo').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Activos",
+                    sheetName: "Activos"
+                })
+            ],
             "retrieve": true,
             'ajax': {
                 "type": "POST",
@@ -161,12 +187,6 @@
                     }
                 }
             ],*/
-            buttons: [
-                $.extend(true, {}, buttonCommon, {
-                    filename: "Activos",
-                    sheetName: "Activos"
-                })
-            ],
             columns: [
                 {
                     "mData": null,
@@ -174,7 +194,7 @@
                     "mRender": function (o, type, row) {
                         var boton = '';
                         // if (o.Editable == true) {
-                        boton = '<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#ModalAddActivo" onclick="EditActivo(' + o.IdActivo + ')"><i class="fa fa-edit"></i></a> ';
+                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAddActivo" onclick="EditActivo(' + o.IdActivo + ')"><i class="fa fa-edit"></i></button> ';
                         //}
                         return boton;
                     }
@@ -185,24 +205,44 @@
                     "mRender": function (o, type, row) {
                         var boton = '';
                         // if (o.Editable == true) {
-                        boton += '<a class="btn btn-danger btn-sm" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="fa fa-trash"></i></a> ';
+                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="far fa-trash-alt"></i></button> ';
                         //}
                         return boton;
                     }
                 },
+                { "data": "RazonSocial" },
                 { "data": "NumeroInterno" },
                 { "data": "CodSoftland" },
                 { "data": "Capacidad" },
+                { "data": "Familia" },
                 { "data": "Descripcion" },
                 { "data": "Marca" },
                 { "data": "Modelo" },
-                { "data": "Motor" },
+                { "data": "MotorChasis" },
                 { "data": "Serie" },
                 { "data": "Anio" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "NumeroFactura" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Patente" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
+                { "data": "Valor" },
                 { "data": "Valor" }
             ]
         });
-        $("#grillaActivo").dataTable().fnDestroy();
+        //$("#grillaActivo").dataTable().fnDestroy();
         return table;
     }
 

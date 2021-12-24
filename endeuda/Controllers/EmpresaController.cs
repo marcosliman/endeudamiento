@@ -63,24 +63,11 @@ namespace tesoreria.Controllers
                 if (empresaEdit != null)
                 {
                     empresaEdit.RazonSocial = empresa.RazonSocial;
-                    empresaEdit.AliasEmpresa = empresa.AliasEmpresa;
-                    empresaEdit.IdTributario = empresa.IdTributario;
-                    empresaEdit.CtaActivo = empresa.CtaActivo;
-                    empresaEdit.CtaVentas = empresa.CtaVentas;
-                    empresaEdit.CtaGastos = empresa.CtaGastos;
-                    empresaEdit.CtaCosto = empresa.CtaCosto;
-                    empresaEdit.CtaDevolucion = empresa.CtaDevolucion;
-                    empresaEdit.CodSubGrNuevo = empresa.CodSubGrNuevo;
-                    empresaEdit.IdTributario = empresa.IdTributario;
-                    empresaEdit.Activo = empresa.Activo;
-                    empresaEdit.TieneBodega = empresa.TieneBodega;
-                    empresaEdit.BaseSoftland = empresa.BaseSoftland;
                 }
             }
             else
             {
                 empresaEdit = empresa;
-                empresaEdit.FechaRegistro = DateTime.Now;
                 showMessageString = new { Estado = 0, Mensaje = "Empresa Registrada" };
                 db.Empresa.Add(empresa);
             }

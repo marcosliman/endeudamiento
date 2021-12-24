@@ -219,7 +219,13 @@
                 }
             });
 
-            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.table tbody').on('mouseover', 'tr', function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: 'hover',
+                    html: true
+                });
+            });
             $('.modal-dialog').draggable({
                 handle: ".modal-header"
             });
@@ -579,18 +585,26 @@
 @RenderSection("scripts", required: false)
 <script>
     $(document).ready(function () {
-        $('.dataTable').DataTable({
-            dom: 'Bfrt',
-            paginate: false,
+        $('#dataTable').DataTable({
+            dom: 'Bfrtip',
+            responsive: true,
             buttons: [
+                /*{
+                    extend: 'copy',
+                    text: "Copiar"
+                },*/
                 {
-                    extend: 'excelHtml5',
-                    text: "Exportar a Excel"
-                }
+                    extend: 'csv',
+                    text: "Csv"
+                },
+                {
+                    extend: 'print',
+                    text: "Imprimir"
+                },
+                'pdf', 'excelHtml5'
             ],
-            "columnDefs": [
-                { targets: '_all', className: 'align-middle' },
-                {
+
+            "columnDefs": [{
                 "targets": 'no-sort',
                 "orderable": false
             }]

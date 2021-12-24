@@ -27,26 +27,42 @@ namespace tesoreria.Helper
     public enum Estado : int
     {
         //General
-        Activo = 1,
-        Inactivo = 2,
-        Programado=3,
-        ValidadoTesorero = 4,
-        ValidadoContralor = 5,
-        Pagado=6,
-        Finalizado=7,
-        Rechazado=8
+        Vigente = 1,
+        NoVigente = 2,
+
+        ActCreado =3,
+        ActDisponible = 4,
+        ActLicitacion = 5,
+        ActEnContrato = 6,
+        ActBaja=7,
+
+        LicCreada=15,
+        LicCompleta=16,
+        LicContrato=17,
+
+        OfeGenerada=25,
+        OfeEnContrato=26,
+        OfeNoUtilizada=27,
+
+        ConCreado=30,
+        ConVigente=31,
+        ConFinalizado=32
     }
-    public enum EstadoControlInventario : int
-    {       
-        Creado = 10
-    }
-    public enum EstadoSolCreaProd : int
+
+    public enum TipoContrato : int
     {
-        Creada = 20,
-        Enviada=21,
-        Aprobada=22,
-        Rechazada=23
+        Leasing = 1,
+        Contrato = 2
     }
+
+    public enum TipoFinanciamiento : int
+    {
+        Leasing = 1,
+        EstructuradoConGarantia = 2,
+        EstructuradoSinGarantia = 3,
+        CapitalDeTrabajoBullet = 4
+    }
+
     public enum Perfilles : int
     {        
         Administrador = 1,

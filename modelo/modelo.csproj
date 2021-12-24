@@ -56,6 +56,16 @@
   <ItemGroup>
     <Compile Include="Models\Local\Activo.cs" />
     <Compile Include="Models\Local\Contrato.cs" />
+    <Compile Include="Models\Local\ContratoActivo.cs" />
+    <Compile Include="Models\Local\LicitacionActivo.cs" />
+    <Compile Include="Models\Local\LicitacionOfertaDocumento.cs" />
+    <Compile Include="Models\Local\LicitacionOferta.cs" />
+    <Compile Include="Models\Local\Licitacion.cs" />
+    <Compile Include="Models\Local\TipoEstado.cs" />
+    <Compile Include="Models\Local\Banco.cs" />
+    <Compile Include="Models\Local\TipoImpuesto.cs" />
+    <Compile Include="Models\Local\TipoFinanciamiento.cs" />
+    <Compile Include="Models\Local\Proveedor.cs" />
     <Compile Include="Models\Local\Estado.cs" />
     <Compile Include="Models\Local\Empresa.cs" />
     <Compile Include="Models\SoftLandContext.cs" />
@@ -82,6 +92,9 @@
     <Compile Include="Models\Softland\OW_vsnpTraeOCDetalle.cs" />
     <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\LicitacionOfertaViewModel.cs" />
+    <Compile Include="ViewModel\ContratoViewModel.cs" />
+    <Compile Include="ViewModel\LicitacionViewModel.cs" />
     <Compile Include="ViewModel\ActivoViewModel.cs" />
     <Compile Include="ViewModel\EmpresaRotacionViewModel.cs" />
     <Compile Include="ViewModel\GraficosViewModel.cs" />

@@ -6,14 +6,14 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 namespace modelo.Models.Local
 {
-    [Table("Estado")]
-    public class Estado
+    [Table("Banco")]
+    public class Banco
     {
         [Key]
-        [Display(Name = "Código Estado")]
-        public int IdEstado { get; set; }
-        public int IdTipoEstado { get; set; }
-        public string NombreEstado { get; set; }
+        [Display(Name = "Código Banco")]
+        public int IdBanco { get; set; }
+        public string NombreBanco { get; set; }
+        public bool  Activo { get; set; }
 
     }
 }

@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "Buscar Contratos";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Buscar Contratos</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes administrar los contratos</h6>
+<br />
+
+<button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0,1)"><i class="fa fa-plus"></i> Nuevo Contrato Leasing</button>
+<button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0,2)"><i class="fa fa-plus"></i> Nuevo Contrato Crédito</button>
+<div class="row">
+    <div class="card col-lg-12">
+        <div class="card card-outline card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-2">
+                        @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" id="nombrearchivo" placeholder="Número Contrato">
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row justify-content-end">
+                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Detalle</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaContrato" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort">Acción</th>
+                                <th>Número Contrato</th>
+                                <th>Empresa</th>
+                                <th>Banco</th>
+                                <th>Tipo</th>
+                                <th>Plazo (meses)</th>
+                                <th>Monto</th>
+                                <th>Tasa Anual</th>
+                                <th>Tasa Mensual</th>
+                                <th>Inicio</th>
+                                <th>Término</th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<form name="frmContrato" id="frmContrato" method="post">
+    <input type="hidden" name="idContrato" id="idContrato" />
+</form>
+<script>
+    $(document).ready(function () {
+        AbrirMenu("RegistrarContrato");
+        RefreshLista();
+    });
+
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTable() {
+        var table = $('#grillaContrato').DataTable({
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/ListaContrato_Read/',
+                "data": function (d) {
+                    d.idBanco = $('#bancoB').val();
+                    d.idEmpresa = $('#empresaB').val();
+                    d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [6],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton = '<button class="btn btn-info btn-sm" type="button" onclick="CreateRegistro(' + o.IdContrato + ')"><i class="fa fa-edit"></i></button> ';
+                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarContrato(' + o.IdContrato + ')"><i class="far fa-trash-alt"></i></button> ';
+                        return boton;
+                    }
+                },
+                { "data": "NumeroContrato" },
+                { "data": "RazonSocial" },
+                { "data": "NombreBanco" },
+                { "data": "NombreTipoFinanciamiento" },
+                { "data": "Plazo" },
+                { "data": "Monto" },
+                { "data": "TasaAnual" },
+                { "data": "TasaMensual" },
+                {
+                    data: {
+                        _: "FechaInicioStr",
+                        sort: "FechaInicio"
+                    }
+                },
+                {
+                    data: {
+                        _: "FechaTerminoStr",
+                        sort: "FechaTermino"
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+
+    function CreateRegistro(idContrato,tipo) {
+        $('#idContrato').val(idContrato);
+        url = "/Contrato/RegistrarContratoLeasing";
+        if (tipo == 2) {
+            url = "/Contrato/RegistrarContratoCredito";
+        }
+        $('#frmContrato').attr('action', url);
+        $('#frmContrato').submit();
+    }
+
+    function EliminarContrato(idContrato) {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                url: "/Contrato/DeleteContrato",
+                type: "Post",
+                data: {
+                    idContrato: idContrato
+                },
+                success: function (data) {
+                    toastr.success(data.Mensaje);
+                    RefreshLista();
+                },
+                failure: function (data) {
+                    toastr.error(data.Mensaje);
+                }
+            });
+        }
+    }
+</script>

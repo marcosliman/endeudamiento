@@ -30,32 +30,13 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-2">
-                        <select name="banco" class="form-control">
-                            <option>--Seleccione Banco--</option>
-                            <option value="1">Todas</option>
-                            <option value="2">BCI</option>
-                            <option value="3">SANTANDER</option>
-                            <option value="3">SCOTIABANK</option>
-                        </select>
+                        @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
-                        <select name="empresa" class="form-control">
-                            <option value="0">---Seleccione Empresa---</option>
-                            <option value="1">MAQSUR S.A.</option>
-                            <option value="2">BIOMASA</option>
-                            <option value="3">TECSUR</option>
-                            <option value="3">MQS</option>
-                            <option value="3">NOK</option>
-                        </select>
+                        @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
-                        <select class="form-control form-control">
-                            <option value="0">---Seleccione Financiamiento---</option>
-                            <option value="1">Leasing</option>
-                            <option value="2">Estructurado con Garantía</option>
-                            <option value="3">Estructurado sin Garantía</option>
-                            <option value="4">Capital de Trabajo - Bullet</option>
-                        </select>
+                        @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
                         
@@ -86,7 +67,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacion" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort" width="3%"><i class="fa fa-eye"></i></th>
@@ -213,65 +194,129 @@
     </div>
 </div>
 
+<div class="modal fade" id="ModalVerLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-verlicitacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosLicitacion"></div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="ModalEditarLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-editarlicitacion" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalEditarLicitacion", null)
-    </div>
-</div>
-<div class="modal fade" id="ModalVerLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-verlicitacion" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalVerLicitacion", null)
+        
     </div>
 </div>
 
 <script>
     $(document).ready(function () {
         AbrirMenu("LicitacionBuscar");
+        initTable();
     });
-</script>
-@*
-    <script>
-        $(document).ready(function () {
-            $('#grillaProductos').DataTable({
-                "searching": false,
-                buttons: [],
-            });
-            AbrirMenu('ContratoBuscar');
-            $("#stockMaterial").hide();
-            $('#selectMaterial').select2({
-                placeholder: 'Busque Material',
-                language: "es",
-                minimumInputLength: 3,
-                data: data
-                /*ajax: {
-                    url: '/Producto/Productos_Read/',
-                    dataType: 'json'
-                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                }*/
-            });
-            $('#selectMaterial').on('select2:select', function (e) {
-                var data = e.params.data;
-                $("#stockMaterial").show();
-                $('#selectMaterial').val(null).trigger('change');
-            });
-        })
 
-        function abreMaterial() {
-            $("#datosBuscar").empty();
-            $('#crear-material').modal('show');
-            tmpUrl = "/Home/SolicitudCreaMaterial";
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTable() {
+        var table = $('#grillaLicitacion').DataTable({
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Licitacion/ListaLicitacion_Read/',
+                "data": function (d) {
+                    d.idBanco = $('#bancoB').val();
+                    d.idEmpresa = $('#empresaB').val();
+                    d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [6],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerLicitacion" onclick="VerLicitacion(' + o.IdLicitacion + ')"><i class="fa fa-eye"></i></button> ';
+                        return boton;
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton += '<button class="btn btn-info btn-sm" type="button" onclick="EditarLicitacion(' + o.IdLicitacion + ')"><i class="fa fa-book-open"></i></button> ';
+                        return boton;
+                    }
+                },
+                { "data": "Autogenerado" },
+                { "data": "NumeroContrato" },
+                { "data": "RazonSocial" },
+                { "data": "NombreTipoFinanciamiento" },
+                { "data": "Monto" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarLicitacion(' + o.IdLicitacion + ')"><i class="far fa-trash-alt"></i></button> ';
+                        return boton;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+
+    function VerLicitacion(idLicitacion) {
+        $.ajax({
+            url: "/Licitacion/ModalVerLicitacion",
+            type: "Post",
+            data: { idLicitacion: idLicitacion },
+            beforeSend: function () {
+                $("#datosLicitacion").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosLicitacion").empty();
+                $("#datosLicitacion").html(data);
+            }
+        });
+    }
+
+    function EliminarLicitacion(idLicitacion) {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
             $.ajax({
-                url: tmpUrl,
-                type: "Get",
-                data: {},
+                url: "/Licitacion/DeleteLicitacion",
+                type: "Post",
+                data: {
+                    idLicitacion: idLicitacion
+                },
                 success: function (data) {
-                    $("#datosBuscar").empty();
-                    $("#datosBuscar").html(data);
-                    esconderCargando();
+                    toastr.success(data.Mensaje);
+                    RefreshLista();
+                },
+                failure: function (data) {
+                    toastr.error(data.Mensaje);
                 }
             });
         }
-
-    </script>
-*@
+    }
+</script>

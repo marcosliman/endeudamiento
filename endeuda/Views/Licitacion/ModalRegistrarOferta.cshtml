@@ -1,79 +1,248 @@
-﻿
+﻿@model modelo.ViewModel.LicitacionOfertaViewModel
 @{
     ViewBag.Title = "Registrar Oferta";
-}
-@{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
-<div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Nueva Oferta</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="card-body">
+    @using (Ajax.BeginForm("GrabarOferta", "Licitacion", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "post",
+        OnSuccess = "Success",
+        OnFailure = "Failure"
+
+    }, new { id = "frmAddOferta", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="idLicitacion" id="idLicitacion" value="@Model.IdLicitacion" />
+        <input type="hidden" name="idLicitacionOferta" id="idLicitacionOferta" value="@Model.IdLicitacionOferta" />
         <div class="ml-2">
             <div class="form-group form-group-sm row">
                 <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Entidad Financiera</label>
                 <div class="col-6">
-                    <input type="text" class="form-control" id="nombrearchivo" placeholder="Ingrese la entidad financiera">
+                    @Html.DropDownList("idBanco", (SelectList)ViewData["listaBanco"], "--Seleccione Entidad Financiera--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                 </div>
             </div>
             <div class="form-group form-group-sm row">
                 <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Tasa Mensual</label>
                 <div class="col-6">
-                     <input type="text" class="form-control" id="usuario" placeholder="Ingrese la tasa mensual ofrecida">
+                    <input type="text" class="form-control form-control-sm tasa" id="tasaMensual" name="tasaMensual" placeholder="Ingrese la tasa mensual ofrecida" value="@Model.TasaMensual.ToString().Replace(",",".")">
                 </div>
             </div>
             <div class="form-group form-group-sm row">
                 <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Tasa Anual</label>
                 <div class="col-6">
-                    <input type="text" class="form-control" id="usuario" placeholder="Ingrese la tasa anual ofrecida">
+                    <input type="text" class="form-control form-control-sm tasa" id="tasaAnual" name="tasaAnual" placeholder="Ingrese la tasa anual ofrecida" value="@Model.TasaAnual.ToString().Replace(",",".")">
                 </div>
             </div>
             <div class="form-group form-group-sm row">
+                <label for="plazo" class="col-sm-3 col-form-label col-form-label-sm">Plazo (meses)</label>
+                <div class="col-6">
+                    <input type="text" class="form-control form-control-sm" id="plazo" name="plazo" placeholder="Ingrese plazo en meses" value="@Model.Plazo">
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="plazo" class="col-sm-3 col-form-label col-form-label-sm">Archivo [.xls,.xlsx,.pdf]</label>
                 <div class="col-sm-auto col-form-label">
-                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                    <input type="file" class="form-control form-control-sm" name="archivo" id="archivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary btn-sm">Crear</button>
-    </div>
-
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+            <button type="button" id="btnGrabarOferta" onclick="GrabarOferta()" class="btn btn-primary btn-sm">@Model.TituloBoton</button>
+        </div>
+    }
+        <div class="form-group form-group-sm row">
+            <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaDocumento" data-order='[[ 0, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort" width="3%">Item</th>
+                        <th>Adjunto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Archivos.ToList())
+                    {
+                        <tr>
+                            <td>
+                                <button data-dz-remove class="btn btn-primary delete btn-xs" onclick="EliminarArchivo('@item.IdLicitacionOfertaDocumento');">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                            <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 </div>
 <script>
     $(document).ready(function () {
-
-        $('#frmEdit').validate({
+        $('#frmAddOferta').validate({
             debug: false,
             errorElement: "em",
-            errorContainer: $("#warning")
+            errorContainer: $("#warning"),
+            rules: {
+                idBanco: { required: true },
+                tasaMensual: { required: true, number: true },
+                tasaAnual: { required: true, number: true },
+                plazo: { required: true, digits: true }
+            }
         });
-        $('#perfiles').select2({
-            theme: 'bootstrap4'
-        })
-        window.top.esconderCargando();
+
     });
 
-    function Success_dl(data) {
-        esconderCargando();
+    function GrabarOferta() {
+        if ($('#frmAddOferta').valid()) {
+            $(".tasa").each(function () {
+                $(this).val($(this).val().toString().replace(/[$.]/g, ','))
+            });
+
+            var input = document.getElementById('archivo');
+            var filePath = input.value;
+            var file = input.files[0];
+            var valido = true;
+            var allowedExtensions = /(.xls|.xlsx|.pdf)$/i;
+            if (file) {
+                if (file.size > 4000000) {
+                    alert('El archivo no debe superar los 4MB');
+                    valido = false;
+                }
+                else if (!allowedExtensions.exec(filePath)) {
+                    alert('Solo se permite archivos con extensión: ' + allowedExtensions);
+                    valido = false;
+                }
+            }
+            if (valido) {
+                var frm = $('#frmAddOferta').get(0);
+                var data = new FormData(frm);
+                $.ajax({
+                    type: 'POST',
+                    url: '/Licitacion/GrabarOferta',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        //data = JSON.parse(data);
+                        Success(data);
+                    },
+                    failure: function (data) {
+                        //data = JSON.parse(data);
+                        Failure(data);
+                    }
+                })
+            }
+        }
+    }
+
+    function archivosTable() {
+        var table = $('#grillaDocumento').DataTable({
+            "dom": '',
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Licitacion/LicitacionOfertaDocumentos_Read/',
+                "data": function (d) {
+                    d.idLicitacionOferta = $('#idLicitacionOferta').val();
+                },
+                "dataSrc": ""
+            },
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        acciones += '<button class="btn btn-primary btn-xs" type="button" onclick="EliminarArchivo(' + o.IdLicitacionOfertaDocumento +');"><i class="far fa-trash-alt"></i></button>';
+                        return acciones;
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        acciones += '<a href="JavaScript:Descargar('+"'" + o.UrlDocumento + "'" + ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> '+o.NombreOriginal+'</a>';
+                        return acciones;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+
+    function Descargar(urlArchivo) {
+        location.href = "/Licitacion/Descargar?rutaArchivo=" + urlArchivo;
+    }
+
+    function EliminarArchivo(idLicitacionOfertaDocumento) {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                url: "/Licitacion/DeleteArchivoOferta",
+                type: "Post",
+                data: {
+                    idLicitacionOfertaDocumento: idLicitacionOfertaDocumento
+                },
+                //contentType: false,
+                //processData: false,
+                success: function (data) {
+                    SuccessP(data);
+                },
+                failure: function (data) {
+                    FailureP(data);
+                }
+            });
+        }
+    }
+
+    function RefreshListaArchivo() {
+        var table = archivosTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function Cerrar() {
+        $('#ModalRegistrarOferta').modal('hide');
+        RefreshLista();
+    }
+
+    function Success(data) {
+        if (data.result.Estado == "0") {
+            toastr.success(data.result.Mensaje);
+            $('#ModalRegistrarOferta').modal('hide');
+            //CargaTab('documentos-part', 4);
+            RefreshListaOferta();
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+        }
+    }
+
+    function Failure(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
+    }
+
+    function SuccessP(data) {
         if (data.Estado == "0") {
             toastr.success(data.Mensaje);
-            $('#modal-registro').modal('hide');
-            RefreshLista();
+            RefreshListaArchivo();
         }
         else {
             toastr.error(data.Mensaje);
         }
     }
-    function Failure_dl(data) {
-        esconderCargando();
+
+    function FailureP(data) {
+        //esconderCargando();
         toastr.error(data.Mensaje);
-        $('#modal-registro').modal('hide');
     }
 
 </script>

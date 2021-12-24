@@ -16,279 +16,177 @@
 </div>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h5 class="h5 mb-0 text-gray-800">Nueva Licitación<h5>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
-    </ol>
+    <h5 class="h5 mb-0 text-gray-800">
+        Nueva Licitación<h5>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+            </ol>
 </div>
-<div class="card">
-    <div class="card card-outline card-info collapsed-card">
-        <div class="card-header">
-            <h3 class="card-title">Datos Generales</h3>
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
-        </div>
+
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <div class="form-inline my-2 my-lg-0">
+
     </div>
-    <div class="card-body">
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-3 col-form-label">Empresa</label>
-            <div class="col-sm-3">
-                <select class="form-control form-control-sm">
-                    <option value="0">---Seleccione Empresa---</option>
-                    <option value="1">MAQSUR S.A.</option>
-                    <option value="2">BIOMASA</option>
-                    <option value="3">TECSUR</option>
-                    <option value="4">MQS</option>
-                    <option value="5">NOK</option>
-                </select>
-            </div>
-            <label for="inputEmail3" class="col-sm-3 col-form-label">Autogenerado</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control form-control-sm" name="Autogenerado" id="Autogenerado" />
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-3 col-form-label">Tipo de Financiamiento</label>
-            <div class="col-sm-3">
-                <select class="form-control form-control-sm">
-                    <option value="0">---Seleccione Financiamiento---</option>
-                    <option value="1">Leasing</option>
-                    <option value="2">Estructurado con Garantía</option>
-                    <option value="3">Estructurado sin Garantía</option>
-                    <option value="4">Capital de Trabajo - Bullet</option>
-                </select>
-            </div>
-            <label for="inputEmail3" class="col-sm-3 col-form-label">Monto a Financiar</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control form-control-sm" name="MontoFinanciar" id="MontoFinanciar" />
-            </div>
-        </div>
-    </div>    
-</div>
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Registro de Activos</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
+    <div class="form-inline my-2 my-lg-0">
+        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nueva Licitación</button>
     </div>
-    <div class="card-body">
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de activos a financiar</label>
-        </div>
-        <div class="form-group row">
-            <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                <div class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalRegistrarActivo"><i class="fa fa-plus"></i>Añadir Activo</button>
+</nav>
+<div class="row">
+    <div class="card col-lg-12">
+        <div class="card card-outline card-info collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
                 </div>
-            </nav>
-        </div>
-        <div class="table-responsive mt-1">
-            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                <thead class="thead-light">
-                    <tr>
-                        <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
-                        <th>Nro Activo</th>
-                        <th>Familia</th>
-                        <th>Descripcion</th>
-                        <th>Clasif. Cuenta</th>
-                        <th>Monto</th>
-                        <th>Modelo</th>
-                        <th>Año</th>
-                        <th>Marca</th>
-                        <th>Proveedor</th>
-                        <th>Factura</th>
-                        <th>Motor y Chasis</th>
-                        <th>Patente</th>
-                        <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                        <td>0253</td>
-                        <td>Maquinaria</td>
-                        <td>Volquete Volvo</td>
-                        <td>01-582-256-52</td>
-                        <td>100,000.00</td>
-                        <td>V34</td>
-                        <td>2019</td>
-                        <td>Volvo</td>
-                        <td>Inversiones SAC</td>
-                        <td>2569887</td>
-                        <td>Volvo V34 Diesel</td>
-                        <td>1247NH</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                        <td>0653</td>
-                        <td>Maquinaria</td>
-                        <td>Volquete Volvo</td>
-                        <td>01-582-256-52</td>
-                        <td>180,000.00</td>
-                        <td>H34</td>
-                        <td>2018</td>
-                        <td>Volvo</td>
-                        <td>Inversiones SAC</td>
-                        <td>6769832</td>
-                        <td>Volvo h34 Diesel</td>
-                        <td>1337NH</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td> </td>
-                        <th>Total</th>
-                        <td>280,000.00</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Registro de Ofertas</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de las ofertas recibidas</label>
-        </div>
-        <div class="form-group row">
-            <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                <div class="form-inline my-2 my-lg-0">
-                    <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalRegistrarOferta"><i class="fa fa-plus"></i>Nueva Oferta</button>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row justify-content-end">
+                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                        </div>
+                    </div>
                 </div>
-            </nav>
-        </div>
-        <div class="table-responsive mt-1">
-            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                <thead class="thead-light">
-                    <tr>
-                        <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
-                        <th>Entidad Financiera</th>
-                        <th>Tasa Mensual Ofrecida</th>
-                        <th>Tasa Anual Ofrecida</th>
-                        <th>Plazo (meses)</th>
-                        <th class="no-sort" width="3%"><i class="fa fa-upload"></i></th>
-                        <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarOferta"><i class="far fa-eye"></i></button></td>
-                        <td>BCI</td>
-                        <td>4.5 %</td>
-                        <td>25.00 %</td>
-                        <td>49</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#CargarDocOferta"><i class="fa fa-upload"></i></button></td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarOferta"><i class="far fa-eye"></i></button></td>
-                        <td>ITAÚ</td>
-                        <td>4.5 %</td>
-                        <td>25.00 %</td>
-                        <td>49</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#CargarDocOferta"><i class="fa fa-upload"></i></button></td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarOferta"><i class="far fa-eye"></i></button></td>
-                        <td>SCOTIABANK</td>
-                        <td>4.5 %</td>
-                        <td>25.00 %</td>
-                        <td>49</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#CargarDocOferta"><i class="fa fa-upload"></i></button></td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarOferta"><i class="far fa-eye"></i></button></td>
-                        <td>SECURITY</td>
-                        <td>4.5 %</td>
-                        <td>25.00 %</td>
-                        <td>49</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#CargarDocOferta"><i class="fa fa-upload"></i></button></td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarOferta"><i class="far fa-eye"></i></button></td>
-                        <td>BBVA</td>
-                        <td>4.5 %</td>
-                        <td>25.00 %</td>
-                        <td>49</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#CargarDocOferta"><i class="fa fa-upload"></i></button></td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarOferta"><i class="far fa-eye"></i></button></td>
-                        <td>SANTANDER</td>
-                        <td>4.5 %</td>
-                        <td>25.00 %</td>
-                        <td>49</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#CargarDocOferta"><i class="fa fa-upload"></i></button></td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    
-
-                </tbody>
-            </table>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="ModalRegistrarActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalRegistrarActivo", null)
-    </div>
-</div>
-<div class="modal fade" id="ModalRegistrarOferta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalRegistrarOferta", null)
-    </div>
-</div>
-<div class="modal fade" id="CargarDocOferta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("CargarDocOferta", null)
-    </div>
-</div>
-<div class="modal fade" id="ModalEditarOferta" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalEditarOferta", null)
-    </div>
-</div>
-<div class="modal fade" id="ModalVerActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalVerActivo", null)
-    </div>
-</div>
 
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Licitaciones Activas</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacion" data-order='[[ 1, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Acción</th>
+                            <th>Número Licitación</th>
+                            <th>Empresa</th>
+                            <th>Tipo Financiamiento</th>
+                            <th>Monto</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<form name="frmLicitacion" id="frmLicitacion" method="post">
+    <input type="hidden" name="idLicitacion" id="idLicitacion" />
+</form>
 <script>
     $(document).ready(function () {
         AbrirMenu("RegistrarLicitacion");
+        Buscar();
     });
+
+
+    function RefreshLista() {
+        //$('#grillaParcela').empty();
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function Buscar() {
+        RefreshLista();
+    }
+
+    function initTable() {
+        var table = $('#grillaLicitacion').DataTable({
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Licitacion/ListaLicitacion_Read/',
+                "data": function (d) {
+                    d.idEmpresa = $('#empresaB').val();
+                    d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [4],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton = '<button class="btn btn-info btn-sm" type="button" onclick="CreateRegistro(' + o.IdLicitacion + ')"><i class="fa fa-edit"></i></button> ';
+                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarLicitacion(' + o.IdLicitacion + ')"><i class="far fa-trash-alt"></i></button> ';
+                        return boton;
+                    }
+                },
+                { "data": "Autogenerado" },
+                { "data": "RazonSocial" },
+                { "data": "NombreTipoFinanciamiento" },
+                { "data": "Monto" },
+                { "data": "NombreEstado" }
+            ]
+        });
+
+        return table;
+    }
+
+    function CreateRegistro(idLicitacion) {
+        $('#idLicitacion').val(idLicitacion);
+        url = "/Licitacion/AddLicitacion";
+        $('#frmLicitacion').attr('action', url);
+        $('#frmLicitacion').submit();
+    }
+
+    function EliminarLicitacion(idLicitacion) {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                url: "/Licitacion/DeleteLicitacion",
+                type: "Post",
+                data: {
+                    idLicitacion: idLicitacion
+                },
+                success: function (data) {
+                    toastr.success(data.Mensaje);
+                    RefreshLista();
+                },
+                failure: function (data) {
+                    toastr.error(data.Mensaje);
+                }
+            });
+        }
+    }
+
 </script>

@@ -1,0 +1,194 @@
+﻿@model modelo.Models.Local.ContratoActivo
+@{
+    ViewBag.Title = "Asociar Activo Contrato";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <input type="text" class="form-control form-control-sm" name="numeroActivo" id="numeroActivoB" placeholder="Número Activo">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control form-control-sm" name="codigoInterno" id="codigoInternoB" placeholder="Código Interno">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body table-responsive">
+        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivo" data-order='[[ 0, "asc" ]]'>
+            <thead class="thead-light">
+                <tr>
+                    <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                    <th>Nro Activo</th>
+                    <th>Familia</th>
+                    <th>Descripcion</th>
+                    <th>Clasif. Cuenta</th>
+                    <th>Monto</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Marca</th>
+                    <th>Proveedor</th>
+                    <th>Factura</th>
+                    <th>Motor y Chasis</th>
+                    <th>Patente</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="button" id="btAsociar" onclick="GrabarAsociacion()" class="btn btn-primary btn-sm">Asociar</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        initTable();
+    });
+
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    var idSeleccion = new Array();
+    function ActualizarSeleccion(key) {
+        //console.log(key)
+        // console.log($("#" + key).prop("checked"))
+        if ($("#" + key).prop("checked") == true) {
+            var existe = idSeleccion.includes(key)
+            if (existe == false) {
+                idSeleccion.push(key);
+            }
+        }
+        else {
+            let pos = idSeleccion.indexOf(key)
+            let elementoEliminado = idSeleccion.splice(pos, 1)
+        }
+        // console.log(idSeleccion)
+    }
+
+    function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'ACTIVOS ',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)"
+            }
+        };
+        var table = $('#grillaActivo').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Activos",
+                    sheetName: "Activos"
+                })
+            ],
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/ListaActivoAsociar_Read/',
+                "data": function (d) {
+                    d.idContrato = "@Model.IdContrato";
+                    d.NumeroActivo = $('#numeroActivoB').val();
+                    d.codigoActivo = $('#codigoInternoB').val();
+                },
+                "dataSrc": ""
+            },
+
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        // if (o.Editable == true) {
+                        var acciones = '<input type="checkbox" class="activo" name="chkActivo" id="' + o.IdActivo + '" value="' + o.IdActivo + '" ' + ' />';
+                        //}
+                        return acciones;
+                    }
+                },
+                { "data": "NumeroInterno" },
+                { "data": "Familia" },
+                { "data": "Descripcion" },
+                { "data": "NombreCuenta" },
+                { "data": "Valor" },
+                { "data": "Modelo" },
+                { "data": "Anio" },
+                { "data": "Marca" },
+                { "data": "NombreProveedor" },
+                { "data": "NumeroFactura" },
+                { "data": "MotorChasis" },
+                { "data": "Patente" }
+            ]
+        });
+        return table;
+    }
+
+    function GrabarAsociacion() {
+        var ids = new Array();
+        checkeados = 0;
+        $(".activo").each(function () {
+            if ($(this).prop("checked") == true) {
+                ids[ids.length] = $(this).val();
+                checkeados++;
+            }
+        })
+        if (checkeados > 0) {
+            a = confirm("¿Seguro de Asociar los registros seleccionados?");
+            if (a == true) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Contrato/AsociarActivo/',
+                    data: {
+                        idContrato: "@Model.IdContrato",
+                        activos: ids
+                    },
+                    success: function (data) {
+                        SuccessA(data);
+                    },
+                    failure: function (data) {
+                        FailureA(data);
+                    }
+                })
+            }
+
+        }
+        else {
+            alert("Debe Seleccionar al menos un registro");
+        }
+    }
+
+    function SuccessA(data) {
+        if (data.result.Estado == "0") {
+            toastr.success(data.result.Mensaje);
+            $('#ModalAsociarActivo').modal('hide');
+            //CargaTab('documentos-part', 4);
+            RefreshListaActivo();
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+        }
+    }
+
+    function FailureA(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
+    }
+</script>
