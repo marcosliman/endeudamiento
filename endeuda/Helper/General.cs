@@ -45,7 +45,7 @@ namespace tesoreria.Helper
         OfeNoUtilizada=27,
 
         ConCreado=30,
-        ConVigente=31,
+        ConActivo=31,
         ConFinalizado=32
     }
 
@@ -53,6 +53,11 @@ namespace tesoreria.Helper
     {
         Leasing = 1,
         Contrato = 2
+    }
+
+    public enum CategoriaDocumento : int
+    {
+        ActivoContrato = 1
     }
 
     public enum TipoFinanciamiento : int

@@ -33,6 +33,7 @@ namespace modelo.ViewModel
         public string Patente { get; set; }
         public DateTime? FechaRegistro { get; set; }
         public string TituloBoton { get; set; }
+        public bool Editable { get; set; }
     }
 
 }

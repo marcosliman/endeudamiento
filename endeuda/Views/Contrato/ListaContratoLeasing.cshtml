@@ -1,21 +1,21 @@
 ﻿@{
-    ViewBag.Title = "Buscar Licitación";
+    ViewBag.Title = "Buscar Contratos";
 }
 @{
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
 }
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Buscar Licitaciones</h5>
+    <h5 class="h5 mb-0 text-gray-800">Buscar Contratos</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Inicio</li>
     </ol>
 </div>
-<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar las licitaciones registradas de todas las empresas.</h6>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes administrar los contratos Leasing</h6>
 <br />
 
-
+<button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Contrato Leasing</button>
 <div class="row">
     <div class="card col-lg-12">
         <div class="card card-outline card-info collapsed-card">
@@ -36,10 +36,7 @@
                         @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
-                        @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        
+                        <input type="text" class="form-control" id="numeroContratoB" name="numeroContratoB" placeholder="Número Contrato">
                     </div>
                     <div class="col-md-2">
                     </div>
@@ -67,17 +64,21 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacion" data-order='[[ 0, "asc" ]]'>
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaContrato" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort" width="3%"><i class="fa fa-eye"></i></th>
-                                <th class="no-sort" width="3%"><i class="fa fa-book-open"></i></th>
-                                <th width="10%">Autogenerado</th>
-                                <th width="10%">Número Contrato</th>
+                                <th class="no-sort">Acción</th>
+                                <th>Número Contrato</th>
                                 <th>Empresa</th>
-                                <th>Tipo Financiamiento</th>
-                                <th>Monto a financiar</th>
-                                <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
+                                <th>Banco</th>
+                                <th>Tipo</th>
+                                <th>Plazo (meses)</th>
+                                <th>Monto</th>
+                                <th>Tasa Anual</th>
+                                <th>Tasa Mensual</th>
+                                <th>Inicio</th>
+                                <th>Término</th>
+
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -89,25 +90,13 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="ModalVerLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-verlicitacion" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div id="datosLicitacion"></div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="ModalEditarLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-editarlicitacion" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        
-    </div>
-</div>
-
+<form name="frmContrato" id="frmContrato" method="post">
+    <input type="hidden" name="idContrato" id="idContrato" />
+</form>
 <script>
     $(document).ready(function () {
-        AbrirMenu("LicitacionBuscar");
-        initTable();
+        AbrirMenu("RegistrarContrato");
+        RefreshLista();
     });
 
     function RefreshLista() {
@@ -116,15 +105,17 @@
     }
 
     function initTable() {
-        var table = $('#grillaLicitacion').DataTable({
+        var table = $('#grillaContrato').DataTable({
             "retrieve": true,
             'ajax': {
                 "type": "POST",
-                "url": '/Licitacion/ListaLicitacion_Read/',
+                "url": '/Contrato/ListaContrato_Read/',
                 "data": function (d) {
+                    d.tipoContrato = "@((int)tesoreria.Helper.TipoContrato.Leasing)";
                     d.idBanco = $('#bancoB').val();
                     d.idEmpresa = $('#empresaB').val();
-                    d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                    //d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                    d.numeroContrato = $('#numeroContratoB').val();
                 },
                 "dataSrc": ""
             },
@@ -148,31 +139,31 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerLicitacion" onclick="VerLicitacion(' + o.IdLicitacion + ')"><i class="fa fa-eye"></i></button> ';
+                        boton = '<button class="btn btn-info btn-sm" type="button" onclick="CreateRegistro(' + o.IdContrato + ')"><i class="fa fa-edit"></i></button> ';
+                        if (o.PuedeEliminar) {
+                            boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarContrato(' + o.IdContrato + ')"><i class="far fa-trash-alt"></i></button> ';
+                        }
                         return boton;
                     }
                 },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        var boton = '';
-                        boton += '<button class="btn btn-info btn-sm" type="button" onclick="EditarLicitacion(' + o.IdLicitacion + ')"><i class="fa fa-book-open"></i></button> ';
-                        return boton;
-                    }
-                },
-                { "data": "Autogenerado" },
                 { "data": "NumeroContrato" },
                 { "data": "RazonSocial" },
+                { "data": "NombreBanco" },
                 { "data": "NombreTipoFinanciamiento" },
+                { "data": "Plazo" },
                 { "data": "Monto" },
+                { "data": "TasaAnual" },
+                { "data": "TasaMensual" },
                 {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        var boton = '';
-                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarLicitacion(' + o.IdLicitacion + ')"><i class="far fa-trash-alt"></i></button> ';
-                        return boton;
+                    data: {
+                        _: "FechaInicioStr",
+                        sort: "FechaInicio"
+                    }
+                },
+                {
+                    data: {
+                        _: "FechaTerminoStr",
+                        sort: "FechaTermino"
                     }
                 }
             ]
@@ -181,29 +172,22 @@
         return table;
     }
 
-    function VerLicitacion(idLicitacion) {
-        $.ajax({
-            url: "/Licitacion/ModalVerLicitacion",
-            type: "Post",
-            data: { idLicitacion: idLicitacion },
-            beforeSend: function () {
-                $("#datosLicitacion").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
-            },
-            success: function (data) {
-                $("#datosLicitacion").empty();
-                $("#datosLicitacion").html(data);
-            }
-        });
+    function CreateRegistro(idContrato) {
+        $('#idContrato').val(idContrato);
+        url = "/Contrato/RegistrarContratoLeasing";
+
+        $('#frmContrato').attr('action', url);
+        $('#frmContrato').submit();
     }
 
-    function EliminarLicitacion(idLicitacion) {
+    function EliminarContrato(idContrato) {
         a = confirm("Seguro de Eliminar el registro seleccionado?")
         if (a) {
             $.ajax({
-                url: "/Licitacion/DeleteLicitacion",
+                url: "/Contrato/DeleteContrato",
                 type: "Post",
                 data: {
-                    idLicitacion: idLicitacion
+                    idContrato: idContrato
                 },
                 success: function (data) {
                     toastr.success(data.Mensaje);

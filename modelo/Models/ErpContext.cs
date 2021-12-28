@@ -34,5 +34,9 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.Contrato> Contrato { get; set; }
         public System.Data.Entity.DbSet<Local.ContratoActivo> ContratoActivo { get; set; }
         public System.Data.Entity.DbSet<Local.TipoImpuesto> TipoImpuesto { get; set; }
+        public System.Data.Entity.DbSet<Local.TipoDocumento> TipoDocumento { get; set; }
+        public System.Data.Entity.DbSet<Local.ContratoActivoDocumento> ContratoActivoDocumento { get; set; }
+        public System.Data.Entity.DbSet<Local.TipoLog> TipoLog { get; set; }
+        public System.Data.Entity.DbSet<Local.ContratoLog> ContratoLog { get; set; }
     }
 }

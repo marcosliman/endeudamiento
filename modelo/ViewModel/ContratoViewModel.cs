@@ -35,6 +35,9 @@ namespace modelo.ViewModel
         public DateTime FechaRegistro { get; set; }
         public string ExisteContrato { get; set; }
         public string TituloBoton { get; set; }
+        public string EsLicitacion { get; set; }
+        public bool PuedeEliminar { get; set; }
+        public string Descripcion { get; set; }
     }
 
 }

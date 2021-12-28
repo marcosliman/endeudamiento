@@ -3,8 +3,7 @@
     ViewBag.Title = "Registrar Contrato Leasing";
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
-@if (Model.IdEstado == (int)tesoreria.Helper.Estado.ConActivo)
-{
+@if (Model.IdEstado == (int)tesoreria.Helper.Estado.ConActivo) {
     <div class="alert alert-success">
         <h5><i class="icon fas fa-check"></i>Contrato Activado</h5>
     </div>
@@ -22,7 +21,7 @@
     {
         @Html.AntiForgeryToken()
         <input type="hidden" name="idContrato" id="idContratoA" value="@Model.IdContrato" />
-        <input type="hidden" name="idTipoContrato" id="idTipoContrato" value="1" />
+        <input type="hidden" name="idTipoContrato" id="idTipoContrato" value="2" />
         <div class="card">
             <div class="card-header" style="background-color:white">
                 <h3 class="card-title">Datos Generales</h3>
@@ -65,7 +64,7 @@
                         }
 
                     </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Motivo Elección Licitación</label>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Sustento</label>
                     <div class="col-sm-2">
                         <textarea name="motivoEleccion" id="motivoEleccion" class="form-control form-control-sm">@Model.MotivoEleccion</textarea>
                     </div>
@@ -92,9 +91,23 @@
                     <div class="col-sm-2">
                         <input type="text" class="form-control form-control-sm" name="numeroContrato" id="numeroContrato" value="@Model.NumeroContrato" />
                     </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de impuesto</label>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Crédito</label>
                     <div class="col-sm-2">
-                        @Html.DropDownList("idTipoImpuesto", (SelectList)ViewData["listaTipoImpuesto"], "--Seleccione Tipo Impuesto--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                        @if (Model.EsLicitacion == "SI")
+                        {
+                            @Html.DropDownList("idTipoFinanciamiento", (SelectList)ViewData["listaTipoCredito"], "--Seleccione Tipo Credito--", htmlAttributes: new { @class = "form-control form-control-sm required", disabled = "disabled" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("idTipoFinanciamiento", (SelectList)ViewData["listaTipoCredito"], "--Seleccione Tipo Credito--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+
+                        }
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Garantía</label>
+                    <div class="col-sm-4">
+                        <textarea class="form-control" name="tipoGarantia" id="tipoGarantia" rows="1">@Model.TipoGarantia</textarea>
                     </div>
                 </div>
                 <div class="form-group row">
@@ -218,7 +231,7 @@
             rules: {
                 numeroContrato: { required: true },
                 idEmpresa: { required: true },
-                idTipoImpuesto: { required: true },
+                idTipoFinanciamiento: { required: true },
                 idBanco: { required: true },
                 monto: { required: true, digits: true },
                 tasaMensual: { required: true, number: true },
@@ -297,15 +310,16 @@
                 $("#tasaAnual").val(data.TasaAnual);
                 $("#tasaMensual").val(data.TasaMensual);
                 $("#plazo").val(data.Plazo);
+                $("#idTipoFinanciamiento").val(data.IdTipoFinanciamiento);
 
-                $("#idEmpresa, #idBanco, #tasaAnual, #tasaMensual, #plazo").prop("disabled", true);
+                $("#idEmpresa, #idBanco, #tasaAnual, #tasaMensual, #plazo, #idTipoFinanciamiento").prop("disabled", true);
             }
         });
     });
 
     function Refresh(idContrato) {
         $('#idContratoAcc').val(idContrato);
-        $("#frmContratoAcc").attr("action", "/Contrato/RegistrarContratoLeasing");
+        $("#frmContratoAcc").attr("action", "/Contrato/RegistrarContratoCredito");
         $("#frmContratoAcc").submit();
     }
 
@@ -406,7 +420,7 @@
 
 
     function Volver() {
-        url = "/Contrato/ListaContratoLeasing";
+        url = "/Contrato/ListaContratoCredito";
         location.href = url;
     }
 

@@ -12,6 +12,7 @@ namespace modelo.Models.Local
         [Key]
         [Display(Name = "Código TipoFinanciamiento")]
         public int IdTipoFinanciamiento { get; set; }
+        public int IdTipoContrato { get; set; }
         public string NombreTipoFinanciamiento { get; set; }
         public bool  Activo { get; set; }
 

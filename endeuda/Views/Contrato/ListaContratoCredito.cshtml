@@ -12,11 +12,10 @@
         <li class="breadcrumb-item active" aria-current="page">Inicio</li>
     </ol>
 </div>
-<h6 class="h6 mb-0 text-gray-800">Acá puedes administrar los contratos</h6>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes administrar los contratos de Crédito</h6>
 <br />
 
-<button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0,1)"><i class="fa fa-plus"></i> Nuevo Contrato Leasing</button>
-<button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0,2)"><i class="fa fa-plus"></i> Nuevo Contrato Crédito</button>
+<button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Contrato Crédito</button>
 <div class="row">
     <div class="card col-lg-12">
         <div class="card card-outline card-info collapsed-card">
@@ -37,10 +36,7 @@
                         @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
-                        @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control" id="nombrearchivo" placeholder="Número Contrato">
+                        <input type="text" class="form-control" id="numeroContratoB" name="numeroContratoB" placeholder="Número Contrato">
                     </div>
                     <div class="col-md-2">
                     </div>
@@ -99,7 +95,7 @@
 </form>
 <script>
     $(document).ready(function () {
-        AbrirMenu("RegistrarContrato");
+        AbrirMenu("RegistrarContratoCredito");
         RefreshLista();
     });
 
@@ -115,9 +111,11 @@
                 "type": "POST",
                 "url": '/Contrato/ListaContrato_Read/',
                 "data": function (d) {
+                    d.tipoContrato = "@((int)tesoreria.Helper.TipoContrato.Contrato)";
                     d.idBanco = $('#bancoB').val();
                     d.idEmpresa = $('#empresaB').val();
-                    d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                    //d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                    d.numeroContrato = $('#numeroContratoB').val();
                 },
                 "dataSrc": ""
             },
@@ -142,7 +140,9 @@
                     "mRender": function (o, type, row) {
                         var boton = '';
                         boton = '<button class="btn btn-info btn-sm" type="button" onclick="CreateRegistro(' + o.IdContrato + ')"><i class="fa fa-edit"></i></button> ';
-                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarContrato(' + o.IdContrato + ')"><i class="far fa-trash-alt"></i></button> ';
+                        if (o.PuedeEliminar) {
+                            boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarContrato(' + o.IdContrato + ')"><i class="far fa-trash-alt"></i></button> ';
+                        }
                         return boton;
                     }
                 },
@@ -172,12 +172,9 @@
         return table;
     }
 
-    function CreateRegistro(idContrato,tipo) {
+    function CreateRegistro(idContrato) {
         $('#idContrato').val(idContrato);
-        url = "/Contrato/RegistrarContratoLeasing";
-        if (tipo == 2) {
-            url = "/Contrato/RegistrarContratoCredito";
-        }
+        url = "/Contrato/RegistrarContratoCredito";
         $('#frmContrato').attr('action', url);
         $('#frmContrato').submit();
     }

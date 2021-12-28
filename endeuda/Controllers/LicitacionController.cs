@@ -260,6 +260,29 @@ namespace tesoreria.Controllers
             }
         }
 
+        /*cambia estado licitacion*/
+        private bool CambiaEstadoLicitacion(int idLicitacion) {
+            var dbLicitacion = db.Licitacion.Find(idLicitacion);
+
+            if (dbLicitacion != null) {
+                var existeActivo = db.LicitacionActivo.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
+                var existeOferta = db.LicitacionOferta.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
+
+                if (existeActivo != null && existeOferta != null)
+                {
+                    dbLicitacion.IdEstado = (int)Helper.Estado.LicCompleta;
+                    db.SaveChanges();
+                }
+                else {
+                    dbLicitacion.IdEstado = (int)Helper.Estado.LicCreada;
+                    db.SaveChanges();
+                }
+            }
+
+
+            return true;
+        }
+
         public ActionResult LicitacionBuscar()
         {
             if (seguridad == null)
@@ -480,7 +503,9 @@ namespace tesoreria.Controllers
                             var mensaje = "";
                             mensaje = "Asociación realizada con éxito";
 
-                             dbContextTransaction.Commit();
+                            CambiaEstadoLicitacion(idLicitacion);
+
+                            dbContextTransaction.Commit();
                             showMessageString = new { Estado = 0, Mensaje = mensaje };
                         }
                         catch (Exception ex)
@@ -514,9 +539,13 @@ namespace tesoreria.Controllers
                         db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActDisponible,dbLicitacionActivo.IdActivo);
                         db.SaveChanges();
 
-
+                        var idLicitacion = dbLicitacionActivo.IdLicitacion;
                         db.LicitacionActivo.Remove(dbLicitacionActivo);
                         db.SaveChanges();
+
+                        CambiaEstadoLicitacion(idLicitacion);
+                        db.SaveChanges();
+
                         dbContextTransaction.Commit();
                         showMessageString = new { Estado = 0, Mensaje = "Asociaciín eliminada con exito" };
                     }
@@ -589,6 +618,9 @@ namespace tesoreria.Controllers
                     registro = new LicitacionOfertaViewModel();
                     registro.IdLicitacion = idLicitacion;
                     registro.IdBanco = 0;
+                    registro.TasaAnual = null;
+                    registro.TasaMensual = null;
+                    registro.Plazo = null;
                     registro.TituloBoton = "Grabar Oferta";
                 }
 
@@ -702,6 +734,8 @@ namespace tesoreria.Controllers
 
 
                                 }
+
+                                CambiaEstadoLicitacion(dato.IdLicitacion);
                                 dbContextTransaction.Commit();
                                 showMessageString = new { Estado = 0, Mensaje = mensaje };
                             }
@@ -750,8 +784,14 @@ namespace tesoreria.Controllers
                         db.Database.ExecuteSqlCommand("DELETE FROM LicitacionOfertaDocumento WHERE IdLicitacionOferta = {0}", dbLicitacionOferta.IdLicitacionOferta);
                         db.SaveChanges();
 
+                        var idLicitacion = dbLicitacionOferta.IdLicitacion;
+
                         db.LicitacionOferta.Remove(dbLicitacionOferta);
                         db.SaveChanges();
+
+                        CambiaEstadoLicitacion(idLicitacion);
+                        db.SaveChanges();
+
                         dbContextTransaction.Commit();
                         showMessageString = new { Estado = 0, Mensaje = "Registro Eliminado con exito" };
                     }

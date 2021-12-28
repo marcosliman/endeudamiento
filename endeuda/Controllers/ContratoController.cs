@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
+using System.IO;
 namespace tesoreria.Controllers
 {
     public class ContratoController : Controller
@@ -15,7 +16,7 @@ namespace tesoreria.Controllers
         // GET: Contrato
 
 
-        public ActionResult RegistrarContrato()
+        public ActionResult ListaContratoLeasing()
         {
             if (seguridad == null)
             {
@@ -49,13 +50,14 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaContrato_Read(int? idBanco, int? idEmpresa, int? idTipoFinanciamiento)
+        public ActionResult ListaContrato_Read(int tipoContrato, int? idBanco, int? idEmpresa, string numeroContrato)
         {
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado.ToList() on c.IdEstado equals e.IdEstado
-                            where c.IdEmpresa == ((idEmpresa != null) ? idEmpresa : c.IdEmpresa)
+                            where c.IdTipoContrato == tipoContrato
+                            && c.IdEmpresa == ((idEmpresa != null) ? idEmpresa : c.IdEmpresa)
                             && c.IdBanco == ((idBanco != null) ? idBanco : c.IdBanco)
-                            && c.IdTipoFinanciamiento == ((idTipoFinanciamiento != null) ? idTipoFinanciamiento : c.IdTipoFinanciamiento)
+                            && c.NumeroContrato == ((numeroContrato != "") ? numeroContrato : c.NumeroContrato)
                             select new ContratoViewModel
                             {
                                 IdContrato = c.IdContrato,
@@ -70,7 +72,8 @@ namespace tesoreria.Controllers
                                 FechaInicio = c.FechaInicio,
                                 FechaInicioStr = c.FechaInicio.ToString("dd-MM-yyyy"),
                                 FechaTermino = c.FechaTermino,
-                                FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy")
+                                FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
+                                PuedeEliminar = (c.IdEstado != (int)Helper.Estado.ConCreado) ? false : true
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -90,8 +93,18 @@ namespace tesoreria.Controllers
             }
             else
             {
-                var contrato = new ContratoViewModel();
-                contrato.IdContrato = idContrato;
+                //var contrato = new ContratoViewModel();
+                var contrato = (from c in db.Contrato where c.IdContrato == idContrato
+                                select new ContratoViewModel {
+                                    IdContrato = c.IdContrato,
+                                    ExisteContrato = "S"
+                                }).FirstOrDefault();
+                if (contrato == null) {
+                    contrato = new ContratoViewModel();
+                    contrato.IdContrato = idContrato;
+                    contrato.ExisteContrato = "N";
+                }
+                
                 return View(contrato);
             }
         }
@@ -114,6 +127,8 @@ namespace tesoreria.Controllers
                                 {
                                     IdContrato = c.IdContrato,
                                     IdLicitacionOferta = c.IdLicitacionOferta,
+                                    EsLicitacion = (c.IdLicitacionOferta != null) ? "SI" : "NO",
+                                    MotivoEleccion = c.MotivoEleccion,
                                     IdEmpresa = c.IdEmpresa,
                                     IdBanco = c.IdBanco,
                                     IdTipoImpuesto = c.IdTipoImpuesto,
@@ -126,6 +141,7 @@ namespace tesoreria.Controllers
                                     FechaInicioStr = c.FechaInicio.ToString("dd-MM-yyyy"),
                                     FechaTermino = c.FechaTermino,
                                     FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
+                                    IdEstado = c.IdEstado,
                                     ExisteContrato = "S",
                                     TituloBoton = "Actualizar Contrato"
                                 }
@@ -135,6 +151,7 @@ namespace tesoreria.Controllers
                 {
                     registro = new ContratoViewModel();
                     registro.IdLicitacionOferta = 0;
+                    registro.EsLicitacion = "NA";
                     registro.IdEmpresa = 0;
                     registro.IdBanco = 0;
                     registro.IdTipoImpuesto = 0;
@@ -142,29 +159,50 @@ namespace tesoreria.Controllers
                     registro.TasaMensual = null;
                     registro.TasaAnual = null;
                     registro.Plazo = null;
+                    registro.IdEstado = 0;
                     registro.ExisteContrato = "N";
                     registro.TituloBoton = "Grabar Contrato";
                 }
 
                 var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
                 var idLicitacion = 0;
-                if (licitacionOferta != null) {
+                var idLicitacionOferta = 0;
+
+                if (licitacionOferta != null)
+                {
                     idLicitacion = licitacionOferta.IdLicitacion;
+                    idLicitacionOferta = licitacionOferta.IdLicitacionOferta;
+
+                    var licitacion = (from e in db.Licitacion
+                                      where e.IdLicitacion == idLicitacion
+                                      select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
+                    SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
+                    ViewData["listaLicitacion"] = listaLicitacion;
+
+                    var oferta = (from e in db.LicitacionOferta
+                                  join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
+                                  join b in db.Banco on e.IdBanco equals b.IdBanco
+                                  where e.IdLicitacionOferta == idLicitacionOferta
+                                  select new RetornoGenerico { Id = e.IdLicitacionOferta, Nombre = b.NombreBanco }).OrderBy(c => c.Id).ToList();
+                    SelectList listaOferta = new SelectList(oferta.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacionOferta);
+                    ViewData["listaOferta"] = listaOferta;
+                }
+                else {
+                    var licitacion = (from e in db.Licitacion
+                                      where e.IdEstado == (int)Helper.Estado.LicCompleta && e.IdTipoFinanciamiento == (int)Helper.TipoContrato.Leasing
+                                      select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
+                    SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
+                    ViewData["listaLicitacion"] = listaLicitacion;
+
+                    var oferta = (from e in db.LicitacionOferta
+                                  join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
+                                  join b in db.Banco on e.IdBanco equals b.IdBanco
+                                  where e.IdLicitacion == idLicitacion
+                                  select new RetornoGenerico { Id = e.IdLicitacionOferta, Nombre = b.NombreBanco }).OrderBy(c => c.Id).ToList();
+                    SelectList listaOferta = new SelectList(oferta.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacionOferta);
+                    ViewData["listaOferta"] = listaOferta;
                 }
 
-                var licitacion = (from e in db.Licitacion
-                             where e.IdEstado == (int)Helper.Estado.LicCompleta
-                             select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
-                SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
-                ViewData["listaLicitacion"] = listaLicitacion;
-
-                var oferta = (from e in db.LicitacionOferta 
-                                        join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
-                                        join b in db.Banco on e.IdBanco equals b.IdBanco
-                                  where e.IdLicitacion == idLicitacion
-                                        select new RetornoGenerico { Id = e.IdLicitacionOferta, Nombre = b.NombreBanco }).OrderBy(c => c.Id).ToList();
-                SelectList listaOferta = new SelectList(oferta.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
-                ViewData["listaOferta"] = listaOferta;
 
                 var banco = (from e in db.Banco
                              where e.Activo == true
@@ -217,7 +255,8 @@ namespace tesoreria.Controllers
                               IdEmpresa = l.IdEmpresa,
                               TasaMensual = e.TasaMensual,
                               TasaAnual = e.TasaAnual,
-                              Plazo = e.Plazo
+                              Plazo = e.Plazo,
+                              IdTipoFinanciamiento = l.IdTipoFinanciamiento
 
                           }).FirstOrDefault();
             return Json(oferta, JsonRequestBehavior.AllowGet);
@@ -251,12 +290,12 @@ namespace tesoreria.Controllers
 
                             var contrato = db.Contrato.Find(dato.IdContrato);
 
-                            dato.FechaTermino = dato.FechaInicio.AddMonths(dato.Plazo);
-                            dato.IdTipoFinanciamiento = (int)Helper.TipoFinanciamiento.Leasing;
-
                             /*verifico si el origen es una licitacion*/
                             var existeOferta = "N";
                             var oferta = new LicitacionOfertaViewModel();
+                            if (contrato != null){
+                                dato.IdLicitacionOferta = contrato.IdLicitacionOferta;
+                            }
                             if (dato.IdLicitacionOferta > 0) {
                                 oferta = (from e in db.LicitacionOferta
                                               join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
@@ -270,18 +309,30 @@ namespace tesoreria.Controllers
                                                   IdEmpresa = l.IdEmpresa,
                                                   TasaMensual = e.TasaMensual,
                                                   TasaAnual = e.TasaAnual,
-                                                  Plazo = e.Plazo
+                                                  Plazo = e.Plazo,
+                                                  IdTipoFinanciamiento = l.IdTipoFinanciamiento
+
 
                                               }).FirstOrDefault();
 
                                 if(oferta != null) {
-                                    dato.TasaMensual = oferta.TasaMensual;
-                                    dato.TasaAnual = oferta.TasaAnual;
-                                    dato.Plazo = oferta.Plazo;
+                                    dato.TasaMensual = (int)oferta.TasaMensual;
+                                    dato.TasaAnual = (int)oferta.TasaAnual;
+                                    dato.Plazo = (int)oferta.Plazo;
                                     dato.IdEmpresa = (int)oferta.IdEmpresa;
+                                    dato.IdTipoFinanciamiento = (int)oferta.IdTipoFinanciamiento;
                                     dato.IdBanco = oferta.IdBanco;
                                     existeOferta = "S";
                                 }
+                            }
+
+                            dato.FechaTermino = dato.FechaInicio.AddMonths(dato.Plazo);
+                            if (dato.IdTipoContrato == (int)Helper.TipoContrato.Leasing) {
+                                dato.IdTipoFinanciamiento = (int)Helper.TipoFinanciamiento.Leasing;
+                                dato.IdTipoContrato = (int)Helper.TipoContrato.Leasing;
+                            }
+                            else {
+                                dato.IdTipoContrato = (int)Helper.TipoContrato.Contrato;
                             }
 
                             if (contrato != null)
@@ -309,7 +360,7 @@ namespace tesoreria.Controllers
                                 mensaje = "Contrato creado con éxito";
 
                                 var addContrato = new Contrato();
-                                addContrato.IdTipoContrato = (int)Helper.TipoContrato.Leasing;
+                                addContrato.IdTipoContrato = dato.IdTipoContrato;
                                 addContrato.IdLicitacionOferta = dato.IdLicitacionOferta;
                                 addContrato.Monto = dato.Monto;
                                 addContrato.NumeroContrato = dato.NumeroContrato;
@@ -355,6 +406,9 @@ namespace tesoreria.Controllers
 
                             }
 
+                            /*registro log contrato*/
+                            GrabaLogContrato(idContrato,1);
+
                             dbContextTransaction.Commit();
                             showMessageString = new { Estado = 0, Mensaje = mensaje, idContrato = idContrato };
                         }
@@ -386,14 +440,14 @@ namespace tesoreria.Controllers
                     if (dbContrato != null)
                     {
 
-                        /*var dbArchivo = (from doc in db.LicitacionOfertaDocumento
-                                         join of in db.LicitacionOferta on doc.IdLicitacionOferta equals of.IdLicitacionOferta
-                                         where of.IdLicitacion == dbLicitacion.IdLicitacion
+                        var dbArchivo = (from doc in db.ContratoActivoDocumento
+                                         join of in db.ContratoActivo on doc.IdContratoActivo equals of.IdContratoActivo
+                                         where of.IdContrato == dbContrato.IdContrato
                                          select new
                                          {
-                                             doc.IdLicitacionOfertaDocumento,
-                                             of.IdLicitacion,
-                                             of.IdLicitacionOferta,
+                                             doc.IdContratoActivoDocumento,
+                                             of.IdContrato,
+                                             of.IdContratoActivo,
                                              doc.UrlDocumento
                                          }).ToList();
                         foreach (var arc in dbArchivo)
@@ -404,9 +458,9 @@ namespace tesoreria.Controllers
                                 System.IO.File.Delete(archivo);
                             }
 
-                            db.Database.ExecuteSqlCommand("DELETE FROM LicitacionOfertaDocumento WHERE IdLicitacionOfertaDocumento = {0}", arc.IdLicitacionOfertaDocumento);
+                            db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivoDocumento WHERE IdContratoActivoDocumento = {0}", arc.IdContratoActivoDocumento);
                             db.SaveChanges();
-                        }*/
+                        }
 
                         /*si viene de licitacion devuelvo el activo a la licitación, caso contrario lo dejo disponible*/
                         var dbActivo = db.ContratoActivo.Where(c => c.IdContrato == idContrato);
@@ -461,12 +515,245 @@ namespace tesoreria.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult ActivarContrato(int idContrato)
+        {
+            dynamic showMessageString = string.Empty;
+            var contrato = db.Contrato.Find(idContrato);
+            var activos = db.ContratoActivo.Where(c => c.IdContrato == idContrato).Count();
+            if (activos > 0)
+            {
+                contrato.IdEstado = (int)Helper.Estado.ConActivo;
+                db.SaveChanges();
+                showMessageString = new { Estado = 0, Mensaje = "Contrato Activado Exitosamente" };
+            }
+            else
+            {
+                showMessageString = new { Estado = 100, Mensaje = "Existen Datos Incompletos" };
+            }
+
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        }
+
+        /*Guarda log contrato*/
+        private bool GrabaLogContrato(int idContrato, int idTipoLog)
+        {
+            //tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+            var dbTipoLog = db.TipoLog.Find(idTipoLog);
+            var dbContrato = db.Contrato.Find(idContrato);
+
+            if (dbContrato != null)
+            {
+                if(dbContrato.IdEstado > (int)Helper.Estado.ConCreado) { 
+                    var nombreLog = "Cambios realizados en: " + dbTipoLog.NombreTipoLog;
+                    var addLog = new ContratoLog();
+                    addLog.IdContrato = dbContrato.IdContrato;
+                    addLog.IdTipoLog = dbTipoLog.IdTipoLog;
+                    addLog.NombreLog = nombreLog;
+                    addLog.IdUsuarioResgistro = (int)seguridad.IdUsuario;
+                    addLog.FechaRegistro = DateTime.Now;
+                    db.ContratoLog.Add(addLog);
+                    db.SaveChanges();
+                }
+            }
+
+
+            return true;
+        }
+
+        #region Contrato Credito
+        public ActionResult ListaContratoCredito()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var banco = (from e in db.Banco
+                             where e.Activo == true
+                             select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
+                SelectList listaBanco = new SelectList(banco.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaBanco"] = listaBanco;
+
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var tipoFinancimiento = (from e in db.TipoFinanciamiento
+                                         where e.Activo == true
+                                         select new RetornoGenerico { Id = e.IdTipoFinanciamiento, Nombre = e.NombreTipoFinanciamiento }).OrderBy(c => c.Id).ToList();
+                SelectList listaTipoFinancimiento = new SelectList(tipoFinancimiento.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaTipoFinancimiento"] = listaTipoFinancimiento;
+
+                return View();
+            }
+        }
+
+        public ActionResult RegistrarContratoCredito(int idContrato)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var contrato = (from c in db.Contrato
+                                where c.IdContrato == idContrato
+                                select new ContratoViewModel
+                                {
+                                    IdContrato = c.IdContrato,
+                                    ExisteContrato = "S"
+                                }).FirstOrDefault();
+                if (contrato == null)
+                {
+                    contrato = new ContratoViewModel();
+                    contrato.IdContrato = idContrato;
+                    contrato.ExisteContrato = "N";
+                }
+                return View(contrato);
+            }
+        }
+
+
+        public ActionResult AddContratoCredito(int idContrato)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var registro = (from c in db.Contrato.ToList()
+                                where c.IdContrato == idContrato
+                                select new ContratoViewModel
+                                {
+                                    IdContrato = c.IdContrato,
+                                    IdLicitacionOferta = c.IdLicitacionOferta,
+                                    EsLicitacion = (c.IdLicitacionOferta != null) ? "SI" : "NO",
+                                    MotivoEleccion = c.MotivoEleccion,
+                                    TipoGarantia = c.TipoGarantia,
+                                    IdEmpresa = c.IdEmpresa,
+                                    IdBanco = c.IdBanco,
+                                    IdTipoFinanciamiento = c.IdTipoFinanciamiento,
+                                    NumeroContrato = c.NumeroContrato,
+                                    TasaMensual = c.TasaMensual,
+                                    TasaAnual = c.TasaAnual,
+                                    Plazo = c.Plazo,
+                                    Monto = c.Monto,
+                                    FechaInicio = c.FechaInicio,
+                                    FechaInicioStr = c.FechaInicio.ToString("dd-MM-yyyy"),
+                                    FechaTermino = c.FechaTermino,
+                                    FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
+                                    IdEstado = c.IdEstado,
+                                    ExisteContrato = "S",
+                                    TituloBoton = "Actualizar Contrato"
+                                }
+                                  ).FirstOrDefault();
+
+                if (registro == null)
+                {
+                    registro = new ContratoViewModel();
+                    registro.IdLicitacionOferta = 0;
+                    registro.EsLicitacion = "NA";
+                    registro.IdEmpresa = 0;
+                    registro.IdBanco = 0;
+                    registro.IdTipoFinanciamiento = 0;
+                    registro.Monto = null;
+                    registro.TasaMensual = null;
+                    registro.TasaAnual = null;
+                    registro.Plazo = null;
+                    registro.IdEstado = 0;
+                    registro.ExisteContrato = "N";
+                    registro.TituloBoton = "Grabar Contrato";
+                }
+
+                var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
+                var idLicitacion = 0;
+                var idLicitacionOferta = 0;
+
+                if (licitacionOferta != null)
+                {
+                    idLicitacion = licitacionOferta.IdLicitacion;
+                    idLicitacionOferta = licitacionOferta.IdLicitacionOferta;
+
+                    var licitacion = (from e in db.Licitacion
+                                      where e.IdLicitacion == idLicitacion
+                                      select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
+                    SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
+                    ViewData["listaLicitacion"] = listaLicitacion;
+
+                    var oferta = (from e in db.LicitacionOferta
+                                  join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
+                                  join b in db.Banco on e.IdBanco equals b.IdBanco
+                                  where e.IdLicitacionOferta == idLicitacionOferta
+                                  select new RetornoGenerico { Id = e.IdLicitacionOferta, Nombre = b.NombreBanco }).OrderBy(c => c.Id).ToList();
+                    SelectList listaOferta = new SelectList(oferta.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacionOferta);
+                    ViewData["listaOferta"] = listaOferta;
+                }
+                else
+                {
+                    var licitacion = (from e in db.Licitacion
+                                      where e.IdEstado == (int)Helper.Estado.LicCompleta && e.IdTipoFinanciamiento != (int)Helper.TipoContrato.Leasing
+                                      select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
+                    SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
+                    ViewData["listaLicitacion"] = listaLicitacion;
+
+                    var oferta = (from e in db.LicitacionOferta
+                                  join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
+                                  join b in db.Banco on e.IdBanco equals b.IdBanco
+                                  where e.IdLicitacion == idLicitacion
+                                  select new RetornoGenerico { Id = e.IdLicitacionOferta, Nombre = b.NombreBanco }).OrderBy(c => c.Id).ToList();
+                    SelectList listaOferta = new SelectList(oferta.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacionOferta);
+                    ViewData["listaOferta"] = listaOferta;
+                }
+
+
+                var banco = (from e in db.Banco
+                             where e.Activo == true
+                             select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
+                SelectList listaBanco = new SelectList(banco.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdBanco);
+                ViewData["listaBanco"] = listaBanco;
+
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEmpresa);
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var tipoCredito = (from e in db.TipoFinanciamiento
+                                where e.Activo == true && e.IdTipoContrato == (int)Helper.TipoContrato.Contrato
+                                select new RetornoGenerico { Id = e.IdTipoFinanciamiento, Nombre = e.NombreTipoFinanciamiento }).OrderBy(c => c.Id).ToList();
+                SelectList listaTipoCredito = new SelectList(tipoCredito.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdTipoFinanciamiento);
+                ViewData["listaTipoCredito"] = listaTipoCredito;
+
+                return View(registro);
+            }
+        }
+
+        #endregion
+
         #region Activo
         public ActionResult ListaActivoContrato_Read(int idContrato)
         {
 
             var registro = (from ac in db.Activo
                             join rel in db.ContratoActivo on ac.IdActivo equals rel.IdActivo
+                            join con in db.Contrato on rel.IdContrato equals con.IdContrato
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
                             join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
@@ -489,7 +776,8 @@ namespace tesoreria.Controllers
                                 Valor = ac.Valor,
                                 NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
                                 NumeroFactura = ac.NumeroFactura,
-                                Patente = ac.Patente
+                                Patente = ac.Patente,
+                                Editable = (con.IdLicitacionOferta != null) ? false : true
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -589,6 +877,9 @@ namespace tesoreria.Controllers
                                 }
                             }
 
+                            /*registro log contrato*/
+                            GrabaLogContrato(idContrato, 4);
+
                             var mensaje = "";
                             mensaje = "Asociación realizada con éxito";
 
@@ -626,6 +917,31 @@ namespace tesoreria.Controllers
                         db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActDisponible, dbContratoActivo.IdActivo);
                         db.SaveChanges();
 
+
+                        /*registro log contrato*/
+                        GrabaLogContrato(dbContratoActivo.IdContrato, 4);
+
+                        var dbArchivo = (from doc in db.ContratoActivoDocumento
+                                         join of in db.ContratoActivo on doc.IdContratoActivo equals of.IdContratoActivo
+                                         where of.IdContratoActivo == dbContratoActivo.IdContratoActivo
+                                         select new
+                                         {
+                                             doc.IdContratoActivoDocumento,
+                                             of.IdContrato,
+                                             of.IdContratoActivo,
+                                             doc.UrlDocumento
+                                         }).ToList();
+                        foreach (var arc in dbArchivo)
+                        {
+                            var archivo = Server.MapPath(arc.UrlDocumento);
+                            if (System.IO.File.Exists(archivo))
+                            {
+                                System.IO.File.Delete(archivo);
+                            }
+
+                            db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivoDocumento WHERE IdContratoActivoDocumento = {0}", arc.IdContratoActivoDocumento);
+                            db.SaveChanges();
+                        }
 
                         db.ContratoActivo.Remove(dbContratoActivo);
                         db.SaveChanges();
@@ -667,7 +983,8 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult AddDocumentoLeasing()
+        #region Documento Leasing
+        public ActionResult AddDocumentoLeasing(int idContrato)
         {
             if (seguridad == null)
             {
@@ -679,25 +996,182 @@ namespace tesoreria.Controllers
             }
             else
             {
-                return View();
+
+                var registro = (from ac in db.Activo
+                                join rel in db.ContratoActivo on ac.IdActivo equals rel.IdActivo
+                                join con in db.Contrato on rel.IdContrato equals con.IdContrato
+                                where rel.IdContrato == idContrato
+                                select new ContratoActivoViewModel
+                                {
+                                    IdContratoActivo = rel.IdContratoActivo,
+                                    IdActivo = ac.IdActivo,
+                                    NumeroInterno = ac.NumeroInterno,
+                                    CodSoftland = ac.CodSoftland,
+                                    Familia = ac.Familia,
+                                    Archivos = (from d in db.ContratoActivoDocumento
+                                                join t in db.TipoDocumento on d.IdTipoDocumento equals t.IdTipoDocumento
+                                                where d.IdContratoActivo == rel.IdContratoActivo
+                                                select new ContratoDocumentoViewModel {
+                                                    IdContratoActivoDocumento = d.IdContratoActivoDocumento,
+                                                    NombreTipoDocumento = t.NombreTipoDocumento,
+                                                    UrlDocumento = d.UrlDocumento,
+                                                    NombreOriginal = d.NombreOriginal
+                                                }).ToList()
+                                }).AsEnumerable().ToList();
+
+                var tipoDocumento = (from e in db.TipoDocumento
+                             where e.Activo == true && e.IdCategoriaDocumento == (int)Helper.CategoriaDocumento.ActivoContrato
+                             select new RetornoGenerico { Id = e.IdTipoDocumento, Nombre = e.NombreTipoDocumento }).OrderBy(c => c.Id).ToList();
+                //SelectList listaTipoDocumento = new SelectList(tipoDocumento.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaTipoDocumento"] = tipoDocumento;
+
+                /*verificacion activar contrato*/
+                ViewData["puedeActivar"] = "N";
+                ViewData["urlRetorno"] = "/Contrato/RegistrarContratoCredito";
+                var conActivo = db.Contrato.Where(c => c.IdContrato == idContrato).FirstOrDefault();
+                if (conActivo != null) {
+                    if(conActivo.IdEstado == (int)Helper.Estado.ConCreado) { 
+                        ViewData["puedeActivar"] = "S";
+                    }
+                    if (conActivo.IdTipoContrato == (int)Helper.TipoContrato.Leasing) {
+                        ViewData["urlRetorno"] = "/Contrato/RegistrarContratoLeasing";
+                    }
+                }
+
+                return View(registro);
             }
         }
 
-        public ActionResult RegistrarContratoCredito()
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+
+        public ActionResult GrabarContratoDocumento(ContratoActivoDocumento dato, HttpPostedFileBase archivo)
         {
+            dynamic showMessageString = string.Empty;
+            //validar que los datos ingresados sean correctos
+            var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
+            ContratoActivoDocumento addDocumento = new ContratoActivoDocumento();
+            tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
             if (seguridad == null)
             {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
+                showMessageString = new { Estado = 1000, Mensaje = "Se finalizó la sesión" };
             }
             else
             {
-                return View();
+                if (ModelState.IsValid)
+                {
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var mensaje = "";
+
+                            if (archivo != null)
+                            {
+                                var contrato = db.ContratoActivo.Where(c => c.IdContratoActivo == dato.IdContratoActivo).FirstOrDefault();
+                                var pathDocumento = "";
+                                var fileName = dato.IdTipoDocumento.ToString()+'_'+Path.GetFileName(archivo.FileName);
+                                var carpeta = "Contrato/"+ contrato.IdContrato;
+                                var pathData = "~/App_Data";
+                                var pathCarpeta = Path.Combine(Server.MapPath(pathData), carpeta); ;
+                                if (!Directory.Exists(pathCarpeta))
+                                {
+                                    DirectoryInfo di = Directory.CreateDirectory(pathCarpeta);
+                                }
+                                string carpetaSolicitud = contrato.IdContratoActivo.ToString();
+                                var pathCarpetaSolicitud = Path.Combine(pathCarpeta, carpetaSolicitud);
+                                if (!Directory.Exists(pathCarpetaSolicitud))
+                                {
+                                    DirectoryInfo di = Directory.CreateDirectory(pathCarpetaSolicitud);
+                                }
+                                pathDocumento = pathData + "/" + carpeta + "/" + carpetaSolicitud + "/" + fileName;
+                                var physicalPath = Path.Combine(pathCarpetaSolicitud, fileName);
+                                archivo.SaveAs(physicalPath);
+
+                                addDocumento.IdContratoActivo = (int)contrato.IdContratoActivo;
+                                addDocumento.IdTipoDocumento = dato.IdTipoDocumento;
+                                addDocumento.FechaRegistro = DateTime.Now;
+                                addDocumento.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                                addDocumento.NombreOriginal = fileName;
+                                addDocumento.UrlDocumento = pathDocumento;
+                                db.ContratoActivoDocumento.Add(addDocumento);
+                                db.SaveChanges();
+                                mensaje = "Archivo Cargado con exito";
+
+                                /*registro log contrato*/
+                                GrabaLogContrato(contrato.IdContrato, 3);
+                            }
+
+                            dbContextTransaction.Commit();
+                            showMessageString = new { Estado = 0, Mensaje = mensaje };
+
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                        }
+                    }
+                }
+                else
+                {
+                    showMessageString = new { Estado = 103, Mensaje = "Se ha producido un error" };
+                }
             }
+            //return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult ListaContratoDocumento_Read(int idContratoActivo)
+        {
+            var registro = (from c in db.ContratoActivoDocumento
+                            join td in db.TipoDocumento on c.IdTipoDocumento equals td.IdTipoDocumento
+                            where c.IdContratoActivo == idContratoActivo
+                            select new ContratoDocumentoViewModel
+                            {
+                                IdContratoActivoDocumento = c.IdContratoActivoDocumento,
+                                IdContratoActivo = idContratoActivo,
+                                NombreTipoDocumento = td.NombreTipoDocumento,
+                                NombreOriginal = c.NombreOriginal,
+                                UrlDocumento = c.UrlDocumento
+                            }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteContratoDocumento(int idContratoActivoDocumento)
+        {
+            dynamic showMessageString = string.Empty;
+            var dbArchivo = db.ContratoActivoDocumento.Find(idContratoActivoDocumento);
+
+            var contrato = (from c in db.ContratoActivoDocumento
+                            join ca in db.ContratoActivo on c.IdContratoActivo equals ca.IdContratoActivo
+                            where c.IdContratoActivoDocumento == idContratoActivoDocumento
+                            select new { ca.IdContrato }).FirstOrDefault();
+
+            var archivo = Server.MapPath(dbArchivo.UrlDocumento);
+            if (System.IO.File.Exists(archivo))
+            {
+                System.IO.File.Delete(archivo);
+            }
+            db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivoDocumento WHERE IdContratoActivoDocumento = {0}", idContratoActivoDocumento);
+            db.SaveChanges();
+
+
+            /*registro log contrato*/
+            if(contrato != null) { 
+                GrabaLogContrato(contrato.IdContrato, 3);
+            }
+
+
+            showMessageString = new { Estado = 0, Mensaje = "Archivo Eliminado" };
+
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
 
         public ActionResult ContratoBuscar()
         {
@@ -711,8 +1185,63 @@ namespace tesoreria.Controllers
             }
             else
             {
+                var banco = (from e in db.Banco
+                             where e.Activo == true
+                             select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
+                SelectList listaBanco = new SelectList(banco.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaBanco"] = listaBanco;
+
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var tipoFinancimiento = (from e in db.TipoFinanciamiento
+                                         where e.Activo == true
+                                         select new RetornoGenerico { Id = e.IdTipoFinanciamiento, Nombre = e.NombreTipoFinanciamiento }).OrderBy(c => c.Id).ToList();
+                SelectList listaTipoFinancimiento = new SelectList(tipoFinancimiento.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaTipoFinancimiento"] = listaTipoFinancimiento;
                 return View();
             }
+        }
+
+        public ActionResult ListaBuscarContrato_Read(int? idBanco, int? idEmpresa, int? idTipoFinanciamiento, string numeroContrato)
+        {
+            var registro = (from c in db.Contrato.ToList()
+                            join e in db.Estado.ToList() on c.IdEstado equals e.IdEstado
+                            where c.IdEmpresa == ((idEmpresa != null) ? idEmpresa : c.IdEmpresa)
+                            && c.IdBanco == ((idBanco != null) ? idBanco : c.IdBanco)
+                            && c.IdTipoFinanciamiento == ((idTipoFinanciamiento != null) ? idTipoFinanciamiento : c.IdTipoFinanciamiento)
+                            && c.NumeroContrato == ((numeroContrato != "") ? numeroContrato : c.NumeroContrato)
+                            select new ContratoViewModel
+                            {
+                                IdContrato = c.IdContrato,
+                                NumeroContrato = c.NumeroContrato,
+                                RazonSocial = c.Empresa.RazonSocial,
+                                NombreBanco = c.Banco.NombreBanco,
+                                NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
+                                Plazo = c.Plazo,
+                                Monto = c.Monto,
+                                TasaAnual = c.TasaAnual,
+                                TasaMensual = c.TasaMensual,
+                                FechaInicio = c.FechaInicio,
+                                FechaInicioStr = c.FechaInicio.ToString("dd-MM-yyyy"),
+                                FechaTermino = c.FechaTermino,
+                                FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
+                                PuedeEliminar = (c.IdEstado != (int)Helper.Estado.ConCreado) ? false : true,
+                                Descripcion=""
+                                /*Descripcion = (from ca in db.ContratoActivo 
+                                                join a in db.Activo on ca.IdActivo equals a.IdActivo
+                                                where ca.IdContrato == c.IdContrato
+                                                select new {a.Familia } into x
+                                                group x by new {x.Familia } into g
+                                                select new {
+                                                    g.Key.Familia.ToString()
+                                                }).FirstOrDefault()*/
+                            }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ModalRegistrarActivo()
