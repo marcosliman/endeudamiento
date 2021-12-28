@@ -1,0 +1,251 @@
+﻿@model modelo.ViewModel.ContratoViewModel
+@{
+    ViewBag.Title = "Contrato";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="alert alert-success">
+    <h5><i class="icon fas fa-handshake"></i>@ViewBag.Title</h5>
+    Aquí puede VER los antecedentes del contrato.
+</div>
+<div class="card-body">
+
+    @using (Ajax.BeginForm("", "", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "post",
+        OnSuccess = "Success_dl",
+        OnFailure = "Failure_dl"
+
+    }, new { id = "frmContrato", @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="idContrato" id="idContratoA" value="@Model.IdContrato" />
+        <input type="hidden" name="idTipoContrato" id="idTipoContrato" value="1" />
+        <div class="card">
+            <div class="card-header" style="background-color:white">
+                <h3 class="card-title">Datos Generales</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            @{
+                var disabled = "";
+                if (Model.EsLicitacion == "SI")
+                {
+                    disabled = " disabled ";
+                }
+
+            }
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Licitación</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("idLicitacion", (SelectList)ViewData["listaLicitacion"], "--Seleccione Licitacion--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Oferta Licitación</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("idLicitacionOferta", (SelectList)ViewData["listaOferta"], "--Seleccione Oferta Licitacion--", htmlAttributes: new { @class = "form-control form-control-sm" })
+
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Motivo Elección Licitación</label>
+                    <div class="col-sm-2">
+                        <textarea name="motivoEleccion" id="motivoEleccion" class="form-control form-control-sm">@Model.MotivoEleccion</textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Monto Contrato</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm numberMiles" name="monto" id="monto" value="@Model.Monto" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Nro. Contrato</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="numeroContrato" id="numeroContrato" value="@Model.NumeroContrato" />
+                    </div>
+                    @if (Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing)
+                    {
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de impuesto</label>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("idTipoImpuesto", (SelectList)ViewData["listaTipoImpuesto"], "--Seleccione Tipo Impuesto--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                        </div>
+                    }
+                    </div>
+                @if(Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Contrato) { 
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Crédito</label>
+                        <div class="col-sm-2">
+                            @Html.DropDownList("idTipoFinanciamiento", (SelectList)ViewData["listaTipoCredito"], "--Seleccione Tipo Credito--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                        </div>
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Garantía</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" name="tipoGarantia" id="tipoGarantia" rows="1">@Model.TipoGarantia</textarea>
+                        </div>
+                    </div>
+                }
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("idBanco", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm tasa" name="tasaMensual" id="tasaMensual" value="@Model.TasaMensual.ToString().Replace(",",".")" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm tasa" name="tasaAnual" id="tasaAnual" value="@Model.TasaAnual.ToString().Replace(",",".")" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="plazo" id="plazo" value="@Model.Plazo" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm classFecha" name="fechaInicio" id="fechaInicio" value="@Model.FechaInicioStr" />
+                    </div>
+                    @if (Model.ExisteContrato == "S")
+                    {
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control form-control-sm classFecha" name="fechaTermino" id="fechaTermino" value="@Model.FechaTerminoStr" />
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.ExisteContrato == "S")
+    {
+        <div class="card">
+            <div class="card-header" style="background-color:white">
+                <h3 class="card-title">Activos Registrados</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="table-responsive mt-1">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaContratoActivo" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Nro Activo</th>
+                                    <th>Familia</th>
+                                    <th>Descripcion</th>
+                                    <th>Clasif. Cuenta</th>
+                                    <th>Monto</th>
+                                    <th>Modelo</th>
+                                    <th>Año</th>
+                                    <th>Marca</th>
+                                    <th>Proveedor</th>
+                                    <th>Factura</th>
+                                    <th>Motor y Chasis</th>
+                                    <th>Patente</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<form name="frmContratoAcc" id="frmContratoAcc" method="post">
+    <input type="hidden" name="idContrato" id="idContratoAcc" />
+</form>
+
+<script>
+    $(document).ready(function () {
+        initTableActivo();
+        $('.classFecha').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: "es"
+        });
+        $('#frmContrato').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning"),
+            rules: {
+                numeroContrato: { required: true },
+                idEmpresa: { required: true },
+                idTipoImpuesto: { required: true },
+                idBanco: { required: true },
+                monto: { required: true, digits: true },
+                tasaMensual: { required: true, number: true },
+                tasaAnual: { required: true, number: true },
+                plazo: { required: true, digits: true }
+            }
+        });
+    });
+
+
+    function RefreshListaActivo() {
+        var table = initTableActivo();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTableActivo() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'ACTIVOS ',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)"
+            }
+        };
+        var table = $('#grillaContratoActivo').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Activos",
+                    sheetName: "Activos"
+                })
+            ],
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/ListaActivoContrato_Read/',
+                "data": function (d) {
+                    d.idContrato = $('#idContrato').val();
+                },
+                "dataSrc": ""
+            },
+
+            columns: [
+                { "data": "NumeroInterno" },
+                { "data": "Familia" },
+                { "data": "Descripcion" },
+                { "data": "NombreCuenta" },
+                { "data": "Valor" },
+                { "data": "Modelo" },
+                { "data": "Anio" },
+                { "data": "Marca" },
+                { "data": "NombreProveedor" },
+                { "data": "NumeroFactura" },
+                { "data": "MotorChasis" },
+                { "data": "Patente" }
+            ]
+        });
+        return table;
+    }
+
+
+    function Volver() {
+        $('#ModalContrato').modal('hide');
+    }
+
+</script>

@@ -1,0 +1,95 @@
+﻿@model IEnumerable<modelo.ViewModel.ContratoActivoViewModel>
+@{
+    ViewBag.Title = "Documentos Contrato";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<div class="alert alert-success">
+    <h5><i class="icon fas fa-cloud"></i>@ViewBag.Title</h5>
+    Aquí puede VER los documentos ingresados para cada uno de los activos.
+</div>
+@foreach (var doc in Model as List<modelo.ViewModel.ContratoActivoViewModel>)
+{
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="background-color:lightblue">
+                <h3 class="card-title">Archivos del Activo @doc.NumeroInterno</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <table class="table table-striped table-bordered table-sm" id="grillaDocumento_@doc.IdContratoActivo" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Tipo Documento</th>
+                                <th>Nombre</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            @foreach (var item in doc.Archivos.ToList())
+                            {
+                                <tr id="tr_@item.IdContratoActivoDocumento">
+                                    <td>@item.NombreTipoDocumento</td>
+                                    <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<form name="frmContratoAcc" id="frmContratoAcc" method="post">
+    <input type="hidden" name="idContrato" id="idContratoAcc" />
+    <input type="hidden" name="idContratoModal" id="idContratoModal" />
+</form>
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+
+    function archivosTable(idContratoActivo) {
+        var table = $('#grillaDocumento_' + idContratoActivo).DataTable({
+            "dom": '',
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/ListaContratoDocumento_Read/',
+                "data": function (d) {
+                    d.idContratoActivo = idContratoActivo;
+                },
+                "dataSrc": ""
+            },
+            columns: [
+                { "data": "NombreTipoDocumento" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        acciones += '<a href="JavaScript:Descargar(' + "'" + o.UrlDocumento + "'" + ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> ' + o.NombreOriginal + '</a>';
+                        return acciones;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+
+    function Descargar(urlArchivo) {
+        location.href = "/Licitacion/Descargar?rutaArchivo=" + urlArchivo;
+    }
+
+
+</script>
+
