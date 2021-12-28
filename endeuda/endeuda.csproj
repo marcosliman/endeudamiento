@@ -2912,6 +2912,10 @@
     <Content Include="Views\Contrato\ModalAsociarActivo.cshtml" />
     <Content Include="Views\Contrato\ListaContratoCredito.cshtml" />
     <Content Include="Views\Contrato\AddContratoCredito.cshtml" />
+    <Content Include="Views\Contrato\ModalVistaContrato.cshtml" />
+    <Content Include="Views\Contrato\VistaContrato.cshtml" />
+    <Content Include="Views\Contrato\VistaDocumento.cshtml" />
+    <Content Include="Views\Contrato\VistaLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
