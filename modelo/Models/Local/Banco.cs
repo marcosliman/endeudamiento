@@ -12,8 +12,10 @@ namespace modelo.Models.Local
         [Key]
         [Display(Name = "Código Banco")]
         public int IdBanco { get; set; }
-        public string NombreBanco { get; set; }
-        public bool  Activo { get; set; }
-
+        public string NombreBanco { get; set; }       
+        public bool Activo { get; set; }        
+        public DateTime? FechaRegistro { get; set; }       
+        public string UrlLogo { get; set; }
+        public string CodBanco { get; set; }
     }
 }
