@@ -246,6 +246,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BancosController.cs" />
     <Compile Include="Controllers\FuncionesGeneralesController.cs" />
     <Compile Include="Controllers\ActivoController.cs" />
     <Compile Include="Controllers\MutuoController.cs" />
@@ -2912,6 +2913,8 @@
     <Content Include="Views\Contrato\ModalAsociarActivo.cshtml" />
     <Content Include="Views\Contrato\ListaContratoCredito.cshtml" />
     <Content Include="Views\Contrato\AddContratoCredito.cshtml" />
+    <Content Include="Views\Bancos\Create.cshtml" />
+    <Content Include="Views\Bancos\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
