@@ -287,6 +287,7 @@ namespace tesoreria.Controllers
                         {
                             var mensaje = "";
                             var idContrato = 0;
+                            var swTran = true;
 
                             var contrato = db.Contrato.Find(dato.IdContrato);
 
@@ -338,50 +339,67 @@ namespace tesoreria.Controllers
                             if (contrato != null)
                             {
                                 mensaje = "Contrato actualizado con éxito";
-                                idContrato = dato.IdContrato;
-                                contrato.IdLicitacionOferta = dato.IdLicitacionOferta;
-                                contrato.Monto = dato.Monto;
-                                contrato.NumeroContrato = dato.NumeroContrato;
-                                contrato.MotivoEleccion = dato.MotivoEleccion;
-                                contrato.IdEmpresa = dato.IdEmpresa;
-                                contrato.IdBanco = dato.IdBanco;
-                                contrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
-                                contrato.IdTipoImpuesto = dato.IdTipoImpuesto;
-                                contrato.TipoGarantia = dato.TipoGarantia;
-                                contrato.TasaMensual = dato.TasaMensual;
-                                contrato.TasaAnual = dato.TasaAnual;
-                                contrato.Plazo = dato.Plazo;
-                                contrato.FechaInicio = dato.FechaInicio;
-                                contrato.FechaTermino = dato.FechaTermino;
-                                db.SaveChanges();
+                                var existeContrato = db.Contrato.Where(c => c.NumeroContrato == dato.NumeroContrato && c.IdContrato != contrato.IdContrato).FirstOrDefault();
+                                if (existeContrato == null)
+                                {
+                                    idContrato = dato.IdContrato;
+                                    contrato.IdLicitacionOferta = dato.IdLicitacionOferta;
+                                    contrato.Monto = dato.Monto;
+                                    contrato.NumeroContrato = dato.NumeroContrato;
+                                    contrato.MotivoEleccion = dato.MotivoEleccion;
+                                    contrato.IdEmpresa = dato.IdEmpresa;
+                                    contrato.IdBanco = dato.IdBanco;
+                                    contrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
+                                    contrato.IdTipoImpuesto = dato.IdTipoImpuesto;
+                                    contrato.TipoGarantia = dato.TipoGarantia;
+                                    contrato.TasaMensual = dato.TasaMensual;
+                                    contrato.TasaAnual = dato.TasaAnual;
+                                    contrato.Plazo = dato.Plazo;
+                                    contrato.FechaInicio = dato.FechaInicio;
+                                    contrato.FechaTermino = dato.FechaTermino;
+                                    db.SaveChanges();
+                                }
+                                else
+                                {
+                                    swTran = false;
+                                    mensaje = "Numero Contrato ya existe, revise sus datos";
+                                }
                             }
                             else
                             {
                                 mensaje = "Contrato creado con éxito";
+                                var existeContrato = db.Contrato.Where(c => c.NumeroContrato == dato.NumeroContrato).FirstOrDefault();
+                                if (existeContrato == null)
+                                {
+                                    var addContrato = new Contrato();
+                                    addContrato.IdTipoContrato = dato.IdTipoContrato;
+                                    addContrato.IdLicitacionOferta = dato.IdLicitacionOferta;
+                                    addContrato.Monto = dato.Monto;
+                                    addContrato.NumeroContrato = dato.NumeroContrato;
+                                    addContrato.MotivoEleccion = dato.MotivoEleccion;
+                                    addContrato.IdEmpresa = dato.IdEmpresa;
+                                    addContrato.IdBanco = dato.IdBanco;
+                                    addContrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
+                                    addContrato.IdTipoImpuesto = dato.IdTipoImpuesto;
+                                    addContrato.TipoGarantia = dato.TipoGarantia;
+                                    addContrato.TasaMensual = dato.TasaMensual;
+                                    addContrato.TasaAnual = dato.TasaAnual;
+                                    addContrato.Plazo = dato.Plazo;
+                                    addContrato.FechaInicio = Convert.ToDateTime(dato.FechaInicio);
+                                    addContrato.FechaTermino = Convert.ToDateTime(dato.FechaTermino);
+                                    addContrato.IdEstado = (int)Helper.Estado.ConCreado;
+                                    addContrato.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                                    addContrato.FechaRegistro = DateTime.Now;
+                                    db.Contrato.Add(addContrato);
+                                    db.SaveChanges();
 
-                                var addContrato = new Contrato();
-                                addContrato.IdTipoContrato = dato.IdTipoContrato;
-                                addContrato.IdLicitacionOferta = dato.IdLicitacionOferta;
-                                addContrato.Monto = dato.Monto;
-                                addContrato.NumeroContrato = dato.NumeroContrato;
-                                addContrato.MotivoEleccion = dato.MotivoEleccion;
-                                addContrato.IdEmpresa = dato.IdEmpresa;
-                                addContrato.IdBanco = dato.IdBanco;
-                                addContrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
-                                addContrato.IdTipoImpuesto = dato.IdTipoImpuesto;
-                                addContrato.TipoGarantia = dato.TipoGarantia;
-                                addContrato.TasaMensual = dato.TasaMensual;
-                                addContrato.TasaAnual = dato.TasaAnual;
-                                addContrato.Plazo = dato.Plazo;
-                                addContrato.FechaInicio = Convert.ToDateTime(dato.FechaInicio);
-                                addContrato.FechaTermino = Convert.ToDateTime(dato.FechaTermino);
-                                addContrato.IdEstado = (int)Helper.Estado.ConCreado;
-                                addContrato.IdUsuarioRegistro = (int)seguridad.IdUsuario;
-                                addContrato.FechaRegistro = DateTime.Now;
-                                db.Contrato.Add(addContrato);
-                                db.SaveChanges();
-
-                                idContrato = addContrato.IdContrato;
+                                    idContrato = addContrato.IdContrato;
+                                }
+                                else
+                                {
+                                    swTran = false;
+                                    mensaje = "Numero Contrato ya existe, revise sus datos";
+                                }
                             }
 
                             /*si es de oferta grabo los activos de la licitacion*/
@@ -409,8 +427,15 @@ namespace tesoreria.Controllers
                             /*registro log contrato*/
                             GrabaLogContrato(idContrato,1);
 
-                            dbContextTransaction.Commit();
-                            showMessageString = new { Estado = 0, Mensaje = mensaje, idContrato = idContrato };
+                            if (swTran)
+                            {
+                                dbContextTransaction.Commit();
+                                showMessageString = new { Estado = 0, Mensaje = mensaje, idContrato = idContrato };
+                            }
+                            else {
+                                dbContextTransaction.Rollback();
+                                showMessageString = new { Estado = 100, Mensaje = mensaje };
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -757,6 +782,8 @@ namespace tesoreria.Controllers
                             join con in db.Contrato on rel.IdContrato equals con.IdContrato
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            from fv in fw.DefaultIfEmpty()
                             join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             from prv in prw.DefaultIfEmpty()
                             where rel.IdContrato == idContrato
@@ -767,12 +794,13 @@ namespace tesoreria.Controllers
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
-                                Familia = ac.Familia,
+                                Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
                                 NombreCuenta = "",
                                 Descripcion = ac.Descripcion,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
-                                MotorChasis = ac.MotorChasis,
+                                Motor = ac.Motor,
+                                Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
                                 NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
@@ -811,6 +839,8 @@ namespace tesoreria.Controllers
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            from fv in fw.DefaultIfEmpty()
                             join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             from prv in prw.DefaultIfEmpty()
                             where ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
@@ -823,12 +853,13 @@ namespace tesoreria.Controllers
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
-                                Familia = ac.Familia,
+                                Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
                                 NombreCuenta = "",
                                 Descripcion = ac.Descripcion,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
-                                MotorChasis = ac.MotorChasis,
+                                Motor = ac.Motor,
+                                Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
                                 NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
@@ -1238,19 +1269,21 @@ namespace tesoreria.Controllers
             foreach (var reg in registro) {
                 var activo = (from ca in db.ContratoActivo
                                    join a in db.Activo on ca.IdActivo equals a.IdActivo
-                                   where ca.IdContrato == reg.IdContrato
-                                   select new { a.Familia } into x
-                                   group x by new { x.Familia } into g
+                                  join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
+                                  from fv in fw.DefaultIfEmpty()
+                              where ca.IdContrato == reg.IdContrato
+                                   select new { fv.NombreFamilia } into x
+                                   group x by new { x.NombreFamilia } into g
                                    select new
                                    {
                                        cont = g.Count(),
-                                       g.Key.Familia
+                                       g.Key.NombreFamilia
                                    }).ToList();
 
                 var desc = "";
                 if (activo != null) {
                     foreach (var a in activo) {
-                        desc += a.cont.ToString() + " " + a.Familia + ", ";
+                        desc += a.cont.ToString() + " " + a.NombreFamilia + ", ";
                     }
                     
                 }

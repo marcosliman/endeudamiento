@@ -57,6 +57,8 @@
     <Compile Include="Models\Local\Activo.cs" />
     <Compile Include="Models\Local\Contrato.cs" />
     <Compile Include="Models\Local\ContratoActivo.cs" />
+    <Compile Include="Models\Local\Poliza.cs" />
+    <Compile Include="Models\Local\PolizaDocumento.cs" />
     <Compile Include="Models\Local\LicitacionActivo.cs" />
     <Compile Include="Models\Local\ContratoActivoDocumento.cs" />
     <Compile Include="Models\Local\LicitacionOfertaDocumento.cs" />
@@ -66,6 +68,11 @@
     <Compile Include="Models\Local\Banco.cs" />
     <Compile Include="Models\Local\TipoDocumento.cs" />
     <Compile Include="Models\Local\ContratoLog.cs" />
+    <Compile Include="Models\Local\PolizaActivo.cs" />
+    <Compile Include="Models\Local\EmpresaAseguradora.cs" />
+    <Compile Include="Models\Local\Familia.cs" />
+    <Compile Include="Models\Local\TipoSeguro.cs" />
+    <Compile Include="Models\Local\TipoMoneda.cs" />
     <Compile Include="Models\Local\TipoLog.cs" />
     <Compile Include="Models\Local\TipoImpuesto.cs" />
     <Compile Include="Models\Local\TipoFinanciamiento.cs" />
@@ -97,7 +104,9 @@
     <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ContratoActivoViewModel.cs" />
+    <Compile Include="ViewModel\PolizaDocumentoViewModel.cs" />
     <Compile Include="ViewModel\ContratoDocumentoViewModel.cs" />
+    <Compile Include="ViewModel\PolizaViewModel.cs" />
     <Compile Include="ViewModel\LicitacionOfertaViewModel.cs" />
     <Compile Include="ViewModel\ContratoViewModel.cs" />
     <Compile Include="ViewModel\ContratoLogViewModel.cs" />

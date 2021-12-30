@@ -34,6 +34,8 @@ namespace tesoreria.Controllers
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            from fv in fw.DefaultIfEmpty()
                             where  ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
                             && ac.CodSoftland == ((codigoActivo != "") ? codigoActivo : ac.CodSoftland)
                             select new ActivoViewModel
@@ -42,12 +44,13 @@ namespace tesoreria.Controllers
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
-                                Familia = ac.Familia,
+                                Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
                                 Descripcion = ac.Descripcion,
                                 Capacidad = ac.Capacidad,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
-                                MotorChasis = ac.MotorChasis,
+                                Motor = ac.Motor,
+                                Chasis = ac.Chasis,
                                 Serie = ac.Serie,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
@@ -110,7 +113,8 @@ namespace tesoreria.Controllers
                                     Capacidad = ac.Capacidad,
                                     Marca = ac.Marca,
                                     Modelo = ac.Modelo,
-                                    MotorChasis = ac.MotorChasis,
+                                    Motor = ac.Motor,
+                                    Chasis = ac.Chasis,
                                     Serie = ac.Serie,
                                     Anio = ac.Anio,
                                     Valor = ac.Valor,
@@ -134,6 +138,12 @@ namespace tesoreria.Controllers
                                  select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
                 SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEmpresa);
                 ViewData["listaEmpresa"] = listaEmpresa;
+
+                var familia = (from e in db.Familia
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdFamilia, Nombre = e.NombreFamilia }).OrderBy(c => c.Id).ToList();
+                SelectList listaFamilia = new SelectList(familia.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdFamilia);
+                ViewData["listaFamilia"] = listaFamilia;
 
                 var proveedor = (from p in db.Proveedor
                                      where p.Activo == true
@@ -163,15 +173,18 @@ namespace tesoreria.Controllers
             {
 
                 datos.CodSoftland = validarDatos.ValidaStr(datos.CodSoftland);
-                datos.Familia = validarDatos.ValidaStr(datos.Familia);
                 datos.Descripcion = validarDatos.ValidaStr(datos.Descripcion);
                 datos.Capacidad = validarDatos.ValidaStr(datos.Capacidad);
                 datos.Marca = validarDatos.ValidaStr(datos.Marca);
                 datos.Modelo = validarDatos.ValidaStr(datos.Modelo);
-                datos.MotorChasis = validarDatos.ValidaStr(datos.MotorChasis);
+                datos.Grupo = validarDatos.ValidaStr(datos.Grupo);
+                datos.SubGrupo = validarDatos.ValidaStr(datos.SubGrupo);
+                datos.Motor = validarDatos.ValidaStr(datos.Motor);
+                datos.Chasis = validarDatos.ValidaStr(datos.Chasis);
                 datos.Serie = validarDatos.ValidaStr(datos.Serie);
                 datos.NumeroFactura = validarDatos.ValidaStr(datos.NumeroFactura);
                 datos.Patente = validarDatos.ValidaStr(datos.Patente);
+                datos.Glosa = validarDatos.ValidaStr(datos.Glosa);
 
 
                 using (var dbContextTransaction = db.Database.BeginTransaction())
@@ -184,54 +197,70 @@ namespace tesoreria.Controllers
 
                         var estado = (int)Helper.Estado.ActCreado;
 
-                        if (datos.CodSoftland != "" && datos.Familia != "" && datos.NumeroInterno > 0) {
-                            estado = (int)Helper.Estado.ActDisponible;
-                        }
+
 
                         if (activo != null)
                         {
+
+                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno > 0 && activo.IdEstado == (int)Helper.Estado.ActCreado)
+                            {
+                                estado = (int)Helper.Estado.ActDisponible;
+                            }
+
                             idActivo = activo.IdActivo;
                             mensaje = "Registro Actualizado con exito";
                             activo.IdEmpresa = datos.IdEmpresa;
                             activo.NumeroInterno = datos.NumeroInterno;
                             activo.CodSoftland = datos.CodSoftland;
-                            activo.Familia = datos.Familia;
+                            activo.IdFamilia = datos.IdFamilia;
                             activo.Descripcion = datos.Descripcion;
                             activo.Capacidad = datos.Capacidad;
                             activo.Marca = datos.Marca;
                             activo.Modelo = datos.Modelo;
-                            activo.MotorChasis = datos.MotorChasis;
+                            activo.Motor = datos.Motor;
+                            activo.Chasis = datos.Chasis;
                             activo.Serie = datos.Serie;
+                            activo.Grupo = datos.Grupo;
+                            activo.SubGrupo = datos.SubGrupo;
                             activo.Anio = datos.Anio;
                             activo.Valor = datos.Valor;
                             activo.IdProveedor = datos.IdProveedor;
                             activo.IdCuenta = datos.IdCuenta;
                             activo.NumeroFactura = datos.NumeroFactura;
                             activo.Patente = datos.Patente;
+                            activo.Glosa = datos.Glosa;
                             activo.IdEstado = estado;
                             db.SaveChanges();
                             showMessageString = new { Estado = 0, Mensaje = mensaje };
                         }
                         else
                         {
+                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno > 0)
+                            {
+                                estado = (int)Helper.Estado.ActDisponible;
+                            }
                             mensaje = "Registro Ingresado con exito";
                             var activoAdd = new Activo();
                             activoAdd.IdEmpresa = datos.IdEmpresa;
                             activoAdd.NumeroInterno = datos.NumeroInterno;
                             activoAdd.CodSoftland = datos.CodSoftland;
-                            activoAdd.Familia = datos.Familia;
+                            activoAdd.IdFamilia = datos.IdFamilia;
                             activoAdd.Descripcion = datos.Descripcion;
                             activoAdd.Capacidad = datos.Capacidad;
                             activoAdd.Marca = datos.Marca;
                             activoAdd.Modelo = datos.Modelo;
-                            activoAdd.MotorChasis = datos.MotorChasis;
+                            activoAdd.Motor = datos.Motor;
+                            activoAdd.Chasis = datos.Chasis;
                             activoAdd.Serie = datos.Serie;
                             activoAdd.Anio = datos.Anio;
+                            activoAdd.Grupo = datos.Grupo;
+                            activoAdd.SubGrupo = datos.SubGrupo;
                             activoAdd.Valor = datos.Valor;
                             activoAdd.IdProveedor = datos.IdProveedor;
                             activoAdd.IdCuenta = datos.IdCuenta;
                             activoAdd.NumeroFactura = datos.NumeroFactura;
                             activoAdd.Patente = datos.Patente;
+                            activoAdd.Glosa = datos.Glosa;
                             activoAdd.IdEstado = estado;
                             activoAdd.FechaRegistro = DateTime.Now;
                             activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;

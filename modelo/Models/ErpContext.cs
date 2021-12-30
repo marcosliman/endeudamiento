@@ -22,6 +22,7 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.TipoEstado> TipoEstado { get; set; }
         public System.Data.Entity.DbSet<Local.Estado> Estado { get; set; }
         public System.Data.Entity.DbSet<Local.Activo> Activo { get; set; }
+        public System.Data.Entity.DbSet<Local.Familia> Familia { get; set; }
         public System.Data.Entity.DbSet<Local.Proveedor> Proveedor { get; set; }
 
         public System.Data.Entity.DbSet<Local.Licitacion> Licitacion { get; set; }
@@ -38,5 +39,12 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.ContratoActivoDocumento> ContratoActivoDocumento { get; set; }
         public System.Data.Entity.DbSet<Local.TipoLog> TipoLog { get; set; }
         public System.Data.Entity.DbSet<Local.ContratoLog> ContratoLog { get; set; }
+
+        public System.Data.Entity.DbSet<Local.Poliza> Poliza { get; set; }
+        public System.Data.Entity.DbSet<Local.PolizaActivo> PolizaActivo { get; set; }
+        public System.Data.Entity.DbSet<Local.PolizaDocumento> PolizaDocumento { get; set; }
+        public System.Data.Entity.DbSet<Local.TipoSeguro> TipoSeguro { get; set; }
+        public System.Data.Entity.DbSet<Local.EmpresaAseguradora> EmpresaAseguradora { get; set; }
+        public System.Data.Entity.DbSet<Local.TipoMoneda> TipoMoneda { get; set; }
     }
 }

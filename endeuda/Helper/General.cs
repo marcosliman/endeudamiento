@@ -35,6 +35,7 @@ namespace tesoreria.Helper
         ActLicitacion = 5,
         ActEnContrato = 6,
         ActBaja=7,
+        ActEnPoliza=8,
 
         LicCreada=15,
         LicCompleta=16,
@@ -46,7 +47,13 @@ namespace tesoreria.Helper
 
         ConCreado=30,
         ConActivo=31,
-        ConFinalizado=32
+        ConFinalizado=32,
+
+        PolCreado = 40,
+        PolActivo = 41,
+        PolFinalizado = 42,
+
+
     }
 
     public enum TipoContrato : int
@@ -57,7 +64,9 @@ namespace tesoreria.Helper
 
     public enum CategoriaDocumento : int
     {
-        ActivoContrato = 1
+        ActivoContrato = 1,
+        Poliza = 2,
+        Siniestro = 3
     }
 
     public enum TipoFinanciamiento : int
