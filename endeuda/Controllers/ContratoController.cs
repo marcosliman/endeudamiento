@@ -15,7 +15,7 @@ namespace tesoreria.Controllers
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         // GET: Contrato
 
-
+        #region Contrato leasing
         public ActionResult ListaContratoLeasing()
         {
             if (seguridad == null)
@@ -287,6 +287,7 @@ namespace tesoreria.Controllers
                         {
                             var mensaje = "";
                             var idContrato = 0;
+                            var swTran = true;
 
                             var contrato = db.Contrato.Find(dato.IdContrato);
 
@@ -338,50 +339,67 @@ namespace tesoreria.Controllers
                             if (contrato != null)
                             {
                                 mensaje = "Contrato actualizado con éxito";
-                                idContrato = dato.IdContrato;
-                                contrato.IdLicitacionOferta = dato.IdLicitacionOferta;
-                                contrato.Monto = dato.Monto;
-                                contrato.NumeroContrato = dato.NumeroContrato;
-                                contrato.MotivoEleccion = dato.MotivoEleccion;
-                                contrato.IdEmpresa = dato.IdEmpresa;
-                                contrato.IdBanco = dato.IdBanco;
-                                contrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
-                                contrato.IdTipoImpuesto = dato.IdTipoImpuesto;
-                                contrato.TipoGarantia = dato.TipoGarantia;
-                                contrato.TasaMensual = dato.TasaMensual;
-                                contrato.TasaAnual = dato.TasaAnual;
-                                contrato.Plazo = dato.Plazo;
-                                contrato.FechaInicio = dato.FechaInicio;
-                                contrato.FechaTermino = dato.FechaTermino;
-                                db.SaveChanges();
+                                var existeContrato = db.Contrato.Where(c => c.NumeroContrato == dato.NumeroContrato && c.IdContrato != contrato.IdContrato).FirstOrDefault();
+                                if (existeContrato == null)
+                                {
+                                    idContrato = dato.IdContrato;
+                                    contrato.IdLicitacionOferta = dato.IdLicitacionOferta;
+                                    contrato.Monto = dato.Monto;
+                                    contrato.NumeroContrato = dato.NumeroContrato;
+                                    contrato.MotivoEleccion = dato.MotivoEleccion;
+                                    contrato.IdEmpresa = dato.IdEmpresa;
+                                    contrato.IdBanco = dato.IdBanco;
+                                    contrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
+                                    contrato.IdTipoImpuesto = dato.IdTipoImpuesto;
+                                    contrato.TipoGarantia = dato.TipoGarantia;
+                                    contrato.TasaMensual = dato.TasaMensual;
+                                    contrato.TasaAnual = dato.TasaAnual;
+                                    contrato.Plazo = dato.Plazo;
+                                    contrato.FechaInicio = dato.FechaInicio;
+                                    contrato.FechaTermino = dato.FechaTermino;
+                                    db.SaveChanges();
+                                }
+                                else
+                                {
+                                    swTran = false;
+                                    mensaje = "Numero Contrato ya existe, revise sus datos";
+                                }
                             }
                             else
                             {
                                 mensaje = "Contrato creado con éxito";
+                                var existeContrato = db.Contrato.Where(c => c.NumeroContrato == dato.NumeroContrato).FirstOrDefault();
+                                if (existeContrato == null)
+                                {
+                                    var addContrato = new Contrato();
+                                    addContrato.IdTipoContrato = dato.IdTipoContrato;
+                                    addContrato.IdLicitacionOferta = dato.IdLicitacionOferta;
+                                    addContrato.Monto = dato.Monto;
+                                    addContrato.NumeroContrato = dato.NumeroContrato;
+                                    addContrato.MotivoEleccion = dato.MotivoEleccion;
+                                    addContrato.IdEmpresa = dato.IdEmpresa;
+                                    addContrato.IdBanco = dato.IdBanco;
+                                    addContrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
+                                    addContrato.IdTipoImpuesto = dato.IdTipoImpuesto;
+                                    addContrato.TipoGarantia = dato.TipoGarantia;
+                                    addContrato.TasaMensual = dato.TasaMensual;
+                                    addContrato.TasaAnual = dato.TasaAnual;
+                                    addContrato.Plazo = dato.Plazo;
+                                    addContrato.FechaInicio = Convert.ToDateTime(dato.FechaInicio);
+                                    addContrato.FechaTermino = Convert.ToDateTime(dato.FechaTermino);
+                                    addContrato.IdEstado = (int)Helper.Estado.ConCreado;
+                                    addContrato.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                                    addContrato.FechaRegistro = DateTime.Now;
+                                    db.Contrato.Add(addContrato);
+                                    db.SaveChanges();
 
-                                var addContrato = new Contrato();
-                                addContrato.IdTipoContrato = dato.IdTipoContrato;
-                                addContrato.IdLicitacionOferta = dato.IdLicitacionOferta;
-                                addContrato.Monto = dato.Monto;
-                                addContrato.NumeroContrato = dato.NumeroContrato;
-                                addContrato.MotivoEleccion = dato.MotivoEleccion;
-                                addContrato.IdEmpresa = dato.IdEmpresa;
-                                addContrato.IdBanco = dato.IdBanco;
-                                addContrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
-                                addContrato.IdTipoImpuesto = dato.IdTipoImpuesto;
-                                addContrato.TipoGarantia = dato.TipoGarantia;
-                                addContrato.TasaMensual = dato.TasaMensual;
-                                addContrato.TasaAnual = dato.TasaAnual;
-                                addContrato.Plazo = dato.Plazo;
-                                addContrato.FechaInicio = Convert.ToDateTime(dato.FechaInicio);
-                                addContrato.FechaTermino = Convert.ToDateTime(dato.FechaTermino);
-                                addContrato.IdEstado = (int)Helper.Estado.ConCreado;
-                                addContrato.IdUsuarioRegistro = (int)seguridad.IdUsuario;
-                                addContrato.FechaRegistro = DateTime.Now;
-                                db.Contrato.Add(addContrato);
-                                db.SaveChanges();
-
-                                idContrato = addContrato.IdContrato;
+                                    idContrato = addContrato.IdContrato;
+                                }
+                                else
+                                {
+                                    swTran = false;
+                                    mensaje = "Numero Contrato ya existe, revise sus datos";
+                                }
                             }
 
                             /*si es de oferta grabo los activos de la licitacion*/
@@ -409,8 +427,15 @@ namespace tesoreria.Controllers
                             /*registro log contrato*/
                             GrabaLogContrato(idContrato,1);
 
-                            dbContextTransaction.Commit();
-                            showMessageString = new { Estado = 0, Mensaje = mensaje, idContrato = idContrato };
+                            if (swTran)
+                            {
+                                dbContextTransaction.Commit();
+                                showMessageString = new { Estado = 0, Mensaje = mensaje, idContrato = idContrato };
+                            }
+                            else {
+                                dbContextTransaction.Rollback();
+                                showMessageString = new { Estado = 100, Mensaje = mensaje };
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -560,6 +585,7 @@ namespace tesoreria.Controllers
 
             return true;
         }
+        #endregion
 
         #region Contrato Credito
         public ActionResult ListaContratoCredito()
@@ -756,6 +782,8 @@ namespace tesoreria.Controllers
                             join con in db.Contrato on rel.IdContrato equals con.IdContrato
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            from fv in fw.DefaultIfEmpty()
                             join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             from prv in prw.DefaultIfEmpty()
                             where rel.IdContrato == idContrato
@@ -766,12 +794,13 @@ namespace tesoreria.Controllers
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
-                                Familia = ac.Familia,
+                                Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
                                 NombreCuenta = "",
                                 Descripcion = ac.Descripcion,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
-                                MotorChasis = ac.MotorChasis,
+                                Motor = ac.Motor,
+                                Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
                                 NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
@@ -810,6 +839,8 @@ namespace tesoreria.Controllers
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            from fv in fw.DefaultIfEmpty()
                             join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             from prv in prw.DefaultIfEmpty()
                             where ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
@@ -822,12 +853,13 @@ namespace tesoreria.Controllers
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
-                                Familia = ac.Familia,
+                                Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
                                 NombreCuenta = "",
                                 Descripcion = ac.Descripcion,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
-                                MotorChasis = ac.MotorChasis,
+                                Motor = ac.Motor,
+                                Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
                                 NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
@@ -966,7 +998,7 @@ namespace tesoreria.Controllers
 
         #endregion
 
-
+        #region Amortizacion
         public ActionResult AddAmortizacion()
         {
             if (seguridad == null)
@@ -982,6 +1014,7 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        #endregion
 
         #region Documento Leasing
         public ActionResult AddDocumentoLeasing(int idContrato)
@@ -1172,7 +1205,7 @@ namespace tesoreria.Controllers
 
         #endregion
 
-
+        #region Vista contrato
         public ActionResult ContratoBuscar()
         {
             if (seguridad == null)
@@ -1230,64 +1263,282 @@ namespace tesoreria.Controllers
                                 FechaTermino = c.FechaTermino,
                                 FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
                                 PuedeEliminar = (c.IdEstado != (int)Helper.Estado.ConCreado) ? false : true,
-                                Descripcion=""
-                                /*Descripcion = (from ca in db.ContratoActivo 
-                                                join a in db.Activo on ca.IdActivo equals a.IdActivo
-                                                where ca.IdContrato == c.IdContrato
-                                                select new {a.Familia } into x
-                                                group x by new {x.Familia } into g
-                                                select new {
-                                                    g.Key.Familia.ToString()
-                                                }).FirstOrDefault()*/
+                                NombreEstado = e.NombreEstado
                             }).AsEnumerable().ToList();
+
+            foreach (var reg in registro) {
+                var activo = (from ca in db.ContratoActivo
+                                   join a in db.Activo on ca.IdActivo equals a.IdActivo
+                                  join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
+                                  from fv in fw.DefaultIfEmpty()
+                              where ca.IdContrato == reg.IdContrato
+                                   select new { fv.NombreFamilia } into x
+                                   group x by new { x.NombreFamilia } into g
+                                   select new
+                                   {
+                                       cont = g.Count(),
+                                       g.Key.NombreFamilia
+                                   }).ToList();
+
+                var desc = "";
+                if (activo != null) {
+                    foreach (var a in activo) {
+                        desc += a.cont.ToString() + " " + a.NombreFamilia + ", ";
+                    }
+                    
+                }
+
+                reg.Descripcion = desc;
+            }
 
             return Json(registro, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ModalRegistrarActivo()
+        public ActionResult ModalVistaContrato(int idContrato)
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
+            else if (seguridad != null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
             else
             {
-                return View();
+                //var contrato = new ContratoViewModel();
+                var contrato = (from c in db.Contrato
+                                where c.IdContrato == idContrato
+                                select new ContratoViewModel
+                                {
+                                    IdContrato = c.IdContrato,
+                                    IdTipoContrato = c.IdTipoContrato,
+                                    ExisteContrato = "S"
+                                }).FirstOrDefault();
+                if (contrato == null)
+                {
+                    contrato = new ContratoViewModel();
+                    contrato.IdContrato = idContrato;
+                    contrato.ExisteContrato = "N";
+                }
+
+                return View(contrato);
             }
         }
-        public ActionResult ModalEditarContratoLeasing()
+
+        public ActionResult VistaContrato(int idContrato)
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
+            else if (seguridad != null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
             else
             {
-                return View();
+                var registro = (from c in db.Contrato.ToList()
+                                where c.IdContrato == idContrato
+                                select new ContratoViewModel
+                                {
+                                    IdContrato = c.IdContrato,
+                                    IdTipoContrato = c.IdTipoContrato,
+                                    IdLicitacionOferta = c.IdLicitacionOferta,
+                                    EsLicitacion = (c.IdLicitacionOferta != null) ? "SI" : "NO",
+                                    MotivoEleccion = c.MotivoEleccion,
+                                    IdEmpresa = c.IdEmpresa,
+                                    IdBanco = c.IdBanco,
+                                    IdTipoImpuesto = c.IdTipoImpuesto,
+                                    IdTipoFinanciamiento = c.IdTipoFinanciamiento,
+                                    NumeroContrato = c.NumeroContrato,
+                                    TasaMensual = c.TasaMensual,
+                                    TasaAnual = c.TasaAnual,
+                                    Plazo = c.Plazo,
+                                    Monto = c.Monto,
+                                    FechaInicio = c.FechaInicio,
+                                    FechaInicioStr = c.FechaInicio.ToString("dd-MM-yyyy"),
+                                    FechaTermino = c.FechaTermino,
+                                    FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
+                                    IdEstado = c.IdEstado,
+                                    ExisteContrato = "S",
+                                    TituloBoton = "Actualizar Contrato"
+                                }
+                                  ).FirstOrDefault();
+
+
+                var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
+                var idLicitacion = 0;
+                var idLicitacionOferta = 0;
+
+                if (licitacionOferta != null)
+                {
+                    idLicitacion = licitacionOferta.IdLicitacion;
+                    idLicitacionOferta = licitacionOferta.IdLicitacionOferta;
+
+                    var licitacion = (from e in db.Licitacion
+                                      where e.IdLicitacion == idLicitacion
+                                      select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
+                    SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
+                    ViewData["listaLicitacion"] = listaLicitacion;
+
+                    var oferta = (from e in db.LicitacionOferta
+                                  join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
+                                  join b in db.Banco on e.IdBanco equals b.IdBanco
+                                  where e.IdLicitacionOferta == idLicitacionOferta
+                                  select new RetornoGenerico { Id = e.IdLicitacionOferta, Nombre = b.NombreBanco }).OrderBy(c => c.Id).ToList();
+                    SelectList listaOferta = new SelectList(oferta.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacionOferta);
+                    ViewData["listaOferta"] = listaOferta;
+                }
+                else
+                {
+                    var licitacion = (from e in db.Licitacion
+                                      where e.IdEstado == (int)Helper.Estado.LicCompleta && e.IdTipoFinanciamiento == (int)Helper.TipoContrato.Leasing
+                                      select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
+                    SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
+                    ViewData["listaLicitacion"] = listaLicitacion;
+
+                    var oferta = (from e in db.LicitacionOferta
+                                  join l in db.Licitacion on e.IdLicitacion equals l.IdLicitacion
+                                  join b in db.Banco on e.IdBanco equals b.IdBanco
+                                  where e.IdLicitacion == idLicitacion
+                                  select new RetornoGenerico { Id = e.IdLicitacionOferta, Nombre = b.NombreBanco }).OrderBy(c => c.Id).ToList();
+                    SelectList listaOferta = new SelectList(oferta.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacionOferta);
+                    ViewData["listaOferta"] = listaOferta;
+                }
+
+
+                var banco = (from e in db.Banco
+                             where e.Activo == true
+                             select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
+                SelectList listaBanco = new SelectList(banco.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdBanco);
+                ViewData["listaBanco"] = listaBanco;
+
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEmpresa);
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var impuesto = (from e in db.TipoImpuesto
+                                where e.Activo == true
+                                select new RetornoGenerico { Id = e.IdTipoImpuesto, Nombre = e.NombreTipoImpuesto }).OrderBy(c => c.Id).ToList();
+                SelectList listaTipoImpuesto = new SelectList(impuesto.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdTipoImpuesto);
+                ViewData["listaTipoImpuesto"] = listaTipoImpuesto;
+
+                var tipoCredito = (from e in db.TipoFinanciamiento
+                                   where e.Activo == true && e.IdTipoContrato == (int)Helper.TipoContrato.Contrato
+                                   select new RetornoGenerico { Id = e.IdTipoFinanciamiento, Nombre = e.NombreTipoFinanciamiento }).OrderBy(c => c.Id).ToList();
+                SelectList listaTipoCredito = new SelectList(tipoCredito.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdTipoFinanciamiento);
+                ViewData["listaTipoCredito"] = listaTipoCredito;
+
+                return View(registro);
             }
         }
-        public ActionResult ModalEditarContratoCredito()
+
+        public ActionResult VistaDocumento(int idContrato)
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
+            else if (seguridad != null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
             else
             {
-                return View();
+
+                var registro = (from ac in db.Activo
+                                join rel in db.ContratoActivo on ac.IdActivo equals rel.IdActivo
+                                join con in db.Contrato on rel.IdContrato equals con.IdContrato
+                                where rel.IdContrato == idContrato
+                                select new ContratoActivoViewModel
+                                {
+                                    IdContratoActivo = rel.IdContratoActivo,
+                                    IdActivo = ac.IdActivo,
+                                    NumeroInterno = ac.NumeroInterno,
+                                    CodSoftland = ac.CodSoftland,
+                                    Familia = ac.Familia,
+                                    Archivos = (from d in db.ContratoActivoDocumento
+                                                join t in db.TipoDocumento on d.IdTipoDocumento equals t.IdTipoDocumento
+                                                where d.IdContratoActivo == rel.IdContratoActivo
+                                                select new ContratoDocumentoViewModel
+                                                {
+                                                    IdContratoActivoDocumento = d.IdContratoActivoDocumento,
+                                                    NombreTipoDocumento = t.NombreTipoDocumento,
+                                                    UrlDocumento = d.UrlDocumento,
+                                                    NombreOriginal = d.NombreOriginal
+                                                }).ToList()
+                                }).AsEnumerable().ToList();
+
+                return View(registro);
             }
         }
-        
-        public ActionResult ModalContratoLeasingOrigen()
+
+        public ActionResult VistaLog(int idContrato)
         {
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
+            else if (seguridad != null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
             else
             {
-                return View();
+
+                var registro = (from l in db.ContratoLog.ToList()
+                                join u in db.Usuario.ToList() on l.IdUsuarioResgistro equals u.IdUsuario
+                                where l.IdContrato == idContrato
+                                select new ContratoLogViewModel
+                                {
+                                    IdContratoLog = l.IdContratoLog,
+                                    IdContrato = l.IdContrato,
+                                    NombreLog = l.NombreLog,
+                                    NombreUsuarioRegistro = u.NombreUsuario,
+                                    FechaRegistroStr = l.FechaRegistro.ToString("dd-MM-yyyy HH:mm")
+                                }).AsEnumerable().ToList();
+
+                return View(registro);
             }
         }
+
+        #endregion
+        /*        public ActionResult ModalEditarContratoLeasing()
+                {
+                    if (seguridad == null)
+                    {
+                        return RedirectToAction("LogOut", "Login");
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                }
+                public ActionResult ModalEditarContratoCredito()
+                {
+                    if (seguridad == null)
+                    {
+                        return RedirectToAction("LogOut", "Login");
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                }
+
+                public ActionResult ModalContratoLeasingOrigen()
+                {
+                    if (seguridad == null)
+                    {
+                        return RedirectToAction("LogOut", "Login");
+                    }
+                    else
+                    {
+                        return View();
+                    }
+                }*/
     }
 }

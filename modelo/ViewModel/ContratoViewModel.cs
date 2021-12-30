@@ -31,6 +31,7 @@ namespace modelo.ViewModel
         public DateTime FechaTermino { get; set; }
         public string FechaTerminoStr { get; set; }
         public int IdEstado { get; set; }
+        public string NombreEstado { get; set; }
         public int IdUsuarioRegistro { get; set; }
         public DateTime FechaRegistro { get; set; }
         public string ExisteContrato { get; set; }

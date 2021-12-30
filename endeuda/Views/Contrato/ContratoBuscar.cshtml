@@ -82,7 +82,7 @@
                                 <th>Tasa Mensual</th>
                                 <th>Inicio</th>
                                 <th>Término</th>
-
+                                <th>Estado</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -96,14 +96,12 @@
 </div>
 
 
-<div class="modal fade" id="verdetalle" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalEditarContratoLeasing", null)
-    </div>
-</div>
-<div class="modal fade" id="vercontratoorigen" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalContratoLeasingOrigen", null)
+<div class="modal fade" id="ModalContrato" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="datosContrato"></div>
+
+        </div>
     </div>
 </div>
 
@@ -153,7 +151,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        boton = '<button class="btn btn-info btn-sm" type="button" onclick="VistaContrato(' + o.IdContrato + ')"><i class="fa fa-eye"></i></button> ';
+                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalContrato" onclick="VistaContrato(' + o.IdContrato + ')"><i class="fa fa-eye"></i></button> ';
                         return boton;
                     }
                 },
@@ -195,10 +193,26 @@
                         _: "FechaTerminoStr",
                         sort: "FechaTermino"
                     }
-                }
+                },
+                { "data": "NombreEstado" }
             ]
         });
 
         return table;
+    }
+
+    function VistaContrato(idContrato) {
+        $.ajax({
+            url: "/Contrato/ModalVistaContrato",
+            type: "Post",
+            data: { idContrato: idContrato },
+            beforeSend: function () {
+                $("#datosContrato").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosContrato").empty();
+                $("#datosContrato").html(data);
+            }
+        });
     }
 </script>

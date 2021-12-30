@@ -2915,6 +2915,14 @@
     <Content Include="Views\Contrato\AddContratoCredito.cshtml" />
     <Content Include="Views\Bancos\Create.cshtml" />
     <Content Include="Views\Bancos\Index.cshtml" />
+    <Content Include="Views\Contrato\ModalVistaContrato.cshtml" />
+    <Content Include="Views\Contrato\VistaContrato.cshtml" />
+    <Content Include="Views\Contrato\VistaDocumento.cshtml" />
+    <Content Include="Views\Contrato\VistaLog.cshtml" />
+    <Content Include="Views\Seguro\ListaSeguro.cshtml" />
+    <Content Include="Views\Seguro\AddSeguro.cshtml" />
+    <Content Include="Views\Seguro\ModalAsociarActivo.cshtml" />
+    <Content Include="Views\Seguro\AddDocumento.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -46,7 +46,7 @@
                 <div class="form-group form-group-sm row">
                     <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Familia de Activo</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm" name="familia" id="familia" placeholder="Ingrese la familia de activo" value="@Model.Familia">
+                        @Html.DropDownList("idFamilia", (SelectList)ViewData["listaFamilia"], "--Seleccione Familia--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -101,6 +101,18 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Grupo</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="grupo" id="grupo" placeholder="Ingrese Grupo" value="@Model.Grupo">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">SubGrupo</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="subGrupo" id="subGrupo" placeholder="Ingrese SubGrupo" value="@Model.SubGrupo">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
                     <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Proveedor</label>
                     <div class="col-6">
                         @Html.DropDownList("idProveedor", (SelectList)ViewData["listaProveedor"], "--Seleccione Proveedor--", htmlAttributes: new { @class = "form-control form-control-sm" })
@@ -113,9 +125,15 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
-                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Motor y Chasis</label>
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Motor</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm" name="motorChasis" id="motorChasis" placeholder="Ingrese número motor y chasis" value="@Model.MotorChasis">
+                        <input type="text" class="form-control form-control-sm" name="motor" id="motor" placeholder="Ingrese número motor" value="@Model.Motor">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Chasis</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="chasis" id="chasis" placeholder="Ingrese número chasis" value="@Model.Chasis">
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -128,6 +146,12 @@
                     <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Patente</label>
                     <div class="col-6">
                         <input type="text" class="form-control" name="patente" id="patente" placeholder="Ingrese el número de patente" value="@Model.Patente">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="glosa" class="col-sm-3 col-form-label col-form-label-sm">Glosa</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" name="glosa" id="glosa" placeholder="Ingrese Glosa" value="@Model.Glosa">
                     </div>
                 </div>
             </div>
@@ -147,6 +171,7 @@
             errorContainer: $("#warning"),
             rules: {
                 idEmpresa: { required: true },
+                idFamilia: { required: true },
                 numeroInterno: { required: true, number: true },
                 descripcion: { required: true },
                 valor: { number: true },

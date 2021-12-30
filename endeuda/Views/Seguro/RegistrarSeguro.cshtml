@@ -1,349 +1,92 @@
-﻿@{
+﻿@model modelo.ViewModel.PolizaViewModel
+@{
     ViewBag.Title = "Registrar Póliza de Seguro";
 }
-<!-- BS Stepper -->
-<link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
-<!-- BS-Stepper -->
-<script src="~/Plantilla/AdminLTE/plugins/bs-stepper/js/bs-stepper.min.js"></script>
-<div class="modal fade" id="modal-buscar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id="datosBuscar">
-
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h5 class="h5 mb-0 text-gray-800">
-        Nueva Póliza de Seguro<h5>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
-            </ol>
+    <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
 </div>
-<div class="card">
-    <div class="card card-outline card-info collapsed-card">
-        <div class="card-header">
-            <h3 class="card-title">Datos Generales</h3>
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
+@{
+    var habilitaTab = "";
+    if (Model.ExistePoliza == "N")
+    {
+        habilitaTab = " disabled ";
+    }
+}
+<input type="hidden" name="idPoliza" id="idPoliza" value="@Model.IdPoliza" />
+<div class="card-body">
+    <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-contrato active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Datos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-contrato @habilitaTab" id="header3" data-toggle="pill" href="#" onclick="CargaTab('tab3',3)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">Documentos</a>
+                </li>
+            </ul>
         </div>
-    </div>
-    <div class="card-body">
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
-            <div class="col-sm-2">
-                <select class="form-control form-control-sm">
-                    <option value="0">---Seleccione Empresa---</option>
-                    <option value="1">MAQSUR S.A.</option>
-                    <option value="2">BIOMASA</option>
-                    <option value="3">TECSUR</option>
-                    <option value="4">MQS</option>
-                    <option value="5">NOK</option>
-                </select>
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Número Poliza</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="NumeroPoliza" id="NumeroPoliza" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Seguro</label>
-            <div class="col-sm-2">
-                <select class="form-control form-control-sm">
-                    <option value="0">---Seleccione Tipo de Seguro---</option>
-                    <option value="1">Tipo 1</option>
-                    <option value="2">Tipo 2</option>
-                    <option value="3">Tipo 3</option>
-                    <option value="4">Tipo 4</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group row">
-
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa aseguradora</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="Aseguradora" id="Aseguradora" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Monto asegurado</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="MontoAsegurado" id="MontoAsegurado" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Prima mensual</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="PrimaMensual" id="PrimaMensual" />
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Número pagos</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="NumeroPagos" id="NumeroPagos" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de moneda</label>
-            <div class="col-sm-2">
-                <select class="form-control form-control-sm">
-                    <option value="0">---Seleccione Tipo de moneda---</option>
-                    <option value="1">USD</option>
-                    <option value="2">CLP</option>
-                </select>
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha venc. seguro</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="FechaFinSeguro" id="FechaFinSeguro" />
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Beneficiario</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="Beneficiario" id="Beneficiario" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">RUT beneficiario</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="RutBeneficiario" id="RutBeneficiario" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha envío bancos</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm" name="FechaEnvioBanco" id="FechaEnvioBanco" />
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Carga Documentaria</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación cargue los documentos que correspondan a la Póliza</label>
-        </div>
-        <div class="row">
-            <div class="col-2">
-                <select name="empresa" class="form-control">
-                    <option value="0">---Seleccione Documento---</option>
-                    <option value="1">Contrato</option>
-                    <option value="2">Orden de Compra</option>
-                    <option value="3">Factura</option>
-                    <option value="4">Archivo de Correo</option>
-                    <option value="5">Otros</option>
-                </select>
-            </div>
-            <div class="col-2">
-                <div class="col-sm-auto col-form-label">
-                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-four-tabContent">
+                <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                </div>
+                <div class="tab-pane fade" id="tab3" role="tabpanel">
                 </div>
             </div>
-            <div class="col-2">
-                <select name="empresa" class="form-control">
-                    <option value="0">---Seleccione Documento---</option>
-                    <option value="1">Contrato</option>
-                    <option value="2">Orden de Compra</option>
-                    <option value="3">Factura</option>
-                    <option value="4">Archivo de Correo</option>
-                    <option value="5">Otros</option>
-                </select>
-            </div>
-            <div class="col-sm-2 col-form-label">
-                <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
-            </div>
-            <div class="col-2">
-                <select name="empresa" class="form-control">
-                    <option value="0">---Seleccione Documento---</option>
-                    <option value="1">Contrato</option>
-                    <option value="2">Orden de Compra</option>
-                    <option value="3">Factura</option>
-                    <option value="4">Archivo de Correo</option>
-                    <option value="5">Otros</option>
-                </select>
-            </div>
-            <div class="col-sm-2 col-form-label">
-                <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-2">
-                <select name="empresa" class="form-control">
-                    <option value="0">---Seleccione Documento---</option>
-                    <option value="1">Contrato</option>
-                    <option value="2">Orden de Compra</option>
-                    <option value="3">Factura</option>
-                    <option value="4">Archivo de Correo</option>
-                    <option value="5">Otros</option>
-                </select>
-            </div>
-            <div class="col-2">
-                <div class="col-sm-auto col-form-label">
-                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
-                </div>
-            </div>
-            <div class="col-2">
-                <select name="empresa" class="form-control">
-                    <option value="0">---Seleccione Documento---</option>
-                    <option value="1">Contrato</option>
-                    <option value="2">Orden de Compra</option>
-                    <option value="3">Factura</option>
-                    <option value="4">Archivo de Correo</option>
-                    <option value="5">Otros</option>
-                </select>
-            </div>
-            <div class="col-sm-2 col-form-label">
-                <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
-            </div>
-            <div class="col-2">
-                <select name="empresa" class="form-control">
-                    <option value="0">---Seleccione Documento---</option>
-                    <option value="1">Contrato</option>
-                    <option value="2">Orden de Compra</option>
-                    <option value="3">Factura</option>
-                    <option value="4">Archivo de Correo</option>
-                    <option value="5">Otros</option>
-                </select>
-            </div>
-            <div class="col-sm-2 col-form-label">
-                <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
-            </div>
         </div>
     </div>
 </div>
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Búsqueda de Activos</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de activos cubiertos por la Póliza</label>
-        </div>
-        <div class="form-group row">
-            <div class="col-sm-1">
-                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                    <div class="form-inline my-1 my-lg-0">
-                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalBuscarActivo"><i class="fa fa-plus"></i>Buscar Activo</button>
-                    </div>
-                </nav>
-            </div>
-            <div class="col-sm-10">
-            </div>
-            <div class="col-sm-1">
-                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                    <div class="form-inline my-1 my-lg-0">
-                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#cargamasiva"><i class="fa fa-plus"></i>Carga Masiva</button>
-                    </div>
-                </nav>
-            </div>
-        </div>
-        <div class="table-responsive mt-1">
-            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                <thead class="thead-light">
-                    <tr>
-                        <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
-                        <th>Cod. Interno</th>
-                        <th>Tipo Activo</th>
-                        <th>Estado</th>
-                        <th>Descripcion</th>
-                        <th>Patente</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Motor</th>
-                        <th>Chasis</th>
-                        <th>Año</th>
-                        <th>Grupo</th>
-                        <th>Sub-grupo</th>
-                        <th>Val. Compra</th>
-                        <th>Fec. Ing.</th>
-                        <th>Glosa</th>
-                        <th>Fec. Baja</th>
-                        <th>Leasing</th>
-                        <th>Término Leas.</th>
-                        <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                        <td>00253</td>
-                        <td>Maquinaria</td>
-                        <td>Activo</td>
-                        <td>Volquete Volvo</td>
-                        <td>01-582-256-52</td>
-                        <td>Volvo</td>
-                        <td>V2</td>
-                        <td>Diesel v2</td>
-                        <td>A233</td>
-                        <td>2010</td>
-                        <td>A</td>
-                        <td>A1</td>
-                        <td>2,500,000.00</td>
-                        <td>08/05/2012</td>
-                        <td>Operativo</td>
-                        <td></td>
-                        <td>05849</td>
-                        <td>01-08-2031</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-                    <tr>
-                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                        <td>00258</td>
-                        <td>Maquinaria</td>
-                        <td>Activo</td>
-                        <td>Volquete Volvo</td>
-                        <td>01-698-256-52</td>
-                        <td>Volvo</td>
-                        <td>V2</td>
-                        <td>Diesel v2</td>
-                        <td>A233</td>
-                        <td>2010</td>
-                        <td>A</td>
-                        <td>A1</td>
-                        <td>2,800,000.00</td>
-                        <td>08/05/2012</td>
-                        <td>Operativo</td>
-                        <td></td>
-                        <td>05849</td>
-                        <td>01-08-2031</td>
-                        <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
-                    </tr>
-
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="ModalBuscarActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalBuscarActivo", null)
-    </div>
-</div>
-
-<div class="modal fade" id="ModalVerActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalVerActivo", null)
-    </div>
-</div>
-
-
-<div class="modal fade" id="cargamasiva" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalCargaMasiva", null)
-    </div>
-</div>
 
 <script>
     $(document).ready(function () {
         AbrirMenu("RegistrarSeguro");
+        $('.tab-pane').removeClass("show").removeClass("active");
+        CargaTab('tab1', '1')
     });
+
+    function CargaTab(div, op) {
+        $('.tab-pane').removeClass("show").removeClass("active");
+        $('.nav-link-contrato').removeClass("active");
+        $("#tab1").empty();
+        $("#tab3").empty();
+        $("#header" + op).addClass("active");
+        url = "";
+        if (op == 1) {
+            url = 'AddSeguro';
+            $("#tab1").addClass("show").addClass("active");
+        }
+        if (op == 3) {
+            url = 'AddDocumento';
+            $("#tab3").addClass("show").addClass("active");
+        }
+
+        $.ajax({
+            url: '/Seguro/' + url,
+            data: { idPoliza: $("#idPoliza").val() },
+            async: true,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            global: true,
+            ifModified: false,
+            processData: true,
+            //data: { idDocumento: op },
+            //data: ReemplazoCadena(aux_busqueda),
+            beforeSend: function () {
+                $("#" + div).empty();
+                $("#" + div).html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (html) {
+                //html=decodeURIComponent(html);
+
+                $("#" + div).empty(),
+                    $("#" + div).append(html);
+            },
+            type: "post"
+        });
+    }
 </script>

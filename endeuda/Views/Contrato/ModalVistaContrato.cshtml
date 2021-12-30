@@ -1,15 +1,9 @@
 ﻿@model modelo.ViewModel.ContratoViewModel
 @{
-    ViewBag.Title = "Registrar Contrato Crédito";
+    ViewBag.Title = "Vista Contrato";
+    Layout = "~/Views/Shared/_Popup.cshtml";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
-    </ol>
-</div>
 @{
     var habilitaTab = "";
     if (Model.ExisteContrato == "N")
@@ -17,7 +11,12 @@
         habilitaTab = " disabled ";
     }
 }
-
+<div class="modal-header">
+    <h5 class="modal-title" id="addParcela">@ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
 <input type="hidden" name="idContrato" id="idContrato" value="@Model.IdContrato" />
 <div class="card-body">
     <div class="card card-primary card-outline card-outline-tabs">
@@ -26,8 +25,17 @@
                 <li class="nav-item">
                     <a class="nav-link nav-link-contrato active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Datos</a>
                 </li>
+                @if (Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-contrato @habilitaTab" id="header2" data-toggle="pill" href="#" onclick="CargaTab('tab2',2)" role="tab" aria-controls="custom-tabs-four-pago" aria-selected="false">Amortización</a>
+                    </li>
+                }
                 <li class="nav-item">
                     <a class="nav-link nav-link-contrato @habilitaTab" id="header3" data-toggle="pill" href="#" onclick="CargaTab('tab3',3)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">Documentos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-contrato @habilitaTab" id="header4" data-toggle="pill" href="#" onclick="CargaTab('tab4',4)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">Log de Cambios</a>
                 </li>
             </ul>
         </div>
@@ -35,16 +43,25 @@
             <div class="tab-content" id="custom-tabs-four-tabContent">
                 <div class="tab-pane fade show active" id="tab1" role="tabpanel">
                 </div>
+                <div class="tab-pane fade" id="tab2" role="tabpanel">
+                </div>
                 <div class="tab-pane fade" id="tab3" role="tabpanel">
+                </div>
+                <div class="tab-pane fade" id="tab4" role="tabpanel">
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+</div>
+
+
 
 <script>
     $(document).ready(function () {
-        AbrirMenu("RegistrarContratoCredito");
+        AbrirMenu("RegistrarContrato");
         $('.tab-pane').removeClass("show").removeClass("active");
         CargaTab('tab1', '1')
 
@@ -53,16 +70,26 @@
         $('.tab-pane').removeClass("show").removeClass("active");
         $('.nav-link-contrato').removeClass("active");
         $("#tab1").empty();
+        $("#tab2").empty();
         $("#tab3").empty();
+        $("#tab4").empty();
         $("#header" + op).addClass("active");
         url = "";
         if (op == 1) {
-            url = 'AddContratoCredito';
+            url = 'VistaContrato';
             $("#tab1").addClass("show").addClass("active");
         }
+        if (op == 2) {
+            url = 'AddAmortizacion';
+            $("#tab2").addClass("show").addClass("active");
+        }
         if (op == 3) {
-            url = 'AddDocumentoLeasing';
+            url = 'VistaDocumento';
             $("#tab3").addClass("show").addClass("active");
+        }
+        if (op == 4) {
+            url = 'VistaLog';
+            $("#tab4").addClass("show").addClass("active");
         }
 
         $.ajax({

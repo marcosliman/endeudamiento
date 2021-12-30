@@ -1,0 +1,76 @@
+﻿@model IEnumerable<modelo.ViewModel.ContratoLogViewModel>
+@{
+    ViewBag.Title = "Log Cambios Contrato";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<div class="alert alert-success">
+    <h5><i class="icon fas fa-user-secret"></i>@ViewBag.Title</h5>
+    Aquí puede VER los Cambios realizados al contrato.
+</div>
+   <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <table class="table table-striped table-bordered table-sm" id="grillaLog" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Tipo Cambio</th>
+                                <th>Usuario</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            @foreach (var item in Model as List<modelo.ViewModel.ContratoLogViewModel>)
+                            {
+                            <tr>
+                                <td>@item.NombreLog</td>
+                                <td>@item.NombreUsuarioRegistro</td>
+                                <td>@item.FechaRegistroStr</td>
+                            </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+
+    function archivosTable() {
+        var table = $('#grillaLog').DataTable({
+            "dom": '',
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/ListaLog_Read/',
+                "data": function (d) {
+                    d.idContrato = $('#idContrato').val();
+                },
+                "dataSrc": ""
+            },
+            columns: [
+                { "data": "NombreTipoDocumento" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        acciones += '<a href="JavaScript:Descargar(' + "'" + o.UrlDocumento + "'" + ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> ' + o.NombreOriginal + '</a>';
+                        return acciones;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+</script>
+

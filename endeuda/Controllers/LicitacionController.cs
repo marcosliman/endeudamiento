@@ -384,6 +384,8 @@ namespace tesoreria.Controllers
                             join rel in db.LicitacionActivo on ac.IdActivo equals rel.IdActivo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            from fv in fw.DefaultIfEmpty()
                             join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             from prv in prw.DefaultIfEmpty()
                             where rel.IdLicitacion == idLicitacion
@@ -394,12 +396,13 @@ namespace tesoreria.Controllers
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
-                                Familia = ac.Familia,
+                                Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
                                 NombreCuenta = "",
                                 Descripcion = ac.Descripcion,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
-                                MotorChasis = ac.MotorChasis,
+                                Motor = ac.Motor,
+                                Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
                                 NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
@@ -435,6 +438,8 @@ namespace tesoreria.Controllers
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            from fv in fw.DefaultIfEmpty()
                             join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             from prv in prw.DefaultIfEmpty()
                             where ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
@@ -447,12 +452,13 @@ namespace tesoreria.Controllers
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
-                                Familia = ac.Familia,
+                                Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
                                 NombreCuenta = "",
                                 Descripcion = ac.Descripcion,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
-                                MotorChasis = ac.MotorChasis,
+                                Motor = ac.Motor,
+                                Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
                                 NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,

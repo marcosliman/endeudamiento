@@ -1,6 +1,6 @@
-﻿@model modelo.Models.Local.LicitacionActivo
+﻿@model modelo.Models.Local.PolizaActivo
 @{
-    ViewBag.Title = "Asociar Activo Licitación";
+    ViewBag.Title = "Asociar Activo Poliza";
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
 
@@ -104,9 +104,9 @@
             "retrieve": true,
             'ajax': {
                 "type": "POST",
-                "url": '/Licitacion/ListaActivoAsociar_Read/',
+                "url": '/Seguro/ListaActivoAsociar_Read/',
                 "data": function (d) {
-                    d.idLicitacion = "@Model.IdLicitacion";
+                    d.idPoliza = "@Model.IdPoliza";
                     d.NumeroActivo = $('#numeroActivoB').val();
                     d.codigoActivo = $('#codigoInternoB').val();
                 },
@@ -157,9 +157,9 @@
             if (a == true) {
                 $.ajax({
                     type: 'POST',
-                    url: '/Licitacion/AsociarActivo/',
+                    url: '/Seguro/AsociarActivo/',
                     data: {
-                        idLicitacion: "@Model.IdLicitacion",
+                        idPoliza: "@Model.IdPoliza",
                         activos: ids
                     },
                     success: function (data) {
