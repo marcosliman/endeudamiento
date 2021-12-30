@@ -1,16 +1,16 @@
 ﻿
 @{
-    ViewBag.Title = "Bancos";
+    ViewBag.Title = "Tipo Documento";
 }
 @{
-    var NombreMenu = "Bancos";
+    var NombreMenu = "TipoDocumento";
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
     var TieneCrear = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Crear);
     var TieneEditar = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Editar);
     var TieneEliminar = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Eliminar);
 }
 <div class="modal fade" id="modal-registro" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div id="editRegistro"></div>
         </div>
@@ -18,13 +18,62 @@
 </div>
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Mantención Bancos</h5>
+    <h5 class="h5 mb-0 text-gray-800">Mantención Tipos de Documento</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page">Mantención</li>
-        <li class="breadcrumb-item active" aria-current="page">Bancos</li>
+        <li class="breadcrumb-item active" aria-current="page">Tipos de Documento</li>
     </ol>
 </div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-outline card-red collapsed-card">
+            <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group form-group-sm">
+                    <div class="col-12 row">
+                          <div class="col-sm-4">
+                            @Html.DropDownList("categoria", (SelectList)ViewData["listaCategorias"], "--Seleccione Cliente--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                          </div>
+                        <div class="form-group form-group-sm col-sm-2">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-swatchbook text-red"></i>
+                                    </span>
+                                    <input type="text" class="form-control form-control-sm col-sm-12" placeholder="Ingrese Nombre Documento" id="documento" name="documento" value="" />
+                                </div>
+                               
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm col-sm-2">
+                            <select name="activo" id="activo" class="form-control form-control-sm">
+                                <option value="" selected>--Todos--</option>
+                                <option value="true">SI</option>
+                                <option value="false">NO</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm">
+                    <div class="col-sm-12">
+                        <button class="btn btn-primary btn-block" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 @if (TieneCrear == true)
 {
     <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
@@ -32,7 +81,7 @@
 
         </div>
         <div class="form-inline my-2 my-lg-0">
-            <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Banco</button>
+            <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Tipo Documento</button>
         </div>
     </nav>
 }
@@ -46,9 +95,8 @@
                     <thead class="thead-light">
                         <tr>
                             <th class="no-sort" width="2%"><i class="fa fa-user-edit text-grey"></i></th>
-                            <th width="10%">Código Banco</th>
-                            <th>Nombre Banco</th>
-                            <th>UrlLogo</th>
+                            <th>Categoria</th>
+                            <th>Nombre Tipo Documento</th>
                             <th>Activo</th>
                         </tr>
                     </thead>
@@ -56,8 +104,6 @@
                 </table>
 
             </div>
-
-
         </div>
     </div>
 
@@ -78,9 +124,11 @@
                 "retrieve": true,
                 'ajax': {
                     "type": "POST",
-                    "url": '/Bancos/Bancos_Read/0',
+                    "url": '/TipoDocumento/TipoDocumento_Read/0',
                     "data": function (d) {
-
+                        d.categoria = $("#categoria").val();
+                        d.documento = $("#documento").val();
+                        d.activo = $("#activo").val();
                     },
                     "dataSrc": ""
                 },
@@ -93,15 +141,14 @@
                            var boton = '';
                             var TieneEditar = '@TieneEditar';
                             if (TieneEditar == "True") {
-                                boton = '<a class="btn-primary btn-xs" href="JavaScript:CreateRegistro(\'' + o.IdBanco + '\')"><i class="fa fa-edit"></i></a> ';
+                                boton = '<a class="btn-primary btn-xs" href="JavaScript:CreateRegistro(' + o.IdTipoDocumento + ')" title="Eliminar"><i class="fa fa-edit"></i></a> ';
                             }
 
                             return boton;
                         }
                     },
-                    { "data": "CodBanco" },
-                    { "data": "NombreBanco" },
-                    { "data": "UrlLogo" },
+                    { "data": "NombreCategoriaDocumento" },
+                    { "data": "NombreTipoDocumento" },
                     {
                         "mData": null,
                         "mRender": function (o, type, row) {
@@ -118,10 +165,10 @@
             return table;
         }
 
-        function CreateRegistro(tmpIdBanco) {
+        function CreateRegistro(tmpIdTipoDocumento) {
             $('#modal-registro').modal('show');
             $.ajax({
-                url: "/Bancos/Create/" + tmpIdBanco,
+                url: "/TipoDocumento/Create/" + tmpIdTipoDocumento,
                 type: "Get",
                 data: {},
                 beforeSend: function () {

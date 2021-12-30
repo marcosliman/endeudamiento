@@ -1,46 +1,42 @@
-﻿@model modelo.Models.Local.Banco
+﻿@model modelo.Models.Local.TipoDocumento
 @{
-    ViewBag.Title = "Crear Banco";
+    ViewBag.Title = (Model.IdTipoDocumento > 0) ? "Editar Tipo Documento" : "Nuevo Tipo Documento";
+    ViewBag.ValueBoton = (Model.IdTipoDocumento > 0) ? "Editar" : "Crear";
 }
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
-@using (Ajax.BeginForm("Create", "Banco", new AjaxOptions
+@using (Ajax.BeginForm("CreateTipoDocumento", "TipoDocumento", new AjaxOptions
 {
     InsertionMode = InsertionMode.Replace,
     HttpMethod = "post",
     OnSuccess = "Success_dl",
     OnFailure = "Failure_dl"
 
-}, new { id = "frmEdit" , @class = "form-horizontal"}))
+}, new { id = "frmEdit", @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.IdBanco);
-    <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Nueva Empresa</h5>
+    @Html.HiddenFor(model => model.IdTipoDocumento);
+    <div class="modal-header bg-azulmarca">
+        <h5 class="modal-title" id="exampleModalLabel" style="color:white"><i class="fas fa-file-contract"></i> @ViewBag.Title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">       
+    <div class="modal-body">
         <div class="ml-2">
 
             <div class="form-group form-group-sm row">
-                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Nombre Banco</label>
-                <div class="col-6">
-                    @Html.EditorFor(model => model.NombreBanco, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                <label for="categoria" class="col-sm-3 col-form-label col-form-label-sm">Categoria</label>
+                <div class="col-sm-9">
+                    @Html.DropDownList("IdCategoriaDocumento", (SelectList)ViewData["listaCategoria"], "--Seleccione Categoria--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                 </div>
             </div>
+
             <div class="form-group form-group-sm row">
-                <label for="CtaVentas" class="col-sm-3 col-form-label col-form-label-sm">Código Banco</label>
-                <div class="col-6">
-                    @Html.EditorFor(model => model.CodBanco, new { htmlAttributes = new { @class = "form-control form-control-sm", MaxLength = "3" } })
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="AliasEmpresa" class="col-sm-3 col-form-label col-form-label-sm">Logo</label>
-                <div class="col-6">
-                    @Html.EditorFor(model => model.UrlLogo, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Nombre Tipo Documento</label>
+                <div class="col-9">
+                    @Html.EditorFor(model => model.NombreTipoDocumento, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
                 </div>
             </div>
             <div class="form-group form-group-sm row">
@@ -50,33 +46,33 @@
                     <label class="" for="Activo">Activo</label>
                 </div>
             </div>
-        </div>           
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary btn-sm">Crear</button>
+        <button type="submit" class="btn btn-primary btn-sm">@ViewBag.ValueBoton</button>
     </div>
 }
 <script>
     $(document).ready(function () {
-       
+
         $('#frmEdit').validate({
             debug: false,
             errorElement: "em",
             errorContainer: $("#warning")
-        });       
-        window.top.esconderCargando();           
+        });
+        window.top.esconderCargando();
     });
-    
-    function Success_dl(data) {        
+
+    function Success_dl(data) {
         esconderCargando();
         if (data.Estado == "0") {
-            toastr.success(data.Mensaje);            
+            toastr.success(data.Mensaje);
             $('#modal-registro').modal('hide');
             RefreshLista();
         }
         else {
-            toastr.error(data.Mensaje);           
+            toastr.error(data.Mensaje);
         }
     }
     function Failure_dl(data) {

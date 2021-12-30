@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Local\Activo.cs" />
+    <Compile Include="Models\Local\CategoriaDocumento.cs" />
     <Compile Include="Models\Local\Contrato.cs" />
     <Compile Include="Models\Local\ContratoActivo.cs" />
     <Compile Include="Models\Local\LicitacionActivo.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Models\Softland\OW_vsnpTraeOCDetalle.cs" />
     <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\TipoDoctoViewModel.cs" />
     <Compile Include="ViewModel\ContratoActivoViewModel.cs" />
     <Compile Include="ViewModel\ContratoDocumentoViewModel.cs" />
     <Compile Include="ViewModel\LicitacionOfertaViewModel.cs" />
