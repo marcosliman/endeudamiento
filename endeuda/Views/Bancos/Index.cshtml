@@ -18,23 +18,23 @@
 </div>
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Mantención Bancos</h5>
+    <h5 class="h5 mb-0 text-gray-800">Hola @seguridad.Nombre, </h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
         <li class="breadcrumb-item active" aria-current="page">Mantención</li>
         <li class="breadcrumb-item active" aria-current="page">Bancos</li>
     </ol>
 </div>
-@if (TieneCrear == true)
-{
-    <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-        <div class="form-inline my-2 my-lg-0">
+<h5 class="h5 mb-0 text-gray-800">Acá puedes crear y editar Bancos asociados</h5>
+<br>
+<nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+    <div class="form-inline my-2 my-lg-0">
 
-        </div>
-        <div class="form-inline my-2 my-lg-0">
-            <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Banco</button>
-        </div>
-    </nav>
+    </div>
+    <div class="form-inline my-2 my-lg-0">
+        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Banco</button>
+    </div>
+</nav>
 }
 <div class="row">
     <!-- Datatables -->
@@ -93,7 +93,7 @@
                            var boton = '';
                             var TieneEditar = '@TieneEditar';
                             if (TieneEditar == "True") {
-                                boton = '<a class="btn-primary btn-xs" href="JavaScript:CreateRegistro(\'' + o.IdBanco + '\')"><i class="fa fa-edit"></i></a> ';
+                                boton = '<a class="btn-primary btn-xs" href="JavaScript:CreateRegistro(\'' + o.IdBanco + '\')" title="Editar"><i class="fa fa-edit"></i></a> ';
                             }
 
                             return boton;

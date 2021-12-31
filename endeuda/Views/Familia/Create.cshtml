@@ -1,17 +1,12 @@
-﻿@model modelo.Models.Local.Banco
+﻿@model modelo.Models.Local.Familia
 @{
-    ViewBag.Title = (Model.IdBanco > 0) ? "Editar Banco" : "Nuevo Banco";
-    ViewBag.ValueBoton = (Model.IdBanco > 0) ? "Editar" : "Crear";
+    ViewBag.Title = (Model.IdFamilia > 0) ? "Editar Familia" : "Nueva Familia";
+    ViewBag.ValueBoton = (Model.IdFamilia > 0) ? "Editar" : "Crear";
 }
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
-
-
-
-
-
-@using (Ajax.BeginForm("Create", "Banco", new AjaxOptions
+@using (Ajax.BeginForm("CreateFamilia", "Familia", new AjaxOptions
 {
     InsertionMode = InsertionMode.Replace,
     HttpMethod = "post",
@@ -21,8 +16,8 @@
 }, new { id = "frmEdit", @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
-    @Html.HiddenFor(model => model.IdBanco);
-    <div class="modal-header">
+    @Html.HiddenFor(model => model.IdFamilia);
+    <div class="modal-header bg-azulmarca">
         <h5 class="modal-title" id="exampleModalLabel" style="color:white"><i class="fas fa-file-contract"></i> @ViewBag.Title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -31,22 +26,11 @@
     <div class="modal-body">
         <div class="ml-2">
 
+
             <div class="form-group form-group-sm row">
-                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Nombre Banco</label>
-                <div class="col-6">
-                    @Html.EditorFor(model => model.NombreBanco, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="CtaVentas" class="col-sm-3 col-form-label col-form-label-sm">Código Banco</label>
-                <div class="col-6">
-                    @Html.EditorFor(model => model.CodBanco, new { htmlAttributes = new { @class = "form-control form-control-sm", MaxLength = "3" } })
-                </div>
-            </div>
-            <div class="form-group form-group-sm row">
-                <label for="AliasEmpresa" class="col-sm-3 col-form-label col-form-label-sm">Logo</label>
-                <div class="col-6">
-                    @Html.EditorFor(model => model.UrlLogo, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Nombre Familia</label>
+                <div class="col-9">
+                    @Html.EditorFor(model => model.NombreFamilia, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
                 </div>
             </div>
             <div class="form-group form-group-sm row">
