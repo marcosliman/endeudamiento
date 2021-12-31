@@ -1,4 +1,4 @@
-﻿
+﻿@model modelo.Models.Local.Siniestro
 @{
     ViewBag.Title = "Registrar Siniestro";
 }
@@ -7,7 +7,7 @@
 }
 <div class="modal-content">
     <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Registrar Siniestro</h5>
+        <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Title</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -18,14 +18,7 @@
                 <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Activo con siniestro</label>
                     <div class="col-sm-3">
-                        <select name="activo" class="form-control">
-                            <option value="0">---Seleccione Activo---</option>
-                            <option value="1">Activo 1</option>
-                            <option value="2">Activo 2</option>
-                            <option value="3">Activo 3</option>
-                            <option value="4">Activo 4</option>
-                            <option value="5">Activo 5</option>
-                        </select>
+                        @Html.DropDownList("idPolizaActivo", (SelectList)ViewData["listaActivo"], "--Seleccione Activo--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                     </div>
                 </div>
                 <div class="form-group row">
@@ -61,23 +54,17 @@
                 <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Reclamada</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control form-control-sm" name="PerdidaReclamada" id="PerdidaReclamada" />
+                        @Html.DropDownList("idPerdidaReclamada", (SelectList)ViewData["listaReclamado"], "--Seleccione Perdida Reclamada--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                     </div>
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Determinada</label>
                     <div class="col-sm-3">
-                        <input type="text" class="form-control form-control-sm" name="PerdidaDeterminada" id="PerdidaDeterminada" />
+                        @Html.DropDownList("idPerdidaDeterminada", (SelectList)ViewData["listaDeterminado"], "--Seleccione Perdida Determinada--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Estado de Siniestro</label>
                     <div class="col-sm-3">
-                        <select name="activo" class="form-control">
-                            <option value="0">---Seleccione Estado---</option>
-                            <option value="1">Declarado</option>
-                            <option value="2">Entrega Documentación</option>
-                            <option value="3">Liquidación</option>
-                            <option value="4">Pago Indemnización</option>
-                        </select>
+                        @Html.DropDownList("idEstado", (SelectList)ViewData["listaEstado"], "--Seleccione Estado--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                     </div>
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Liquidador</label>
                     <div class="col-sm-3">

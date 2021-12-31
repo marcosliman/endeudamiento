@@ -29,47 +29,26 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-md-2">
-                        <select name="empresa" class="form-control">
-                            <option value="0">---Seleccione Empresa---</option>
-                            <option value="1">MAQSUR S.A.</option>
-                            <option value="2">BIOMASA</option>
-                            <option value="3">TECSUR</option>
-                            <option value="3">MQS</option>
-                            <option value="3">NOK</option>
-                        </select>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
-                        <select name="empresa" class="form-control">
-                            <option value="0">---Seleccione Aseguradora---</option>
-                            <option value="1">Aseguradora 1</option>
-                            <option value="2">Aseguradora 2</option>
-                            <option value="3">Aseguradora 3</option>
-                            <option value="3">Aseguradora 4</option>
-                            <option value="3">Aseguradora 5</option>
-                        </select>
+                        @Html.DropDownList("empresaAseguradoraB", (SelectList)ViewData["listaEmpresaAseguradora"], "--Seleccione Empresa Aseguradora--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
-                        <select name="empresa" class="form-control">
-                            <option value="0">---Seleccione Tipo---</option>
-                            <option value="1">Tipo 1</option>
-                            <option value="2">Tipo 2</option>
-                            <option value="3">Tipo 3</option>
-                            <option value="3">Tipo 4</option>
-                        </select>
+                        @Html.DropDownList("tipoSeguroB", (SelectList)ViewData["listaTipoSeguro"], "--Seleccione Tipo Seguro--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                     <div class="col-md-2">
-                        <input type="text" class="form-control" id="numeropoliza" placeholder="Número Póliza">
+                        <input type="text" class="form-control" id="numeroPolizaB" name="numeroPolizaB" placeholder="Número Poliza">
                     </div>
                     <div class="col-md-2">
-                        <input type="text" class="form-control" id="numeroactivo" placeholder="Número Activo">
+                        <input type="text" class="form-control" id="numeroActivoB" name="numeroActivoB" placeholder="Número Activo">
                     </div>
                     <div class="col-md-2">
                         <div class="row justify-content-end">
                             <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -105,15 +84,13 @@
                         </nav>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPolizaActivo" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
-                                <th class="no-sort" width="3%"><i class="fa fa-book-open"></i></th>
                                 <th class="no-sort" width="3%"><i class="fas fa-fire"></i></th>
                                 <th width="20%">Num. Poliza</th>
-                                <th width="30%">Descripción</th>
                                 <th>Tipo Seguro</th>
                                 <th>Aseguradora</th>
                                 <th>Monto Aseg.</th>
@@ -146,304 +123,7 @@
 
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>5 generadores y 3 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>2 generadores y 4 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>NOKS S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>3 generadores y 3 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>NOKS S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>2 generadores y 5 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>TEQS S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>1 generador y 4 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>BIOFISH S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>5 generadores y 3 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>2 generadores y 2 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>NOKS S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerSeguro"><i class="far fa-eye"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalEditarSeguro"><i class="fa fa-book-open"></i></button></td>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAgregarSiniestro"><i class="fas fa-fire"></i></button></td>
-                                <td>256-896-652</td>
-                                <td>5 generadores y 4 compresores</td>
-                                <td>Tipo 1</td>
-                                <td>Aseguradora 1</td>
-                                <td>18,250,000.00</td>
-                                <td>750,000.00</td>
-                                <td>12</td>
-                                <td>CLP</td>
-                                <td>30-09-2022</td>
-                                <td>XXXXXXXXXX</td>
-                                <td>YYYYYYYYYY</td>
-                                <td>01-09-2021</td>
-                                <td>BIOM S.A.</td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-
-                            </tr>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
 
@@ -452,76 +132,166 @@
         </div>
     </div>
 </div>
+<form name="frmPoliza" id="frmPoliza" method="post">
+    <input type="hidden" name="idPoliza" id="idPoliza" />
+</form>
 
+<div class="modal fade" id="ModalSiniestro" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="datosSiniestro"></div>
 
-<div class="modal fade" id="ModalEditarSeguro" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-editarseguro" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalEditarSeguro", null)
-    </div>
-</div>
-<div class="modal fade" id="ModalCargaMasiva" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-cargamasiva" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalCargaMasiva", null)
-    </div>
-</div>
-<div class="modal fade" id="ModalVerSeguro" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-verseguro" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalVerSeguro", null)
-    </div>
-</div>
-<div class="modal fade" id="ModalAgregarSiniestro" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-agregarsiniestro" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        @Html.Partial("ModalAgregarSiniestro", null)
+        </div>
     </div>
 </div>
 
 <script>
     $(document).ready(function () {
         AbrirMenu("SeguroBuscar");
+        initTable();
     });
-</script>
-@*
-    <script>
-        $(document).ready(function () {
-            $('#grillaProductos').DataTable({
-                "searching": false,
-                buttons: [],
-            });
-            AbrirMenu('ContratoBuscar');
-            $("#stockMaterial").hide();
-            $('#selectMaterial').select2({
-                placeholder: 'Busque Material',
-                language: "es",
-                minimumInputLength: 3,
-                data: data
-                /*ajax: {
-                    url: '/Producto/Productos_Read/',
-                    dataType: 'json'
-                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                }*/
-            });
-            $('#selectMaterial').on('select2:select', function (e) {
-                var data = e.params.data;
-                $("#stockMaterial").show();
-                $('#selectMaterial').val(null).trigger('change');
-            });
-        })
 
-        function abreMaterial() {
-            $("#datosBuscar").empty();
-            $('#crear-material').modal('show');
-            tmpUrl = "/Home/SolicitudCreaMaterial";
-            $.ajax({
-                url: tmpUrl,
-                type: "Get",
-                data: {},
-                success: function (data) {
-                    $("#datosBuscar").empty();
-                    $("#datosBuscar").html(data);
-                    esconderCargando();
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'ACTIVOS ',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)"
+            }
+        };
+        var table = $('#grillaPolizaActivo').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Activos",
+                    sheetName: "Activos"
+                })
+            ],
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Seguro/ListaSeguroBuscar_Read/',
+                "data": function (d) {
+                    d.idEmpresa = $('#empresaB').val();
+                    d.idEmpresaAseguradora = $('#empresaAseguradoraB').val();
+                    d.idTipoSeguro = $('#tipoSeguroB').val();
+                    d.numeroPoliza = $('#numeroPolizaB').val();
+                    d.numeroActivo = $('#numeroActivoB').val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [5,6],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
                 }
-            });
-        }
+            ],
 
-    </script>
-*@
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        //if (o.Editable == true) {
+                        var acciones = '<button class="btn btn-primary btn-sm" type="button" onclick="VerPoliza(' + o.IdPoliza + ')"><i class="far fa-eye"></i></button>';
+                        //}
+                        return acciones;
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        //if (o.Editable == true) {
+                        var acciones = '<button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#ModalSiniestro" onclick="RegistroSiniestro(' + o.IdPolizaActivo + ')"><i class="fas fa-fire"></i></button>';
+                        //}
+                        return acciones;
+                    }
+                },
+                { "data": "NumeroPoliza" },
+                { "data": "NombreTipoSeguro" },
+                { "data": "NombreEmpresaAseguradora" },
+                { "data": "MontoAsegurado" },
+                { "data": "PrimaMensual" },
+                { "data": "NumeroPagos" },
+                { "data": "NombreTipoMoneda" },
+                {
+                    data: {
+                        _: "FechaVencimientoStr",
+                        sort: "FechaVencimiento"
+                    }
+                },
+                { "data": "Beneficiario" },
+                { "data": "RutBeneficiario" },
+                {
+                    data: {
+                        _: "FechaEnvioBancoStr",
+                        sort: "FechaEnvioBanco"
+                    }
+                },
+                { "data": "RazonSocial" },
+                { "data": "NumeroInterno" },
+                { "data": "Familia" },
+                { "data": "NombreEstadoActivo" },
+                { "data": "Descripcion" },
+                { "data": "Patente" },
+                { "data": "Marca" },
+                { "data": "Modelo" },
+                { "data": "Motor" },
+                { "data": "Chasis" },
+                { "data": "Anio" },
+                { "data": "Grupo" },
+                { "data": "SubGrupo" },
+                { "data": "Valor" },
+                {
+                    data: {
+                        _: "FechaRegistroActivoStr",
+                        sort: "FechaRegistroActivo"
+                    }
+                },
+                { "data": "Glosa" },
+                {
+                    data: {
+                        _: "FechaBajaStr",
+                        sort: "FechaBaja"
+                    }
+                },
+                { "data": "NumeroLeasing" },
+                { "data": "FechaBajaStr" }
+            ]
+        });
+        return table;
+    }
+
+    function RegistroSiniestro(idPolizaActivo) {
+        url = "/Seguro/ModalAgregarSiniestro";
+        $.ajax({
+            url: url,
+            type: "Post",
+            data: { idPolizaActivo: idPolizaActivo },
+            beforeSend: function () {
+                $("#datosSiniestro").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosSiniestro").empty();
+                $("#datosSiniestro").html(data);
+            }
+        });
+    }
+
+</script>

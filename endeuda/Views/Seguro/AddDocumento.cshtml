@@ -238,13 +238,28 @@
             url: '/Seguro/ActivarPoliza/',
             data: { idPoliza: $("#idPolizaModal").val() },
             success: function (data) {
-                RefreshActivar();
+                SuccessActiva(data);
+                //RefreshActivar();
             },
             failure: function (data) {
-                Failure(data);
+                FailureActiva(data);
             }
         })
     });
+
+    function SuccessActiva(data) {
+        if (data.Estado == "0") {
+            RefreshActivar();
+        }
+        else {
+            $('#ConfirmActivar').modal('hide');
+            toastr.error(data.Mensaje);
+        }
+    }
+
+    function FailureActiva(data) {
+        toastr.error(data.Mensaje);
+    }
 
     function RefreshListaArchivo() {
         var table = archivosTable();

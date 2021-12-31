@@ -1040,7 +1040,7 @@ namespace tesoreria.Controllers
                                     IdActivo = ac.IdActivo,
                                     NumeroInterno = ac.NumeroInterno,
                                     CodSoftland = ac.CodSoftland,
-                                    Familia = ac.Familia,
+                                    Familia = (ac.Familia.NombreFamilia != null) ? ac.Familia.NombreFamilia : string.Empty,
                                     Archivos = (from d in db.ContratoActivoDocumento
                                                 join t in db.TipoDocumento on d.IdTipoDocumento equals t.IdTipoDocumento
                                                 where d.IdContratoActivo == rel.IdContratoActivo
@@ -1459,7 +1459,7 @@ namespace tesoreria.Controllers
                                     IdActivo = ac.IdActivo,
                                     NumeroInterno = ac.NumeroInterno,
                                     CodSoftland = ac.CodSoftland,
-                                    Familia = ac.Familia,
+                                    Familia = (ac.Familia.NombreFamilia != null) ? ac.Familia.NombreFamilia : string.Empty,
                                     Archivos = (from d in db.ContratoActivoDocumento
                                                 join t in db.TipoDocumento on d.IdTipoDocumento equals t.IdTipoDocumento
                                                 where d.IdContratoActivo == rel.IdContratoActivo

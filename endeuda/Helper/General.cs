@@ -24,6 +24,10 @@ namespace tesoreria.Helper
         public const int IdEmpresaPrincipal = 1;
     }
 
+    public enum TipoEstado : int
+    {
+        Siniestro = 7
+    }
     public enum Estado : int
     {
         //General

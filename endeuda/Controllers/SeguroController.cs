@@ -749,6 +749,8 @@ namespace tesoreria.Controllers
 
         #endregion
 
+        #region Buscar Seguro
+
         public ActionResult SeguroBuscar()
         {
             if (seguridad == null)
@@ -761,9 +763,131 @@ namespace tesoreria.Controllers
             }
             else
             {
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var empresaAseguradora = (from e in db.EmpresaAseguradora
+                                          where e.Activo == true
+                                          select new RetornoGenerico { Id = e.IdEmpresaAseguradora, Nombre = e.NombreEmpresaAseguradora }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresaAseguradora = new SelectList(empresaAseguradora.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresaAseguradora"] = listaEmpresaAseguradora;
+
+                var tipoSeguro = (from e in db.TipoSeguro
+                                  where e.Activo == true
+                                  select new RetornoGenerico { Id = e.IdTipoSeguro, Nombre = e.NombreTipoSeguro }).OrderBy(c => c.Id).ToList();
+                SelectList listaTipoSeguro = new SelectList(tipoSeguro.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaTipoSeguro"] = listaTipoSeguro;
                 return View();
             }
         }
+
+        public ActionResult ListaSeguroBuscar_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza, string numeroActivo)
+        {
+            var registro = (from p in db.Poliza.ToList()
+                            join e in db.Estado.ToList() on p.IdEstado equals e.IdEstado
+                            join rel in db.PolizaActivo.ToList() on p.IdPoliza equals rel.IdPoliza
+                            join a in db.Activo.ToList() on rel.IdActivo equals a.IdActivo
+                            where p.IdEmpresa == ((idEmpresa != null) ? idEmpresa : p.IdEmpresa)
+                            && p.IdEmpresaAseguradora == ((idEmpresaAseguradora != null) ? idEmpresaAseguradora : p.IdEmpresaAseguradora)
+                            && p.IdTipoSeguro == ((idTipoSeguro != null) ? idTipoSeguro : p.IdTipoSeguro)
+                            && p.NumeroPoliza == ((numeroPoliza != "") ? numeroPoliza : p.NumeroPoliza)
+                            select new PolizaActivoViewModel
+                            {
+                                IdPoliza = p.IdPoliza,
+                                NumeroPoliza = p.NumeroPoliza,
+                                NombreTipoSeguro = (p.TipoSeguro.NombreTipoSeguro != null) ? p.TipoSeguro.NombreTipoSeguro : string.Empty,
+                                NombreEmpresaAseguradora = (p.EmpresaAseguradora.NombreEmpresaAseguradora != null) ? p.EmpresaAseguradora.NombreEmpresaAseguradora : string.Empty,
+                                MontoAsegurado = p.MontoAsegurado,
+                                PrimaMensual = p.PrimaMensual,
+                                NumeroPagos = p.NumeroPagos,
+                                NombreTipoMoneda = (p.TipoMoneda.NombreTipoMoneda != null) ? p.TipoMoneda.NombreTipoMoneda : string.Empty,
+                                FechaVencimiento = p.FechaVencimiento,
+                                FechaVencimientoStr = p.FechaVencimiento.ToString("dd-MM-yyyy"),
+                                Beneficiario = p.Beneficiario,
+                                RutBeneficiario = p.RutBeneficiario,
+                                FechaEnvioBanco = p.FechaEnvioBanco,
+                                FechaEnvioBancoStr = p.FechaEnvioBanco.ToString("dd-MM-yyyy"),
+                                RazonSocial = p.Empresa.RazonSocial,
+
+                                IdPolizaActivo = rel.IdPolizaActivo,
+                                NumeroInterno = a.NumeroInterno,
+                                Familia = (a.Familia.NombreFamilia != null) ? a.Familia.NombreFamilia : string.Empty,
+                                NombreEstadoActivo = (a.Estado.NombreEstado != null) ? a.Estado.NombreEstado : string.Empty,
+                                Descripcion = a.Descripcion,
+                                Patente = a.Patente,
+                                Marca = a.Marca,
+                                Modelo = a.Modelo,
+                                Motor = a.Motor,
+                                Chasis = a.Chasis,
+                                Anio = a.Anio,
+                                Grupo = a.Grupo,
+                                SubGrupo = a.SubGrupo,
+                                Valor = a.Valor,
+                                FechaRegistroActivo = a.FechaRegistro,
+                                FechaRegistroActivoStr = "",
+                                Glosa = a.Glosa,
+                                FechaBaja = a.FechaBaja,
+                                FechaBajaStr = ""
+
+                            }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Siniestro
+        public ActionResult ModalAgregarSiniestro(int IdPolizaActivo)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                var siniestro = db.Siniestro.Where(c => c.IdPolizaActivo == IdPolizaActivo).FirstOrDefault();
+
+                if (siniestro == null) {
+                    siniestro = new Siniestro();
+                    siniestro.IdSiniestro = 0;
+                    siniestro.IdPolizaActivo = IdPolizaActivo;
+                    siniestro.IdPerdidaReclamada = 0;
+                    siniestro.IdPerdidaDeterminada = 0;
+                    siniestro.IdEstado = 0;
+                }
+
+                var activo = (from p in db.PolizaActivo
+                              join a in db.Activo on p.IdActivo equals a.IdActivo
+                                 where p.IdPolizaActivo == siniestro.IdPolizaActivo
+                                 select new RetornoGenerico { Id = p.IdPolizaActivo, Nombre = "Activo "+a.NumeroInterno.ToString() }).OrderBy(c => c.Id).ToList();
+                SelectList listaActivo = new SelectList(activo.OrderBy(c => c.Nombre), "Id", "Nombre", siniestro.IdPolizaActivo);
+                ViewData["listaActivo"] = listaActivo;
+
+                var reclamado = (from e in db.TipoPerdida
+                                  where e.Activo == true
+                                  select new RetornoGenerico { Id = e.IdTipoPerdida, Nombre = e.NombreTipoPerdida}).OrderBy(c => c.Id).ToList();
+                SelectList listaReclamado = new SelectList(reclamado.OrderBy(c => c.Nombre), "Id", "Nombre",siniestro.IdPerdidaReclamada);
+                ViewData["listaReclamado"] = listaReclamado;
+
+                var determinado = (from e in db.TipoPerdida
+                                 where e.Activo == true
+                                 select new RetornoGenerico { Id = e.IdTipoPerdida, Nombre = e.NombreTipoPerdida }).OrderBy(c => c.Id).ToList();
+                SelectList listaDeterminado = new SelectList(determinado.OrderBy(c => c.Nombre), "Id", "Nombre", siniestro.IdPerdidaDeterminada);
+                ViewData["listaDeterminado"] = listaDeterminado;
+
+                var estado = (from e in db.Estado
+                                   where e.IdTipoEstado == (int)Helper.TipoEstado.Siniestro
+                                   select new RetornoGenerico { Id = e.IdEstado, Nombre = e.NombreEstado }).OrderBy(c => c.Id).ToList();
+                SelectList listaEstado = new SelectList(estado.OrderBy(c => c.Nombre), "Id", "Nombre", siniestro.IdEstado);
+                ViewData["listaEstado"] = listaEstado;
+
+                return View(siniestro);
+            }
+        }
+        #endregion
 
         public ActionResult ModalBuscarActivo()
         {
@@ -819,66 +943,10 @@ namespace tesoreria.Controllers
             }
             else
             {
-                var empresa = (from e in db.Empresa
-                               where e.Activo == true
-                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
-                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
-                ViewData["listaEmpresa"] = listaEmpresa;
 
-                var empresaAseguradora = (from e in db.EmpresaAseguradora
-                                          where e.Activo == true
-                                          select new RetornoGenerico { Id = e.IdEmpresaAseguradora, Nombre = e.NombreEmpresaAseguradora }).OrderBy(c => c.Id).ToList();
-                SelectList listaEmpresaAseguradora = new SelectList(empresaAseguradora.OrderBy(c => c.Nombre), "Id", "Nombre");
-                ViewData["listaEmpresaAseguradora"] = listaEmpresaAseguradora;
-
-                var tipoSeguro = (from e in db.TipoSeguro
-                                  where e.Activo == true
-                                  select new RetornoGenerico { Id = e.IdTipoSeguro, Nombre = e.NombreTipoSeguro }).OrderBy(c => c.Id).ToList();
-                SelectList listaTipoSeguro = new SelectList(tipoSeguro.OrderBy(c => c.Nombre), "Id", "Nombre");
-                ViewData["listaTipoSeguro"] = listaTipoSeguro;
                 return View();
             }
         }
 
-        /*public ActionResult ListaSeguroBuscar_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza, string numeroActivo)
-        {
-            var registro = (from p in db.Poliza.ToList()
-                            join e in db.Estado.ToList() on p.IdEstado equals e.IdEstado
-                            join rel in db.PolizaActivo.ToList() on p.IdPoliza equals rel.IdPoliza
-                            join a in db.Activo.ToList() on rel.IdActivo equals a.IdActivo
-                            where p.IdEmpresa == ((idEmpresa != null) ? idEmpresa : p.IdEmpresa)
-                            && p.IdEmpresaAseguradora == ((idEmpresaAseguradora != null) ? idEmpresaAseguradora : p.IdEmpresaAseguradora)
-                            && p.IdTipoSeguro == ((idTipoSeguro != null) ? idTipoSeguro : p.IdTipoSeguro)
-                            && p.NumeroPoliza == ((numeroPoliza != "") ? numeroPoliza : p.NumeroPoliza)
-                            select new PolizaViewModel
-                            {
-                                IdPoliza = p.IdPoliza,
-                                NumeroPoliza = p.NumeroPoliza,
-                                RazonSocial = p.Empresa.RazonSocial,
-                                NombreTipoSeguro = p.TipoSeguro.NombreTipoSeguro,
-                                NombreEmpresaAseguradora = p.EmpresaAseguradora.NombreEmpresaAseguradora,
-                                Beneficiario = p.Beneficiario,
-                                RutBeneficiario = p.RutBeneficiario,
-                                MontoAsegurado = p.MontoAsegurado,
-                                FechaVencimiento = p.FechaVencimiento,
-                                FechaVencimientoStr = p.FechaVencimiento.ToString("dd-MM-yyyy"),
-                                PuedeEliminar = (p.IdEstado != (int)Helper.Estado.PolCreado) ? false : true,
-                                ActivoViewModel = a.Familia
-                            }).AsEnumerable().ToList();
-
-            return Json(registro, JsonRequestBehavior.AllowGet);
-        }*/
-
-        public ActionResult ModalAgregarSiniestro()
-        {
-            if (seguridad == null)
-            {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else
-            {
-                return View();
-            }
-        }
     }
 }
