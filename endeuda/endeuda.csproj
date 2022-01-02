@@ -27,7 +27,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <Use64BitIISExpress />
+    <Use64BitIISExpress>false</Use64BitIISExpress>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
   </PropertyGroup>
@@ -39,6 +39,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -247,6 +248,9 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BancosController.cs" />
+    <Compile Include="Controllers\TipoPerdidaController.cs" />
+    <Compile Include="Controllers\TipoSeguroController.cs" />
+    <Compile Include="Controllers\FamiliaController.cs" />
     <Compile Include="Controllers\FuncionesGeneralesController.cs" />
     <Compile Include="Controllers\ActivoController.cs" />
     <Compile Include="Controllers\MutuoController.cs" />
@@ -259,6 +263,8 @@
     <Compile Include="Controllers\PerfilController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContratoController.cs" />
+    <Compile Include="Controllers\CategoriaDocumentoController.cs" />
+    <Compile Include="Controllers\TipoDocumentoController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -2923,6 +2929,16 @@
     <Content Include="Views\Seguro\AddSeguro.cshtml" />
     <Content Include="Views\Seguro\ModalAsociarActivo.cshtml" />
     <Content Include="Views\Seguro\AddDocumento.cshtml" />
+    <Content Include="Views\TipoDocumento\Create.cshtml" />
+    <Content Include="Views\TipoDocumento\Index.cshtml" />
+    <Content Include="Views\CategoriaDocumento\Create.cshtml" />
+    <Content Include="Views\CategoriaDocumento\Index.cshtml" />
+    <Content Include="Views\Familia\Create.cshtml" />
+    <Content Include="Views\Familia\Index.cshtml" />
+    <Content Include="Views\TipoSeguro\Create.cshtml" />
+    <Content Include="Views\TipoSeguro\Index.cshtml" />
+    <Content Include="Views\TipoPerdida\Create.cshtml" />
+    <Content Include="Views\TipoPerdida\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

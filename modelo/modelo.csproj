@@ -107,6 +107,8 @@
     <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\CatDoctoViewModel.cs" />
+    <Compile Include="ViewModel\TipoPerdidaViewModel.cs" />
+    <Compile Include="ViewModel\TipoSeguroViewModel.cs" />
     <Compile Include="ViewModel\FamiliaViewModel.cs" />
     <Compile Include="ViewModel\PolizaActivoViewModel.cs" />
     <Compile Include="ViewModel\TipoDoctoViewModel.cs" />
