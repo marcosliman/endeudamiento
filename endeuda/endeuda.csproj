@@ -250,6 +250,7 @@
     <Compile Include="Controllers\BancosController.cs" />
     <Compile Include="Controllers\TipoPerdidaController.cs" />
     <Compile Include="Controllers\TipoSeguroController.cs" />
+    <Compile Include="Controllers\CategoriaDocumentoController.cs" />
     <Compile Include="Controllers\FamiliaController.cs" />
     <Compile Include="Controllers\FuncionesGeneralesController.cs" />
     <Compile Include="Controllers\ActivoController.cs" />
