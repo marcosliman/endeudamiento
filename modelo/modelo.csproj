@@ -58,6 +58,7 @@
     <Compile Include="Models\Local\CategoriaDocumento.cs" />
     <Compile Include="Models\Local\Contrato.cs" />
     <Compile Include="Models\Local\ContratoActivo.cs" />
+    <Compile Include="Models\Local\SiniestroDocumento.cs" />
     <Compile Include="Models\Local\Siniestro.cs" />
     <Compile Include="Models\Local\Poliza.cs" />
     <Compile Include="Models\Local\PolizaDocumento.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\CatDoctoViewModel.cs" />
+    <Compile Include="ViewModel\SiniestroDocumentoViewModel.cs" />
+    <Compile Include="ViewModel\SiniestroViewModel.cs" />
     <Compile Include="ViewModel\TipoPerdidaViewModel.cs" />
     <Compile Include="ViewModel\TipoSeguroViewModel.cs" />
     <Compile Include="ViewModel\FamiliaViewModel.cs" />

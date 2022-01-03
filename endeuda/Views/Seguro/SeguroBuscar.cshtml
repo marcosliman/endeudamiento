@@ -16,7 +16,7 @@
 <br />
 
 
-<div class="row">
+
     <div class="card col-lg-12">
         <div class="card card-outline card-info collapsed-card">
             <div class="card-header">
@@ -145,6 +145,14 @@
     </div>
 </div>
 
+<div class="modal fade" id="ModalVistaPoliza" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="datosPoliza"></div>
+
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function () {
         AbrirMenu("SeguroBuscar");
@@ -207,7 +215,7 @@
                     "mRender": function (o, type, row) {
                         var acciones = '';
                         //if (o.Editable == true) {
-                        var acciones = '<button class="btn btn-primary btn-sm" type="button" onclick="VerPoliza(' + o.IdPoliza + ')"><i class="far fa-eye"></i></button>';
+                        var acciones = '<button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#ModalVistaPoliza" onclick="VistaPoliza(' + o.IdPoliza + ')"><i class="far fa-eye"></i></button>';
                         //}
                         return acciones;
                     }
@@ -218,7 +226,7 @@
                     "mRender": function (o, type, row) {
                         var acciones = '';
                         //if (o.Editable == true) {
-                        var acciones = '<button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#ModalSiniestro" onclick="RegistroSiniestro(' + o.IdPolizaActivo + ')"><i class="fas fa-fire"></i></button>';
+                        var acciones = '<button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#ModalSiniestro" onclick="RegistroSiniestro(' + o.IdPolizaActivo + ', ' + o.IdSiniestro + ')"><i class="fas fa-fire"></i></button>';
                         //}
                         return acciones;
                     }
@@ -278,18 +286,35 @@
         return table;
     }
 
-    function RegistroSiniestro(idPolizaActivo) {
+    function RegistroSiniestro(idPolizaActivo,idSiniestro) {
         url = "/Seguro/ModalAgregarSiniestro";
         $.ajax({
             url: url,
             type: "Post",
-            data: { idPolizaActivo: idPolizaActivo },
+            data: {
+                idPolizaActivo: idPolizaActivo,
+                idSiniestro: idSiniestro},
             beforeSend: function () {
                 $("#datosSiniestro").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
             },
             success: function (data) {
                 $("#datosSiniestro").empty();
                 $("#datosSiniestro").html(data);
+            }
+        });
+    }
+
+    function VistaPoliza(idPoliza) {
+        $.ajax({
+            url: "/Seguro/ModalVistaSeguro",
+            type: "Post",
+            data: { idPoliza: idPoliza },
+            beforeSend: function () {
+                $("#datosPoliza").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosPoliza").empty();
+                $("#datosPoliza").html(data);
             }
         });
     }

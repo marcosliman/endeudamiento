@@ -27,7 +27,8 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <Use64BitIISExpress>false</Use64BitIISExpress>
+    <Use64BitIISExpress>
+    </Use64BitIISExpress>
     <TypeScriptToolsVersion>3.1</TypeScriptToolsVersion>
     <WebGreaseLibPath>..\packages\WebGrease.1.5.2\lib</WebGreaseLibPath>
   </PropertyGroup>
@@ -250,7 +251,6 @@
     <Compile Include="Controllers\BancosController.cs" />
     <Compile Include="Controllers\TipoPerdidaController.cs" />
     <Compile Include="Controllers\TipoSeguroController.cs" />
-    <Compile Include="Controllers\CategoriaDocumentoController.cs" />
     <Compile Include="Controllers\FamiliaController.cs" />
     <Compile Include="Controllers\FuncionesGeneralesController.cs" />
     <Compile Include="Controllers\ActivoController.cs" />
@@ -264,7 +264,6 @@
     <Compile Include="Controllers\PerfilController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContratoController.cs" />
-    <Compile Include="Controllers\CategoriaDocumentoController.cs" />
     <Compile Include="Controllers\TipoDocumentoController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
@@ -2940,6 +2939,11 @@
     <Content Include="Views\TipoSeguro\Index.cshtml" />
     <Content Include="Views\TipoPerdida\Create.cshtml" />
     <Content Include="Views\TipoPerdida\Index.cshtml" />
+    <Content Include="Views\Seguro\AddSiniestro.cshtml" />
+    <Content Include="Views\Seguro\AddDocumentoSiniestro.cshtml" />
+    <Content Include="Views\Seguro\ModalVistaSeguro.cshtml" />
+    <Content Include="Views\Seguro\VistaSeguro.cshtml" />
+    <Content Include="Views\Seguro\VistaDocumentoSeguro.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -49,5 +49,6 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.TipoMoneda> TipoMoneda { get; set; }
         public System.Data.Entity.DbSet<Local.Siniestro> Siniestro { get; set; }
         public System.Data.Entity.DbSet<Local.TipoPerdida> TipoPerdida { get; set; }
+        public System.Data.Entity.DbSet<Local.SiniestroDocumento> SiniestroDocumento { get; set; }
     }
 }

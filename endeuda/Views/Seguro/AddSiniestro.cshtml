@@ -1,0 +1,205 @@
+﻿@model modelo.ViewModel.SiniestroViewModel
+@{
+    ViewBag.Title = "Registrar Contrato Leasing";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@if (Model.IdEstado == (int)tesoreria.Helper.Estado.ConActivo) {
+    <div class="alert alert-success">
+        <h5><i class="icon fas fa-check"></i>Contrato Activado</h5>
+    </div>
+}
+    <div class="card-body">
+
+        @using (Ajax.BeginForm("GrabarSiniestro", "Seguro", new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "post",
+            OnSuccess = "Success_dl",
+            OnFailure = "Failure_dl"
+
+        }, new { id = "frmSiniestro", @class = "form-horizontal" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="idSiniestro" id="idSiniestroA" value="@Model.IdSiniestro" />
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Activo con siniestro</label>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("idPolizaActivo", (SelectList)ViewData["listaActivo"], "--Seleccione Activo--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Número de Liquidación</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="numeroLiquidacion" id="numeroLiquidacion" value="@Model.NumeroLiquidacion" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Monto de Liquidación</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm numberMiles" name="montoLiquidacion" id="montoLiquidacion" value="@Model.MontoLiquidacion" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha Declaración</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm classFecha" name="fechaDeclaracion" id="fechaDeclaracion" value="@Model.FechaDeclaracion" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Número de Siniestro</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="numeroSiniestro" id="numeroSiniestro" value="@Model.NumeroSiniestro" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha de Siniestro</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm classFecha" name="fechaSiniestro" id="fechaSiniestro" value="@Model.FechaSiniestro" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Detalle de Siniestro</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="detalleSiniestro" id="detalleSiniestro" value="@Model.DetalleSiniestro" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Reclamada</label>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("idPerdidaReclamada", (SelectList)ViewData["listaReclamado"], "--Seleccione Perdida Reclamada--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Determinada</label>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("idPerdidaDeterminada", (SelectList)ViewData["listaDeterminado"], "--Seleccione Perdida Determinada--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Estado de Siniestro</label>
+                    <div class="col-sm-3">
+                        @Html.DropDownList("idEstado", (SelectList)ViewData["listaEstado"], "--Seleccione Estado--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Liquidador</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control form-control-sm" name="liquidador" id="liquidador" value="@Model.Liquidador" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Infraseguro</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" name="Infraseguro" id="Infraseguro" value="@Model.Infraseguro" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Deducible</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm numberMiles" name="deducible" id="deducible" value="@Model.Deducible" />
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Indemnización</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm numberMiles" name="indemnizacion" id="indemnizacion" value="@Model.Indemnizacion" />
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" onclick="Cerrar()" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+                @if (Model.ExisteSiniestro == "S")
+                {
+                    <button type="button" name="btnEliminar" id="btnEliminar" onclick="ElininarSiniestro()" class="btn btn-danger btn-sm float-right">Eliminar Siniestro</button>
+
+                }
+                <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarSiniestro()" class="btn btn-primary btn-sm float-right">@Model.TituloBoton</button>
+            </div>
+        }
+
+    </div>
+<form name="frmSiniestroAcc" id="frmSiniestroAcc" method="post">
+    <input type="hidden" name="idSiniestro" id="idSiniestroAcc" />
+</form>
+<script>
+    $(document).ready(function () {
+        $('.classFecha').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: "es"
+        });
+        $('#frmSiniestro').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning"),
+            rules: {
+                numeroLiquidacion: { required: true },
+                montoLiquidacion: { required: true, digits: true },
+                fechaDeclaracion: { required: true },
+                numeroSiniestro: { required: true },
+                fechaSiniestro: { required: true },
+                detalleSiniestro: { required: true },
+                idPerdidaReclamada: { required: true },
+                idPerdidaDeterminada: { required: true },
+                idEstado: { required: true },
+                Liquidador: { required: true },
+                Infraseguro: { required: true },
+                Deducible: { required: true, digits: true },
+                Indemnizacion: { required: true, digits: true }
+            }
+        });
+    });
+
+    function GrabarSiniestro() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''))
+        });
+        if ($('#frmSiniestro').valid()) {
+            $.ajax({
+                type: 'POST',
+                url: '/Seguro/GrabarSiniestro/',
+                data: $("#frmSiniestro").serialize(),
+                success: function (data) {
+                    Success(data);
+                },
+                failure: function (data) {
+                    Failure(data);
+                }
+            })
+
+        }
+    }
+
+    function Success(data) {
+        if (data.result.Estado == "0") {
+            toastr.success(data.result.Mensaje);
+            //if (data.result.tipoAccion == "G") {
+            //$('#ModalReserva').modal('hide');
+            RegistroSiniestro(data.result.idPolizaActivo, data.result.idSiniestro);
+            RefreshLista();
+            //}
+            //setTimeout(function(){ Refresh(); }, 3000);
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+        }
+    }
+
+    function Failure(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
+    }
+
+    function ElininarSiniestro() {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                url: "/Seguro/DeleteSiniestro",
+                type: "Post",
+                data: {idSiniestro: $("#idSiniestroA").val()},
+                success: function (data) {
+                    toastr.success(data.Mensaje);
+                    Cerrar();
+                    RefreshLista();
+                },
+                failure: function (data) {
+                    toastr.error(data.Mensaje);
+                }
+            });
+        }
+    }
+
+    function RefreshListaActivo() {
+        var table = initTableActivo();
+        table.ajax.reload(function (json) { });
+    }
+
+
+</script>

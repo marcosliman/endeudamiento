@@ -33,6 +33,7 @@ namespace modelo.ViewModel
         public int IdUsuarioRegistro { get; set; }
 
         public int? IdPolizaActivo { get; set; }
+        public int? IdSiniestro { get; set; }
         public int? NumeroInterno { get; set; }
         public string CodSoftland { get; set; }
         public int? IdFamilia { get; set; }
