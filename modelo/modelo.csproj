@@ -67,7 +67,6 @@
     <Compile Include="Models\Local\LicitacionOfertaDocumento.cs" />
     <Compile Include="Models\Local\LicitacionOferta.cs" />
     <Compile Include="Models\Local\Licitacion.cs" />
-    <Compile Include="Models\Local\TipoContrato.cs" />
     <Compile Include="Models\Local\TipoEstado.cs" />
     <Compile Include="Models\Local\Banco.cs" />
     <Compile Include="Models\Local\TipoDocumento.cs" />
@@ -112,6 +111,7 @@
     <Compile Include="ViewModel\SiniestroDocumentoViewModel.cs" />
     <Compile Include="ViewModel\SiniestroViewModel.cs" />
     <Compile Include="ViewModel\ConsolidadoLeasingViewModel.cs" />
+>>>>>>> parent of b620cd3 (ReporteConsolidado Leasing)
     <Compile Include="ViewModel\TipoPerdidaViewModel.cs" />
     <Compile Include="ViewModel\TipoSeguroViewModel.cs" />
     <Compile Include="ViewModel\FamiliaViewModel.cs" />
