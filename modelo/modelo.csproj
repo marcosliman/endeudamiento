@@ -109,12 +109,9 @@
     <Compile Include="Models\Softland\OW_vsnpTraeOCEncabezado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\CatDoctoViewModel.cs" />
-<<<<<<< Updated upstream
     <Compile Include="ViewModel\SiniestroDocumentoViewModel.cs" />
     <Compile Include="ViewModel\SiniestroViewModel.cs" />
-=======
     <Compile Include="ViewModel\ConsolidadoLeasingViewModel.cs" />
->>>>>>> Stashed changes
     <Compile Include="ViewModel\TipoPerdidaViewModel.cs" />
     <Compile Include="ViewModel\TipoSeguroViewModel.cs" />
     <Compile Include="ViewModel\FamiliaViewModel.cs" />
