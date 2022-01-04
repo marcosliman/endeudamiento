@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
+using System.Globalization;
 namespace tesoreria.Controllers
 {
     public class ReportesController : Controller
@@ -28,8 +29,9 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
-        public ActionResult ConsolidadoLeasing_Read()
+        public ActionResult ConsolidadoDeudaLeasing_Read()
         {
+           
             var registro = (from Con in db.Contrato
                             join TCon in db.TipoContrato on Con.IdTipoContrato equals TCon.IdTipoContrato
                             join ConAct in db.ContratoActivo on Con.IdContrato equals ConAct.IdContrato
@@ -47,47 +49,22 @@ namespace tesoreria.Controllers
                                 RazonSocial = Emp.RazonSocial,
                                 NombreBanco = Bco.NombreBanco,
                                 NumeroContrato = Con.NumeroContrato,
-                                IdBanco = Con.IdBanco,
-                                DescActivo = Act.Descripcion,
+                                NombreFamilia = Act.Familia.NombreFamilia,
+                                DescripcionActivo = Act.Descripcion,
                                 Plazo = Con.Plazo,
-                                Monto = Con.Monto,
-                                TasaAnual = Con.TasaAnual,
-                                TasaMensual = Con.TasaMensual,
                                 FechaInicio = Con.FechaInicio,
                                 FechaTermino = Con.FechaTermino,
+                                Total = Math.Round(Con.Monto, 2),
+                                TasaAnual = Con.TasaAnual,
                                 PuedeEliminar = (Con.IdEstado != (int)Helper.Estado.ConCreado) ? false : true,
                                 NombreEstado = Est.NombreEstado
                             }).AsEnumerable().ToList();
+            
+            var listaretorno = registro.GroupBy(c => new { c.IdContrato, c.RazonSocial, c.NombreBanco, c.NumeroContrato, c.NombreFamilia,c.DescripcionActivo,c.Plazo,c.FechaInicio,c.FechaTermino,c.Total })
+                .Select(c => new { c.Key.IdContrato, c.Key.RazonSocial,c.Key.NombreBanco,c.Key.NumeroContrato,c.Key.NombreFamilia,c.Key.DescripcionActivo,c.Key.Plazo,c.Key.FechaInicio,c.Key.FechaTermino,Total = c.Sum(x => x.Monto)}).ToList();
 
-            foreach (var reg in registro)
-            {
-                var activo = (from ca in db.ContratoActivo
-                              join a in db.Activo on ca.IdActivo equals a.IdActivo
-                              join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
-                              from fv in fw.DefaultIfEmpty()
-                              where ca.IdContrato == reg.IdContrato
-                              select new { fv.NombreFamilia } into x
-                              group x by new { x.NombreFamilia } into g
-                              select new
-                              {
-                                  cont = g.Count(),
-                                  g.Key.NombreFamilia
-                              }).ToList();
 
-                var desc = "";
-                if (activo != null)
-                {
-                    foreach (var a in activo)
-                    {
-                        desc += a.cont.ToString() + " " + a.NombreFamilia + ", ";
-                    }
-
-                }
-
-                reg.Descripcion = desc;
-            }
-
-            return Json(registro, JsonRequestBehavior.AllowGet);
+            return Json(listaretorno, JsonRequestBehavior.AllowGet);
         }
         public ActionResult ConsolidadoDeudaCreditosCon()
         {

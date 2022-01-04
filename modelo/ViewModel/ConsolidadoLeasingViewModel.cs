@@ -4,11 +4,14 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using modelo.Models.Local;
 
 namespace modelo.ViewModel
 {
     public class ConsolidadoLeasingViewModel
     {
+        public Familia Familia;
+
         public int IdContrato { get; set; }
         public int IdTipoContrato { get; set; }
         public int? IdLicitacionOferta { get; set; }
@@ -26,6 +29,8 @@ namespace modelo.ViewModel
         public double? TasaAnual { get; set; }
         public int? Plazo { get; set; }
         public double? Monto { get; set; }
+        public double? Total { get; set; }
+        
         public DateTime FechaInicio { get; set; }
         public string FechaInicioStr { get; set; }
         public DateTime FechaTermino { get; set; }
@@ -38,8 +43,10 @@ namespace modelo.ViewModel
         public string TituloBoton { get; set; }
         public string EsLicitacion { get; set; }
         public bool PuedeEliminar { get; set; }
-        public string Descripcion { get; set; }
-        public string DescActivo { get; set; }
+        public string DescripcionActivo { get; set; }
+        public int IdFamilia { get; set; }
+        public string NombreFamilia { get; set; }
+
     }
 
 }
