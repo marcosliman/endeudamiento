@@ -33,6 +33,7 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.LicitacionOfertaDocumento> LicitacionOfertaDocumento { get; set; }
 
         public System.Data.Entity.DbSet<Local.Contrato> Contrato { get; set; }
+        public System.Data.Entity.DbSet<Local.TipoContrato> TipoContrato { get; set; }
         public System.Data.Entity.DbSet<Local.ContratoActivo> ContratoActivo { get; set; }
         public System.Data.Entity.DbSet<Local.TipoImpuesto> TipoImpuesto { get; set; }
         public System.Data.Entity.DbSet<Local.TipoDocumento> TipoDocumento { get; set; }
