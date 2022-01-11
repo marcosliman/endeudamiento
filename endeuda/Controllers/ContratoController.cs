@@ -1283,7 +1283,10 @@ namespace tesoreria.Controllers
                 var desc = "";
                 if (activo != null) {
                     foreach (var a in activo) {
-                        desc += a.cont.ToString() + " " + a.NombreFamilia + ", ";
+                        desc += a.cont.ToString() + " " + ((a.NombreFamilia!=null)? a.NombreFamilia:"Familia No asociada") + ", ";
+
+                       
+
                     }
                     
                 }

@@ -36,6 +36,8 @@ namespace tesoreria.Controllers
                             join TCon in db.TipoContrato on Con.IdTipoContrato equals TCon.IdTipoContrato
                             join ConAct in db.ContratoActivo on Con.IdContrato equals ConAct.IdContrato
                             join Act in db.Activo on ConAct.IdActivo equals Act.IdActivo
+                            join Fam in db.Familia on Act.IdFamilia equals Fam.IdFamilia into t_fam
+                            from l_fam in t_fam.DefaultIfEmpty()
                             join Emp in db.Empresa on Con.IdEmpresa equals Emp.IdEmpresa
                             join Bco in db.Banco on Con.IdBanco equals Bco.IdBanco
                             join Est in db.Estado on Con.IdEstado equals Est.IdEstado
@@ -49,7 +51,7 @@ namespace tesoreria.Controllers
                                 RazonSocial = Emp.RazonSocial,
                                 NombreBanco = Bco.NombreBanco,
                                 NumeroContrato = Con.NumeroContrato,
-                                NombreFamilia = Act.Familia.NombreFamilia,
+                                NombreFamilia = (l_fam != null) ? l_fam.NombreFamilia : "Familia No Asociada",
                                 DescripcionActivo = Act.Descripcion,
                                 Plazo = Con.Plazo,
                                 FechaInicio = Con.FechaInicio,
