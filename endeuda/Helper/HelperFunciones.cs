@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Web;
 
-namespace bodega.Helper
+namespace tesoreria.Helper
 {
     public class HelperFunciones
     {

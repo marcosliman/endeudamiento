@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
+using tesoreria.Helper;
 namespace tesoreria.Controllers
 {
     public class UsuarioController : Controller
@@ -35,7 +36,7 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
-            Usuario registro = new Usuario();
+            modelo.Models.Local.Usuario registro = new modelo.Models.Local.Usuario();
             registro.Activo = true;
             if (id != null)
             {
@@ -47,7 +48,7 @@ namespace tesoreria.Controllers
             }
             var perfiles = (from p in db.Perfil.ToList()
                             join up in db.UsuarioPerfil.Where(x => x.IdUsuario == id) on p.IdPerfil equals up.IdPerfil into t_up
-                            from l_up in t_up.DefaultIfEmpty()                            
+                            from l_up in t_up.DefaultIfEmpty()
                             select new RetornoGenerico
                             {
                                 Id = (int)p.IdPerfil,
@@ -59,20 +60,20 @@ namespace tesoreria.Controllers
             //SelectList listaperfil = new SelectList(perfiles.OrderBy(c => c.Nombre), "Id", "Nombre");
             ViewData["listaPerfiles"] = perfiles;
 
-           
+
             return View(registro);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult Create(Usuario registro, int[] perfiles)
+        public JsonResult Create(modelo.Models.Local.Usuario registro, int[] perfiles)
         {
+
             dynamic showMessageString = string.Empty;
             var valido = true;
-            Usuario registroEdit = new Usuario();
+            modelo.Models.Local.Usuario registroEdit = new modelo.Models.Local.Usuario();
             if (registro.IdUsuario > 0)
             {
-                showMessageString = new { Estado = 0, Mensaje = "Usuario Actualizado" };                              
-                
+                showMessageString = new { Estado = 0, Mensaje = "Usuario Actualizado" };
                 registroEdit = db.Usuario.Find(registro.IdUsuario);
                 if (registroEdit != null)
                 {
@@ -80,24 +81,31 @@ namespace tesoreria.Controllers
                     {
                         registroEdit.Clave = Crypto.Hash(registro.Clave);
                     }
-                    registroEdit.RutUsuario = registro.RutUsuario.ToUpper();
+                    registroEdit.RutUsuario = registro.RutUsuario;
                     registroEdit.NombreUsuario = registro.NombreUsuario;
                     registroEdit.ApellidoUsuario = registro.ApellidoUsuario;
-                    registroEdit.CorreoElectronico = registro.CorreoElectronico;
+                    var emailExiste = db.Usuario.Where(c => c.CorreoElectronico.ToUpper() == registro.CorreoElectronico.ToUpper() && c.IdUsuario != registro.IdUsuario).FirstOrDefault();
+                    if (emailExiste != null)
+                    {
+                        showMessageString = new { Estado = 0, Mensaje = "Usuario Actualizado, menos el correo (asociado a otro usuario)" };
+                    }
+                    else
+                    {
+                        registroEdit.CorreoElectronico = registro.CorreoElectronico;
+                    }
                     registroEdit.Activo = registro.Activo;
                 }
-                
             }
             else
             {
-                var mensajeRetorno = "";                
+                var mensajeRetorno = "";
                 var rutExiste = db.Usuario.Where(c => c.RutUsuario.Replace("-", "").Replace(".", "").ToUpper() == registro.RutUsuario.Replace("-", "").Replace(".", "").ToUpper()).FirstOrDefault();
                 if (rutExiste != null)
                 {
                     mensajeRetorno = "Rut ya existe en el sistema";
                     valido = false;
                 }
-                var emailExiste = db.Usuario.Where(c => c.CorreoElectronico.ToUpper() == registro.CorreoElectronico.ToUpper()).FirstOrDefault(); 
+                var emailExiste = db.Usuario.Where(c => c.CorreoElectronico.ToUpper() == registro.CorreoElectronico.ToUpper()).FirstOrDefault();
                 if (emailExiste != null)
                 {
                     mensajeRetorno = (mensajeRetorno == "") ? mensajeRetorno : mensajeRetorno + "<br>";
@@ -110,6 +118,7 @@ namespace tesoreria.Controllers
                     registroEdit.RutUsuario = registro.RutUsuario.ToUpper();
                     registroEdit.Clave = Crypto.Hash(registro.Clave);
                     registroEdit.FechaRegistro = DateTime.Now;
+                    registroEdit.CambiarClave = false;
                     showMessageString = new { Estado = 0, Mensaje = "Usuario Registrado" };
                     db.Usuario.Add(registroEdit);
                 }
@@ -119,31 +128,143 @@ namespace tesoreria.Controllers
                 }
             }
             db.SaveChanges();
-            if (valido == true)
-            {
-                //eliminar perfiles
-                var uPerfil = db.UsuarioPerfil.Where(c => c.IdUsuario == registroEdit.IdUsuario);
+            //eliminar perfiles
+            var uPerfil = db.UsuarioPerfil.Where(c => c.IdUsuario == registroEdit.IdUsuario);
 
-                foreach (var c in uPerfil)
-                {
-                    db.UsuarioPerfil.Remove(c);
-                }
-                db.SaveChanges();
-                //Asociar perfiles
-                if (perfiles != null)
-                {
-                    foreach (var id in perfiles)
-                    {
-                        UsuarioPerfil newPerfil = new UsuarioPerfil();
-                        newPerfil.IdPerfil = id;
-                        newPerfil.IdUsuario = registroEdit.IdUsuario;
-                        newPerfil.Activo = true;
-                        db.UsuarioPerfil.Add(newPerfil);
-                    }
-                }
-                db.SaveChanges();
+            foreach (var c in uPerfil)
+            {
+                db.UsuarioPerfil.Remove(c);
             }
-            
+            db.SaveChanges();
+            //Asociar perfiles
+            if (perfiles != null)
+            {
+                foreach (var id in perfiles)
+                {
+                    UsuarioPerfil newPerfil = new UsuarioPerfil();
+                    newPerfil.IdPerfil = id;
+                    newPerfil.IdUsuario = registroEdit.IdUsuario;
+                    newPerfil.Activo = true;
+                    db.UsuarioPerfil.Add(newPerfil);
+                }
+            }
+            db.SaveChanges();
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult SolicitaClave()
+        {
+            return View();
+        }
+        public ActionResult SolicitarClave(string CorreoElectronico)
+        {
+            dynamic showMessageString = string.Empty;
+
+            var usuario = db.Usuario.Where(c => c.CorreoElectronico == CorreoElectronico && c.Activo == true).FirstOrDefault();
+            if (usuario != null)
+            {
+                Random rdn = new Random();
+                string caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890%$#@";
+                int longitud = caracteres.Length;
+                char letra;
+                int longitudContrasenia = 10;
+                string contraseniaAleatoria = string.Empty;
+                for (int i = 0; i < longitudContrasenia; i++)
+                {
+                    letra = caracteres[rdn.Next(longitud)];
+                    contraseniaAleatoria += letra.ToString();
+                }
+                usuario.Clave = Crypto.Hash(contraseniaAleatoria);
+                usuario.CambiarClave = true;
+                db.SaveChanges();
+                showMessageString = new { Estado = 0, Mensaje = "Correcto", ToUrl = "" };
+                //Enviar correo
+                var mensaje = "";
+                HelperFunciones funciones = new HelperFunciones();
+                mensaje = "<h3>Estimado(a) " + usuario.NombreUsuario + " " + usuario.ApellidoUsuario + ".</h3><br>";
+                mensaje += "Tu contraseña para acceder al sistema de Inmobiliaria ha sido generada con éxito";
+                mensaje += "<br>";
+                mensaje += "<h3>" + contraseniaAleatoria + "</h3><br>";
+                mensaje += "<br><b>Este mail se genera en forma automática, por favor, no responder</b>";
+                var resApro = funciones.envioCorreo(mensaje, usuario.CorreoElectronico, "Recuperar Contraseña");
+            }
+            else
+            {
+                showMessageString = new { Estado = 100, Mensaje = "Correo Ingresado no Existe o se encuentra Inactivo", ToUrl = "" };
+
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult RespuestaClave()
+        {
+            return View();
+        }
+        public ActionResult CambiarClave()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                var usuario = db.Usuario.Find((int)seguridad.IdUsuario);
+                return View(usuario);
+            }
+        }
+        public ActionResult ActualizarClave(modelo.Models.Local.Usuario registro, string ClaveConfirm)
+        {
+            dynamic showMessageString = string.Empty;
+
+            var usuario = db.Usuario.Find(registro.IdUsuario);
+            if (registro.Clave == ClaveConfirm)
+            {
+                usuario.Clave = Crypto.Hash(registro.Clave);
+                usuario.CambiarClave = false;
+                db.SaveChanges();
+                showMessageString = new { Estado = 0, Mensaje = "Contraseña actualizada Exitosamente", claveCuenta = registro.Clave };
+            }
+            else
+            {
+                showMessageString = new { Estado = 100, Mensaje = "Las contraseñas no coinciden", ToUrl = "" };
+
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult DatosUsuario()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                var usuario = db.Usuario.Find((int)seguridad.IdUsuario);
+                return View(usuario);
+            }
+        }
+        public ActionResult ModificarClave(modelo.Models.Local.Usuario registro, string NuevaClave, string ClaveConfirm)
+        {
+            dynamic showMessageString = string.Empty;
+
+            var usuario = db.Usuario.Find(registro.IdUsuario);
+            if (usuario.Clave == Crypto.Hash(registro.Clave))
+            {
+                if (NuevaClave == ClaveConfirm)
+                {
+                    usuario.Clave = Crypto.Hash(NuevaClave);
+                    db.SaveChanges();
+                    showMessageString = new { Estado = 0, Mensaje = "Contraseña actualizada Exitosamente", claveCuenta = registro.Clave };
+                }
+                else
+                {
+                    showMessageString = new { Estado = 100, Mensaje = "Las contraseñas no coinciden", ToUrl = "" };
+
+                }
+            }
+            else
+            {
+                showMessageString = new { Estado = 100, Mensaje = "La Contraseña Actual es Incorrecta", ToUrl = "" };
+
+            }
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
     }

@@ -1,0 +1,160 @@
+﻿@model modelo.Models.Local.Usuario
+@{
+    ViewBag.Title = "Dashboard";
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Modificar Contraseña</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">Usuario</li>
+        <li class="breadcrumb-item active" aria-current="page">Modificar Clave</li>
+    </ol>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Datos Usuario</h3>
+            </div>
+            <div class="card-body p-0">
+
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="DesProd" class="col-sm-3 col-form-label">Rut</label>
+                        <div class="col-lg col-form-label">
+                            @Model.RutUsuario
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="DesProd" class="col-sm-3 col-form-label">Nombres</label>
+                        <div class="col-lg col-form-label">
+                            @Model.NombreUsuario
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="CodigoParte" class="col-sm-3 col-form-label">Apellidos</label>
+                        <div class="col-lg-7 col-form-label">
+                            @Model.ApellidoUsuario
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="CodGrupo" class="col-sm-3 col-form-label">Correo</label>
+                        <div class="col-lg-7 col-form-label">
+                            @Model.CorreoElectronico
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        @using (Ajax.BeginForm("ModificarClave", "Usuario", null, new AjaxOptions
+        {
+            //InsertionMode = InsertionMode.Replace,
+            OnBegin = "mostrarCargando",
+            HttpMethod = "post",
+            OnSuccess = "Success_dl",
+            OnFailure = "Failure_dl"
+
+        }, new { id = "frmSoli", @class = "form-horizontal" }))
+        {
+            @Html.HiddenFor(model => model.IdUsuario);
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Modificar Contraseña</h3>
+                </div>
+                <div class="card-body p-0">
+
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label for="Clave" class="col-sm-3 col-form-label">Contraseña Actual</label>
+                            <div class="col-lg-7">
+                                <div class="input-group">
+                                    <input ID="Clave" name="Clave" type="Password" Class="form-control form-control-sm required inputSol">
+                                    <div class="input-group-append">
+                                        <button id="show_password" class="btn btn-primary" type="button" onclick="mostrarPassword('Clave')"> <span class="fa fa-eye-slash icon"></span> </button>
+                                    </div>
+                                </div>
+                                <em class="error" for="Clave"></em>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group row">
+                            <label for="CodigoParte" class="col-sm-3 col-form-label">Nueva Contraseña</label>
+                            <div class="col-lg-7">
+                                <input type="password" name="NuevaClave" id="NuevaClave" class="form-control form-control-sm required inputSol" minlength="8" autocomplete="off" value="" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="CodGrupo" class="col-sm-3 col-form-label">Repetir Contraseña</label>
+                            <div class="col-lg-7">
+                                <input type="password" name="ClaveConfirm" id="ClaveConfirm" class="form-control form-control-sm required inputSol" minlength="8" autocomplete="off" value="" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-footer clearfix">
+                    <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Guardar Nueva Contraseña</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="modal fade" id="crear-material" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="datosBuscar">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function mostrarPassword(tmpId) {
+        var cambio = document.getElementById(tmpId);
+        if (cambio.type == "password") {
+            cambio.type = "text";
+            $('.icon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+        } else {
+            cambio.type = "password";
+            $('.icon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+        }
+    }
+
+    $(document).ready(function () {
+        $('#frmSoli').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        //CheckBox mostrar contraseña
+        $('#ShowPassword').click(function () {
+            $('#Password').attr('type', $(this).is(':checked') ? 'text' : 'password');
+        });
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            $(".inputSol").val('');
+            toastr.success(data.Mensaje);
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        toastr.error(data.Mensaje);
+    }
+</script>

@@ -10,40 +10,35 @@
     </ol>
 </div>
 <h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los activos de todas las empresas.</h6>
-<br />
 
-
-<div class="row">
-    <div class="card col-lg-12">
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title">Filtros</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+<div class="card card-outline card-info collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <input type="text" class="form-control form-control-sm" name="numeroActivo" id="numeroActivoB" placeholder="Número Activo">
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-2">
-                        <input type="text" class="form-control form-control-sm" name="numeroActivo" id="numeroActivoB" placeholder="Número Activo">
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control form-control-sm" name="codigoInterno" id="codigoInternoB" placeholder="Código Interno">
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row justify-content-end">
-                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
-                        </div>
-                    </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control form-control-sm" name="codigoInterno" id="codigoInternoB" placeholder="Código Interno">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div>    
+
 
 <div class="row">
     <div class="col-md-12">
@@ -57,25 +52,17 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="form-group row">
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaActivo"><i class="fa fa-plus"></i>Cargar Activo desde Softland</button>
-                            </div>
-                        </nav>
+                <div class="row form-group">
+                    <div class="col-md-10">                       
+                         <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaActivo"><i class="fa fa-plus"></i>Cargar Activo desde Softland</button>                         
                     </div>
-                    <div class="col-sm-10">
-                    </div>
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo" data-toggle="modal" data-target="#ModalAddActivo"><i class="fa fa-plus"></i>Nuevo Activo</button>
-                                <!--<button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnMasivo" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva Activo</button> -->
-                            </div>
-                        </nav>
+                   
+                    <div class="col-md-2 justify-content-end text-right">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo" data-toggle="modal" data-target="#ModalAddActivo"><i class="fa fa-plus"></i>Nuevo Activo</button>
+                        <!--<button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnMasivo" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva Activo</button> -->                        
                     </div>
                 </div>
+
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivo" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
@@ -195,7 +182,7 @@
                     "mRender": function (o, type, row) {
                         var boton = '';
                         // if (o.Editable == true) {
-                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalAddActivo" onclick="EditActivo(' + o.IdActivo + ')"><i class="fa fa-edit"></i></button> ';
+                        boton = '<button class="btn btn-info btn-xs" type="button" data-toggle="modal" data-target="#ModalAddActivo" title="Editar" onclick="EditActivo(' + o.IdActivo + ')"><i class="fa fa-edit"></i></button> ';
                         //}
                         return boton;
                     }
@@ -206,7 +193,7 @@
                     "mRender": function (o, type, row) {
                         var boton = '';
                         // if (o.Editable == true) {
-                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="far fa-trash-alt"></i></button> ';
+                        boton += '<button class="btn btn-primary btn-xs" type="button" title="Eliminar" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="far fa-trash-alt"></i></button> ';
                         //}
                         return boton;
                     }

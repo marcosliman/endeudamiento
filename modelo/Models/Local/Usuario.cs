@@ -25,5 +25,6 @@ namespace modelo.Models.Local
         public string RutRegistro { get; set; }
         public int IdUsuarioRegistro { get; set; }
         public string NombreRegistro { get; set; }
+        public bool CambiarClave { get; set; }
     }
 }

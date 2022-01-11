@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="/img/logo/logo1.png" rel="icon">
-    <title>Endeudamiento - Acceso</title>
+    <title>Bodega - Solicitar Clave</title>
     <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
     @Styles.Render("~/Content/css")
     <!-- Toastr -->
@@ -62,14 +62,15 @@
             background-color: #1F2A44;
         }
 
-        .login-form-1 .ForgetPwd {
-            color: #0062cc;
-            font-weight: 600;
-            text-decoration: none;
+        .login-form-1 .btnSubmitBack {
+            width: 50%;
+            border-radius: 1rem;
+            padding: 1.5%;
+            border: none;
+            cursor: pointer;
         }
     </style>
 </head>
-
 <body class="bg-gradient-login">
     <!-- Login Content -->
     <div class="container login-container">
@@ -80,11 +81,9 @@
                     <div class="col-sm-12 text-center"><img src="~/img/logo/logo1.png" class="text-center" width="150" /></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12"><h3>Acceso Usuario</h3></div>
-                </div>
-                <div class="row">
                     <div class="col-sm-12">
-                        @using (Ajax.BeginForm("Autherize", "Home", new AjaxOptions
+
+                        @using (Ajax.BeginForm("SolicitarClave", "Usuario", new AjaxOptions
                         {
                             InsertionMode = InsertionMode.Replace,
                             HttpMethod = "post",
@@ -93,21 +92,26 @@
 
                         }, new { id = "frmAcceso" }))
                         {
-                            <input type="hidden" name="tipoAcceso" id="tipoAcceso" value="1" />
+                            <p class="login-box-msg">¿Olvidaste tu contraseña? Aquí puede solicitar fácilmente una nueva contraseña.</p>
                             <div class="form-group">
-                                <input type="text" name="usuarioCuenta" id="usuarioCuenta" class="form-control" placeholder="Usuario *" value="" />
+                                <div class="input-group mb-3">
+                                    <input type="email" name="CorreoElectronico" id="CorreoElectronico" class="form-control" placeholder="Email">
+                                    <div class="input-group-append">
+                                        <div class="input-group-text">
+                                            <span class="fas fa-envelope"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group">
-                                <input type="password" name="claveCuenta" id="claveCuenta" class="form-control" placeholder="Clave *" value="" />
+                                <input type="submit" class="btnSubmit btn btn-primary btn-block" value="Solicitar Nueva Contraseña" />
                             </div>
                             <div class="form-group">
-                                <input type="submit" class="btnSubmit" value="Ingresar" />
-                            </div>
-                            <div>
-                                <a class="" href="/Usuario/SolicitaClave">¿Olvidaste tu Contraseña?</a>
+                                <a href="/Home/Index" class="btnSubmitBack btn btn-secondary btn-block">Volver</a>
                             </div>
                         }
                     </div>
+
                 </div>
 
             </div>
@@ -131,15 +135,18 @@
         function SuccessSol(data) {
             $("#divErrorAcceso").empty();
             if (data.result.Estado == "0") {
-                location.href = data.result.ToUrl;
+                location.href = "/Usuario/RespuestaClave";
             }
             else {
                 toastr.error(data.result.Mensaje);
+               // $.notify(data.result.Mensaje, "error");
                 esconderCargando();
             }
         }
         function FailureSol(data) {
-            $.notify(data.Message, "error");
+            esconderCargando();
+            toastr.error("Error de Conexión");
+            //$.notify("Error de Conexión", "error");
         }
         function mostrarCargando(mensaje, imagen) {
             if (mensaje == null || mensaje == undefined) {
