@@ -141,8 +141,6 @@ C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\endeuda\bin\System.Web.WebPages.R
 C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\endeuda\bin\System.Web.Optimization.xml
 C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\endeuda\bin\es\System.Web.Optimization.resources.dll
 C:\Personal\ERPMaqSur\Desarrollo\Endeudamiento\endeuda\obj\Debug\endeuda.csproj.CopyComplete
-C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\obj\Debug\endeuda.csprojAssemblyReference.cache
-C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\obj\Debug\endeuda.csproj.CoreCompileInputs.cache
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\Web.config
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\grpc_csharp_ext.x86.dll
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\grpc_csharp_ext.x64.dll
@@ -281,6 +279,8 @@ C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\System.Web.WebPages.
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\System.Web.WebPages.Razor.xml
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\System.Web.Optimization.xml
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\es\System.Web.Optimization.resources.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\obj\Debug\endeuda.csprojAssemblyReference.cache
+C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\obj\Debug\endeuda.csproj.CoreCompileInputs.cache
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\obj\Debug\endeuda.csproj.CopyComplete
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\obj\Debug\bodega.dll
 C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\obj\Debug\bodega.pdb

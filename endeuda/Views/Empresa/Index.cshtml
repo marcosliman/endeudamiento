@@ -38,7 +38,7 @@
                         <tr>
                             <th class="no-sort" width="10%">&nbsp;</th>
                             <th>Nombre</th>
-                            <th>Base SofLand</th>
+                            <th width="10%">Base SofLand</th>
                             <th>Alias</th>
                             <th>Id Tributario</th>
                             <th>Activo</th>
@@ -107,10 +107,10 @@
             return table;
         }
 
-        function CreateRegistro(tmpIdPago) {
+        function CreateRegistro(tmpIdEmpresa) {
             $('#modal-registro').modal('show');
             $.ajax({
-                url: "/Empresa/Create/" + tmpIdPago,
+                url: "/Empresa/Create/" + tmpIdEmpresa,
                 type: "Get",
                 data: {},
                 beforeSend: function () {

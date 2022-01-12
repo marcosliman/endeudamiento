@@ -13,7 +13,12 @@ namespace modelo.Models.Local
         [Display(Name = "Código Empresa")]
         public int IdEmpresa { get; set; }
         public string RazonSocial { get; set; }
+        public string IdTributario { get; set; }
+        public string AliasEmpresa { get; set; }
+        public string BaseSoftland { get; set; }
         public bool Activo { get; set; }
-      
+
+        
+
     }
 }

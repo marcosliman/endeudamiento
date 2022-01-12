@@ -46,10 +46,10 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.PolizaActivo> PolizaActivo { get; set; }
         public System.Data.Entity.DbSet<Local.PolizaDocumento> PolizaDocumento { get; set; }
         public System.Data.Entity.DbSet<Local.TipoSeguro> TipoSeguro { get; set; }
+        public System.Data.Entity.DbSet<Local.TipoPerdida> TipoPerdida { get; set; }
         public System.Data.Entity.DbSet<Local.EmpresaAseguradora> EmpresaAseguradora { get; set; }
         public System.Data.Entity.DbSet<Local.TipoMoneda> TipoMoneda { get; set; }
         public System.Data.Entity.DbSet<Local.Siniestro> Siniestro { get; set; }
-        public System.Data.Entity.DbSet<Local.TipoPerdida> TipoPerdida { get; set; }
         public System.Data.Entity.DbSet<Local.SiniestroDocumento> SiniestroDocumento { get; set; }
     }
 }
