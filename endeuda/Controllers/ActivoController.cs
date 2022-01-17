@@ -29,15 +29,15 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaActivo_Read(int? numeroActivo, string codigoActivo)
+        public ActionResult ListaActivo_Read(int? numeroInterno, string codigoSoftland)
         {
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
                             join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
-                            where  ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
-                            && ac.CodSoftland == ((codigoActivo != "") ? codigoActivo : ac.CodSoftland)
+                            where  ac.NumeroInterno == ((numeroInterno != null) ? numeroInterno : ac.NumeroInterno)
+                            && ac.CodSoftland == ((codigoSoftland != "") ? codigoSoftland : ac.CodSoftland)
                             select new ActivoViewModel
                             {
                                 IdActivo =  ac.IdActivo,
