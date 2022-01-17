@@ -248,6 +248,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\BeneficiarioController.cs" />
     <Compile Include="Controllers\BancosController.cs" />
     <Compile Include="Controllers\TipoPerdidaController.cs" />
     <Compile Include="Controllers\TipoSeguroController.cs" />

@@ -73,7 +73,7 @@
             <div class="card-body">
                 <div class="row form-group">
                     <div class="col-md-10">                       
-                         <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaActivo"><i class="fa fa-plus"></i>Cargar Activo desde Softland</button>                         
+                         <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaActivo"><i class="fa fa-file-import"></i> Cargar Activo desde Softland</button>                         
                     </div>
                    
                     <div class="col-md-2 justify-content-end text-right">
@@ -169,11 +169,17 @@
         };
         var table = $('#grillaActivo').DataTable({
             buttons: [
+                {
+                    text: 'Exportar sin Cod. Softland',
+                    extend: 'excelHtml5'
+                },
                 $.extend(true, {}, buttonCommon, {
                     filename: "Activos",
                     sheetName: "Activos"
-                })
+                }) 
             ],
+            "scrollY": 450,
+            "scrollX": true,
             "retrieve": true,
             'ajax': {
                 "type": "POST",

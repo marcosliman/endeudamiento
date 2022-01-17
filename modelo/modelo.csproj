@@ -93,6 +93,7 @@
     <Compile Include="Models\Local\Perfil.cs" />
     <Compile Include="Models\Local\PermisoPerfil.cs" />
     <Compile Include="Models\Softland\cwtauxi.cs" />
+    <Compile Include="Models\Softland\cwpctas.cs" />
     <Compile Include="Models\Softland\cwtccos.cs" />
     <Compile Include="Models\Softland\iw_cocod.cs" />
     <Compile Include="Models\Softland\iw_gsaen.cs" />

@@ -784,8 +784,8 @@ namespace tesoreria.Controllers
                             from emv in emw.DefaultIfEmpty()
                             join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
-                            join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
-                            from prv in prw.DefaultIfEmpty()
+                            //join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
+                            //from prv in prw.DefaultIfEmpty()
                             where rel.IdContrato == idContrato
                             select new ActivoViewModel
                             {
@@ -803,7 +803,7 @@ namespace tesoreria.Controllers
                                 Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
-                                NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
+                                NombreProveedor = "",//(prv != null) ? prv.NombreProveedor : string.Empty,
                                 NumeroFactura = ac.NumeroFactura,
                                 Patente = ac.Patente,
                                 Editable = (con.IdLicitacionOferta != null) ? false : true
@@ -841,8 +841,8 @@ namespace tesoreria.Controllers
                             from emv in emw.DefaultIfEmpty()
                             join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
-                            join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
-                            from prv in prw.DefaultIfEmpty()
+                            //join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
+                            //from prv in prw.DefaultIfEmpty()
                             where ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
                                 && ac.CodSoftland == ((codigoActivo != "") ? codigoActivo : ac.CodSoftland)
                                 && ac.IdEmpresa == idEmpresa
@@ -862,7 +862,7 @@ namespace tesoreria.Controllers
                                 Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
-                                NombreProveedor = (prv != null) ? prv.NombreProveedor : string.Empty,
+                                NombreProveedor = "",//(prv != null) ? prv.NombreProveedor : string.Empty,
                                 NumeroFactura = ac.NumeroFactura,
                                 Patente = ac.Patente
                             }).AsEnumerable().ToList();

@@ -27,11 +27,12 @@ namespace modelo.Models.Local
         public int? Anio { get; set; }
         public string Grupo { get; set; }
         public string SubGrupo { get; set; }
-        public int? IdCuenta { get; set; }
+        public string IdCuenta { get; set; }
         public double? Valor { get; set; }
-        public int? IdProveedor { get; set; }
-        [ForeignKey("IdProveedor")]
-        public virtual Proveedor Proveedor { get; set; }
+        public string IdProveedor { get; set; }
+        public string NombreProveedor { get; set; }
+        //[ForeignKey("IdProveedor")]
+        //public virtual Proveedor Proveedor { get; set; }
         public string NumeroFactura { get; set; }
         public string Motor { get; set; }
         public string Chasis { get; set; }
