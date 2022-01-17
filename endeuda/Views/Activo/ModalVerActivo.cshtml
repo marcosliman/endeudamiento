@@ -64,16 +64,8 @@
                 <div class="form-group form-group-sm row">
                     <label for="fecha" class="col-sm-3 col-form-label col-form-label-sm">Clasificación de Cuenta</label>
                     <div class="col-6">
-                        <select class="form-control form-control-sm" name="idCuenta" id="idCuenta">
-                            <option value="">--Seleccione Cuenta--</option>
-                            <option value="1">01-2526-05</option>
-                            <option value="2">01-2527-05</option>
-                            <option value="3">01-2528-05</option>
-                            <option value="4">01-2529-05</option>
-                            <option value="5">01-2530-05</option>
-                            <option value="6">01-2531-05</option>
-                            <option value="7">01-2532-05</option>
-                        </select>
+                        @Html.DropDownList("idCuenta", (SelectList)ViewData["listaCuentas"], "--Seleccione Cuenta--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                       
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -115,7 +107,8 @@
                 <div class="form-group form-group-sm row">
                     <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Proveedor</label>
                     <div class="col-6">
-                        @Html.DropDownList("idProveedor", (SelectList)ViewData["listaProveedor"], "--Seleccione Proveedor--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                        @Html.DropDownList("idProveedor", (SelectList)ViewData["listaProveedor"], "--Seleccione Proveedor--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                       
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -164,7 +157,7 @@
 
 <script>
     $(document).ready(function () {
-
+        $("#idEmpresa").change(function () { cambioEmpresabusqueda(this.value); })
         $('#frmActivo').validate({
             debug: false,
             errorElement: "em",
@@ -178,22 +171,69 @@
                 anio: { digits: true }
             }
         });
+        $('#idCuenta').select2({
+            theme: 'bootstrap4',
+            language: "es"
+        });
+        $('#idProveedor').select2({
+            placeholder: 'Busque Proveedor',
+            language: "es",
+            minimumInputLength: 3,
+            allowClear: true,
+            ajax: {
+                url: '/Beneficiario/Proveedores_Read',
+                data: function (params) {
+                    var query = {
+                        q: params.term,
+                        type: 'public',
+                        IdEmpresa:$("#idEmpresa").val()
+                    }
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                },
+                delay: 250,
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                }
+            }
+        });
     });
+    function cambioEmpresabusqueda(IdEmpresa) {
+        $("#idCuenta").empty();
+        $("#idCuenta").append('<option value="">--Seleccione Cuenta--</option>');
+        $.ajax({
+            url: "/Activo/ObtenerCuentasSoftland",
+            type: "Post",
+            data: { idEmpresa: IdEmpresa },
+            success: function (data) {
+                var length = Object.keys(data).length;
+                for (var i = 0; i < length; i++) {
+                    $("#idCuenta").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                };
+            }
+        });
 
+
+    }
     function GrabarActivo() {
         $(".numberMiles").each(function () {
             $(this).val($(this).val().toString().replace(/[$,]/g, '').replace(/[$.]/g, ''))
         });
-
+        mostrarCargando();
         if ($('#frmActivo').valid()) {
             $.ajax({
                 type: 'POST',
                 url: '/Activo/GrabarActivo/',
                 data: $("#frmActivo").serialize(),
                 success: function (data) {
+                    esconderCargando();
                     Success(data);
                 },
                 failure: function (data) {
+                    esconderCargando();
                     Failure(data);
                 }
             })
@@ -216,7 +256,7 @@
     }
 
     function Failure(data) {
-        //esconderCargando();
+        esconderCargando();
         toastr.error(data.result.Mensaje);
     }
 

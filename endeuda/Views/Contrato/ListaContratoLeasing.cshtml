@@ -14,42 +14,42 @@
 </div>
 <h6 class="h6 mb-0 text-gray-800">Acá puedes administrar los contratos Leasing</h6>
 <br />
-
-<button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Contrato Leasing</button>
 <div class="row">
-    <div class="card col-lg-12">
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title">Filtros</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+    <div class="col-sm-12">
+        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nuevo Contrato Leasing</button>
+    </div>    
+</div>
+<div class="card card-outline card-info collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-2">
-                        @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control" id="numeroContratoB" name="numeroContratoB" placeholder="Número Contrato">
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row justify-content-end">
-                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
-                        </div>
-                    </div>
+            <div class="col-md-2">
+                @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="numeroContratoB" name="numeroContratoB" placeholder="Número Contrato">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+  
 
 <div class="row">
     <div class="col-md-12">

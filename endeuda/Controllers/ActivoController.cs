@@ -99,7 +99,8 @@ namespace tesoreria.Controllers
                 if (IdActivo == 0) {
 
                 }
-
+                List<RetornoGenerico> cuentas = new List<RetornoGenerico>();
+                List<RetornoGenerico> proveedores = new List<RetornoGenerico>();
                 var registro = (from ac in db.Activo where ac.IdActivo == IdActivo
 
                                 select new ActivoViewModel
@@ -129,10 +130,24 @@ namespace tesoreria.Controllers
                 if (registro == null) {
                     registro = new ActivoViewModel();
                     registro.IdActivo = 0;
-                    registro.IdProveedor = 0;
+                    registro.IdProveedor = "";
                     registro.IdEmpresa = 0;
                     registro.TituloBoton = "Grabar";
+                    registro.IdCuenta = "";
                 }
+                else
+                {
+                    var empresaSel = db.Empresa.Find(registro.IdEmpresa);
+                    SoftLandContext dbSoft = new SoftLandContext(empresaSel.BaseSoftland);
+                    cuentas = (from t in dbSoft.cwpctas
+                               select new RetornoGenerico { Id = 0, Nombre = t.PCCODI + ": " + t.PCDESC, ValorString = t.PCCODI }).OrderBy(c => c.Nombre).ToList();
+                    var auxiliar = dbSoft.cwtauxi.Find(registro.IdProveedor);
+                    proveedores = (from aux in dbSoft.cwtauxi
+                                 where aux.CodAux==registro.IdProveedor
+                                 select new RetornoGenerico { Id =0, Nombre = aux.RutAux + " : " + aux.NomAux,ValorString= aux.CodAux }).OrderBy(c => c.Id).ToList();
+                }
+                SelectList listaCuentas = new SelectList(cuentas.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.IdCuenta);
+                ViewData["listaCuentas"] = listaCuentas;
 
                 var empresa = (from e in db.Empresa
                                  where e.Activo == true
@@ -146,12 +161,9 @@ namespace tesoreria.Controllers
                 SelectList listaFamilia = new SelectList(familia.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdFamilia);
                 ViewData["listaFamilia"] = listaFamilia;
 
-                var proveedor = (from p in db.Proveedor
-                                     where p.Activo == true
-                                     select new RetornoGenerico { Id = p.IdProveedor, Nombre = p.NombreProveedor }).OrderBy(c => c.Id).ToList();
-                SelectList listaProveedor = new SelectList(proveedor.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdProveedor);
+                SelectList listaProveedor = new SelectList(proveedores.OrderBy(c => c.Nombre), "ValorString", "Nombre");
                 ViewData["listaProveedor"] = listaProveedor;
-
+              
                 return View(registro);
             }
         }
@@ -243,6 +255,7 @@ namespace tesoreria.Controllers
                             mensaje = "Registro Ingresado con exito";
                             var activoAdd = new Activo();
                             activoAdd.IdEmpresa = datos.IdEmpresa;
+                            
                             activoAdd.NumeroInterno = datos.NumeroInterno;
                             activoAdd.CodSoftland = datos.CodSoftland;
                             activoAdd.IdFamilia = datos.IdFamilia;
@@ -258,6 +271,10 @@ namespace tesoreria.Controllers
                             activoAdd.SubGrupo = datos.SubGrupo;
                             activoAdd.Valor = datos.Valor;
                             activoAdd.IdProveedor = datos.IdProveedor;
+                            var empresaSoft = db.Empresa.Find(datos.IdEmpresa);
+                            SoftLandContext dbSoft = new SoftLandContext(empresaSoft.BaseSoftland);
+                            var auxiliar = dbSoft.cwtauxi.Find(datos.IdProveedor);
+                            activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
                             activoAdd.IdCuenta = datos.IdCuenta;
                             activoAdd.NumeroFactura = datos.NumeroFactura;
                             activoAdd.Patente = datos.Patente;
@@ -319,6 +336,14 @@ namespace tesoreria.Controllers
                     return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
                 }
             }
+        }
+        public JsonResult ObtenerCuentasSoftland(int idEmpresa)
+        {
+            var empresa = db.Empresa.Find(idEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+            var subgrupos = (from t in dbSoft.cwpctas
+                             select new RetornoGenerico { Id = 0, Nombre = t.PCCODI + ": " + t.PCDESC, ValorString = t.PCCODI }).OrderBy(c => c.Nombre).ToList();
+            return Json(subgrupos, JsonRequestBehavior.AllowGet);
         }
     }
 }
