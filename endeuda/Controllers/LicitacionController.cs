@@ -427,7 +427,7 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaActivoAsociar_Read(int idLicitacion, int? numeroActivo, string codigoActivo)
+        public ActionResult ListaActivoAsociar_Read(int idLicitacion, string numeroActivo, string codigoActivo)
         {
             var idEmpresa = 0;
             var licitacion = db.Licitacion.Find(idLicitacion);
@@ -442,7 +442,7 @@ namespace tesoreria.Controllers
                             from fv in fw.DefaultIfEmpty()
                             //join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             //from prv in prw.DefaultIfEmpty()
-                            where ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
+                            where ac.NumeroInterno == ((numeroActivo != "") ? numeroActivo : ac.NumeroInterno)
                                 && ac.CodSoftland == ((codigoActivo != "") ? codigoActivo : ac.CodSoftland)
                                 && ac.IdEmpresa == idEmpresa
                                 && ac.IdEstado == (int)Helper.Estado.ActDisponible

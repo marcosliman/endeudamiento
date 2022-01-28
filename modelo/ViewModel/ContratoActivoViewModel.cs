@@ -12,7 +12,7 @@ namespace modelo.ViewModel
         public int IdContratoActivo { get; set; }
         public int IdContrato { get; set; }
         public int IdActivo { get; set; }
-        public int? NumeroInterno { get; set; }
+        public string NumeroInterno { get; set; }
         public string CodSoftland { get; set; }
         public string Familia { get; set; }
         public string Descripcion { get; set; }

@@ -92,6 +92,9 @@
     <Compile Include="Models\Local\Menu.cs" />
     <Compile Include="Models\Local\Perfil.cs" />
     <Compile Include="Models\Local\PermisoPerfil.cs" />
+    <Compile Include="Models\Softland\awfichaac.cs" />
+    <Compile Include="Models\Softland\awtsubgr.cs" />
+    <Compile Include="Models\Softland\awtgrup.cs" />
     <Compile Include="Models\Softland\cwtauxi.cs" />
     <Compile Include="Models\Softland\cwpctas.cs" />
     <Compile Include="Models\Softland\cwtccos.cs" />

@@ -2945,6 +2945,8 @@
     <Content Include="Views\Seguro\ModalVistaSeguro.cshtml" />
     <Content Include="Views\Seguro\VistaSeguro.cshtml" />
     <Content Include="Views\Seguro\VistaDocumentoSeguro.cshtml" />
+    <Content Include="Views\Activo\ImportarActivos.cshtml" />
+    <Content Include="Views\Activo\ImportaActivosSoftland.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

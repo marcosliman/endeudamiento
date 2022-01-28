@@ -35,5 +35,9 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Softland.iw_gsaen> iw_gsaen { get; set; }
         public System.Data.Entity.DbSet<Softland.iw_cocod> iw_cocod { get; set; }
         public System.Data.Entity.DbSet<Softland.cwpctas> cwpctas { get; set; }
+        //Activos
+        public System.Data.Entity.DbSet<Softland.awfichaac> awfichaac { get; set; }
+        public System.Data.Entity.DbSet<Softland.awtgrup> awtgrup { get; set; }
+        public System.Data.Entity.DbSet<Softland.awtsubgr> awtsubgr { get; set; }
     }
 }

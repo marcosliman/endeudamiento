@@ -452,7 +452,7 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaActivoAsociar_Read(int idPoliza, int? numeroActivo, string codigoActivo)
+        public ActionResult ListaActivoAsociar_Read(int idPoliza, string numeroActivo, string codigoActivo)
         {
             var idEmpresa = 0;
             var poliza = db.Poliza.Find(idPoliza);
@@ -468,7 +468,7 @@ namespace tesoreria.Controllers
                             from fv in fw.DefaultIfEmpty()
                             //join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             //from prv in prw.DefaultIfEmpty()
-                            where ac.NumeroInterno == ((numeroActivo != null) ? numeroActivo : ac.NumeroInterno)
+                            where ac.NumeroInterno == ((numeroActivo != "") ? numeroActivo : ac.NumeroInterno)
                                 && ac.CodSoftland == ((codigoActivo != "") ? codigoActivo : ac.CodSoftland)
                                 && ac.IdEmpresa == idEmpresa
                                 && ac.IdEstado == (int)Helper.Estado.ActDisponible

@@ -15,7 +15,7 @@ namespace modelo.Models.Local
         public int? IdEmpresa { get; set; }
         [ForeignKey("IdEmpresa")]
         public virtual Empresa Empresa { get; set; }
-        public int? NumeroInterno { get; set; }
+        public string NumeroInterno { get; set; }
         public string CodSoftland { get; set; }
         public int? IdFamilia { get; set; }
         [ForeignKey("IdFamilia")]

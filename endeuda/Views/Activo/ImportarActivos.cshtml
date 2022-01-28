@@ -1,0 +1,158 @@
+﻿
+
+@{
+    ViewBag.Title = "Carga Masiva Activos";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Carga Masiva Activos</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="card-body">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background-color:white">
+                        <h3 class="card-title">Cargar archivo</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <label for="IdTributario" class="col-sm-9 col-form-label col-form-label-sm">Después de descargar la plantilla desde este <a href="C:\Users\Usuario\DocumentsPlantilla_Endeudamiento.xlsx">enlace</a> proceda a cargarla para procesarla.</label>
+                            <div class="col-3">
+                                <div class="col-sm-auto col-form-label">
+                                    <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" style="background-color:white">
+                        <h3 class="card-title">Resultado de la validación</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Archivo</label>
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Activos-Seguro-0258.xlsx</label>
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Filas procesadas</label>
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">42</label>
+                                <label for="inputEmail3" class="col-sm-12 col-form-label">Los montos registrados inicialmente son consistentes con la data procesada en el archivo.</label>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Fila</th>
+                                            <th>Resultado</th>
+                                            <th>Observaciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Correcto</td>
+                                            <td>Columnas comprobadas.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>Correcto</td>
+                                            <td>Columnas comprobadas.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3</td>
+                                            <td>Error</td>
+                                            <td>Revisar columna 4, Revisar columna 5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>Correcto</td>
+                                            <td>Columnas comprobadas.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>Error</td>
+                                            <td>Número de columnas no coincide.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>Correcto</td>
+                                            <td>Columnas comprobadas.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>Correcto</td>
+                                            <td>Columnas comprobadas.</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>Correcto</td>
+                                            <td>Columnas comprobadas.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm">Guardar</button>
+    </div>
+
+</div>
+@*
+    <script>
+        $(document).ready(function () {
+
+            $('#frmEdit').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            $('#perfiles').select2({
+                theme: 'bootstrap4'
+            })
+            window.top.esconderCargando();
+        });
+
+        function Success_dl(data) {
+            esconderCargando();
+            if (data.Estado == "0") {
+                toastr.success(data.Mensaje);
+                $('#modal-registro').modal('hide');
+                RefreshLista();
+            }
+            else {
+                toastr.error(data.Mensaje);
+            }
+        }
+        function Failure_dl(data) {
+            esconderCargando();
+            toastr.error(data.Mensaje);
+            $('#modal-registro').modal('hide');
+        }
+
+    </script>*@

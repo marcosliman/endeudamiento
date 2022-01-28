@@ -131,8 +131,14 @@ namespace tesoreria.Controllers
                 else
                 {
                     System.Web.HttpContext.Current.Session["Seguridad"] = seguridad;
-                    
-                    showMessageString = new { Estado = 0, Mensaje = "Acceso correcto", ToUrl = "/Home/Inicio" };
+                    if (usuario.CambiarClave == true)
+                    {
+                        showMessageString = new { Estado = 0, Mensaje = "Acceso correcto", ToUrl = "/Usuario/CambiarClave" };
+                    }
+                    else
+                    {
+                        showMessageString = new { Estado = 0, Mensaje = "Acceso correcto", ToUrl = "/Home/Inicio" };
+                    }
                     
                 }
 

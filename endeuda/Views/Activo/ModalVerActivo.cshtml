@@ -34,7 +34,7 @@
                 <div class="form-group form-group-sm row">
                     <label for="numeroInterno" class="col-sm-3 col-form-label col-form-label-sm">Número de Activo</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm required number" name="numeroInterno" id="numeroInterno" placeholder="Ingrese el identificador del activo" value="@Model.NumeroInterno">
+                        <input type="text" class="form-control form-control-sm required" name="numeroInterno" id="numeroInterno" placeholder="Ingrese el identificador del activo" value="@Model.NumeroInterno">
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -93,15 +93,16 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
-                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Grupo</label>
+                    <label for="grupo" class="col-sm-3 col-form-label col-form-label-sm">Grupo</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm" name="grupo" id="grupo" placeholder="Ingrese Grupo" value="@Model.Grupo">
+                        @Html.DropDownList("grupo", (SelectList)ViewData["listaGrupos"], "--Seleccione Grupo--", htmlAttributes: new { @class = "form-control form-control-sm" })
+
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
-                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">SubGrupo</label>
+                    <label for="subGrupo" class="col-sm-3 col-form-label col-form-label-sm">SubGrupo</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm" name="subGrupo" id="subGrupo" placeholder="Ingrese SubGrupo" value="@Model.SubGrupo">
+                        @Html.DropDownList("subGrupo", (SelectList)ViewData["listaSubGrupos"], "--Seleccione Sub Grupo--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -157,7 +158,8 @@
 
 <script>
     $(document).ready(function () {
-        $("#idEmpresa").change(function () { cambioEmpresabusqueda(this.value); })
+        $("#idEmpresa").change(function () { cambioEmpresabusqueda(this.value); });
+        $("#grupo").change(function () { cambioGrupoBusqueda($("#idEmpresa").val(), this.value); });
         $('#frmActivo').validate({
             debug: false,
             errorElement: "em",
@@ -216,14 +218,44 @@
             }
         });
 
+        $("#grupo").empty();
+        $("#grupo").append('<option value="">--Seleccione Grupo--</option>');
+        $.ajax({
+            url: "/Activo/ObtenerGrupoSoftland",
+            type: "Post",
+            data: { idEmpresa: IdEmpresa },
+            success: function (data) {
+                var length = Object.keys(data).length;
+                for (var i = 0; i < length; i++) {
+                    $("#grupo").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                };
+            }
+        });
+        cambioGrupoBusqueda(IdEmpresa, "");
+    }
+    function cambioGrupoBusqueda(IdEmpresa, CodGru) {
 
+        $("#subGrupo").empty();
+        $("#subGrupo").append('<option value="">--Seleccione Sub Grupo--</option>');
+        $.ajax({
+            url: "/Activo/ObtenerSubGrupoSoftland",
+            type: "Post",
+            data: { idEmpresa: IdEmpresa, CodGru: CodGru },
+            success: function (data) {
+                var length = Object.keys(data).length;
+                for (var i = 0; i < length; i++) {
+                    $("#subGrupo").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                };
+            }
+        });
     }
     function GrabarActivo() {
         $(".numberMiles").each(function () {
             $(this).val($(this).val().toString().replace(/[$,]/g, '').replace(/[$.]/g, ''))
         });
-        mostrarCargando();
+        
         if ($('#frmActivo').valid()) {
+            mostrarCargando();
             $.ajax({
                 type: 'POST',
                 url: '/Activo/GrabarActivo/',

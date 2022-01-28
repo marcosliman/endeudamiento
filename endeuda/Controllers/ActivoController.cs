@@ -29,14 +29,14 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaActivo_Read(int? numeroInterno, string codigoSoftland)
+        public ActionResult ListaActivo_Read(string numeroInterno, string codigoSoftland)
         {
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
                             join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
-                            where  ac.NumeroInterno == ((numeroInterno != null) ? numeroInterno : ac.NumeroInterno)
+                            where  ac.NumeroInterno == ((numeroInterno != "") ? numeroInterno : ac.NumeroInterno)
                             && ac.CodSoftland == ((codigoSoftland != "") ? codigoSoftland : ac.CodSoftland)
                             select new ActivoViewModel
                             {
@@ -84,6 +84,11 @@ namespace tesoreria.Controllers
             }
             else
             {
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
                 return View();
             }
         }
@@ -101,6 +106,8 @@ namespace tesoreria.Controllers
                 }
                 List<RetornoGenerico> cuentas = new List<RetornoGenerico>();
                 List<RetornoGenerico> proveedores = new List<RetornoGenerico>();
+                List<RetornoGenerico> grupos = new List<RetornoGenerico>();
+                List<RetornoGenerico> subgrupos = new List<RetornoGenerico>();
                 var registro = (from ac in db.Activo where ac.IdActivo == IdActivo
 
                                 select new ActivoViewModel
@@ -124,7 +131,9 @@ namespace tesoreria.Controllers
                                     IdCuenta = ac.IdCuenta,
                                     NumeroFactura = ac.NumeroFactura,
                                     Patente = ac.Patente,
-                                    TituloBoton = "Editar"
+                                    TituloBoton = "Editar",
+                                    Grupo=ac.Grupo,
+                                    SubGrupo=ac.SubGrupo
                                 }).FirstOrDefault();
 
                 if (registro == null) {
@@ -145,7 +154,19 @@ namespace tesoreria.Controllers
                     proveedores = (from aux in dbSoft.cwtauxi
                                  where aux.CodAux==registro.IdProveedor
                                  select new RetornoGenerico { Id =0, Nombre = aux.RutAux + " : " + aux.NomAux,ValorString= aux.CodAux }).OrderBy(c => c.Id).ToList();
+
+                    grupos = (from t in dbSoft.awtgrup
+                                     select new RetornoGenerico { Id = 0, Nombre = t.DesGru, ValorString = t.CodGru }).OrderBy(c => c.Nombre).ToList();
+                    subgrupos = (from t in dbSoft.awtsubgr
+                                     where ((registro.Grupo != "") ? t.CodGru == registro.Grupo : true)
+                                     select new RetornoGenerico { Id = 0, Nombre = t.DesSGru, ValorString = t.CodSGru }).OrderBy(c => c.Nombre).ToList();
                 }
+                SelectList listaGrupos = new SelectList(grupos.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.Grupo);
+                ViewData["listaGrupos"] = listaGrupos;
+                
+                SelectList listaSubGrupos = new SelectList(subgrupos.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.SubGrupo);
+                ViewData["listaSubGrupos"] = listaSubGrupos;
+
                 SelectList listaCuentas = new SelectList(cuentas.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.IdCuenta);
                 ViewData["listaCuentas"] = listaCuentas;
 
@@ -215,7 +236,7 @@ namespace tesoreria.Controllers
                         if (activo != null)
                         {
 
-                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno > 0 && activo.IdEstado == (int)Helper.Estado.ActCreado)
+                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "" && activo.IdEstado == (int)Helper.Estado.ActCreado)
                             {
                                 estado = (int)Helper.Estado.ActDisponible;
                             }
@@ -248,7 +269,7 @@ namespace tesoreria.Controllers
                         }
                         else
                         {
-                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno > 0)
+                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "")
                             {
                                 estado = (int)Helper.Estado.ActDisponible;
                             }
@@ -344,6 +365,149 @@ namespace tesoreria.Controllers
             var subgrupos = (from t in dbSoft.cwpctas
                              select new RetornoGenerico { Id = 0, Nombre = t.PCCODI + ": " + t.PCDESC, ValorString = t.PCCODI }).OrderBy(c => c.Nombre).ToList();
             return Json(subgrupos, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ListaImportaActivo_Read(int idEmpresa, string CodGru,string CodSGru)
+        {
+            var empresa = db.Empresa.Find(idEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+            var activosEmpresa = db.Activo.Where(c => c.IdEmpresa == idEmpresa).ToList();
+            var activosSoftland = (from ac in dbSoft.awfichaac
+                            join gr in dbSoft.awtgrup on ac.CodGru equals gr.CodGru
+                            join sgr in dbSoft.awtsubgr on new { ac.CodGru, ac.CodSGru } equals new {sgr.CodGru,sgr.CodSGru}
+                            where ((CodGru != "") ? ac.CodGru == CodGru : true)
+                            && ((CodSGru != "") ? ac.CodSGru == CodSGru : true)
+                            select new
+                            {
+                                ac.CodAct,
+                                ac.Estado,
+                                ac.DescAct,
+                                gr.DesGru,
+                                sgr.DesSGru,
+                                ac.ValCom,
+                                ac.FecIng,
+                                ac.GloBaja,
+                                ac.FecBaja
+                            }).AsEnumerable().ToList();
+
+            var listaRetorno=(from ac in activosSoftland
+                              join ae in activosEmpresa on ac.CodAct equals ae.CodSoftland into t_ae
+                              from l_ae in t_ae.DefaultIfEmpty()
+                              where l_ae==null 
+                              select new
+                              {
+                                  DT_RowId = "row_" +ac.CodAct,
+                                  ac.CodAct,
+                                  ac.Estado,
+                                  ac.DescAct,
+                                  ac.DesGru,
+                                  ac.DesSGru,
+                                  ac.ValCom,
+                                  ac.FecIng,
+                                  ac.GloBaja,
+                                  ac.FecBaja
+                              }
+                              ).ToList();
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ImportaActivosSoftland()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("ControlInterno", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+                return View();
+            }
+        }
+        public JsonResult ObtenerGrupoSoftland(int idEmpresa)
+        {
+            var empresa = db.Empresa.Find(idEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+            var grupos = (from t in dbSoft.awtgrup
+                             select new RetornoGenerico { Id = 0, Nombre = t.DesGru, ValorString = t.CodGru }).OrderBy(c => c.Nombre).ToList();
+            return Json(grupos, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ObtenerSubGrupoSoftland(int idEmpresa, string CodGru)
+        {
+            var empresa = db.Empresa.Find(idEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+            var subgrupos = (from t in dbSoft.awtsubgr where ((CodGru!="")? t.CodGru==CodGru :true)
+                             select new RetornoGenerico { Id = 0, Nombre = t.DesSGru, ValorString = t.CodSGru }).OrderBy(c => c.Nombre).ToList();
+            return Json(subgrupos, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult ImportaActivoSoftland(int idEmpresa,string CodAct)
+        {
+            dynamic showMessageString = string.Empty;
+
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var empresa = db.Empresa.Find(idEmpresa);
+                    SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+                    var activoSoftland=dbSoft.awfichaac.Find(CodAct);
+                    //solo elimina cuando no hay registros asociados
+                    if (activoSoftland != null)
+                    {
+                        var activoAdd = new Activo();
+                        activoAdd.IdEmpresa = idEmpresa;
+
+                        activoAdd.NumeroInterno = CodAct;
+                        activoAdd.CodSoftland = CodAct;
+                        activoAdd.IdFamilia = null;
+                        activoAdd.Descripcion = activoSoftland.DescAct;
+                        activoAdd.Capacidad = "";
+                        activoAdd.Marca = "";
+                        activoAdd.Modelo = "";
+                        activoAdd.Motor = "";
+                        activoAdd.Chasis = "";
+                        activoAdd.Serie = "";
+                        activoAdd.Anio = ((DateTime)activoSoftland.FecIng).Year;
+                        activoAdd.Grupo = activoSoftland.CodGru;
+                        activoAdd.SubGrupo = activoSoftland.CodSGru;
+                        activoAdd.Valor = activoSoftland.ValCom;
+                        activoAdd.IdProveedor = activoSoftland.CodAux;                        
+                        var auxiliar = dbSoft.cwtauxi.Find(activoSoftland.CodAux);
+                        activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
+                        activoAdd.IdCuenta = activoSoftland.CtaCom;
+                        activoAdd.NumeroFactura = "";
+                        activoAdd.Patente = "";
+                        activoAdd.Glosa = "";
+                        activoAdd.IdEstado = (int)Helper.Estado.ActCreado;
+                        activoAdd.FechaRegistro = DateTime.Now;
+                        activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                        db.Activo.Add(activoAdd);
+                        db.SaveChanges();
+
+                        dbContextTransaction.Commit();
+
+                        showMessageString = new { Estado = 0, Mensaje = "Activo Importado con exito" };
+                        return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        showMessageString = new { Estado = 500, Mensaje = "Error: No se pudo importar el activo" };
+                        return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                    dbContextTransaction.Rollback();
+                    return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                }
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace modelo.ViewModel
         public int? IdPolizaActivo { get; set; }
         public int? IdEmpresa { get; set; }
         public string RazonSocial { get; set; }
-        public int? NumeroInterno { get; set; }
+        public string NumeroInterno { get; set; }
         public string CodSoftland { get; set; }
         public int? IdFamilia { get; set; }
         public string Familia { get; set; }

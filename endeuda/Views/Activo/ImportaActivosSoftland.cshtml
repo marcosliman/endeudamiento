@@ -1,0 +1,266 @@
+﻿@{
+    ViewBag.Title = "Buscar Activos";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Buscar Activos</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item"><a href="/Activo/ControlInterno">Activos-Control Interno</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los activos de todas las empresas.</h6>
+<br />
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group form-group-sm">
+                    <div class="form-group form-group-sm row">
+                        <label for="idEmpresa" class="col-sm-2 col-form-label col-form-label-sm">Empresa</label>
+                        <div class="col-sm-9">
+                            @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm row">
+                        <label for="CodGruBus" class="col-sm-2 col-form-label col-form-label-sm">Grupo</label>
+                        <div class="col-sm-9">
+                            <select name="CodGruBus" id="CodGruBus" class="form-control form-control-sm"></select>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm row">
+                        <label for="CodSGruBus" class="col-sm-2 col-form-label col-form-label-sm">Sub-Grupo</label>
+                        <div class="col-sm-9">
+                            <select name="CodSGru" id="CodSGruBus" class="form-control form-control-sm"></select>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm">
+                        <div class="col-sm-12">
+                            <button class="btn btn-primary btn-block" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="background-color:white">
+                <h3 class="card-title">Activos Disponibles</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivoSoftland" data-order='[[ 2, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort noExport" width="2%"></th>
+                            <th class="no-sort noExport" width="2%"><i class="fa fa-file-import text-grey"></i></th>
+                            <th>Cod. Softland</th>
+                            <th>Estado</th>
+                            <th>Descripción</th>
+                            <th>Grupo</th>
+                            <th>Sub-Grupo</th>
+                            <th>Monto Adquisición</th>
+                            <th>Fecha Ingreso</th>
+                            <th>Motivo Baja</th>
+                            <th>Fecha Baja</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalCargaMasivaA" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+       
+    </div>
+</div>
+<div class="modal fade" id="ModalVerActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("ControlInterno");
+        $('#CodGruBus,#CodSGruBus').select2({
+            theme: 'bootstrap4',
+            language: "es",
+            placeholder: 'Seleccione'
+        });
+        cambioEmpresabusqueda($("#idEmpresa").val());
+        $("#idEmpresa").change(function () { cambioEmpresabusqueda(this.value); })
+        $("#CodGruBus").change(function () { cambioGrupoBusqueda($("#idEmpresa").val(), this.value); })
+        //initTable();
+    });
+    function cambioEmpresabusqueda(IdEmpresa) {
+        $("#CodGruBus").empty();
+        $("#CodGruBus").append('<option value="">--Seleccione Grupo--</option>');
+        $.ajax({
+            url: "/Activo/ObtenerGrupoSoftland",
+            type: "Post",
+            data: { idEmpresa: IdEmpresa },
+            success: function (data) {
+                var length = Object.keys(data).length;
+                for (var i = 0; i < length; i++) {
+                    $("#CodGruBus").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                };
+            }
+        });
+
+        cambioGrupoBusqueda(IdEmpresa, "");
+    }
+    function cambioGrupoBusqueda(IdEmpresa,CodGru) {
+       
+        $("#CodSGruBus").empty();
+        $("#CodSGruBus").append('<option value="">--Seleccione Sub Grupo--</option>');
+        $.ajax({
+            url: "/Activo/ObtenerSubGrupoSoftland",
+            type: "Post",
+            data: { idEmpresa: IdEmpresa, CodGru: CodGru },
+            success: function (data) {
+                var length = Object.keys(data).length;
+                for (var i = 0; i < length; i++) {
+                    $("#CodSGruBus").append('<option value="' + data[i].ValorString + '">' + data[i].Nombre + '</option>');
+                };
+            }
+        });
+    }
+    function RefreshLista() {
+        if ($("#idEmpresa").val() > 0) {
+            var table = initTable();
+            table.ajax.reload(function (json) { });
+        }
+        else {
+            alert("Debe Seleccionar Empresa")
+        }
+        
+    }
+
+    function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Activos Softland ',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)"
+            }
+        };
+        var table = $('#grillaActivoSoftland').DataTable({
+            buttons: [
+
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Activos",
+                    sheetName: "Activos"
+                })
+            ],
+            "scrollY": 450,
+            "scrollX": true,
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Activo/ListaImportaActivo_Read/',
+                "data": function (d) {
+                    d.idEmpresa = $('#idEmpresa').val();
+                    d.CodGru = $('#CodGruBus').val();
+                    d.CodSGru = $('#CodSGruBus').val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [8,10],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        // if (o.Editable == true) {
+                        //boton = '<button class="btn btn-info btn-xs" type="button" data-toggle="modal" data-target="#ModalAddActivo" title="Editar" onclick="EditActivo(' + o.IdActivo + ')"><i class="fa fa-edit"></i></button> ';
+                        //}
+                        return boton;
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        // if (o.Editable == true) {
+                        boton += '<button class="btn btn-success btn-xs" type="button" title="Importar" onclick="ImportarActivoSofland(\'' + o.CodAct + '\')"><i class="fa fa-file-import"></i></button> ';
+                        //}
+                        return boton;
+                    }
+                },
+                { "data": "CodAct" },
+                { "data": "Estado" },
+                { "data": "DescAct" },
+                { "data": "DesGru" },
+                { "data": "DesSGru" },
+                { "data": "ValCom" },
+                { "data": "FecIng" },
+                { "data": "GloBaja" },
+                { "data": "FecBaja" }
+            ]
+        });
+        //$("#grillaActivo").dataTable().fnDestroy();
+        return table;
+    }
+    function ImportarActivoSofland(CodAct) {
+        a = true;//confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                type: 'POST',
+                url: '/Activo/ImportaActivoSoftland',
+                data: { CodAct: CodAct, idEmpresa : $('#idEmpresa').val()},
+                success: function (data) {
+                    if (data.result.Estado == "0") {
+                        toastr.success(data.result.Mensaje);
+                        RefreshLista();
+
+                    }
+                    else {
+                        toastr.error(data.result.Mensaje);
+                    }
+                },
+                failure: function (data) {
+                    toastr.error(data.result.Mensaje);
+                }
+            })
+        }
+    }
+</script>

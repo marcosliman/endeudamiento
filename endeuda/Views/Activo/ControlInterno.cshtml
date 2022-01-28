@@ -6,7 +6,7 @@
     <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+        <li class="breadcrumb-item active" aria-current="page">Activos-Control Interno</li>
     </ol>
 </div>
 <h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los activos de todas las empresas.</h6>
@@ -73,12 +73,14 @@
             <div class="card-body">
                 <div class="row form-group">
                     <div class="col-md-10">                       
-                         <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaActivo"><i class="fa fa-file-import"></i> Cargar Activo desde Softland</button>                         
+                         <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="ImportarActivosSoftland()"><i class="fa fa-file-import"></i> Importar Activos Softland</button> 
+                         <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="ImportarActivosSoftland()"><i class="fa fa-sync"></i> Sincronizar Activos</button>
                     </div>
                    
                     <div class="col-md-2 justify-content-end text-right">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo" data-toggle="modal" data-target="#ModalAddActivo"><i class="fa fa-file-import"></i> Cargar Activos XLS</button>
                         <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo" data-toggle="modal" data-target="#ModalAddActivo"><i class="fa fa-plus"></i>Nuevo Activo</button>
-                        <!--<button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnMasivo" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva Activo</button> -->                        
+                        <!--<button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnMasivo" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva Activo</button> -->
                     </div>
                 </div>
 
@@ -87,7 +89,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort noExport" width="2%"><i class="fa fa-user-edit text-grey"></i></th>
-                                <th class="no-sort noExport" width="2%"><i class="fa fa-trash text-grey"></i></th>
+                                <th class="no-sort noExport" width="2%"><i class="fa fa-file-import"></i></th>
                                 <th>Empresa</th>
                                 <th>Num. Interno</th>
                                 <th>Cod. Softland</th>
@@ -130,12 +132,13 @@
         </div>
     </div>
 </div>
-<!--
-<div class="modal fade" id="ModalCargaMasivaA" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+
+<div class="modal fade" id="modal-importSoftland" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div id="datosActivosSoftland"></div>
     </div>
 </div>
--->
+
 <div class="modal fade" id="ModalAddActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modal-crearLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -169,10 +172,7 @@
         };
         var table = $('#grillaActivo').DataTable({
             buttons: [
-                {
-                    text: 'Exportar sin Cod. Softland',
-                    extend: 'excelHtml5'
-                },
+                
                 $.extend(true, {}, buttonCommon, {
                     filename: "Activos",
                     sheetName: "Activos"
@@ -308,5 +308,22 @@
     function Failure_dl(data) {
         //esconderCargando();
         toastr.error(data.result.Mensaje);
+    }
+    function ImportarActivosSoftland() {
+        location.href = "/Activo/ImportaActivosSoftland";
+        /*$("#datosActivosSoftland").empty();
+        $('#modal-importSoftland').modal('show');
+        $.ajax({
+            url: "/Activo/ModalCargaMasivaA",
+            type: "Post",
+            data: {  },
+            beforeSend: function () {
+                $("#datosActivosSoftland").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosActivosSoftland").empty();
+                $("#datosActivosSoftland").html(data);
+            }
+        });*/
     }
 </script>
