@@ -49,6 +49,7 @@ namespace tesoreria.Controllers
                             join e in db.Estado on l.IdEstado equals e.IdEstado
                             where l.IdEmpresa == ((idEmpresa != null) ? idEmpresa : l.IdEmpresa)
                             && l.IdTipoFinanciamiento == ((idTipoFinanciamiento != null) ? idTipoFinanciamiento : l.IdTipoFinanciamiento)
+                            && l.IdEstado == (int)Helper.Estado.LicCreada
                             select new LicitacionViewModel
                             {
                                 IdLicitacion = l.IdLicitacion,
@@ -205,44 +206,57 @@ namespace tesoreria.Controllers
                     if (dbLicitacion != null)
                     {
 
-                        var dbArchivo = (from doc in db.LicitacionOfertaDocumento
-                                         join of in db.LicitacionOferta on doc.IdLicitacionOferta equals of.IdLicitacionOferta
-                                         where of.IdLicitacion == dbLicitacion.IdLicitacion
-                                         select new {
-                                             doc.IdLicitacionOfertaDocumento,
-                                             of.IdLicitacion,
-                                             of.IdLicitacionOferta,
-                                             doc.UrlDocumento
-                                         }).ToList();
-                        foreach (var arc in dbArchivo)
+                        var existeContrato = (from c in db.Contrato
+                                              join o in db.LicitacionOferta on c.IdLicitacionOferta equals o.IdLicitacionOferta
+                                              where o.IdLicitacion == dbLicitacion.IdLicitacion
+                                              select c).FirstOrDefault();
+
+                        if (existeContrato == null)
                         {
-                            var archivo = Server.MapPath(arc.UrlDocumento);
-                            if (System.IO.File.Exists(archivo))
+                            var dbArchivo = (from doc in db.LicitacionOfertaDocumento
+                                             join of in db.LicitacionOferta on doc.IdLicitacionOferta equals of.IdLicitacionOferta
+                                             where of.IdLicitacion == dbLicitacion.IdLicitacion
+                                             select new
+                                             {
+                                                 doc.IdLicitacionOfertaDocumento,
+                                                 of.IdLicitacion,
+                                                 of.IdLicitacionOferta,
+                                                 doc.UrlDocumento
+                                             }).ToList();
+                            foreach (var arc in dbArchivo)
                             {
-                                System.IO.File.Delete(archivo);
+                                var archivo = Server.MapPath(arc.UrlDocumento);
+                                if (System.IO.File.Exists(archivo))
+                                {
+                                    System.IO.File.Delete(archivo);
+                                }
+
+                                db.Database.ExecuteSqlCommand("DELETE FROM LicitacionOfertaDocumento WHERE IdLicitacionOfertaDocumento = {0}", arc.IdLicitacionOfertaDocumento);
+                                db.SaveChanges();
                             }
 
-                            db.Database.ExecuteSqlCommand("DELETE FROM LicitacionOfertaDocumento WHERE IdLicitacionOfertaDocumento = {0}", arc.IdLicitacionOfertaDocumento);
+                            var dbActivo = db.LicitacionActivo.Where(c => c.IdLicitacion == idLicitacion);
+                            foreach (var act in dbActivo)
+                            {
+                                db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActDisponible, act.IdActivo);
+                                db.SaveChanges();
+                            }
+
+                            db.Database.ExecuteSqlCommand("DELETE FROM LicitacionActivo WHERE IdLicitacion = {0}", dbLicitacion.IdLicitacion);
                             db.SaveChanges();
-                        }
 
-                        var dbActivo = db.LicitacionActivo.Where(c => c.IdLicitacion == idLicitacion);
-                        foreach (var act in dbActivo)
-                        {
-                            db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActDisponible, act.IdActivo);
+                            db.Database.ExecuteSqlCommand("DELETE FROM LicitacionOferta WHERE IdLicitacion = {0}", dbLicitacion.IdLicitacion);
                             db.SaveChanges();
+
+                            db.Licitacion.Remove(dbLicitacion);
+                            db.SaveChanges();
+                            dbContextTransaction.Commit();
+                            showMessageString = new { Estado = 0, Mensaje = "Registro Eliminado con exito" };
                         }
-
-                        db.Database.ExecuteSqlCommand("DELETE FROM LicitacionActivo WHERE IdLicitacion = {0}", dbLicitacion.IdLicitacion);
-                        db.SaveChanges();
-
-                        db.Database.ExecuteSqlCommand("DELETE FROM LicitacionOferta WHERE IdLicitacion = {0}", dbLicitacion.IdLicitacion);
-                        db.SaveChanges();
-
-                        db.Licitacion.Remove(dbLicitacion);
-                        db.SaveChanges();
-                        dbContextTransaction.Commit();
-                        showMessageString = new { Estado = 0, Mensaje = "Registro Eliminado con exito" };
+                        else {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 500, Mensaje = "No se puede eliminar licitación, tiene datos relacionados" };
+                        }
                     }
                     else
                     {
@@ -260,27 +274,43 @@ namespace tesoreria.Controllers
             }
         }
 
-        /*cambia estado licitacion*/
-        private bool CambiaEstadoLicitacion(int idLicitacion) {
-            var dbLicitacion = db.Licitacion.Find(idLicitacion);
-
-            if (dbLicitacion != null) {
-                var existeActivo = db.LicitacionActivo.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
-                var existeOferta = db.LicitacionOferta.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
-
-                if (existeActivo != null && existeOferta != null)
+        /*finaliza licitacion*/
+        [HttpPost]
+        public JsonResult FinalizarLicitacion(int idLicitacion) {
+            dynamic showMessageString = string.Empty;
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
                 {
-                    dbLicitacion.IdEstado = (int)Helper.Estado.LicCompleta;
-                    db.SaveChanges();
+                    var dbLicitacion = db.Licitacion.Find(idLicitacion);
+
+                    if (dbLicitacion != null)
+                    {
+                        var existeActivo = db.LicitacionActivo.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
+                        var existeOferta = db.LicitacionOferta.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
+
+                        if (existeActivo != null && existeOferta != null)
+                        {
+                            dbLicitacion.IdEstado = (int)Helper.Estado.LicFinalizada;
+                            db.SaveChanges();
+                            dbContextTransaction.Commit();
+                            showMessageString = new { Estado = 0, Mensaje = "Licitación finalizada exitosamente" };
+                        }
+                        else
+                        {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 500, Mensaje = "No puede finalizar licitacion, tiene datos faltantes" };
+                        }
+                    }
                 }
-                else {
-                    dbLicitacion.IdEstado = (int)Helper.Estado.LicCreada;
-                    db.SaveChanges();
+                catch (Exception ex)
+                {
+                    dbContextTransaction.Rollback();
+                    showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
                 }
+
+                return Json(showMessageString, JsonRequestBehavior.AllowGet);
             }
-
-
-            return true;
         }
 
         public ActionResult LicitacionBuscar()
@@ -322,12 +352,13 @@ namespace tesoreria.Controllers
         {
             var registro = (from l in db.Licitacion
                             join e in db.Estado on l.IdEstado equals e.IdEstado
-                            join lo in db.LicitacionOferta on l.IdLicitacion equals lo.IdLicitacion into low
-                            from lov in low.DefaultIfEmpty()
-                            join c in db.Contrato on lov.IdLicitacionOferta equals c.IdLicitacionOferta into cw
-                            from cv in cw.DefaultIfEmpty()
+                            //join lo in db.LicitacionOferta on l.IdLicitacion equals lo.IdLicitacion into low
+                            //from lov in low.DefaultIfEmpty()
+                            //join c in db.Contrato on lov.IdLicitacionOferta equals c.IdLicitacionOferta into cw
+                            //from cv in cw.DefaultIfEmpty()
                             where l.IdEmpresa == ((idEmpresa != null) ? idEmpresa : l.IdEmpresa)
                             && l.IdTipoFinanciamiento == ((idTipoFinanciamiento != null) ? idTipoFinanciamiento : l.IdTipoFinanciamiento)
+                            && l.IdEstado != (int)Helper.Estado.LicCreada
                             select new LicitacionViewModel
                             {
                                 IdLicitacion = l.IdLicitacion,
@@ -335,9 +366,19 @@ namespace tesoreria.Controllers
                                 RazonSocial = l.Empresa.RazonSocial,
                                 NombreTipoFinanciamiento = l.TipoFinanciamiento.NombreTipoFinanciamiento,
                                 Monto = l.Monto,
-                                NombreEstado = e.NombreEstado,
-                                NumeroContrato = (cv != null) ? cv.NumeroContrato : string.Empty
+                                NombreEstado = e.NombreEstado
+                                //NumeroContrato = (cv != null) ? cv.NumeroContrato : string.Empty
                             }).AsEnumerable().ToList();
+
+            foreach (var reg in registro) {
+                var contrato = (from lo in db.LicitacionOferta
+                                join c in db.Contrato on lo.IdLicitacionOferta equals c.IdLicitacionOferta
+                                where lo.IdLicitacion == reg.IdLicitacion
+                                select new { c.NumeroContrato }).FirstOrDefault();
+                if (contrato != null) {
+                    reg.NumeroContrato = contrato.NumeroContrato;
+                }
+            }
 
             return Json(registro, JsonRequestBehavior.AllowGet);
         }
@@ -509,7 +550,7 @@ namespace tesoreria.Controllers
                             var mensaje = "";
                             mensaje = "Asociación realizada con éxito";
 
-                            CambiaEstadoLicitacion(idLicitacion);
+                            //CambiaEstadoLicitacion(idLicitacion);
 
                             dbContextTransaction.Commit();
                             showMessageString = new { Estado = 0, Mensaje = mensaje };
@@ -549,7 +590,7 @@ namespace tesoreria.Controllers
                         db.LicitacionActivo.Remove(dbLicitacionActivo);
                         db.SaveChanges();
 
-                        CambiaEstadoLicitacion(idLicitacion);
+                        //CambiaEstadoLicitacion(idLicitacion);
                         db.SaveChanges();
 
                         dbContextTransaction.Commit();
@@ -741,7 +782,7 @@ namespace tesoreria.Controllers
 
                                 }
 
-                                CambiaEstadoLicitacion(dato.IdLicitacion);
+                                //CambiaEstadoLicitacion(dato.IdLicitacion);
                                 dbContextTransaction.Commit();
                                 showMessageString = new { Estado = 0, Mensaje = mensaje };
                             }
@@ -795,7 +836,7 @@ namespace tesoreria.Controllers
                         db.LicitacionOferta.Remove(dbLicitacionOferta);
                         db.SaveChanges();
 
-                        CambiaEstadoLicitacion(idLicitacion);
+                        //CambiaEstadoLicitacion(idLicitacion);
                         db.SaveChanges();
 
                         dbContextTransaction.Commit();

@@ -42,7 +42,7 @@ namespace tesoreria.Helper
         ActEnPoliza=8,
 
         LicCreada=15,
-        LicCompleta=16,
+        LicFinalizada=16,
         LicContrato=17,
 
         OfeGenerada=25,

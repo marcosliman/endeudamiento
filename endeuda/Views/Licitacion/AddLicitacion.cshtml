@@ -71,6 +71,10 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary btn-sm" onclick="Volver();">Volver</button>
+            @if (Model.ExisteLicitacion == "S")
+            {
+                <button type="button" id="btnFinalizar" class="btn btn-success btn-sm" onclick="ConfirmFinalizar(@Model.IdLicitacion);">Finalizar Licitación</button>
+            }
             <button type="button" id="btnGenerar" class="btn btn-primary btn-sm" onclick="GrabarLicitacion();">Grabar Licitación</button>
         </div>
     </div>
@@ -176,9 +180,27 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="ConfirmFinalizar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmación finalización registro licitación</h4>
+            </div>
+            <div class="modal-body">
+                <label>¿Está seguro de finalizar el registro de esta licitación?, La licitación quedará disponible para asociarla a un contrato</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success btn-ok" id="btnAceptaFinalizar">Acepto</button>
+                <a class="btn btn-danger" data-dismiss="modal">
+                    No Acepto
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 <form name="frmLicitacionAcc" id="frmLicitacionAcc" method="post">
     <input type="hidden" name="idLicitacion" id="idLicitacionAcc" />
+    <input type="hidden" name="idLicitacion" id="idLicitacionModal" />
 </form>
 <script>
     $(document).ready(function () {
@@ -221,6 +243,33 @@
         })
     }
 
+    function ConfirmFinalizar(idLicitacion) {
+        $("#idLicitacionModal").val(idLicitacion)
+        $('#ConfirmFinalizar').modal('show');
+    }
+
+    $('#btnAceptaFinalizar').click(function () {
+        var tmpUrl = "/Licitacion/FinalizarLicitacion/";
+        $.ajax({
+            url: tmpUrl,
+            type: "POST",
+            data: { idLicitacion: $("#idLicitacionModal").val() },
+            success: function (data) {
+                if (data.Estado == 0) {
+                    toastr.success(data.Mensaje)
+                    $('#ConfirmFinalizar').modal('hide');
+                    setTimeout(function () { SuccessF(data); }, 3000);
+                    esconderCargando();
+                }
+                else {
+                    toastr.error(data.Mensaje);
+                }
+            }
+        });
+
+    });
+
+
     function Success(data) {
         if (data.result.Estado == "0") {
             toastr.success(data.result.Mensaje);
@@ -242,6 +291,11 @@
         //alert(idLicitacion);
         $('#idLicitacionAcc').val(idLicitacion);
         $("#frmLicitacionAcc").attr("action", "/Licitacion/AddLicitacion");
+        $("#frmLicitacionAcc").submit();
+    }
+
+    function SuccessF() {
+        $("#frmLicitacionAcc").attr("action", "/Licitacion/RegistrarLicitacion");
         $("#frmLicitacionAcc").submit();
     }
 

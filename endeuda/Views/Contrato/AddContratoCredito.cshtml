@@ -237,15 +237,16 @@
                 monto: { required: true, digits: true },
                 tasaMensual: { required: true, number: true },
                 tasaAnual: { required: true, number: true },
-                plazo: { required: true, digits: true }
+                plazo: { required: true, digits: true },
+                fechaInicio: { required: true }
             }
         });
     });
 
     function GrabarContrato() {
-        $(".numberMiles").each(function () {
+        /*$(".numberMiles").each(function () {
             $(this).val($(this).val().toString().replace(/[$.]/g, ''))
-        });
+        });*/
         if ($('#frmContrato').valid()) {
             $(".tasa").each(function () {
                 $(this).val($(this).val().toString().replace(/[$.]/g, ','))

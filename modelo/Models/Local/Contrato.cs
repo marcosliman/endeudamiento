@@ -14,6 +14,8 @@ namespace modelo.Models.Local
         public int IdContrato { get; set; }
         public int IdTipoContrato { get; set; }
         public int? IdLicitacionOferta { get; set; }
+        [ForeignKey("IdLicitacionOferta")]
+        public virtual LicitacionOferta LicitacionOferta { get; set; }
         public int IdEmpresa { get; set; }
         [ForeignKey("IdEmpresa")]
         public virtual Empresa Empresa { get; set; }

@@ -189,7 +189,7 @@ namespace tesoreria.Controllers
                 }
                 else {
                     var licitacion = (from e in db.Licitacion
-                                      where e.IdEstado == (int)Helper.Estado.LicCompleta && e.IdTipoFinanciamiento == (int)Helper.TipoContrato.Leasing
+                                      where e.IdEstado == (int)Helper.Estado.LicFinalizada && e.IdTipoFinanciamiento == (int)Helper.TipoContrato.Leasing
                                       select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
                     SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
                     ViewData["listaLicitacion"] = listaLicitacion;
@@ -317,8 +317,8 @@ namespace tesoreria.Controllers
                                               }).FirstOrDefault();
 
                                 if(oferta != null) {
-                                    dato.TasaMensual = (int)oferta.TasaMensual;
-                                    dato.TasaAnual = (int)oferta.TasaAnual;
+                                    dato.TasaMensual = (double)oferta.TasaMensual;
+                                    dato.TasaAnual = (double)oferta.TasaAnual;
                                     dato.Plazo = (int)oferta.Plazo;
                                     dato.IdEmpresa = (int)oferta.IdEmpresa;
                                     dato.IdTipoFinanciamiento = (int)oferta.IdTipoFinanciamiento;
@@ -494,7 +494,7 @@ namespace tesoreria.Controllers
                             var oferta = db.LicitacionOferta.Find(dbContrato.IdLicitacionOferta);
                             if (oferta != null)
                             {
-                                db.Database.ExecuteSqlCommand("UPDATE Licitacion SET IdEstado = {0} WHERE IdLicitacion = {1}", (int)Helper.Estado.LicCompleta, oferta.IdLicitacion);
+                                db.Database.ExecuteSqlCommand("UPDATE Licitacion SET IdEstado = {0} WHERE IdLicitacion = {1}", (int)Helper.Estado.LicFinalizada, oferta.IdLicitacion);
                                 db.SaveChanges();
 
                                 foreach (var act in dbActivo)
@@ -734,7 +734,7 @@ namespace tesoreria.Controllers
                 else
                 {
                     var licitacion = (from e in db.Licitacion
-                                      where e.IdEstado == (int)Helper.Estado.LicCompleta && e.IdTipoFinanciamiento != (int)Helper.TipoContrato.Leasing
+                                      where e.IdEstado == (int)Helper.Estado.LicFinalizada && e.IdTipoFinanciamiento != (int)Helper.TipoContrato.Leasing
                                       select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
                     SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
                     ViewData["listaLicitacion"] = listaLicitacion;
@@ -1060,14 +1060,14 @@ namespace tesoreria.Controllers
 
                 /*verificacion activar contrato*/
                 ViewData["puedeActivar"] = "N";
-                ViewData["urlRetorno"] = "/Contrato/RegistrarContratoCredito";
+                ViewData["urlRetorno"] = "/Contrato/ListaContratoCredito";
                 var conActivo = db.Contrato.Where(c => c.IdContrato == idContrato).FirstOrDefault();
                 if (conActivo != null) {
                     if(conActivo.IdEstado == (int)Helper.Estado.ConCreado) { 
                         ViewData["puedeActivar"] = "S";
                     }
                     if (conActivo.IdTipoContrato == (int)Helper.TipoContrato.Leasing) {
-                        ViewData["urlRetorno"] = "/Contrato/RegistrarContratoLeasing";
+                        ViewData["urlRetorno"] = "/Contrato/ListaContratoLeasing";
                     }
                 }
 
@@ -1396,7 +1396,7 @@ namespace tesoreria.Controllers
                 else
                 {
                     var licitacion = (from e in db.Licitacion
-                                      where e.IdEstado == (int)Helper.Estado.LicCompleta && e.IdTipoFinanciamiento == (int)Helper.TipoContrato.Leasing
+                                      where e.IdEstado == (int)Helper.Estado.LicFinalizada && e.IdTipoFinanciamiento == (int)Helper.TipoContrato.Leasing
                                       select new RetornoGenerico { Id = e.IdLicitacion, Nombre = e.Autogenerado }).OrderBy(c => c.Id).ToList();
                     SelectList listaLicitacion = new SelectList(licitacion.OrderBy(c => c.Nombre), "Id", "Nombre", idLicitacion);
                     ViewData["listaLicitacion"] = listaLicitacion;
