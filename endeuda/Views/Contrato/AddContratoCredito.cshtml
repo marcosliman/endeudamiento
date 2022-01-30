@@ -234,7 +234,7 @@
                 idEmpresa: { required: true },
                 idTipoFinanciamiento: { required: true },
                 idBanco: { required: true },
-                monto: { required: true, digits: true },
+                monto: { required: true },
                 tasaMensual: { required: true, number: true },
                 tasaAnual: { required: true, number: true },
                 plazo: { required: true, digits: true },
@@ -244,9 +244,9 @@
     });
 
     function GrabarContrato() {
-        /*$(".numberMiles").each(function () {
+        $(".numberMiles").each(function () {
             $(this).val($(this).val().toString().replace(/[$.]/g, ''))
-        });*/
+        });
         if ($('#frmContrato').valid()) {
             $(".tasa").each(function () {
                 $(this).val($(this).val().toString().replace(/[$.]/g, ','))
@@ -264,6 +264,9 @@
             })
 
         }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
     }
 
     function Success(data) {

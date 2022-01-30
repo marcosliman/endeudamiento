@@ -221,7 +221,7 @@
                 idEmpresa: { required: true },
                 idTipoImpuesto: { required: true },
                 idBanco: { required: true },
-                monto: { required: true, digits: true },
+                monto: { required: true },
                 tasaMensual: { required: true, number: true },
                 tasaAnual: { required: true, number: true },
                 plazo: { required: true, digits: true },
@@ -249,8 +249,10 @@
                     Failure(data);
                 }
             })
-
         }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
     }
 
     function Success(data) {

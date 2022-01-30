@@ -14,5 +14,7 @@ namespace modelo.Models.Local
         public int IdContratoActivo { get; set; }
         public int IdContrato { get; set; }
         public int IdActivo { get; set; }
+        [ForeignKey("IdActivo")]
+        public virtual Activo Activo { get; set; }
     }
 }

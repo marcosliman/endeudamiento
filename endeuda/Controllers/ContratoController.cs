@@ -73,7 +73,8 @@ namespace tesoreria.Controllers
                                 FechaInicioStr = c.FechaInicio.ToString("dd-MM-yyyy"),
                                 FechaTermino = c.FechaTermino,
                                 FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
-                                PuedeEliminar = (c.IdEstado != (int)Helper.Estado.ConCreado) ? false : true
+                                PuedeEliminar = (c.IdEstado != (int)Helper.Estado.ConCreado) ? false : true,
+                                NombreEstado = e.NombreEstado
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -290,6 +291,7 @@ namespace tesoreria.Controllers
                             var swTran = true;
 
                             var contrato = db.Contrato.Find(dato.IdContrato);
+                            var contratoEdit = db.Contrato.Find(dato.IdContrato);
 
                             /*verifico si el origen es una licitacion*/
                             var existeOferta = "N";
@@ -336,8 +338,59 @@ namespace tesoreria.Controllers
                                 dato.IdTipoContrato = (int)Helper.TipoContrato.Contrato;
                             }
 
+                            var textoLog = "";
                             if (contrato != null)
                             {
+
+                                /*log de cambios*/
+                                if (contratoEdit.Monto != dato.Monto)
+                                {
+                                    textoLog += "Monto Contrato: " + contratoEdit.Monto + " por " + dato.Monto;
+                                }
+                                if (contratoEdit.NumeroContrato != dato.NumeroContrato)
+                                {
+                                    textoLog += ", Número Contrato: " + contratoEdit.NumeroContrato + " por " + dato.NumeroContrato;
+                                }
+                                if (contratoEdit.MotivoEleccion != dato.MotivoEleccion)
+                                {
+                                    textoLog += ", Motivo Elección: " + contratoEdit.MotivoEleccion + " por " + dato.MotivoEleccion;
+                                }
+                                if (contratoEdit.IdBanco != dato.IdBanco)
+                                {
+                                    var banco = db.Banco.Find(dato.IdBanco);
+                                    textoLog += ", Banco: " + contratoEdit.Banco.NombreBanco + " por " + banco.NombreBanco;
+                                }
+                                if (contratoEdit.IdTipoFinanciamiento != dato.IdTipoFinanciamiento)
+                                {
+                                    var tipoF = db.TipoFinanciamiento.Find(dato.IdTipoFinanciamiento);
+                                    textoLog += ", Tipo Financiamiento: " + contratoEdit.TipoFinanciamiento.NombreTipoFinanciamiento + " por " + tipoF.NombreTipoFinanciamiento;
+                                }
+                                if (contratoEdit.IdTipoImpuesto != dato.IdTipoImpuesto)
+                                {
+                                    var tipoI = db.TipoImpuesto.Find(dato.IdTipoImpuesto);
+                                    textoLog += ", Tipo Impuesto: " + contratoEdit.TipoImpuesto.NombreTipoImpuesto + " por " + tipoI.NombreTipoImpuesto;
+                                }
+                                if (contratoEdit.TipoGarantia != dato.TipoGarantia)
+                                {
+                                    textoLog += ", Tipo Garantía: " + contratoEdit.TipoGarantia + " por " + dato.TipoGarantia;
+                                }
+                                if (contratoEdit.TasaMensual != dato.TasaMensual)
+                                {
+                                    textoLog += ", Tasa Mensual: " + contratoEdit.TasaMensual + " por " + dato.TasaMensual;
+                                }
+                                if (contratoEdit.TasaAnual != dato.TasaAnual)
+                                {
+                                    textoLog += ", Tasa Anual: " + contratoEdit.TasaAnual + " por " + dato.TasaAnual;
+                                }
+                                if (contratoEdit.Plazo != dato.Plazo)
+                                {
+                                    textoLog += ", Plazo Contrato: " + contratoEdit.Plazo + " por " + dato.Plazo;
+                                }
+                                if (contratoEdit.FechaInicio != dato.FechaInicio)
+                                {
+                                    textoLog += ", Fecha Inicio Contrato: " + contratoEdit.FechaInicio + " por " + dato.FechaInicio;
+                                }
+
                                 mensaje = "Contrato actualizado con éxito";
                                 var existeContrato = db.Contrato.Where(c => c.NumeroContrato == dato.NumeroContrato && c.IdContrato != contrato.IdContrato).FirstOrDefault();
                                 if (existeContrato == null)
@@ -425,7 +478,7 @@ namespace tesoreria.Controllers
                             }
 
                             /*registro log contrato*/
-                            GrabaLogContrato(idContrato,1);
+                            GrabaLogContrato(idContrato,1, textoLog);
 
                             if (swTran)
                             {
@@ -561,7 +614,7 @@ namespace tesoreria.Controllers
         }
 
         /*Guarda log contrato*/
-        private bool GrabaLogContrato(int idContrato, int idTipoLog)
+        private bool GrabaLogContrato(int idContrato, int idTipoLog, string textoLog)
         {
             //tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
             var dbTipoLog = db.TipoLog.Find(idTipoLog);
@@ -570,7 +623,7 @@ namespace tesoreria.Controllers
             if (dbContrato != null)
             {
                 if(dbContrato.IdEstado > (int)Helper.Estado.ConCreado) { 
-                    var nombreLog = "Cambios realizados en: " + dbTipoLog.NombreTipoLog;
+                    var nombreLog = "Cambios realizados en: " + dbTipoLog.NombreTipoLog+" ("+ textoLog+" )";
                     var addLog = new ContratoLog();
                     addLog.IdContrato = dbContrato.IdContrato;
                     addLog.IdTipoLog = dbTipoLog.IdTipoLog;
@@ -892,6 +945,7 @@ namespace tesoreria.Controllers
                         try
                         {
 
+                            var textoLog = "";
                             foreach (int ac in activos)
                             {
                                 var existeActivo = db.Activo.Where(c => c.IdActivo == ac && c.IdEstado == (int)Helper.Estado.ActDisponible).FirstOrDefault();
@@ -906,11 +960,14 @@ namespace tesoreria.Controllers
                                     /*cambio el estado del activo*/
                                     existeActivo.IdEstado = (int)Helper.Estado.ActEnContrato;
                                     db.SaveChanges();
+
+                                    /*log de cambios*/
+                                    textoLog += " Nuevo activo: "+addActivo.Activo.NumeroInterno + "; ";
                                 }
                             }
 
                             /*registro log contrato*/
-                            GrabaLogContrato(idContrato, 4);
+                            GrabaLogContrato(idContrato, 4, textoLog);
 
                             var mensaje = "";
                             mensaje = "Asociación realizada con éxito";
@@ -951,7 +1008,9 @@ namespace tesoreria.Controllers
 
 
                         /*registro log contrato*/
-                        GrabaLogContrato(dbContratoActivo.IdContrato, 4);
+                        var textoLog = "";
+                        textoLog += " Elimina activo: " + dbContratoActivo.Activo.NumeroInterno;
+                        GrabaLogContrato(dbContratoActivo.IdContrato, 4, textoLog);
 
                         var dbArchivo = (from doc in db.ContratoActivoDocumento
                                          join of in db.ContratoActivo on doc.IdContratoActivo equals of.IdContratoActivo
@@ -1132,7 +1191,9 @@ namespace tesoreria.Controllers
                                 mensaje = "Archivo Cargado con exito";
 
                                 /*registro log contrato*/
-                                GrabaLogContrato(contrato.IdContrato, 3);
+                                var textoLog = "";
+                                textoLog += " Agrega Documento: " + addDocumento.NombreOriginal;
+                                GrabaLogContrato(contrato.IdContrato, 3, textoLog);
                             }
 
                             dbContextTransaction.Commit();
@@ -1181,20 +1242,23 @@ namespace tesoreria.Controllers
             var contrato = (from c in db.ContratoActivoDocumento
                             join ca in db.ContratoActivo on c.IdContratoActivo equals ca.IdContratoActivo
                             where c.IdContratoActivoDocumento == idContratoActivoDocumento
-                            select new { ca.IdContrato }).FirstOrDefault();
+                            select new { ca.IdContrato,c.NombreOriginal }).FirstOrDefault();
 
             var archivo = Server.MapPath(dbArchivo.UrlDocumento);
             if (System.IO.File.Exists(archivo))
             {
                 System.IO.File.Delete(archivo);
             }
+            var textoLog = "";
+            textoLog += " Elimina Documento: " + contrato.NombreOriginal;
+
             db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivoDocumento WHERE IdContratoActivoDocumento = {0}", idContratoActivoDocumento);
             db.SaveChanges();
 
 
             /*registro log contrato*/
             if(contrato != null) { 
-                GrabaLogContrato(contrato.IdContrato, 3);
+                GrabaLogContrato(contrato.IdContrato, 3, textoLog);
             }
 
 

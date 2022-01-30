@@ -28,6 +28,8 @@ namespace modelo.Models.Local
         [ForeignKey("IdTipoFinanciamiento")]
         public virtual TipoFinanciamiento TipoFinanciamiento { get; set; }
         public int IdTipoImpuesto { get; set; }
+        [ForeignKey("IdTipoImpuesto")]
+        public virtual TipoImpuesto TipoImpuesto { get; set; }
         public string TipoGarantia { get; set; }
         public double TasaMensual { get; set; }
         public double TasaAnual { get; set; }
