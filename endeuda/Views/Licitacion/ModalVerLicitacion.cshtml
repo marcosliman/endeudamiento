@@ -3,23 +3,20 @@
     ViewBag.Title = "Detalles de Licitación";
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
-
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Detalles de Licitación</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-      
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title">Datos Generales</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">Detalles de Licitación</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">Datos Generales</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
             </div>
         </div>
         <div class="card-body">
@@ -44,73 +41,72 @@
                 </div>
             </div>
         </div>
-        
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Registro de Activos</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive mt-1">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacioActivo" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Nro Activo</th>
-                                <th>Familia</th>
-                                <th>Descripcion</th>
-                                <th>Clasif.Cuenta</th>
-                                <th>Monto</th>
-                                <th>Modelo</th>
-                                <th>Año</th>
-                                <th>Marca</th>
-                                <th>Proveedor</th>
-                                <th>Factura</th>
-                                <th>Motor</th>
-                                <th>Chasis</th>
-                                <th>Patente</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Registro de Ofertas</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive mt-1">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaOferta" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Entidad Financiera</th>
-                                <th>Tasa Mensual Ofrecida</th>
-                                <th>Tasa Anual Ofrecida</th>
-                                <th>Plazo (meses)</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-        </div>
-
     </div>
-    <script>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Registro de Activos</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive mt-1">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacioActivo" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Nro Activo</th>
+                            <th>Familia</th>
+                            <th>Descripcion</th>
+                            <th>Clasif.Cuenta</th>
+                            <th>Monto</th>
+                            <th>Modelo</th>
+                            <th>Año</th>
+                            <th>Marca</th>
+                            <th>Proveedor</th>
+                            <th>Factura</th>
+                            <th>Motor</th>
+                            <th>Chasis</th>
+                            <th>Patente</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Registro de Ofertas</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive mt-1">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaOferta" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Entidad Financiera</th>
+                            <th>Tasa Mensual Ofrecida</th>
+                            <th>Tasa Anual Ofrecida</th>
+                            <th>Plazo (meses)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+</div>
+<script>
         $(document).ready(function () {
             initTableActivo();
             initTableOferta()
@@ -211,4 +207,4 @@
         return table;
     }
 
-    </script>
+</script>

@@ -17,12 +17,12 @@
 </div>
 
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h5 class="h5 mb-0 text-gray-800">
-        Nueva Licitación<h5>
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Inicio</li>
-            </ol>
+    <h5 class="h5 mb-0 text-gray-800">Nueva Licitación</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item"><a href="/Licitacion/RegistrarLicitacion">Registrar Licitación</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Nueva Licitación</li>
+    </ol>
 </div>
 @using (Ajax.BeginForm("GrabarLicitacion", "Licitacion", new AjaxOptions
 {
@@ -36,16 +36,10 @@
 {
     @Html.AntiForgeryToken()
     <input type="hidden" name="idLicitacion" id="idLicitacion" value="@Model.IdLicitacion" />
-    <div class="card">
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title">Datos Generales</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
+    
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">Datos Generales</h3>
         </div>
         <div class="card-body">
             <div class="form-group row">
@@ -78,6 +72,7 @@
             <button type="button" id="btnGenerar" class="btn btn-primary btn-sm" onclick="GrabarLicitacion();">Grabar Licitación</button>
         </div>
     </div>
+        
 }
 @if (Model.ExisteLicitacion == "S")
 {
@@ -86,7 +81,7 @@
             <h3 class="card-title">Registro de Activos</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-minus"></i>
                 </button>
             </div>
         </div>
@@ -132,7 +127,7 @@
             <h3 class="card-title">Registro de Ofertas</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                    <i class="fas fa-plus"></i>
+                    <i class="fas fa-minus"></i>
                 </button>
             </div>
         </div>
@@ -166,7 +161,7 @@
 }
 
 <div class="modal fade" id="ModalAsociarActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div id="datosActivo"></div>
         </div>
@@ -215,7 +210,7 @@
             rules: {
                 idEmpresa: { required: true },
                 IdTipoFinanciamiento: { required: true },
-                Monto: { required: true, digits: true },
+                Monto: { required: true },
             }
         });
     });

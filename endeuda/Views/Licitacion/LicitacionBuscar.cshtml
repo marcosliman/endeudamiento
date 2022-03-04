@@ -16,79 +16,73 @@
 <br />
 
 
-<div class="row">
-    <div class="card col-lg-12">
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title">Filtros</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+
+<div class="card card-outline card-info collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-2">
-                        @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
+            <div class="col-md-2">
+                @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="col-md-2">
                         
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row justify-content-end">
-                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</div>    
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Detalle</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacion" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="no-sort" width="3%"><i class="fa fa-eye"></i></th>
-                                <th class="no-sort" width="3%"><i class="fa fa-book-open"></i></th>
-                                <th width="10%">Autogenerado</th>
-                                <th width="10%">Número Contrato</th>
-                                <th>Empresa</th>
-                                <th>Tipo Financiamiento</th>
-                                <th>Monto a financiar</th>
-                                <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-            </div>
-
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Detalle</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
         </div>
     </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacion" data-order='[[ 0, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort" width="3%"><i class="fa fa-eye"></i></th>
+                        <th class="no-sort" width="3%"><i class="fa fa-book-open"></i></th>
+                        <th width="10%">Autogenerado</th>
+                        <th width="10%">Número Contrato</th>
+                        <th>Empresa</th>
+                        <th>Tipo Financiamiento</th>
+                        <th>Monto a financiar</th>
+                        <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+
 </div>
+   
 
 <div class="modal fade" id="ModalVerLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-verlicitacion" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">

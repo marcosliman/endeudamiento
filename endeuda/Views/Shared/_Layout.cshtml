@@ -619,6 +619,27 @@
                 "orderable": false
             }]
         }); // ID From dataTable
+
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
+        $(".numberMiles").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    var valor = value.replace(/[^0-9,]/g, '');
+                    return SeparadorMilesInput(valor);                    
+                });
+            },
+            "change": function (event) {
+                $(event.target).val(function (index, value) {
+                    var valor = value.replace(/[^0-9,]/g, '');
+                    return SeparadorMilesInput(valor);
+                });
+            }
+        });
     });
     function mostrarCargando(mensaje, imagen) {
         if (mensaje == null || mensaje == undefined) {
