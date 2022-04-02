@@ -45,5 +45,7 @@ namespace modelo.Models.Local
         public virtual Estado Estado { get; set; }
         public DateTime? FechaRegistro { get; set; }
         public int? IdUsuarioRegistro { get; set; }
+        public bool SincronizadoSoftland { get; set; }
+        public string NumeroContrato { get; set; }
     }
 }

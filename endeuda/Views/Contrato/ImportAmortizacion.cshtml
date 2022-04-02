@@ -1,0 +1,96 @@
+﻿@model modelo.Models.Local.Contrato
+@{
+    ViewBag.Title = "Importación de Amortización";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="addArchivo">@ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="card-body">
+    @using (Ajax.BeginForm("ImportaPlanillaAmortizacion", "Contrato", new AjaxOptions
+    {
+        OnBegin = "mostrarCargando",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "post",
+        OnSuccess = "Success",
+        OnFailure = "Failure"
+
+    }, new { id = "frmAddArchivo", enctype = "multipart/form-data" }))
+    {
+        <input type="hidden" name="IdContrato" id="IdContratoImport" value="@Model.IdContrato" />
+
+        <div class="form-group row">
+            <label for="precio" class="col-sm-4 col-form-label">Archivo [.xls,.xlsx]</label>
+            <div class="col-sm-8">
+                <input type="file" class="form-control required" name="archivo" id="archivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
+            </div>
+        </div>
+        <button type="button" onclick="Cerrar()" class="btn btn-secondary"><i class="fa fa-ban"></i> Cancelar</button>
+        <button type="button" class="btn btn-primary fa-pull-right mb-1" id="btnArchivo" onclick="GrabarArchivo()"><i class="fa fa-file-import"></i> Importar</button>
+    }
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#rutApoderado").Rut({ format_on: 'keyup' });
+        $('#frmAddArchivo').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning"),
+            rules: {
+                precio: { required: true, digits: true, maxlength: 20 },
+                idAfectoIva: { required: true }
+            }
+        });
+    });
+
+    function GrabarArchivo() {
+        if ($('#frmAddArchivo').valid()) {
+            var input = document.getElementById('archivo');
+            var filePath = input.value;
+            var file = input.files[0];
+            var valido = true;
+            var allowedExtensions = /(.xls|.xlsx)$/i;
+            if (file) {
+                if (file.size > 4000000) {
+                    alert('El archivo no debe superar los 4MB');
+                    valido = false;
+                }
+                else if (!allowedExtensions.exec(filePath)) {
+                    alert('Solo se permite archivos con extensión: ' + allowedExtensions);
+                    valido = false;
+                }
+            }
+            if (valido) {
+
+                $('#frmAddArchivo').submit();
+            }
+        }
+    }
+
+    function Cerrar() {
+        $('#ModalArchivo').modal('hide');
+        RefreshLista();
+    }
+
+    function Success(data) {
+        esconderCargando();
+        if (data.result.Estado == "0") {
+
+            toastr.success(data.result.Mensaje);
+            $('#ModalArchivo').modal('hide');
+            //CargaTab('documentos-part', 4);
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+        }
+    }
+
+    function Failure(data) {
+        esconderCargando();
+        toastr.error("Error");
+    }
+</script>

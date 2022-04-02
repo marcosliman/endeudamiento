@@ -27,6 +27,9 @@
                     <a class="nav-link nav-link-contrato active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Datos</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link nav-link-contrato @habilitaTab" id="header2" data-toggle="pill" href="#" onclick="CargaTab('tab2',2)" role="tab" aria-controls="custom-tabs-four-pago" aria-selected="false">Amortización</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link nav-link-contrato @habilitaTab" id="header3" data-toggle="pill" href="#" onclick="CargaTab('tab3',3)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">Documentos</a>
                 </li>
             </ul>
@@ -34,6 +37,8 @@
         <div class="card-body">
             <div class="tab-content" id="custom-tabs-four-tabContent">
                 <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                </div>
+                <div class="tab-pane fade" id="tab2" role="tabpanel">
                 </div>
                 <div class="tab-pane fade" id="tab3" role="tabpanel">
                 </div>
@@ -53,12 +58,17 @@
         $('.tab-pane').removeClass("show").removeClass("active");
         $('.nav-link-contrato').removeClass("active");
         $("#tab1").empty();
+        $("#tab2").empty();
         $("#tab3").empty();
         $("#header" + op).addClass("active");
         url = "";
         if (op == 1) {
             url = 'AddContratoCredito';
             $("#tab1").addClass("show").addClass("active");
+        }
+        if (op == 2) {
+            url = 'AddAmortizacion';
+            $("#tab2").addClass("show").addClass("active");
         }
         if (op == 3) {
             url = 'AddDocumentoLeasing';

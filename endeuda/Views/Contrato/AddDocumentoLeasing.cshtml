@@ -5,88 +5,94 @@
 }
 
 <div class="alert alert-success">
-    <h5><i class="icon fas fa-cloud"></i>Documentos Contrato</h5>
+    <h5><i class="icon fas fa-cloud"></i>Documentos Contrato Leasing</h5>
     Aquí puede adjuntar los documentos para cada uno de los activos.
 </div>
 @foreach (var doc in Model as List<modelo.ViewModel.ContratoActivoViewModel>)
 {
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header" style="background-color:lightblue">
-                <h3 class="card-title">Archivos del Activo @doc.NumeroInterno</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
+
+    <div class="card">
+        <div class="card-header" style="background-color:lightblue">
+            <h3 class="card-title">Archivos del Activo @doc.NumeroInterno</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <table class="table table-striped table-bordered table-sm" id="grillaDocumento_@doc.IdContratoActivo" width="100%">
-                        <thead>
-                            <tr>
-                                <th>Tipo Documento</th>
-                                <th>Nombre</th>
-                                <th>Acción</th>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <table class="table table-striped table-bordered table-sm" id="grillaDocumento_@doc.IdContratoActivo" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Tipo Documento</th>
+                            <th>Nombre</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        @foreach (var item in doc.Archivos.ToList())
+                        {
+                            <tr id="tr_@item.IdContratoActivoDocumento">
+                                <td>@item.NombreTipoDocumento</td>
+                                <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
+                                <td>
+                                    <button class="btn btn-danger btn-xs" type="button" onclick="EliminarArchivo('@item.IdContratoActivoDocumento','@doc.IdContratoActivo');">
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody id="tbody">
-                            @foreach (var item in doc.Archivos.ToList())
-                            {
-                                <tr id="tr_@item.IdContratoActivoDocumento">
-                                    <td>@item.NombreTipoDocumento</td>
-                                    <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
-                                    <td>
-                                        <button class="btn btn-primary btn-xs" type="button" onclick="EliminarArchivo('@item.IdContratoActivoDocumento','@doc.IdContratoActivo');">
-                                            <i class="far fa-trash-alt"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            }
+                        }
 
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
+            </div>
 
-                <div class="card">
-                    <h3 class="card-title">Cargar Documento</h3>
-                    <div class="card-body">
-                        <form name="frmUpload" id="frmUpload_@doc.IdContratoActivo" class="classForm" method="post" enctype = "multipart/form-data">
-                            <input type="hidden" name="idContratoActivo" id="idContratoActivo_@doc.IdContratoActivo" value="@doc.IdContratoActivo" />
-                            <div class="card-body pb-0">
-                                <div class="form-group form-group-sm row">
-                                    <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Tipo Documento</label>
-                                    <div class="col-auto col-form-label">
-                                        <select name="idTipoDocumento" id="idTipoDocumento_@doc.IdContratoActivo" class="form-control form-control-sm required">
-                                            <option value="">--Seleccione Tipo Documento --</option>
-                                            @{ 
-                                                foreach (var t in ViewData["listaTipoDocumento"] as List<modelo.ViewModel.RetornoGenerico>) {
-                                                    <text><option value="@t.Id">@t.Nombre</text>
-                                                }
-                                            }
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group form-group-sm row">
-                                    <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Documento [.xls,.xlsx,.pdf]</label>
-                                    <div class="col-auto col-form-label">
-                                        <input type="file" class="form-control form-control-sm" name="archivo" id="archivo_@doc.IdContratoActivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
-                                    </div>
-                                </div>
-                                <div class="col-sm-auto col-form-label">
-                                    <button type="button" class="btn btn-primary btn-sm fileinput-button" id="btnUpload_@doc.IdContratoActivo" onclick="Upload(@doc.IdContratoActivo)"><i class="fa fa-upload"></i> Cargar Documento</button>
-                                </div>
-                            </div>
-                        </form>
+
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Cargar Documento</h3>
+        </div>        
+        <div class="card-body">
+            <form name="frmUpload" id="frmUpload_@doc.IdContratoActivo" class="classForm" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="idContratoActivo" id="idContratoActivo_@doc.IdContratoActivo" value="@doc.IdContratoActivo" />
+                <div class="card-body pb-0">
+                    <div class="form-group form-group-sm row">
+                        <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Tipo Documento</label>
+                        <div class="col-auto col-form-label">
+                            <select name="idTipoDocumento" id="idTipoDocumento_@doc.IdContratoActivo" class="form-control form-control-sm required">
+                                <option value="">--Seleccione Tipo Documento --</option>
+                                @{
+                                    foreach (var t in ViewData["listaTipoDocumento"] as List<modelo.ViewModel.RetornoGenerico>)
+                                    {
+                                        <text>
+                                            <option value="@t.Id">
+                                                @t.Nombre</text>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm row">
+                        <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Documento [.xls,.xlsx,.pdf]</label>
+                        <div class="col-auto col-form-label">
+                            <input type="file" class="form-control form-control-sm" name="archivo" id="archivo_@doc.IdContratoActivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
+                        </div>
+                    </div>
+                    <div class="col-sm-auto col-form-label">
+                        <button type="button" class="btn btn-primary btn-sm fileinput-button" id="btnUpload_@doc.IdContratoActivo" onclick="Upload(@doc.IdContratoActivo)"><i class="fa fa-upload"></i> Cargar Documento</button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 }
 <div class="card-footer">
-    @if(ViewData["puedeActivar"] == "S") {
-    <button type="button" onclick="ConfirmaActivar()" name="btnCrear" id="btnCrear" class="btn btn-success btn-sm float-right">Activar Contrato</button>
+    @if (ViewData["puedeActivar"] == "S")
+    {
+        <button type="button" onclick="ConfirmaActivar()" name="btnCrear" id="btnCrear" class="btn btn-success btn-sm float-right">Activar Contrato</button>
     }
 </div>
 
@@ -208,7 +214,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var acciones = '';
-                        acciones += '<button class="btn btn-primary btn-xs" type="button" onclick="EliminarArchivo(' + o.IdContratoActivoDocumento + ',' + o.IdContratoActivo + ');"><i class="far fa-trash-alt"></i></button>';
+                        acciones += '<button class="btn btn-danger btn-xs" type="button" onclick="EliminarArchivo(' + o.IdContratoActivoDocumento + ',' + o.IdContratoActivo + ');"><i class="far fa-trash-alt"></i></button>';
                         return acciones;
                     }
                 }

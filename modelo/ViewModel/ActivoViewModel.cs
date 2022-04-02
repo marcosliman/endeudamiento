@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-
+using modelo.Models.Local;
 namespace modelo.ViewModel
 {
     public class ActivoViewModel
@@ -46,6 +46,8 @@ namespace modelo.ViewModel
         public string NumeroLeasing { get; set; }
         public string TituloBoton { get; set; }
         public bool Editable { get; set; }
+        public Activo Activo { get; set; }
+        public string NumeroContrato { get; set; }
     }
 
 }

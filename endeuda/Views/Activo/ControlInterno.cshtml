@@ -78,7 +78,7 @@
                     </div>
                    
                     <div class="col-md-2 justify-content-end text-right">
-                        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo"><i class="fa fa-file-import"></i> Cargar Activos XLS</button>
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="ImportActivos()" id="btnNuevo"><i class="fa fa-file-import"></i> Cargar Activos XLS</button>
                         <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo"><i class="fa fa-plus"></i>Nuevo Activo</button>
                         <!--<button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnMasivo" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva Activo</button> -->
                     </div>
@@ -133,9 +133,12 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-importSoftland" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div id="datosActivosSoftland"></div>
+<div class="modal fade" id="ModalArchivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosArchivo"></div>
+
+        </div>
     </div>
 </div>
 
@@ -149,6 +152,24 @@
 
 
 <script>
+    function ImportActivos() {
+        $("#datosArchivo").empty();
+        $('#ModalArchivo').modal('show');
+        $.ajax({
+            url: "/Activo/ImportActivosInterno",
+            type: "Post",
+            data: {
+                
+            },
+            beforeSend: function () {
+                $("#datosArchivo").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosArchivo").empty();
+                $("#datosArchivo").html(data);
+            }
+        });
+    }
     $(document).ready(function () {
         //$.fn.dataTable.moment('DD/MM/YYYY');
         AbrirMenu("ControlInterno");
@@ -172,11 +193,11 @@
         };
         var table = $('#grillaActivo').DataTable({
             buttons: [
-                
+
                 $.extend(true, {}, buttonCommon, {
                     filename: "Activos",
                     sheetName: "Activos"
-                }) 
+                })
             ],
             "scrollY": 450,
             "scrollX": true,
@@ -217,9 +238,9 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        // if (o.Editable == true) {
-                        boton += '<button class="btn btn-primary btn-xs" type="button" title="Eliminar" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="far fa-trash-alt"></i></button> ';
-                        //}
+                        if (row.IdEstado == 3 || row.IdEstado == 4) {
+                            boton += '<button class="btn btn-danger btn-xs" type="button" title="Eliminar" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="far fa-trash-alt"></i></button> ';
+                        }
                         return boton;
                     }
                 },
@@ -236,24 +257,114 @@
                 { "data": "Serie" },
                 { "data": "Anio" },
                 { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
                 { "data": "NumeroFactura" },
-                { "data": "Valor" },
-                { "data": "Valor" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                { "data": "NumeroContrato" },
                 { "data": "Patente" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" },
-                { "data": "Valor" }
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                }
             ]
         });
         //$("#grillaActivo").dataTable().fnDestroy();

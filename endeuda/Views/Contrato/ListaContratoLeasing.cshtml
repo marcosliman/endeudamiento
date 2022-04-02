@@ -6,10 +6,10 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Buscar Contratos</h5>
+    <h5 class="h5 mb-0 text-gray-800">Registrar Contratos Leasing</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+        <li class="breadcrumb-item active" aria-current="page">Contrato Leasing</li>
     </ol>
 </div>
 <h6 class="h6 mb-0 text-gray-800">Acá puedes administrar los contratos Leasing</h6>
@@ -118,7 +118,7 @@
                     d.tipoContrato = "@((int)tesoreria.Helper.TipoContrato.Leasing)";
                     d.idBanco = $('#bancoB').val();
                     d.idEmpresa = $('#empresaB').val();
-                    //d.idTipoFinanciamiento = $('#tipoFinanciamientoB').val();
+                    d.IdEstado= 30;
                     d.numeroContrato = $('#numeroContratoB').val();
                 },
                 "dataSrc": ""

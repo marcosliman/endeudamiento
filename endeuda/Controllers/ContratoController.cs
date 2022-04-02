@@ -7,6 +7,11 @@ using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
 using System.IO;
+using System.Data;
+using System.Data.SqlClient;
+using LinqToExcel;
+using System.Data.OleDb;
+using System.Data.Entity.Validation;
 namespace tesoreria.Controllers
 {
     public class ContratoController : Controller
@@ -50,7 +55,7 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaContrato_Read(int tipoContrato, int? idBanco, int? idEmpresa, string numeroContrato)
+        public ActionResult ListaContrato_Read(int tipoContrato, int? idBanco, int? idEmpresa, string numeroContrato,int? IdEstado)
         {
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado.ToList() on c.IdEstado equals e.IdEstado
@@ -58,6 +63,7 @@ namespace tesoreria.Controllers
                             && c.IdEmpresa == ((idEmpresa != null) ? idEmpresa : c.IdEmpresa)
                             && c.IdBanco == ((idBanco != null) ? idBanco : c.IdBanco)
                             && c.NumeroContrato == ((numeroContrato != "") ? numeroContrato : c.NumeroContrato)
+                            && ((IdEstado!=null)?c.IdEstado==IdEstado:true)
                             select new ContratoViewModel
                             {
                                 IdContrato = c.IdContrato,
@@ -1058,7 +1064,7 @@ namespace tesoreria.Controllers
         #endregion
 
         #region Amortizacion
-        public ActionResult AddAmortizacion()
+        public ActionResult AddAmortizacion(int idContrato)
         {
             if (seguridad == null)
             {
@@ -1070,8 +1076,249 @@ namespace tesoreria.Controllers
             }
             else
             {
-                return View();
+                var contrato = db.ContratoActivo.Find(idContrato);
+                return View(contrato);
             }
+        }
+        public ActionResult DetAmortizacion_Read(int idContrato)
+        {
+            var registro = (from c in db.Contrato_Amortizacion
+                            join det in db.Contrato_DetAmortizacion on c.IdContratoAmortizacion equals det.IdContratoAmortizacion
+                            where c.IdContrato == idContrato
+                            select new 
+                            {
+                                det.Mes,
+                                det.CortoPlazo,
+                                det.LargoPlazo,
+                                det.FechaPago,
+                                det.Periodo,
+                                det.Cuota,
+                                det.IvaDiferido,
+                                det.Intereses,
+                                det.Amortizacion,
+                                det.Saldo_Insoluto
+                            }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ImportAmortizacion(int? IdContrato)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                var contrato = db.Contrato.Find(IdContrato);
+                return View(contrato);
+            }
+        }
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ImportaPlanillaAmortizacion(int IdContrato, HttpPostedFileBase archivo)
+        {
+            dynamic showMessageString = string.Empty;
+            List<string> data = new List<string>();
+            if (archivo != null)
+            {
+                //guardar amortizacion
+                Contrato_Amortizacion contratoAmortizacion = new Contrato_Amortizacion();
+                var existeAmortizacion = db.Contrato_Amortizacion.Where(c => c.IdContrato == IdContrato).FirstOrDefault();
+                if (existeAmortizacion != null)
+                {
+                    contratoAmortizacion = existeAmortizacion;
+                }
+                else
+                {
+                    contratoAmortizacion.IdContrato = IdContrato;
+                    contratoAmortizacion.FechaRegistro = DateTime.Now;
+                    contratoAmortizacion.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                    db.Contrato_Amortizacion.Add(contratoAmortizacion);
+                    db.SaveChanges();
+                }
+                // tdata.ExecuteCommand("truncate table OtherCompanyAssets");
+                if (archivo.ContentType == "application/vnd.ms-excel" || archivo.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                {
+                    string filename = archivo.FileName;
+                    string targetpath = Server.MapPath("~/App_Data/");
+                    archivo.SaveAs(targetpath + filename);
+                    string pathToExcelFile = targetpath + filename;
+                    var connectionString = "";
+                    if (filename.EndsWith(".xls"))
+                    {
+                        connectionString = string.Format("Provider=Microsoft.Jet.OLEDB.4.0; data source={0}; Extended Properties=Excel 8.0;", pathToExcelFile);
+                    }
+                    else if (filename.EndsWith(".xlsx"))
+                    {
+                        connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\";", pathToExcelFile);
+                    }
+
+                    var adapter = new OleDbDataAdapter("SELECT * FROM [Sheet1$]", connectionString);
+                    var ds = new DataSet();
+                    adapter.Fill(ds, "ExcelTable");
+                    DataTable dtable = ds.Tables["ExcelTable"];
+                    string sheetName = "Sheet1";
+                    var excelFile = new ExcelQueryFactory(pathToExcelFile);
+                    var artistAlbums = from a in excelFile.Worksheet<DetAmortizacionViewModel>(sheetName) select a;
+                    
+                    
+                    foreach (var a in artistAlbums)
+                    {
+                        try
+                        {
+                            if (a.Periodo >= 0)
+                            {
+                                var periodo = db.Contrato_DetAmortizacion.Where(c => c.IdContratoAmortizacion == contratoAmortizacion.IdContratoAmortizacion && c.Periodo == a.Periodo).FirstOrDefault();
+                                if (periodo != null)
+                                {
+                                    periodo.CortoPlazo = a.CortoPlazo;
+                                    periodo.LargoPlazo = a.LargoPlazo;
+                                    periodo.FechaPago = a.FechaPago;
+                                    periodo.Cuota = a.Cuota;
+                                    periodo.IvaDiferido = a.IvaDiferido;
+                                    periodo.Intereses = a.Intereses;
+                                    periodo.Amortizacion = a.Amortizacion;
+                                    periodo.Saldo_Insoluto = a.Saldo_Insoluto;
+                                    db.SaveChanges();                                    
+                                }
+                                else
+                                {
+                                    Contrato_DetAmortizacion detPeriodo= new Contrato_DetAmortizacion();
+                                    detPeriodo.IdContratoAmortizacion = contratoAmortizacion.IdContratoAmortizacion;
+                                    detPeriodo.Periodo = a.Periodo;
+                                    detPeriodo.CortoPlazo = a.CortoPlazo;
+                                    detPeriodo.LargoPlazo = a.LargoPlazo;
+                                    detPeriodo.FechaPago = a.FechaPago;
+                                    detPeriodo.Cuota = a.Cuota;
+                                    detPeriodo.IvaDiferido = a.IvaDiferido;
+                                    detPeriodo.Intereses = a.Intereses;
+                                    detPeriodo.Amortizacion = a.Amortizacion;
+                                    detPeriodo.Saldo_Insoluto = a.Saldo_Insoluto;
+                                    db.Contrato_DetAmortizacion.Add(detPeriodo);
+                                    db.SaveChanges();
+                                }
+
+                            }
+                            else
+                            {
+                                data.Add("<ul>");
+                                if (a.Periodo == 0) data.Add("<li> Nro es obligatorio</li>");
+                                data.Add("</ul>");
+                                data.ToArray();
+                                showMessageString = new { Estado = 100, Mensaje = "Error en los registros" };
+                                break;
+                            }
+                            showMessageString = new { Estado = 0, Mensaje = "Registros Importados Exitosamente" };
+                        }
+                        catch (DbEntityValidationException ex)
+                        {
+                            foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                            {
+                                foreach (var validationError in entityValidationErrors.ValidationErrors)
+                                {
+                                    Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                                }
+                            }
+                            showMessageString = new { Estado = 100, Mensaje = "Error en los registros" };
+                        }
+                    }
+                    //calcular tir
+                    var valTir = computeIRR(IdContrato, 0);
+                    //var saldoInsoluto=
+                    //deleting excel file from folder
+                    if ((System.IO.File.Exists(pathToExcelFile)))
+                    {
+                        System.IO.File.Delete(pathToExcelFile);
+                    }
+
+                }
+                else
+                {
+                    //alert message for invalid file format
+                    data.Add("<ul>");
+                    data.Add("<li>Only Excel file format is allowed</li>");
+                    data.Add("</ul>");
+                    data.ToArray();
+
+                    showMessageString = new { Estado = 100, Mensaje = "Formato no permitido" };
+                }
+            }
+            else
+            {
+                data.Add("<ul>");
+                if (archivo == null) data.Add("<li>Please choose Excel file</li>");
+                data.Add("</ul>");
+                data.ToArray();
+                showMessageString = new { Estado = 100, Mensaje = "Please choose Excel file" };
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+        }
+        
+        
+        public double computeIRR(int IdContrato, int numOfFlows)
+        {
+            var amortizacion = db.Contrato_Amortizacion.Where(c => c.IdContrato == IdContrato).FirstOrDefault();
+            var detAmortizacion = db.Contrato_DetAmortizacion.Where(c => c.IdContratoAmortizacion == amortizacion.IdContratoAmortizacion).OrderBy(c=>c.Periodo).ToList();
+            numOfFlows = detAmortizacion.Max(c => c.Periodo);
+            var detFlow = detAmortizacion.Where(c => c.Periodo < numOfFlows).OrderBy(c => c.Periodo).ToList();
+            double LOW_RATE = 0.01;
+            double HIGH_RATE = 0.5;
+            var MAX_ITERATION = 1000;
+            double PRECISION_REQ = 0.00000001;
+            int i = 0, j = 0;
+            double m = 0.0;
+            double old = 0.00;
+            double nuevo = 0.00;
+            double oldguessRate = LOW_RATE;
+            double newguessRate = LOW_RATE;
+            double guessRate = LOW_RATE;
+            double lowGuessRate = LOW_RATE;
+            double highGuessRate = HIGH_RATE;
+            double npv = 0.0;
+            double denom = 0.0;
+            for (i = 0; i < MAX_ITERATION; i++)
+            {
+                npv = 0.00;
+                var sumDenom = 0.00;
+                j = 0;
+                foreach(var cf in detAmortizacion)
+                {
+                    denom = Math.Pow((1 + guessRate), cf.Periodo);
+                    sumDenom = sumDenom + denom;
+                    var k = (cf.Cuota / denom);
+                    npv = npv + k;
+                    j++;
+                }
+                /* Stop checking once the required precision is achieved */
+                if ((npv > 0) && (npv < PRECISION_REQ))
+                    break;
+                if (old == 0)
+                    old = npv;
+                else
+                    old = nuevo;
+                nuevo = npv;
+                if (i > 0)
+                {
+                    if (old < nuevo)
+                    {
+                        if (old < 0 && nuevo < 0)
+                            highGuessRate = newguessRate;
+                        else
+                            lowGuessRate = newguessRate;
+                    }
+                    else
+                    {
+                        if (old > 0 && nuevo > 0)
+                            lowGuessRate = newguessRate;
+                        else
+                            highGuessRate = newguessRate;
+                    }
+                }
+                oldguessRate = guessRate;
+                guessRate = (lowGuessRate + highGuessRate) / 2;
+                newguessRate = guessRate;
+            }
+            return guessRate;
         }
         #endregion
 

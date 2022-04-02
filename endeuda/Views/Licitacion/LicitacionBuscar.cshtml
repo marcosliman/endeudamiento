@@ -72,7 +72,7 @@
                         <th>Empresa</th>
                         <th>Tipo Financiamiento</th>
                         <th>Monto a financiar</th>
-                        <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
+                        <th class="no-sort" width="3%">@*<i class="far fa-trash-alt"></i>*@</th>
                     </tr>
                 </thead>
                 <tbody></tbody>
@@ -165,7 +165,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarLicitacion(' + o.IdLicitacion + ')"><i class="far fa-trash-alt"></i></button> ';
+                       // boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarLicitacion(' + o.IdLicitacion + ')"><i class="far fa-trash-alt"></i></button> ';
                         return boton;
                     }
                 }

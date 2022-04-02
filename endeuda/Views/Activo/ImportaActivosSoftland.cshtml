@@ -6,11 +6,11 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Buscar Activos</h5>
+    <h5 class="h5 mb-0 text-gray-800">Buscar Activos en Softland</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
         <li class="breadcrumb-item"><a href="/Activo/ControlInterno">Activos-Control Interno</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+        <li class="breadcrumb-item active" aria-current="page">Importar</li>
     </ol>
 </div>
 <h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los activos de todas las empresas.</h6>
@@ -49,9 +49,12 @@
                             <select name="CodSGru" id="CodSGruBus" class="form-control form-control-sm"></select>
                         </div>
                     </div>
-                    <div class="form-group form-group-sm">
-                        <div class="col-sm-12">
+                    <div class="form-group row">
+                        <div class="col-sm-10">
                             <button class="btn btn-primary btn-block" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-secondary btn-block" type="button" onclick="location.href='/Activo/ControlInterno'"><i class="fa fa-undo"></i> Volver</button>
                         </div>
                     </div>
                 </div>
@@ -78,15 +81,16 @@
                         <tr>
                             <th class="no-sort noExport" width="2%"></th>
                             <th class="no-sort noExport" width="2%"><i class="fa fa-file-import text-grey"></i></th>
-                            <th>Cod. Softland</th>
-                            <th>Estado</th>
+                            <th>Cod. Softland</th>                            
                             <th>Descripción</th>
                             <th>Grupo</th>
                             <th>Sub-Grupo</th>
                             <th>Monto Adquisición</th>
                             <th>Fecha Ingreso</th>
-                            <th>Motivo Baja</th>
-                            <th>Fecha Baja</th>
+                            <th>Factura</th>
+                            <th>Leasing</th>
+                            <th>Cta.</th>
+                            <th>Proveedor</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -137,7 +141,7 @@
         cambioGrupoBusqueda(IdEmpresa, "");
     }
     function cambioGrupoBusqueda(IdEmpresa,CodGru) {
-       
+
         $("#CodSGruBus").empty();
         $("#CodSGruBus").append('<option value="">--Seleccione Sub Grupo--</option>');
         $.ajax({
@@ -160,7 +164,7 @@
         else {
             alert("Debe Seleccionar Empresa")
         }
-        
+
     }
 
     function initTable() {
@@ -196,7 +200,18 @@
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [8,10],
+                    targets: [6],
+                    render: function (data) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = "$" + SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                },
+                {
+                    targets: [7],
                     render: function (data) {
                         var fecha = DateDatatable(data);
                         return fecha;
@@ -227,14 +242,15 @@
                     }
                 },
                 { "data": "CodAct" },
-                { "data": "Estado" },
                 { "data": "DescAct" },
                 { "data": "DesGru" },
                 { "data": "DesSGru" },
                 { "data": "ValCom" },
                 { "data": "FecIng" },
-                { "data": "GloBaja" },
-                { "data": "FecBaja" }
+                { "data": "NumFac" },
+                { "data": "Leasing" },
+                { "data": "CtaCom" },
+                { "data": "NomAux" }
             ]
         });
         //$("#grillaActivo").dataTable().fnDestroy();

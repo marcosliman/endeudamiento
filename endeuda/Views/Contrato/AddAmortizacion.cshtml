@@ -1,117 +1,162 @@
-﻿@{
+﻿@model modelo.Models.Local.ContratoActivo
+@{
     ViewBag.Title = "Registrar Contrato Leasing";
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
 
 <div class="card-body">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header" style="background-color:white">
-                <h3 class="card-title">Cargar archivo</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <label for="IdTributario" class="col-sm-6 col-form-label col-form-label-sm">Después de descargar la plantilla desde este <a href="C:\Users\Usuario\DocumentsPlantilla_Endeudamiento.xlsx">enlace</a> proceda a cargarla para procesarla.</label>
-                    <div class="col-6">
-                        <div class="col-sm-auto col-form-label">
-                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header" style="background-color:white">
-                <h3 class="card-title">Resultado de la validación</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-6">
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">Archivo</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">Cronograma.xlsx</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">Filas procesadas</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">42</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">Monto total</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">15986263</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">Tasa mensual</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">0.025</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">Tasa anual</label>
-                        <label for="inputEmail3" class="col-sm-4 col-form-label">0.35</label>
-                        <label for="inputEmail3" class="col-sm-12 col-form-label">Los montos registrados inicialmente son consistentes con la data procesada en el archivo.</label>
-                    </div>
-                    <div class="col-6">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Fila</th>
-                                    <th>Resultado</th>
-                                    <th>Observaciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Correcto</td>
-                                    <td>Columnas comprobadas.</td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>Correcto</td>
-                                    <td>Columnas comprobadas.</td>
-                                </tr>
-                                <tr>
-                                    <td>3</td>
-                                    <td>Error</td>
-                                    <td>Revisar columna 4, Revisar columna 5</td>
-                                </tr>
-                                <tr>
-                                    <td>4</td>
-                                    <td>Correcto</td>
-                                    <td>Columnas comprobadas.</td>
-                                </tr>
-                                <tr>
-                                    <td>5</td>
-                                    <td>Error</td>
-                                    <td>Número de columnas no coincide.</td>
-                                </tr>
-                                <tr>
-                                    <td>6</td>
-                                    <td>Correcto</td>
-                                    <td>Columnas comprobadas.</td>
-                                </tr>
-                                <tr>
-                                    <td>7</td>
-                                    <td>Correcto</td>
-                                    <td>Columnas comprobadas.</td>
-                                </tr>
-                                <tr>
-                                    <td>8</td>
-                                    <td>Correcto</td>
-                                    <td>Columnas comprobadas.</td>
-                                </tr>
-                            </tbody>
-                        </table>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
 
+                <!-- /.card-header -->
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaParcela" data-order='[[ 1, "asc" ]]'>
+                        <thead class="thead-light">
 
-                    </div>
+                            <tr>
+                                <th>Mes</th>
+                                <th>CortoPlazo</th>
+                                <th>LargoPlazo</th>
+                                <th>FechaPago</th>
+                                <th>Periodo</th>
+                                <th>Cuota</th>
+                                <th>IvaDiferido</th>
+                                <th>Intereses</th>
+                                <th>Amortizacion</th>
+                                <th>Saldo_Insoluto</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
+
             </div>
+
         </div>
+
     </div>
-    <div class="card-footer">
-        <button type="button" onclick="location.href='/Home/Inicio'" class="btn btn-secondary btn-sm" data-dismiss="modal">Volver</button>
-        <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Siguiente</button>
+
+</div>
+<!-- Modal Detalle-->
+<div class="modal fade" id="ModalParcela" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosParcela"></div>
+
+        </div>
     </div>
 </div>
+<div class="modal fade" id="ModalArchivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosArchivo"></div>
+
+        </div>
+    </div>
+</div>
+<script>
+
+    $(document).ready(function () {
+        AbrirMenu("Proyectos");
+        initTable();
+
+    });
+    function ImportParcelas() {
+        $("#datosArchivo").empty();
+        $('#ModalArchivo').modal('show');
+        $.ajax({
+            url: "/Contrato/ImportAmortizacion",
+            type: "Post",
+            data: {
+                IdContrato : '@Model.IdContrato'
+            },
+            beforeSend: function () {
+                $("#datosArchivo").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosArchivo").empty();
+                $("#datosArchivo").html(data);
+            }
+        });
+    }
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+    function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            extend: 'excelHtml5',
+            title: '',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >=1) ?
+                            texto.replace(/[$,]/g, '').replace(/[$.]/g, '').replace(/[UF.]/g, '') :
+                            texto;
+                    }
+                }
+            }
+        };
+        var table = $('#grillaParcela').DataTable({
+            buttons: [
+                {
+                    text: 'Importar Amortización <i class="fa fa-file-import"></i>',
+                    action: function (e, dt, node, config) {
+                        ImportParcelas();
+                    }
+                },
+                $.extend(true, {}, buttonCommon, {
+                    filename: "AmortizacionContrato_@Model.IdContrato"
+                })
+            ],
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/DetAmortizacion_Read/',
+                "data": function (d) {
+                    d.IdContrato = @Model.IdContrato;
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [6,7,8,9],
+                    render: function (data) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = "$" + SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                },
+                {
+                    targets: [3],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "Mes" },
+                { "data": "CortoPlazo" },
+                { "data": "LargoPlazo" },
+                { "data": "FechaPago" },
+                { "data": "Periodo" },
+                { "data": "Cuota" },
+                { "data": "IvaDiferido" },
+                { "data": "Intereses" },
+                { "data": "Amortizacion" },
+                { "data": "Saldo_Insoluto" }
+            ]
+        });
+
+        return table;
+    }
+</script>
