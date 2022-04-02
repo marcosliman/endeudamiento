@@ -1,201 +1,87 @@
 ﻿@{
     ViewBag.Title = "Dashboard";
 }
-<div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Dashboard</h5>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
-    </ol>
-</div>
+<h5 class="h5 mb-0 text-gray-800">Demos un vistaso al desarrollo de los contratos y endeudamiento de todas las empresas.</h5>
+<br />
 
-<div class="row" id="carga-pendientes">
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box btn btn-outline-info" onclick="location.href='/Home/IndexG'">
-            <span class="info-box-icon bg-info"><i class="far fa fa-plus"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text text-left">Solicitar Producto</span>
-                <span class="info-box-number"></span>
-            </div>
 
-        </div>
-
-    </div>
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box btn btn-outline-info" onclick="location.href='/Solicitud/TraspasoBodegaSol'">
-            <span class="info-box-icon bg-info"><i class="far fa fa-plus"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text text-left">Solicitar Traspaso</span>
-                <span class="info-box-number"></span>
-            </div>
-
-        </div>
-
-    </div>
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-primary"><i class="far fa fa-paper-plane"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text text-left">Por Aprobar</span>
-                <span class="info-box-number text-left">10</span>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="col-md-3 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-warning"><i class="far fa fa-barcode"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Por Retirar</span>
-                <span class="info-box-number">10</span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-    <!-- /.col -->
-    <div class="col-md-2 col-sm-6 col-12">
-        <div class="info-box">
-            <span class="info-box-icon bg-danger"><i class="far fa fa-ban"></i></span>
-            <div class="info-box-content">
-                <span class="info-box-text">Rechazadas</span>
-                <span class="info-box-number">5</span>
-            </div>
-            <!-- /.info-box-content -->
-        </div>
-        <!-- /.info-box -->
-    </div>
-
-</div>
-<div class="modal fade" id="modal-ticket" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Ticket de Confirmación</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+<div class="card">
+    <div class="card card-outline card-info collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">Filtros</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="alert alert-success">
-                    <h5><i class="icon fas fa-check"></i>Nro: XY-1234</h5>
-                    Solicitud enviada con éxito. este número será solicitado por el encargado de bodega para poder retirar los materiales.
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    <select name="empresa" class="form-control">
+                        <option>--Seleccione Empresa--</option>
+                        <option value="1">Todas</option>
+                        <option value="2">MAQSUR S.A.</option>
+                        <option value="3">BIOMASA</option>
+                        <option value="3">TECSUR</option>
+                        <option value="3">MQS</option>
+                        <option value="3">NOK</option>
+                    </select>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <div class="col-sm-2">
+                    <select name="banco" class="form-control">
+                        <option>--Seleccione Banco--</option>
+                        <option value="1">Todas</option>
+                        <option value="2">BCI</option>
+                        <option value="3">SANTANDER</option>
+                        <option value="3">SCOTIABANK</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <select name="anio" class="form-control">
+                        <option>--Seleccione Año--</option>
+                        <option value="1">2021</option>
+                        <option value="2">2022</option>
+                        <option value="3">2023</option>
+                        <option value="4">2024</option>
+                        <option value="5">2025</option>
+                        <option value="6">2026</option>
+                        <option value="7">2027</option>
+                        <option value="8">2028</option>
+                        <option value="9">2029</option>
+                        <option value="10">2030</option>
+                        <option value="11">2031</option>
+                        <option value="12">2032</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <select name="empresa" class="form-control">
+                        <option>--Seleccione Mes--</option>
+                        <option value="1">Enero</option>
+                        <option value="2">Febrero</option>
+                        <option value="3">Marzo</option>
+                        <option value="4">Abril</option>
+                        <option value="5">Mayo</option>
+                        <option value="6">Junio</option>
+                        <option value="7">Julio</option>
+                        <option value="8">Agosto</option>
+                        <option value="9">Septiembre</option>
+                        <option value="10">Octubre</option>
+                        <option value="11">Noviembre</option>
+                        <option value="12">Diciembre</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-md-8">
+
+    <div class="col-md-6">
         <div class="card">
-            <div class="card-header border-transparent">
-                <h3 class="card-title">Últimas Solicitudes</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 1, "asc" ]]' >
-                        <thead>
-                            <tr>
-                                <th>Código Sol.</th>
-                                <th>Códio Retiro</th>
-                                <th>Fecha</th>                                
-                                <th>Cliente</th>
-                                <th>O.T</th>
-                                <th>Proyecto</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var res in ViewBag.solicitud)
-                            {
-                                <tr>
-                                    <td><a href="/Home/Solicitud">@res.CodigoSolicitud</a></td>
-                                    <td><a href="#" data-toggle="modal" data-target="#modal-ticket" class="alert-link"><i class="fa fa-eye"></i> ******</a></td>
-                                    <td>@res.FechaRegistro</td>
-                                    <td>COMTEC LTDA.</td>
-                                    <td>@res.CodigoSolicitud</td>
-                                    <td>@res.IdProyecto</td>
-                                    <td><span class="badge badge-success" style="width:80px">Creado</span></td>
-                                </tr>
-                            }                            
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.table-responsive -->
-            </div>
-            <!-- /.card-body -->
-            <div class="card-footer clearfix">
-                <a href="/Home/IndexG" class="btn btn-sm btn-info float-left">Nueva Solicitud</a>
-                <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-right">Ver Todas</a>
-            </div>
-            <!-- /.card-footer -->
-        </div>
-        <!-- /.card -->
-    </div>
-    <div class="col-md-4">
-        <!-- PRODUCT LIST -->
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Últimos Materiales Solicitadossssssss</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="remove">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body p-0">
-                <ul class="products-list product-list-in-card pl-2 pr-2" id="SolMateriales">
-                    @foreach (var val in ViewBag.material)
-                    {
-                        <li class="item">
-                            <div class="product-img">
-                                <img src="/Plantilla/AdminLTE/dist/img/default-150x150.png" alt="Product Image" class="img-size-50">
-                            </div>
-                            <div class="product-info">
-                                <a href="javascript:void(0)" data-toggle='modal' data-target='#exampleModal' class="product-title">
-                                    @val.DesProd
-                                    @if (val.IdEstado == 1)
-                                    {
-                                        <span class="badge badge-success float-right" style="width:80px">Creado</span>
-                                    }
-                                    
-                                </a>
-                                <span class="product-description">
-                                    <strong>@val.CantidadRequerida</strong> Unidades solicitado el @val.FechaRegistro
-                                </span>
-                            </div>
-                        </li>
-                    }
-
-                </ul>
-            </div>
-
-            <div class="card-footer text-center">
-                <a href="javascript:void(0)" class="uppercase">Ver Todos los Materiales</a>
-            </div>
-
-        </div>
-
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-4">
-        <div class="card direct-chat direct-chat-primary">
-            <div class="card-header">
-                <h3 class="card-title">Stock Materiales</h3>
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Empresa</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -203,149 +89,895 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="card card-widget widget-user-2" id="stockMaterial">
-                    <div class="widget-user-header bg-warning">
-                        <div class="widget-user-image">
-                            <img class="img-circle elevation-2" src="/img/alicate.jpg" alt="User Avatar">
-                        </div>
-                        <h3 class="widget-user-username">Alicate PLano</h3>
-                        <h5 class="widget-user-desc">Herramientas Generales</h5>
-                    </div>
-                    <div class="card-footer p-0">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 1 <span class="float-right badge bg-primary">15</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 2 <span class="float-right badge bg-warning">5</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 3 <span class="float-right badge bg-primary">12</span>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
-                                    Bodega 4 <span class="float-right badge bg-danger">0</span>
-                                </a>
-                            </li>
-                        </ul>
+                <div class="row">
+                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Cant. Leasing Contratados</th>
+                                    <th>Tasa Prom. de Endeu. en CLP $</th>
+                                    <th>Tasa Prom. de Endeu. en UF</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>MAQSUR S.A.</th>
+                                    <td>68</td>
+                                    <td>4.6 %</td>
+                                    <td>5.4 %</td>
+                                </tr>
+                                <tr>
+                                    <th>TECSUR S.A.</th>
+                                    <td>23</td>
+                                    <td>4.6 %</td>
+                                    <td>No Tiene</td>
+                                </tr>
+                                <tr>
+                                    <th>BIOMASA</th>
+                                    <td>14</td>
+                                    <td>5.6 %</td>
+                                    <td>No Tiene</td>
+                                </tr>
+                                <tr>
+                                    <th>MQS</th>
+                                    <td>1</td>
+                                    <td>6.3 %</td>
+                                    <td>No Tiene</td>
+                                </tr>
+                                <tr>
+                                    <th>NOKS</th>
+                                    <td>1</td>
+                                    <td>6.9 %</td>
+                                    <td>No Tiene</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <!-- /.widget-user -->
+
+
             </div>
-            <div class="card-footer">
-                <form action="#" method="post">
-                    <div class="input-group">
-                        <select class="form-control select2" name="selectMaterial" id="selectMaterial">
-                            <option value=""></option>
-                        </select>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Moneda</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>CLP $</th>
+                                    <th>UF</th>
+                                    <th>USD</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>MAQSUR S.A.</th>
+                                    <td>5,403,601,355.00</td>
+                                    <td>100,016.00</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>TECSUR S.A.</th>
+                                    <td>728,285,221.00</td>
+                                    <td>-</td>
+                                    <td>1,366,979.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BIOMASA</th>
+                                    <td>1,659,903,914.00</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>MQS</th>
+                                    <td>188,623,881.00</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>NOKS</th>
+                                    <td>8,515,398.00</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-auto">
-        <div class="callout callout-warning">
-            <p>Si el material deseado no existe puede solicitar la creación de este. <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" onclick="abreMaterial()">Solicitar Creación Material</button></p>
-        </div>
-    </div>
-</div>
+                </div>
 
-<div class="modal fade" id="crear-material" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id="datosBuscar">
-                
+
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Consolidado de Tipo de Activo en Leasing</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
             </div>
-            <div class="modal-body">
-                @Html.Partial("PartDetalleMaterial", null)
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            <div class="card-body">
+                <div class="row">
+                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="2">Monto Deuda Inicial</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                    <th>Tipo Activo en Leasing</th>
+                                    <th>Contratos</th>
+                                    <th>CLP $</th>
+                                    <th>UF</th>
+                                    <th>Deuda Vigente</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>MAQUINARIA</th>
+                                    <td>73</td>
+                                    <td>254,100,016.00</td>
+                                    <td>-</td>
+                                    <td>4,552,805,876.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BARCAZA</th>
+                                    <td>4</td>
+                                    <td>120,080,230.00</td>
+                                    <td>-</td>
+                                    <td>754,000,723.00</td>
+                                </tr>
+                                <tr>
+                                    <th>TERRENOS</th>
+                                    <td>3</td>
+                                    <td>156,619,716.00</td>
+                                    <td>3,267.00</td>
+                                    <td>208,790,385.00</td>
+                                </tr>
+                                <tr>
+                                    <th>CONSTRUCCIONES</th>
+                                    <td>2</td>
+                                    <td>-</td>
+                                    <td>35,166.00</td>
+                                    <td>588,127,924.00</td>
+                                </tr>
+                                <tr>
+                                    <th>VEHÍCULOS</th>
+                                    <td>8</td>
+                                    <td>230,131,558.00</td>
+                                    <td>-</td>
+                                    <td>164,425,724.00</td>
+                                </tr>
+                                <tr>
+                                    <th>EQUIPOS</th>
+                                    <td>3</td>
+                                    <td>89,943,428.00</td>
+                                    <td>-</td>
+                                    <td>21,466,915.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
             </div>
         </div>
     </div>
 </div>
+
+    
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Deuda Vigente por Entidad Financiera</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-cobranza" style="height:300px;background-color: transparent;" data-highcharts-chart="15">
+
+                            </div>
+                        </div>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
+
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-cobranza', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '<b>{point.percentage:.1f}%</b>'
+                                },
+                                accessibility: {
+                                    point: {
+                                        valueSuffix: '%'
+                                    }
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        // colors: pieColors,
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '{point.percentage:.1f} %',
+                                            distance: 20,
+                                            filter: {
+                                                property: 'percentage',
+                                                operator: '>',
+                                                value: 1
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Monto',
+                                    data: [
+                                        { name: 'BCI', y: 46 },
+                                        { name: 'SANTANDER', y: 19 },
+                                        { name: 'CHILE', y: 8 },
+                                        { name: 'ESTADO', y: 7 },
+                                        { name: 'SECURITY', y: 2 },
+                                        { name: 'SCOTIABANK', y: 11 },
+                                        { name: 'ITAÚ', y: 5 },
+                                        { name: 'BICE', y: 2 },
+
+
+                                    ]
+                                }]
+                            });
+                        </script>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-sm">
+                                <thead>
+                                    <tr>
+                                        <th><p style="color:black;font-size:10px;">Entidad Financiera</p></th>
+                                        <th><p style="color:black;font-size:10px;">BCI</p></th>
+                                        <th><p style="color:black;font-size:10px;">SANTANDER</p></th>
+                                        <th><p style="color:black;font-size:10px;">SCOTIABANK</p></th>
+                                        <th><p style="color:black;font-size:10px;">BBVA</p></th>
+                                        <th><p style="color:black;font-size:10px;">ESTADO</p></th>
+                                        <th><p style="color:black;font-size:10px;">SECURITY</p></th>
+                                        <th><p style="color:black;font-size:10px;">BICE</p></th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th><p style="color:black;font-size:10px;">Monto Ch$</p></th>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgray">
+                <h3 class="card-title">Resumen Estructura de Deuda según Categoria y Empresa (MM$)</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <figure class="highcharts-figure" ">
+                    <div id="chartEstadistico"></div>
+
+                </figure>
+                <script>
+                    Highcharts.chart('chartEstadistico', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: ['MAQSUR S.A.', 'BIOMASA', 'TECSUR', 'MQS', 'NOK']
+                        },
+                        yAxis: {
+                            allowDecimals: true,
+                            min: 0,
+                            title: {
+                                text: 'MM$'
+                            },
+                            stackLabels: {
+                                enabled: true,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: ( // theme
+                                        Highcharts.defaultOptions.title.style &&
+                                        Highcharts.defaultOptions.title.style.color
+                                    ) || 'gray'
+                                }
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        /*legend: {
+                            align: 'top',
+                            x: -0,
+                            verticalAlign: 'bottom',
+                            y: 0,
+                            floating: true,
+                            backgroundColor:
+                                Highcharts.defaultOptions.legend.backgroundColor || 'white',
+                            borderColor: '#CCC',
+                            borderWidth: 0,
+                            shadow: false
+                        },*/
+                        tooltip: {
+                            headerFormat: '<b>{point.x}</b><br/>',
+                            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                        },
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal',
+                                dataLabels: {
+                                    enabled: true
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Deuda Estructurada con Garantía',
+                            data: [3764, 473, 124, 2507, 0]
+                        },
+                        {
+                            name: 'Deuda Estructurada sin Garantía',
+                            data: [470, 0, 0, 0, 101]
+                        },
+                        {
+                            name: 'Deuda Fogape',
+                            data: [2958, 125, 0, 0, 0]
+                        }]
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Deuda Leasing por Institución Financiera</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Bancos</th>
+                                    <th>Obligación CP</th>
+                                    <th>Obligación LP</th>
+                                    <th>Totales</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>BCI</th>
+                                    <td>898,830,908.00</td>
+                                    <td>1,658,429,374.00</td>
+                                    <td>2,557,260,281.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BBVA</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>CORPBANCA</th>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>CHILE</th>
+                                    <td>351,695,868.00</td>
+                                    <td>341,041,234.00</td>
+                                    <td>692,737,102.00</td>
+                                </tr>
+                                <tr>
+                                    <th>ESTADO</th>
+                                    <td>265,070,141.00</td>
+                                    <td>543,150,043.00</td>
+                                    <td>808,220,183.00</td>
+                                </tr>
+                                <tr>
+                                    <th>ITAÚ</th>
+                                    <td>49,019,314.00</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <th>SANTANDER</th>
+                                    <td>308,880,861.00</td>
+                                    <td>785,370,783.00</td>
+                                    <td>1,094,251,644.00</td>
+                                </tr>
+                                <tr>
+                                    <th>SCOTIABANK</th>
+                                    <td>197,963,087.00</td>
+                                    <td>219,052,208.00</td>
+                                    <td>417,015,295.00</td>
+                                </tr>
+                                <tr>
+                                    <th>SECURITY</th>
+                                    <td>171,889,690.00</td>
+                                    <td>144,538,790.00</td>
+                                    <td>316,428,481.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BICE</th>
+                                    <td>116,253,525.00</td>
+                                    <td>238,363,231.00</td>
+                                    <td>354,616,757.00</td>
+                                </tr>
+                                <tr>
+                                    <th>BICE</th>
+                                    <th>2,359,603,394.00</th>
+                                    <th>3,929,945,663.00</th>
+                                    <th>6,289,549,057.00</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Endeudamiento Grupo MAQSUR</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-deudacompleta" style="height: 300px;background-color: transparent;" data-highcharts-chart="15">
+
+                            </div>
+                        </div>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
+
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-deudacompleta', {
+                                chart: {
+                                    plotBackgroundColor: null,
+                                    plotBorderWidth: null,
+                                    plotShadow: false,
+                                    type: 'pie'
+                                },
+                                exporting: {
+                                    enabled: false
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    pointFormat: '<b>{point.percentage:.1f}%</b>'
+                                },
+                                accessibility: {
+                                    point: {
+                                        valueSuffix: '%'
+                                    }
+                                },
+                                plotOptions: {
+                                    pie: {
+                                        allowPointSelect: true,
+                                        cursor: 'pointer',
+                                        // colors: pieColors,
+                                        dataLabels: {
+                                            enabled: true,
+                                            format: '{point.percentage:.1f} %',
+                                            distance: 20,
+                                            filter: {
+                                                property: 'percentage',
+                                                operator: '>',
+                                                value: 1
+                                            }
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Monto',
+                                    data: [
+                                        { name: 'MAQSUR S.A.', y: 15 },
+                                        { name: 'BIOMASA', y: 20 },
+                                        { name: 'TECSUR', y: 20 },
+                                        { name: 'MQS', y: 18 },
+                                        { name: 'NOK', y: 27 },
+
+                                    ]
+                                }]
+                            });
+                        </script>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th><p style="color:black;font-size:10px;">Empresa</p></th>
+                                        <th><p style="color:black;font-size:10px;">MAQSUR S.A.</p></th>
+                                        <th><p style="color:black;font-size:10px;">BIOMASA</p></th>
+                                        <th><p style="color:black;font-size:10px;">TECSUR</p></th>
+                                        <th><p style="color:black;font-size:10px;">MQS</p></th>
+                                        <th><p style="color:black;font-size:10px;">NOK</p></th>
+                                        <th><p style="color:black;font-size:10px;">TOTAL</p></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th><p style="color:black;font-size:10px;">Monto</p></th>
+                                        <th><p style="color:black;font-size:10px;">$15,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$20,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$20,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$18,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$27,000,000.00</p></th>
+                                        <th><p style="color:black;font-size:10px;">$100,000,000.00</p></th>
+                                    </tr>
+
+                                </tbody>
+                            </table>    
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Resumen Estructura de Deuda del Grupo MAQSUR</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
+                            <div id="chart-consolidado" style="height: 100%;background-color: transparent;" data-highcharts-chart="15">
+
+                            </div>
+                        </div>
+                        <script>
+                            // Make monochrome colors
+                            /* var pieColors = (function () {
+                                    var colors = [],
+                                        base = Highcharts.getOptions().colors[0],
+                                        i;
+
+                                    for (i = 0; i < 10; i += 1) {
+                                        // Start out with a darkened base color (negative brighten), and end
+                                        // up with a much brighter color
+                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+                                    }
+                                    return colors;
+                                }());
+                                */
+                            // Build the chart
+                            Highcharts.chart('chart-consolidado', {
+                                chart: {
+                                    type: 'column'
+                                },
+                                title: {
+                                    text: ''
+                                },
+                                credits: {
+                                    enabled: false
+                                },
+                                tooltip: {
+                                    headerFormat: '<b>{point.x}</b><br/>',
+                                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                                },
+                                xAxis: {
+                                    categories: ['2021', '2022', '2023', '2024', '2025']
+                                },
+                                yAxis: {
+                                    allowDecimals: true,
+                                    min: 0,
+                                    title: {
+                                        text: 'MM$'
+                                    },
+                                    stackLabels: {
+                                        enabled: true,
+                                        style: {
+                                            fontWeight: 'bold',
+                                            color: ( // theme
+                                                Highcharts.defaultOptions.title.style &&
+                                                Highcharts.defaultOptions.title.style.color
+                                            ) || 'gray'
+                                        }
+                                    }
+                                },
+                                //legend: {
+                                //    reversed: true
+                                //},
+                                plotOptions: {
+                                    column: {
+                                        stacking: 'normal',
+                                        dataLabels: {
+                                            enabled: true
+                                        }
+                                    }
+                                },
+                                series: [{
+                                    name: 'Deuda leasing (Capital)',
+                                    data: [1000000, 1600000, 1250000, 700000, 600000]
+                                }, {
+                                    name: 'Deuda Estructurada (Capital)',
+                                    data: [1000000, 900000, 1250000, 600000, 200000]
+                                }]
+                            });
+                        </script>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="background-color:lightgrey">
+                <h3 class="card-title">Consolidado por Tipo de Deuda MM$</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Tipo Deuda</th>
+                                    <th>2020</th>
+                                    <th>2021</th>
+                                    <th>2022</th>
+                                    <th>2023</th>
+                                    <th>2024</th>
+                                    <th>2025</th>
+                                    <th>2026</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>Deuda Estructurada (capital)</th>
+                                    <td>0</td>
+                                    <td>885.00</td>
+                                    <td>2,206.00</td>
+                                    <td>2,122.00</td>
+                                    <td>1,842.00</td>
+                                    <td>1,535.00</td>
+                                    <td>1,073.00</td>
+                                </tr>
+                                <tr>
+                                    <th>Deuda Estructurada (cuota)</th>
+                                    <td>0</td>
+                                    <td>1,155.00</td>
+                                    <td>2,677.00</td>
+                                    <td>2,472.00</td>
+                                    <td>2,094.00</td>
+                                    <td>1,705.00</td>
+                                    <td>1,172.00</td>
+                                </tr>
+                                <tr>
+                                    <th>Deuda Leasing (cuota)</th>
+                                    <td>0</td>
+                                    <td>1,410.00</td>
+                                    <td>2,290.00</td>
+                                    <td>1,690.00</td>
+                                    <td>890.00</td>
+                                    <td>314.00</td>
+                                    <td>266.00</td>
+                                </tr>
+                                <tr>
+                                    <th>Deuda Leasing (capital)</th>
+                                    <td>0</td>
+                                    <td>1,284.00</td>
+                                    <td>2,119.00</td>
+                                    <td>1,600.00</td>
+                                    <td>848.00</td>
+                                    <td>292.00</td>
+                                    <td>254.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
-    var data = [
-        {
-            id: 0,
-            text: 'Alicate PLano'
-        },
-        {
-            id: 1,
-            text: 'Alicate Universal'
-        },
-        {
-            id: 2,
-            text: 'Alicate Punta Redonda '
-        },
-        {
-            id: 3,
-            text: 'Destornillador estrella'
-        },
-        {
-            id: 4,
-            text: 'Destornillador Plano'
-        }
-    ];
-    $(document).ready(function () {
-        $('#grillaProductos').DataTable({
-            "searching": false,
-            buttons: [],
-        });
-        AbrirMenu('Solicitante');
-        $("#stockMaterial").hide();
-        $('#selectMaterial').select2({
-            placeholder: 'Busque Material',
-            language: "es",
-            minimumInputLength: 3,
-            data: data
-            /*ajax: {
-                url: '/Producto/Productos_Read/',
-                dataType: 'json'
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-            }*/
-        });
-        $('#selectMaterial').on('select2:select', function (e) {
-            var data = e.params.data;
-            $("#stockMaterial").show();
-            $('#selectMaterial').val(null).trigger('change');
-        });
-    })
-
-    function abreMaterial() {
-        $("#datosBuscar").empty();
-        $('#crear-material').modal('show');
-        tmpUrl = "/Home/SolicitudCreaMaterial";
-        $.ajax({
-            url: tmpUrl,
-            type: "Get",
-            data: {},
-            success: function (data) {
-                $("#datosBuscar").empty();
-                $("#datosBuscar").html(data);
-                esconderCargando();
+        var data = [
+            {
+                id: 0,
+                text: 'Alicate PLano'
+            },
+            {
+                id: 1,
+                text: 'Alicate Universal'
+            },
+            {
+                id: 2,
+                text: 'Alicate Punta Redonda '
+            },
+            {
+                id: 3,
+                text: 'Destornillador estrella'
+            },
+            {
+                id: 4,
+                text: 'Destornillador Plano'
             }
-        });
-    }
+        ];
+        $(document).ready(function () {
+            $('#grillaProductos').DataTable({
+                "searching": false,
+                buttons: [],
+            });
+            AbrirMenu('Solicitante');
+            $("#stockMaterial").hide();
+            $('#selectMaterial').select2({
+                placeholder: 'Busque Material',
+                language: "es",
+                minimumInputLength: 3,
+                data: data
+                /*ajax: {
+                    url: '/Producto/Productos_Read/',
+                    dataType: 'json'
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                }*/
+            });
+            $('#selectMaterial').on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#stockMaterial").show();
+                $('#selectMaterial').val(null).trigger('change');
+            });
+        })
+
+        function abreMaterial() {
+            $("#datosBuscar").empty();
+            $('#crear-material').modal('show');
+            tmpUrl = "/Home/SolicitudCreaMaterial";
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: {},
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
 
 </script>

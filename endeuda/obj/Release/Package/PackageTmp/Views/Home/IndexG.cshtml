@@ -15,69 +15,11 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-difStock" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div id="datosBuscar">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Productos con menos Stock</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-danger alert-dismissible" style="display:none" id="alertaStock">                        
-                        <h5><i class="icon fas fa-ban"></i> Alerta!</h5>
-                        Existen Productos con menos stock del solicitado, el sistema áctualizó la solicitud, ¿Desea Continuar?.
-                    </div>                    
-                    <div class="row">
-                        <div class="col-lg-12">
-
-                            <div class="card mb-4">
-                                <div class="card-body table-responsive">
-
-                                    @using (Html.BeginForm("SolicitudEnviada", "Solicitud", FormMethod.Post, new { @id = "form_envio"}))
-                                    {
-                                        <input type="hidden" name="idS" id="idS" />
-                                        <table class="table table-bordered table-hover dataTable dtr-inline border" width="100%" id="grillaStock" data-order='[[ 1, "desc" ]]'>
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Cod. Producto</th>
-                                                    <th>Nombre Producto</th>
-                                                    <th>Precio Promedio</th>
-                                                    <th>Solicitado</th>
-                                                    <th>Stock Actual</th>
-                                                    <th>Actualizado</th>
-                                                    <th>Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tbody"></tbody>
-                                            <tfoot id="tfoot">
-                                            </tfoot>
-                                        </table>
-                                    }
-                                    
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">                    
-                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
-                    <button type="button" onclick="envioSolicitud()" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm">Enviar Solicitud</button>
-                    
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h5 class="h5 mb-0 text-gray-800">Solicitar Productos</h5>
+    <h5 class="h5 mb-0 text-gray-800">Nuevo Contrato Leasing</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Solicitar</li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
     </ol>
 </div>
 <div class="card">
@@ -88,18 +30,34 @@
                 <div class="step" data-target="#logins-part">
                     <button type="button" class="step-trigger" role="tab" aria-controls="logins-part" id="logins-part-trigger">
                         <span class="bs-stepper-circle">1</span>
-                        <span class="bs-stepper-label">Centro de Costo</span>
+                        <span class="bs-stepper-label">Opciones</span>
                     </button>
                 </div>
                 <div class="line"></div>
                 <div class="step" data-target="#information-part">
                     <button type="button" class="step-trigger" role="tab" aria-controls="information-part" id="information-part-trigger">
                         <span class="bs-stepper-circle">2</span>
-                        <span class="bs-stepper-label">Producto(s)</span>
+                        <span class="bs-stepper-label">Compra</span>
+                    </button>
+                </div>
+                <div class="line"></div>
+                <div class="step" data-target="#amortizacion-part">
+                    <button type="button" class="step-trigger" role="tab" aria-controls="amortizacion-part" id="amortizacion-part-trigger">
+                        <span class="bs-stepper-circle">3</span>
+                        <span class="bs-stepper-label">Amortización</span>
+                    </button>
+                </div>
+                <div class="line"></div>
+                <div class="step" data-target="#documentos-part">
+                    <button type="button" class="step-trigger" role="tab" aria-controls="documentos-part" id="documentos-part-trigger">
+                        <span class="bs-stepper-circle">4</span>
+                        <span class="bs-stepper-label">Documentos</span>
                     </button>
                 </div>
             </div>
             <div class="bs-stepper-content">
+                <div id="documentos-part" class="content" role="tabpanel" aria-labelledby="documentos-part-trigger"></div>
+                <div id="amortizacion-part" class="content" role="tabpanel" aria-labelledby="amortizacion-part-trigger"></div>
                 <!-- your steps content here -->
                 <div id="logins-part" class="content" role="tabpanel" aria-labelledby="logins-part-trigger">
 
@@ -112,468 +70,462 @@
 
                     }, new { id = "frmEdit", @class = "form-horizontal" }))
                     {
-                        @Html.AntiForgeryToken()                       
+                        @Html.AntiForgeryToken()
                         <div class="ml-2">
 
                             <div class="form-group row">
                                 <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
                                 <div class="col-sm-4">
-                                    @Html.DropDownList("IdEmpresa", (SelectList)ViewData["listaEmpresa"], "Seleccione Empresa", htmlAttributes: new { @class = "form-control form-control-sm required" })                                    
-                                </div>
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Centro de Costo</label>
-                                <div class="col-sm-4">
-                                    @Html.DropDownList("CodiCC", (SelectList)ViewData["listaCentros"], "Seleccione Centro de Costo", htmlAttributes: new { @class = "form-control form-control-sm required" })
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <div class="col-sm-6"></div>
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Bodega</label>
-                                <div class="col-sm-4">
-                                    @Html.DropDownList("CodBode", (SelectList)ViewData["listaBodega"], "Seleccione Bodega", htmlAttributes: new { @class = "form-control form-control-sm required" })
-                                    
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Cliente</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control select2 js-data-example-ajax" name="selectCliente" id="selectCliente">
-                                        <option value=""></option>
-                                    </select>
-                                </div>
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">O.T</label>
-                                <div class="col-sm-4">
-                                    <input type="text" class="form-control form-control-sm" name="NumeroOT" id="NumeroOT"/>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Proyecto</label>
-                                <div class="col-sm-4">
-                                    <select class="form-control select2 js-data-example-ajax" name="IdProyecto" id="selectProyecto">
-                                        <option value=""></option>
-                                    </select>
 
                                 </div>
-                                <button type="button" onclick="nuevoProyecto()" class="btn btn-primary btn-sm float-right "><i class="fa fa-plus"></i> Nuevo Proyecto</button>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Nro. Contrato</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
+                                    <div class="col-sm-4">
+                                        <select class="form-control form-control-sm">
+                                            <option value="">--Seleccione Banco--</option>
+                                            <option>SANTANDER</option>
+                                            <option>CHILE</option>
+                                            <option>BCI</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Qué Financia</label>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control form-control-sm" name="NroContrato" id="NroContrato" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button type="button" onclick="location.href='/Home/Inicio'" class="btn btn-secondary btn-sm" data-dismiss="modal">Volver</button>
+                                <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Siguiente</button>
+                            </div>
+                        }
+                    </div>
+                    <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
+                        <input name="textMaterial" type="hidden" id="textMaterial" value="" />
+                        <div class="card card-outline card-info collapsed-card">
+                            <div class="card-header">
+                                <h3 class="card-title"><span id="p2_empresa"></span> -- <span id="p2_CC"></span> -- <span id="p2_bode"></span></h3>
+                                <input type="hidden" name="p2_idSolicitud" id="p2_idSolicitud" />
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Cliente:</label>
+                                    <div class="col-sm-2" id="nCliente">
+
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">O.T:</label>
+                                    <div class="col-sm-2" id="nOt">
+
+                                    </div>
+                                    <label for="inputEmail3" class="col-sm-2 col-form-label">Proyecto:</label>
+                                    <div class="col-sm-2" id="nProyecto">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card card-default">
+
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control form-control-sm" name="codproducto" id="codProductoBus" placeholder="Cod. Producto" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control form-control-sm" name="nomProducto" id="nomProductoBus" placeholder="Nombre Producto" />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn btn-primary btn-sm" onclick="BuscarProducto()">Buscar</button>
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="card" id="divSeleccionados">
+                            <div class="card-header"><h3 class="card-title">Materiales Seleccionados</h3></div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-striped table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 1, "asc" ]]'>
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Producto</th>
+                                            <th>Cant. Req.</th>
+                                            <th>Cant. Ret.</th>
+                                            <th>Submateria</th>
+                                            <th>Costo U.</th>
+                                            <th>Total</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
                             </div>
                         </div>
                         <div class="card-footer">
-                            <button type="button" onclick="location.href='/Home/Inicio'" class="btn btn-secondary btn-sm" data-dismiss="modal">Volver</button>
-                            <button type="submit" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Siguiente</button>
+                            <button type="button" class="btn btn-info btn-sm" onclick="stepper1.previous()">Anterior</button>
+                            <button type="button" onclick="solicitudVerifica()" name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Enviar Solicitud</button>
                         </div>
-                    }
-                </div>
-                <div id="information-part" class="content" role="tabpanel" aria-labelledby="information-part-trigger">
-                    <input name="textMaterial" type="hidden" id="textMaterial" value="" />
-                    <div class="card card-outline card-info collapsed-card">
-                        <div class="card-header">
-                            <h3 class="card-title"><span id="p2_empresa"></span> -- <span id="p2_CC"></span> -- <span id="p2_bode"></span></h3>
-                            <input type="hidden" name="p2_idSolicitud" id="p2_idSolicitud" />
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Cliente:</label>
-                                <div class="col-sm-2" id="nCliente">
-                                    
-                                </div>
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">O.T:</label>
-                                <div class="col-sm-2" id="nOt">
-                                    
-                                </div>
-                                <label for="inputEmail3" class="col-sm-2 col-form-label">Proyecto:</label>
-                                <div class="col-sm-2" id="nProyecto">
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card card-default">
-
-                        <div class="card-body">
-                            <div class="form-group row">
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control form-control-sm" name="codproducto" id="codProductoBus" placeholder="Cod. Producto" />
-                                </div>
-                                <div class="col-sm-3">
-                                    <input type="text" class="form-control form-control-sm" name="nomProducto" id="nomProductoBus" placeholder="Nombre Producto" />
-                                </div>
-                                <div class="col-sm-3">
-                                    <button type="button" class="btn btn-primary btn-sm" onclick="BuscarProducto()">Buscar</button>
-                                </div>
-
-                            </div>
-                            
-
-                        </div>
-                    </div>
-                    <div class="card" id="divSeleccionados">
-                        <div class="card-header"><h3 class="card-title">Materiales Seleccionados</h3></div>
-                        <div class="card-body table-responsive">
-                            <table class="table table-striped table-hover dataTable dtr-inline" width="100%" id="grillaProductos" data-order='[[ 1, "asc" ]]'>
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Producto</th>
-                                        <th>Cant. Req.</th>
-                                        <th>Cant. Ret.</th>
-                                        <th>Submateria</th>
-                                        <th>Costo U.</th>
-                                        <th>Total</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-info btn-sm" onclick="stepper1.previous()">Anterior</button>
-                        <button type="button" onclick="solicitudVerifica()"  name="btnCrear" id="btnCrear" class="btn btn-primary btn-sm float-right">Enviar Solicitud</button>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>
-</div>
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @Html.Partial("PartDetalleMaterial", null)
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-            </div>
         </div>
     </div>
-</div>
-<div class="modal fade" id="modalStock" tabindex="-1" role="dialog" aria-labelledby="modalStock" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Detalle Stock</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                @Html.Partial("PartDetalleStock", null)
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detalle Material</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("PartDetalleMaterial", null)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    $(document).ready(function () {
+    <div class="modal fade" id="modalStock" tabindex="-1" role="dialog" aria-labelledby="modalStock" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Detalle Stock</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("PartDetalleStock", null)
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
 
-    });
-    function RefreshLista() {
-        var table = initTable();
-        table.ajax.reload(function (json) { });
-    }
-    function initTable() {
-        var URL = "/Solicitud/solicitudPedidos_pedidos_Read/" + $("#p2_idSolicitud").val();
-        //var buttonCommon = ExcelCommon();
-        var table = $('#grillaProductos').DataTable({
-            "paging": false,
-            "searching":false,            
-            buttons: [],            
-            "retrieve": true,
-            'ajax': {
-                "type": "POST",
-                "url": URL,
-                "data": function (d) {
-                },
-                "dataSrc": ""
-            },
-            columns: [
-
-                { "data": "CodProd" },
-                { "data": "DesProd" },
-                { "data": "CantidadRequerida" },
-                { "data": "CantidadRetiro" },
-                { "data": "UMedida" },
-                { "data": "CostoUn" },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        var estado = o.CantidadRequerida * o.CostoUn;
-
-                        return estado;
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        var boton = '';
-                        boton = '<button class="btn btn-danger btn-sm" onclick="DeleteRegistro(' + o.IdSolicitudProducto_Producto + ')"><i class="fa fa-trash"></i></button> ';
-                        return boton;
-                    }
-                }
-            ]
         });
-
-        return table;
-    }
-
-    function Success_dl(data) {
-        esconderCargando();
-        if (data.Estado == "0") {
-            //toastr.success(data.Mensaje);
-            $("#p2_empresa").html(data.NomEmpresa);
-            $("#p2_CC").html(data.codCC);
-            $("#p2_bode").html(data.CodBode);
-            $("#p2_idSolicitud").val(data.idSoli)
-
-            //datos proeyctos
-            $("#nCliente").html($("#selectCliente option:selected").text());
-            $("#nProyecto").html($("#selectProyecto option:selected").text());
-            $("#nOt").html($("#NumeroOT").val());
-
-            stepper1.next();
-            
+        function RefreshLista() {
+            var table = initTable();
+            table.ajax.reload(function (json) { });
         }
-        else {
+        function initTable() {
+            var URL = "/Solicitud/solicitudPedidos_pedidos_Read/" + $("#p2_idSolicitud").val();
+            //var buttonCommon = ExcelCommon();
+            var table = $('#grillaProductos').DataTable({
+                "paging": false,
+                "searching":false,
+                buttons: [],
+                "retrieve": true,
+                'ajax': {
+                    "type": "POST",
+                    "url": URL,
+                    "data": function (d) {
+                    },
+                    "dataSrc": ""
+                },
+                columns: [
+
+                    { "data": "CodProd" },
+                    { "data": "DesProd" },
+                    { "data": "CantidadRequerida" },
+                    { "data": "CantidadRetiro" },
+                    { "data": "UMedida" },
+                    { "data": "CostoUn" },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var estado = o.CantidadRequerida * o.CostoUn;
+
+                            return estado;
+                        }
+                    },
+                    {
+                        "mData": null,
+                        "bSortable": false,
+                        "mRender": function (o, type, row) {
+                            var boton = '';
+                            boton = '<button class="btn btn-danger btn-sm" onclick="DeleteRegistro(' + o.IdSolicitudProducto_Producto + ')"><i class="fa fa-trash"></i></button> ';
+                            return boton;
+                        }
+                    }
+                ]
+            });
+
+            return table;
+        }
+
+        function Success_dl(data) {
+            esconderCargando();
+            if (data.Estado == "0") {
+                //toastr.success(data.Mensaje);
+                $("#p2_empresa").html(data.NomEmpresa);
+                $("#p2_CC").html(data.codCC);
+                $("#p2_bode").html(data.CodBode);
+                $("#p2_idSolicitud").val(data.idSoli)
+
+                //datos proeyctos
+                $("#nCliente").html($("#selectCliente option:selected").text());
+                $("#nProyecto").html($("#selectProyecto option:selected").text());
+                $("#nOt").html($("#NumeroOT").val());
+
+                stepper1.next();
+
+            }
+            else {
+                toastr.error(data.Mensaje);
+            }
+        }
+        function Failure_dl(data) {
+            esconderCargando();
             toastr.error(data.Mensaje);
         }
-    }
-    function Failure_dl(data) {
-        esconderCargando();
-        toastr.error(data.Mensaje);        
-    }  
-   
-    var dataProyecto = [
-        {
-            id: 0,
-            text: 'PROYECTO PALLETIZADO 1'
-        },
-        {
-            id: 1,
-            text: 'PROYECTO PALLETIZADO 2'
-        },
-        {
-            id: 2,
-            text: 'PROYECTO PALLETIZADO 3'
-        },
-        {
-            id: 3,
-            text: 'PROYECTO X'
-        },
-        {
-            id: 4,
-            text: 'PROYECTO CORFO'
+
+        $(document).ready(function () {
+            //Validar formulario
+            $('#frmEdit').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
+            $("#addMaterial").hide();
+            //$("#divSeleccionados").hide();
+            $('#CodiCC').select2({
+                theme: 'bootstrap4',
+                placeholder: '--Seleccione Centro de Costo--'
+            });
+            $('#selectCliente').select2({
+                placeholder: 'Busque Cliente',
+                language: "es",
+                minimumInputLength: 3,
+                //data: dataCliente
+                ajax: {
+                    url: '/Beneficiario/Clientes_Read',
+                    delay: 250,
+                    dataType: 'json',
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+
+            });
+            $('#selectProyecto').select2({
+                placeholder: 'Busque Proyecto',
+                language: "es",
+                //minimumInputLength: 3,
+                //data: dataProyecto
+                ajax: {
+                    url: '/Beneficiario/Proyectos_Read',
+                    delay: 250,
+                    dataType: 'json',
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+
+            });
+
+            AbrirMenu('Solicitante');
+            window.stepper1 = new Stepper(document.querySelector('#stepper1'), { linear: false });
+        })
+
+        function AgregarMaterial(codProduct) {
+            var precioProd = $("#row_" + codProduct).find('.precio-producto').text();
+            var cantidad = $("#cant_" + codProduct).val()
+            var cantidadr = $("#cantr_" + codProduct).val()
+            var producto = {
+                IdSolicitudProducto: $("#p2_idSolicitud").val(),
+                CodProd: codProduct,
+                CostoUn: precioProd.replace("$","").replace(".",""),
+                DesProd: $("#row_" + codProduct).find('.des-producto').text(),
+                CantidadRequerida: cantidad,
+                CantidadRetiro: cantidadr,
+                UMedida: "UND"
+
+            };
+
+            $.ajax({
+                url: "/Solicitud/Create/",
+                type: "Post",
+                data: producto,
+
+                success: function (data) {
+                    if (data.Estado == 0) {
+                        $("#textMaterial").val("")
+                        $("#txtCantidad").val("")
+                        $("#addMaterial").hide();
+                        $("#divSeleccionados").show();
+                        //$("#bodySeleccion").append(registro);
+                        $("#tdMaterial").empty();
+                        $("#row_" + codProduct).hide();
+                        RefreshLista();
+                    }
+                    else {
+                        $.notify(data.Mensaje, "error");
+                    }
+                }
+            });
         }
-    ];
-
-    $(document).ready(function () {
-        //Validar formulario
-        $('#frmEdit').validate({
-            debug: false,
-            errorElement: "em",
-            errorContainer: $("#warning")
-        }); 
-        $("#addMaterial").hide();
-        //$("#divSeleccionados").hide();
-        $('#CodiCC').select2({
-            theme: 'bootstrap4',
-            placeholder: '--Seleccione Centro de Costo--'
-        });
-        $('#selectCliente').select2({
-            placeholder: 'Busque Cliente',
-            language: "es",
-            minimumInputLength: 3,            
-            //data: dataCliente
-            ajax: {
-                url: '/Beneficiario/Clientes_Read',
-                delay: 250,
-                dataType: 'json',
-                processResults: function (data) {                    
-                    return {
-                        results: data
-                    };
-                }
-            }
-
-        });
-        $('#selectProyecto').select2({
-            placeholder: 'Busque Proyecto',
-            language: "es",
-            //minimumInputLength: 3,
-            //data: dataProyecto
-            ajax: {
-                url: '/Beneficiario/Proyectos_Read',
-                delay: 250,
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                }
-            }
-
-        });
-        
-        AbrirMenu('Solicitante');
-        window.stepper1 = new Stepper(document.querySelector('#stepper1'), { linear: true });
-    })
-
-    function AgregarMaterial(codProduct) {
-        var precioProd = $("#row_" + codProduct).find('.precio-producto').text();
-        var cantidad = $("#cant_" + codProduct).val()
-        var cantidadr = $("#cantr_" + codProduct).val()
-        var producto = {
-            IdSolicitudProducto: $("#p2_idSolicitud").val(),
-            CodProd: codProduct,
-            CostoUn: precioProd.replace("$","").replace(".",""),
-            DesProd: $("#row_" + codProduct).find('.des-producto').text(),
-            CantidadRequerida: cantidad,
-            CantidadRetiro: cantidadr,
-            UMedida: "UND"
-
-        };
-        
-        $.ajax({
-            url: "/Solicitud/Create/",
-            type: "Post",
-            data: producto,
-
-            success: function (data) {               
-                if (data.Estado == 0) {
-                    $("#textMaterial").val("")
-                    $("#txtCantidad").val("")
-                    $("#addMaterial").hide();
-                    $("#divSeleccionados").show();
-                    //$("#bodySeleccion").append(registro);
-                    $("#tdMaterial").empty();
-                    $("#row_" + codProduct).hide();
+        function DeleteRegistro(idp) {
+            $.ajax({
+                url: "/Solicitud/Delete/",
+                type: "Post",
+                data: {id:idp},
+                success: function (data) {
+                    toastr.success(data.Mensaje)
                     RefreshLista();
                 }
-                else {
-                    $.notify(data.Mensaje, "error");
+            });
+        }
+        function CancelMaterial() {
+            $("#textMaterial").val("")
+            $("#txtCantidad").val("")
+            $("#addMaterial").hide();
+            $("#tdMaterial").empty();
+        }
+        function BuscarProducto() {
+            $("#datosBuscar").empty();
+            $('#modal-buscar').modal('show');
+            $.ajax({
+                url: "/Solicitud/BuscarProducto",
+                type: "Get",
+                data: { IdEmpresa: $("#IdEmpresa").val(),  nomProducto: $("#nomProductoBus").val(), codProducto: $("#codProductoBus").val() },
+                beforeSend: function () {
+                    $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
                 }
-            }
-        });
-    }
-    function DeleteRegistro(idp) {
-        $.ajax({
-            url: "/Solicitud/Delete/",
-            type: "Post",
-            data: {id:idp},
-            success: function (data) {
-                toastr.success(data.Mensaje)
-                RefreshLista();
-            }
-        });
-    }
-    function CancelMaterial() {
-        $("#textMaterial").val("")
-        $("#txtCantidad").val("")
-        $("#addMaterial").hide();
-        $("#tdMaterial").empty();
-    }
-    function BuscarProducto() {
-        $("#datosBuscar").empty();
-        $('#modal-buscar').modal('show');        
-        $.ajax({
-            url: "/Solicitud/BuscarProducto",
-            type: "Get",
-            data: { IdEmpresa: $("#IdEmpresa").val(),  nomProducto: $("#nomProductoBus").val(), codProducto: $("#codProductoBus").val() },
-            beforeSend: function () {
-                $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
-                mostrarCargando();
-            },
-            success: function (data) {
-                $("#datosBuscar").empty();
-                $("#datosBuscar").html(data);
-                esconderCargando();
-            }
-        });
-    }
-    function solicitudVerifica() {
-        var Id = $("#p2_idSolicitud").val()
-        $("#alertaStock").hide()
-        $.ajax({
-            url: "/Solicitud/Verifica",
-            type: "Get",
-            data: { idSolicitud: Id },
-            beforeSend: function () {
-                $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
-                mostrarCargando();
-            },
-            success: function (data) {
-                if (data.Estado == 1) { $("#alertaStock").show() }
-                var tr = ""; var tgrl = 0;
-                $.each(data.Listado, function (a, b) {
-                    console.log(b)
-                    tr += "<tr>";
-                    tr += "  <td>" + b.CodProd + "</td>";
-                    tr += "  <td>" + b.DesProd + "</td>";
-                    tr += "  <td>$ " + b.CostoUn + "</td>";
-                    tr += "  <td>" + b.CantidadRequerida + "</td>";
-                    tr += "  <td>" + b.Stock + "</td>";
-                    if (b.Status == "Nok") {
+            });
+        }
+        function solicitudVerifica() {
+            var Id = $("#p2_idSolicitud").val()
+            $("#alertaStock").hide()
+            $.ajax({
+                url: "/Solicitud/Verifica",
+                type: "Get",
+                data: { idSolicitud: Id },
+                beforeSend: function () {
+                    $("#datosBuscar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    if (data.Estado == 1) { $("#alertaStock").show() }
+                    var tr = ""; var tgrl = 0;
+                    $.each(data.Listado, function (a, b) {
+                        console.log(b)
+                        tr += "<tr>";
+                        tr += "  <td>" + b.CodProd + "</td>";
+                        tr += "  <td>" + b.DesProd + "</td>";
+                        tr += "  <td>$ " + b.CostoUn + "</td>";
+                        tr += "  <td>" + b.CantidadRequerida + "</td>";
+                        tr += "  <td>" + b.Stock + "</td>";
+                        if (b.Status == "Nok") {
 
-                        tr += "  <td><input type='text' name='cantidad' id='cant_"+ b.CodProd + "' value='" + b.Stock +"' class='form-control form-control-sm' /></td>";
+                            tr += "  <td><input type='text' name='cantidad' id='cant_"+ b.CodProd + "' value='" + b.Stock +"' class='form-control form-control-sm' /></td>";
 
-                    } else {
-                        tr += "<td><button class='btn btn-xs btn-success'><i class='fa fa-check-circle'></i></button></td>";
-                    }                    
-                    tr += "  <td>$ " + b.total + "</td>";
-                    tr += "</tr>";
+                        } else {
+                            tr += "<td><button class='btn btn-xs btn-success'><i class='fa fa-check-circle'></i></button></td>";
+                        }
+                        tr += "  <td>$ " + b.total + "</td>";
+                        tr += "</tr>";
 
-                    tgrl += parseFloat(b.total)
-                });
-                
-                tf = "<tr><th colspan='5'></th><th>Total</th><th class='text-right'>$ " + tgrl + "</th></tr>";
+                        tgrl += parseFloat(b.total)
+                    });
 
-                
-                $("#tbody").html(tr);
-                esconderCargando();
-                $('#modal-difStock').modal('show')
-            }
-        });
-    }
+                    tf = "<tr><th colspan='5'></th><th>Total</th><th class='text-right'>$ " + tgrl + "</th></tr>";
 
-    function envioSolicitud()
-    {
-        $("#idS").val($("#p2_idSolicitud").val());
-        $("#form_envio").submit()
-    }
 
-    //nuevo proyecto 
-    function nuevoProyecto() {
-        $("#modal-buscar .modal-content").empty();
-        $('#modal-buscar').modal('show');
-        tmpUrl = "/Home/creaProyecto";
-        $.ajax({
-            url: tmpUrl,
-            type: "Get",
-            data: {},
-            success: function (data) {
-                $("#modal-buscar .modal-content").empty();
-                $("#modal-buscar .modal-content").html(data);
-                esconderCargando();
-            }
-        });
-    }
+                    $("#tbody").html(tr);
+                    esconderCargando();
+                    $('#modal-difStock').modal('show')
+                }
+            });
+        }
 
-</script>
+        function envioSolicitud()
+        {
+            $("#idS").val($("#p2_idSolicitud").val());
+            $("#form_envio").submit()
+        }
+
+        //nuevo proyecto
+        function nuevoProyecto() {
+            $("#modal-buscar .modal-content").empty();
+            $('#modal-buscar').modal('show');
+            tmpUrl = "/Home/creaProyecto";
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: {},
+                success: function (data) {
+                    $("#modal-buscar .modal-content").empty();
+                    $("#modal-buscar .modal-content").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+
+    </script>

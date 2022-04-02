@@ -12,3 +12,17 @@ C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.csproj.CoreCom
 C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.csproj.CopyComplete
 C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.dll
 C:\Personal\ERPMaqSur\Desarrollo\Bodega\modelo\obj\Release\modelo.pdb
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\modelo.dll.config
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\modelo.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\modelo.pdb
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\EntityFramework.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\EntityFramework.SqlServer.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\Newtonsoft.Json.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\EntityFramework.xml
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\EntityFramework.SqlServer.xml
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Release\Newtonsoft.Json.xml
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Release\modelo.csproj.AssemblyReference.cache
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Release\modelo.csproj.CoreCompileInputs.cache
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Release\modelo.csproj.CopyComplete
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Release\modelo.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Release\modelo.pdb

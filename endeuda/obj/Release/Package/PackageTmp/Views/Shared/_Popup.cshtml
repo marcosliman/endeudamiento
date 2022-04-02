@@ -6,20 +6,56 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <title>@ViewData["Title"] - cl.dexiplus.Trazabilidad</title>
+    <title>@ViewData["Title"] - Endeudamiento</title>
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
     <style>
         #container-wrapper {
             font-size: .90rem;
         }
     </style>
     <script>
+        function SeparadorMilesInput(numero) {
+            var num = numero;
+            var splitStr = num.split(',');
+            var splitLeft = splitStr[0];
+            var splitRight = splitStr.length > 1 ? "," + splitStr[1] : '';
+            var regx = /(\d+)(\d{3})/;
+            while (regx.test(splitLeft)) {
+                splitLeft = splitLeft.replace(regx, '$1' + "." + '$2');
+            }
+            return splitLeft + splitRight;
+        }
         $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip()
+
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.table tbody').on('mouseover', 'tr', function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: 'hover',
+                    html: true
+                });
+            });
             $('.modal-dialog').draggable({
                 handle: ".modal-header"
             });
-            
+            $(".numberMiles").each(function () {
+                $(this).val(SeparadorMilesInput($(this).val().toString()))
+            })
+            //$(".numberMiles").val(SeparadorMiles($(this).val().toString()))
+            $(".numberMiles").on({
+                "focus": function (event) {
+                    $(event.target).select();
+                },
+                "keyup": function (event) {
+                    $(event.target).val(function (index, value) {
+                        var valor = value.replace(/[^0-9,]/g, '');
+                        return SeparadorMilesInput(valor);
+                        /* return value.replace(/\D/g, "")
+                             .replace(/([0-9])([0-9]{3})$/, '$1.$2')
+                             .replace(/\B(?=(\d{3})+(?!\d)\.?)/g, ".");*/
+                    });
+                }
+            });
         });
     </script>
 </head>

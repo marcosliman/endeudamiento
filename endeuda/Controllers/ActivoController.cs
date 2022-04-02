@@ -270,7 +270,10 @@ namespace tesoreria.Controllers
                             activo.NumeroFactura = datos.NumeroFactura;
                             activo.Patente = datos.Patente;
                             activo.Glosa = datos.Glosa;
-                            activo.IdEstado = estado;
+                            if (activo.IdEstado == 3)
+                            {
+                                activo.IdEstado = estado;
+                            }                            
                             db.SaveChanges();
                             showMessageString = new { Estado = 0, Mensaje = mensaje };
                         }

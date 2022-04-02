@@ -7,8 +7,9 @@
     <meta http-equiv="Last-Modified" content="0">
     <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
     <meta http-equiv="Pragma" content="no-cache">
-    <title>Bodega</title>
+    <title>Endeudamiento</title>
     <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
     <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
     <!-- datatable -->
     <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
@@ -72,10 +73,6 @@
             font-size: .85rem;
         }
 
-        .dropdown-toggle::after {
-            display: none;
-        }
-
         tr.group,
         tr.group:hover {
             background-color: #ddd !important;
@@ -134,6 +131,27 @@
         .sidebar-dark-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active,
         .sidebar-light-primary .nav-sidebar.nav-legacy > .nav-item > .nav-link.active {
             border-color: #1F2A44;
+        }
+
+        .modal.modal-fullscreen .modal-dialog {
+            width: 95vw;
+            margin: 10;
+            padding: 10;
+            max-width: none;
+        }
+
+        .modal.modal-fullscreen .modal-content {
+            border-radius: 0;
+            border: none;
+        }
+
+        .modal.modal-fullscreen .modal-body {
+            overflow-y: auto;
+        }
+
+        .os-scrollbar {
+            background: #1F2A44 !important;
+            opacity: 0.5;
         }
     </style>
     <script>
@@ -202,7 +220,13 @@
                 }
             });
 
-            $('[data-toggle="tooltip"]').tooltip()
+            $('[data-toggle="tooltip"]').tooltip();
+            $('.table tbody').on('mouseover', 'tr', function () {
+                $('[data-toggle="tooltip"]').tooltip({
+                    trigger: 'hover',
+                    html: true
+                });
+            });
             $('.modal-dialog').draggable({
                 handle: ".modal-header"
             });
@@ -262,6 +286,37 @@
             });
         }
 
+        function DateDatatable(fecha) {
+            if (fecha != "" && fecha != null) {
+                fecha = fecha.replace('/Date(', '').replace(')/', '');
+                var expDate = new Date(parseInt(fecha));
+                var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                return fechaES;
+            }
+            else {
+                return "";
+            }
+        }
+        function DateDatatableTime(fecha) {
+            if (fecha != "" && fecha != null) {
+                fecha = fecha.replace('/Date(', '').replace(')/', '');
+                var expDate = new Date(parseInt(fecha));
+                var dateLocal = expDate.toLocaleDateString().replace(/[-]/g, '/').split("/");
+                var dia = (dateLocal[0].length == 1) ? "0" + dateLocal[0] : dateLocal[0];
+                var mes = (dateLocal[1].length == 1) ? "0" + dateLocal[1] : dateLocal[1];
+                var fechaES = dia + "/" + mes + "/" + dateLocal[2];
+                var dateLocalTime = expDate.toLocaleTimeString().split(":");
+                fechaES = fechaES + " " + dateLocalTime[0] + ":" + dateLocalTime[1];
+                return fechaES;
+            }
+            else {
+                return "";
+            }
+        }
+
         function SeparadorMiles(numero) {
             var num = numero;
             var splitStr = num.split('.');
@@ -295,13 +350,15 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
-
+            <div class="row justify-content-end">
+                
+            </div>
             <!-- Right navbar links -->
 
             <ul class="navbar-nav ml-auto">
                 <!-- Messages Dropdown Menu -->
                 <!-- Notifications Dropdown Menu -->
-                <!--
+
                 <li class="nav-item dropdown">
                     <a class="nav-link" data-toggle="dropdown" href="#">
                         <i class="far fa-bell"></i>
@@ -311,24 +368,24 @@
                         <span class="dropdown-item dropdown-header">15 Notificaciones</span>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 5 solicitudes por aprobar
+                            <i class="fas fa-envelope mr-2"></i> 5 Tareas Pendientes
                             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 5 solicitudes para retiro
+                            <i class="fas fa-envelope mr-2"></i> 5 Promesas por Vencer
                             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item">
-                            <i class="fas fa-envelope mr-2"></i> 5 guias de salida finalizadas
+                            <i class="fas fa-envelope mr-2"></i> 5 Cuotas por Vencer
                             <span class="float-right text-muted text-sm">3 mins</span>
                         </a>
                         <div class="dropdown-divider"></div>
                         <a href="#" class="dropdown-item dropdown-footer">Ver todas las Notificaciones</a>
                     </div>
                 </li>
-                -->
+
                 <li class="topbar-divider d-none d-sm-block bg"></li>
                 <li class="nav-item dropdown no-arrow">
                     <a class="nav-link dropdown-toggle bg-azulmarca" href="#" id="userDropdown" role="button" data-toggle="dropdown"
@@ -337,9 +394,9 @@
                         <span class="ml-2 d-none d-lg-inline text-white">@seguridad.Nombre</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="#">
+                        <a class="dropdown-item" href="/Usuario/Datosusuario">
                             <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Perfil
+                            Cambiar Clave
                         </a>
 
                         <div class="dropdown-divider"></div>
@@ -357,7 +414,7 @@
             <!-- Brand Logo -->
             <a href="/Home/Inicio" class="brand-link bg-azulmarca">
                 <img src="/img/logo/logo2.png" alt="MaqSur" class="brand-image elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light text-white">BODEGA</span>
+                <span class="brand-text font-weight-light text-white">ENDEUDAMIENTO</span>
             </a>
 
             <!-- Sidebar -->
@@ -367,79 +424,78 @@
                     </div>
                 </div>
                 <nav class="mt-2">
-                    @Html.Raw("<ul class='nav nav-pills nav-sidebar flex-column nav-child-indent' data-widget='treeview' role='menu' data-accordion='false'>")
-
-                    @{
-                        foreach (var menu in seguridad.MenuUsuario.Where(c => c.NivelMenu == 1).OrderBy(c => c.OrdenMenu))
-                        {
-                            var existeHeader = seguridad.MenuUsuario.Where(h => h.NivelMenu == 0 && h.IdMenuPadre == menu.IdMenu).FirstOrDefault();
-                            if (existeHeader != null)
+                    <ul class='nav nav-pills nav-sidebar flex-column nav-child-indent' data-widget='treeview' role='menu' data-accordion='false'>
+                        @{
+                            foreach (var menu in seguridad.MenuUsuario.Where(c => c.NivelMenu == 1).OrderBy(c => c.OrdenMenu))
                             {
+                                var existeHeader = seguridad.MenuUsuario.Where(h => h.NivelMenu == 0 && h.IdMenuPadre == menu.IdMenu).FirstOrDefault();
+                                if (existeHeader != null)
+                                {
+                                    <text>
+                                        <li class="nav-header text-uppercase text-blue">@existeHeader.NombreMenu</li>
+                                    </text>
+                                }
                                 <text>
-                                    <li class="nav-header text-uppercase text-blue">@existeHeader.NombreMenu</li>
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link menuPadre" id="@menu.Nombre">
+                                            <i class="nav-icon @menu.Icono" style='color:royalblue'></i>
+                                            <p class="">
+                                                @menu.NombreMenu
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
+                                        </a>
                                 </text>
-                            }
-                            <text>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link menuPadre" id="@menu.Nombre">
-                                        <i class="nav-icon @menu.Icono"></i>
-                                        <p class="">
-                                            @menu.NombreMenu
-                                            <i class="right fas fa-angle-left"></i>
-                                        </p>
-                                    </a>
-                            </text>
-                            foreach (var submenu in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == menu.IdMenu && x.NivelMenu == 2).OrderBy(c => c.OrdenMenu))
-                            {
-                                var existeMenu3 = seguridad.MenuUsuario.Where(h => h.NivelMenu == 3 && h.IdMenuPadre == submenu.IdMenu).Count();
-                                if (existeMenu3 > 0)
+                                foreach (var submenu in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == menu.IdMenu && x.NivelMenu == 2).OrderBy(c => c.OrdenMenu))
                                 {
-                                    <ul class="nav nav-treeview" id="@submenu.Nombre">
-                                        <li class="nav-item">
-                                            <a href="@submenu.UrlMenu" class="nav-link">
-                                                <i class="@submenu.Icono"></i>
-                                                <p>
-                                                    @submenu.NombreMenu
-                                                    <i class="right fas fa-angle-left"></i>
-                                                </p>
-                                            </a>
-                                            <ul class="nav nav-treeview">
-                                                @foreach (var menunivel3 in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == submenu.IdMenu && x.NivelMenu == 3).OrderBy(c => c.OrdenMenu))
-                                                {
-                                                    <li class="nav-item" id="@menunivel3.Nombre">
-                                                        <a href="@menunivel3.UrlMenu" class="nav-link">
-                                                            <i class="@menunivel3.Icono"></i>
-                                                            <p>@menunivel3.NombreMenu</p>
-                                                        </a>
-                                                    </li>
-                                                }
+                                    var existeMenu3 = seguridad.MenuUsuario.Where(h => h.NivelMenu == 3 && h.IdMenuPadre == submenu.IdMenu).Count();
+                                    if (existeMenu3 > 0)
+                                    {
+                                        <ul class="nav nav-treeview" id="@submenu.Nombre">
+                                            <li class="nav-item">
+                                                <a href="@submenu.UrlMenu" class="nav-link">
+                                                    <i class="@submenu.Icono"></i>
+                                                    <p>
+                                                        @submenu.NombreMenu
+                                                        <i class="right fas fa-angle-left"></i>
+                                                    </p>
+                                                </a>
+                                                <ul class="nav nav-treeview">
+                                                    @foreach (var menunivel3 in seguridad.MenuUsuario.Where(x => x.IdMenuPadre == submenu.IdMenu && x.NivelMenu == 3).OrderBy(c => c.OrdenMenu))
+                                                    {
+                                                        <li class="nav-item" id="@menunivel3.Nombre">
+                                                            <a href="@menunivel3.UrlMenu" class="nav-link">
+                                                                <i class="@menunivel3.Icono"></i>
+                                                                <p>@menunivel3.NombreMenu</p>
+                                                            </a>
+                                                        </li>
+                                                    }
 
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                }
-                                else
-                                {
-                                    <ul class="nav nav-treeview" id="@submenu.Nombre">
-                                        <li class="nav-item">
-                                            <a href="@submenu.UrlMenu" class="nav-link">
-                                                <i class="@submenu.Icono"></i>
-                                                <p>
-                                                    @submenu.NombreMenu
-                                                </p>
-                                            </a>
-                                        </li>
-                                    </ul>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    }
+                                    else
+                                    {
+                                        <ul class="nav nav-treeview" id="@submenu.Nombre">
+                                            <li class="nav-item">
+                                                <a href="@submenu.UrlMenu" class="nav-link">
+                                                    <i class="@submenu.Icono"></i>
+                                                    <p>
+                                                        @submenu.NombreMenu
+                                                    </p>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    }
+
                                 }
 
+                                @Html.Raw("</li>")
                             }
-
-                            @Html.Raw("</li>")
                         }
-                    }
-                    </ul>
+                </ul>
             </nav>
-            <!-- /.sidebar-menu -->
+
             <div class="user-panel mt-2 pb-3 mb-4 d-flex">
                 <div class="info">
                 </div>
@@ -482,8 +538,7 @@
     </div>
     <!-- /.content-wrapper -->
     <footer class="main-footer">
-        <strong>Datos del Pie</strong>
-        ...
+        Desarrollado por <strong><a href="http://www.solucionesreloncavi.cl/" target="_blank">Soluciones Reloncavi SPA.</a></strong>
         <div class="float-right d-none d-sm-inline-block">
             <b>Version</b> 1.0
         </div>

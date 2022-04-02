@@ -31,7 +31,7 @@
     <div class="col-lg-12">
 
         <div class="card mb-4">
-            <div class="card-body table-responsive">
+            <div class="card-body">
                 <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 1, "asc" ]]'>
                     <thead class="thead-light">
                         <tr>
@@ -64,13 +64,8 @@
             table.ajax.reload(function (json) { });
         }
         function initTable() {
-            var buttonCommon=ExcelCommon();
-            var table = $('#grillaEmpresa').DataTable({  
-                buttons: [
-                    $.extend(true, {}, buttonCommon, {
-                        filename: "ListaUsuarios"
-                    })
-                ],                           
+            var table = $('#grillaEmpresa').DataTable({               
+                "scrollX": true,                
                 "retrieve": true,
                 'ajax': {
                     "type": "POST",
@@ -87,7 +82,7 @@
                         "bSortable": false,
                         "mRender": function (o, type, row) {
                             var boton = '';
-                            boton = '<button class="btn btn-primary btn-xs" onclick="CreateRegistro(' + o.IdUsuario +')"><i class="fa fa-edit"></i></button> ';                               
+                            boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdUsuario +')"><i class="fa fa-edit"></i></button> ';                               
                             return boton;
                         }
                     },

@@ -1197,7 +1197,6 @@ namespace tesoreria.Controllers
                                     db.Contrato_DetAmortizacion.Add(detPeriodo);
                                     db.SaveChanges();
                                 }
-
                             }
                             else
                             {
@@ -1224,6 +1223,10 @@ namespace tesoreria.Controllers
                     }
                     //calcular tir
                     var valTir = computeIRR(IdContrato, 0);
+                    var amortizacion = db.Contrato_Amortizacion.Where(c => c.IdContrato == IdContrato).FirstOrDefault();
+                    amortizacion.TasaMensual = valTir;
+                    amortizacion.TasaAnual=Math.Pow(1+valTir, 12)-1;
+                    db.SaveChanges();
                     //var saldoInsoluto=
                     //deleting excel file from folder
                     if ((System.IO.File.Exists(pathToExcelFile)))

@@ -42,3 +42,17 @@ C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csproj.C
 C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csproj.CopyComplete
 C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.dll
 C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.pdb
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\modelo.dll.config
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\modelo.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\modelo.pdb
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\EntityFramework.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\EntityFramework.SqlServer.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\Newtonsoft.Json.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\EntityFramework.xml
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\EntityFramework.SqlServer.xml
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\Newtonsoft.Json.xml
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.AssemblyReference.cache
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.CoreCompileInputs.cache
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.CopyComplete
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.dll
+C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.pdb
