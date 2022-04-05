@@ -61,7 +61,8 @@ namespace tesoreria.Controllers
                                 NumeroFactura = ac.NumeroFactura,
                                 Patente = ac.Patente,
                                 ac.IdEstado,
-                                ac.NumeroContrato
+                                ac.NumeroContrato,
+                                ac.SincronizadoSoftland
             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -140,6 +141,7 @@ namespace tesoreria.Controllers
                                     TituloBoton = "Editar",
                                     Grupo=ac.Grupo,
                                     SubGrupo=ac.SubGrupo,
+                                    IdEstado=ac.IdEstado,
                                     Activo=ac
                                 }).FirstOrDefault();
 
@@ -377,7 +379,7 @@ namespace tesoreria.Controllers
                              select new RetornoGenerico { Id = 0, Nombre = t.PCCODI + ": " + t.PCDESC, ValorString = t.PCCODI }).OrderBy(c => c.Nombre).ToList();
             return Json(subgrupos, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult ListaImportaActivo_Read(int idEmpresa, string CodGru,string CodSGru)
+        public ActionResult ListaImportaActivo_Read(int idEmpresa, string CodGru,string CodSGru,string CodActBus)
         {
             var empresa = db.Empresa.Find(idEmpresa);
             SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
@@ -389,6 +391,7 @@ namespace tesoreria.Controllers
                             from l_prov in t_prov.DefaultIfEmpty()
                             where ac.Estado=="V" && ((CodGru != "") ? ac.CodGru == CodGru : true)
                             && ((CodSGru != "") ? ac.CodSGru == CodSGru : true)
+                            && ((CodActBus != "") ? ac.CodAct == CodActBus : true)
                             select new
                             {
                                 ac.CodAct,
@@ -662,6 +665,62 @@ namespace tesoreria.Controllers
                 showMessageString = new { Estado = 100, Mensaje = "Please choose Excel file" };
             }
             return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult SincronizarActivo(int? IdActivo)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("ControlInterno", Helper.TipoAcceso.Acceder) || IdActivo==null)
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var activo=db.Activo.Find(IdActivo);
+                return View(activo);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SincronizarActivoConSoftland(int? IdActivo, string CodAct)
+        {
+            dynamic showMessageString = string.Empty;
+
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var activo = db.Activo.Find(IdActivo);
+                    var empresa = db.Empresa.Find(activo.IdEmpresa);
+                    SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+                    var activoSoftland = dbSoft.awfichaac.Find(CodAct);
+                    //solo elimina cuando no hay registros asociados
+                    if (activoSoftland != null)
+                    {                        
+                        activo.CodSoftland = CodAct;
+                        activo.SincronizadoSoftland = true;                        
+                        db.SaveChanges();
+                        dbContextTransaction.Commit();
+
+                        showMessageString = new { Estado = 0, Mensaje = "Activo Sincronizado con exito" };
+                        return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        dbContextTransaction.Rollback();
+                        showMessageString = new { Estado = 500, Mensaje = "Error: Activo no existe en Softland" };
+                        return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                    dbContextTransaction.Rollback();
+                    return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                }
+            }
         }
     }
 }

@@ -16,27 +16,13 @@
     <div class="card-body">
         <div class="row">
             <div class="col-sm-2">
-                <select name="empresa" class="form-control">
-                    <option>--Seleccione Empresa--</option>
-                    <option value="1">Todas</option>
-                    <option value="2">MAQSUR S.A.</option>
-                    <option value="3">BIOMASA</option>
-                    <option value="3">TECSUR</option>
-                    <option value="3">MQS</option>
-                    <option value="3">NOK</option>
-                </select>
+                @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
             <div class="col-sm-2">
-                <select name="banco" class="form-control">
-                    <option>--Seleccione Banco--</option>
-                    <option value="1">Todas</option>
-                    <option value="2">BCI</option>
-                    <option value="3">SANTANDER</option>
-                    <option value="3">SCOTIABANK</option>
-                </select>
+                @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
             <div class="col-sm-2">
-                <select name="anio" class="form-control">
+                <select name="anio" class="form-control form-control-sm">
                     <option>--Seleccione Año--</option>
                     <option value="1">2021</option>
                     <option value="2">2022</option>
@@ -53,7 +39,7 @@
                 </select>
             </div>
             <div class="col-sm-2">
-                <select name="empresa" class="form-control">
+                <select name="empresa" class="form-control form-control-sm">
                     <option>--Seleccione Mes--</option>
                     <option value="1">Enero</option>
                     <option value="2">Febrero</option>

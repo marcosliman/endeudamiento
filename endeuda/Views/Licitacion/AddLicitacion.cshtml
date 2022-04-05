@@ -253,7 +253,8 @@
                 if (data.Estado == 0) {
                     toastr.success(data.Mensaje)
                     $('#ConfirmFinalizar').modal('hide');
-                    setTimeout(function () { SuccessF(data); }, 3000);
+                    //setTimeout(function () { SuccessF(data); }, 3000);
+                    SuccessF(data);
                     esconderCargando();
                 }
                 else {

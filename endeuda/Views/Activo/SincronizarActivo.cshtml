@@ -1,22 +1,24 @@
-﻿@{
-    ViewBag.Title = "Buscar Activos";
-}
+﻿@model modelo.Models.Local.Activo
 @{
+    ViewBag.Title = "Buscar Activos";
+
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+    var codigoSync = (Model.CodSoftland != "" && Model.CodSoftland!=null) ? Model.CodSoftland : Model.NumeroInterno;
 }
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Buscar Activos en Softland</h5>
+    <h5 class="h5 mb-0 text-gray-800">Sincronizar Activo Softland @Model.NumeroInterno: @Model.Descripcion</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
         <li class="breadcrumb-item"><a href="/Activo/ControlInterno">Activos-Control Interno</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Importar</li>
+        <li class="breadcrumb-item active" aria-current="page">Sincronizar</li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.NumeroInterno</li>
     </ol>
 </div>
-<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los activos de todas las empresas.</h6>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar los activos disponibles para Sincronizar.</h6>
 <br />
 
-
+<input type="hidden" name="idEmpresa" id="idEmpresa" value="@Model.IdEmpresa" />
 <div class="row">
     <div class="col-lg-12">
         <div class="card card-outline card-info">
@@ -32,9 +34,9 @@
             <div class="card-body">
                 <div class="form-group form-group-sm">
                     <div class="form-group form-group-sm row">
-                        <label for="idEmpresa" class="col-sm-2 col-form-label col-form-label-sm">Empresa</label>
+                        <label for="CodGruBus" class="col-sm-2 col-form-label col-form-label-sm">Cod. Softland</label>
                         <div class="col-sm-9">
-                            @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                            <input type="text" name="CodActBus" id="CodActBus" value="@codigoSync" class="form-control form-control-sm" />
                         </div>
                     </div>
                     <div class="form-group form-group-sm row">
@@ -47,12 +49,6 @@
                         <label for="CodSGruBus" class="col-sm-2 col-form-label col-form-label-sm">Sub-Grupo</label>
                         <div class="col-sm-9">
                             <select name="CodSGru" id="CodSGruBus" class="form-control form-control-sm"></select>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm row">
-                        <label for="CodGruBus" class="col-sm-2 col-form-label col-form-label-sm">Cod. Softland</label>
-                        <div class="col-sm-9">
-                            <input type="text" name="CodActBus" id="CodActBus" value="" class="form-control form-control-sm" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -85,9 +81,8 @@
                 <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivoSoftland" data-order='[[ 2, "asc" ]]'>
                     <thead class="thead-light">
                         <tr>
-                            <th class="no-sort noExport" width="2%"></th>
-                            <th class="no-sort noExport" width="2%"><i class="fa fa-file-import text-grey"></i></th>
-                            <th>Cod. Softland</th>                            
+                            <th class="no-sort noExport" width="2%"><i class="fa fa-sync text-grey"></i></th>
+                            <th>Cod. Softland</th>
                             <th>Descripción</th>
                             <th>Grupo</th>
                             <th>Sub-Grupo</th>
@@ -105,14 +100,17 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="ModalCargaMasivaA" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-       
-    </div>
-</div>
-<div class="modal fade" id="ModalVerActivo" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        
+<div class="modal fade" id="modal-finHito" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modal-asociar" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="alert alert-success" id="msjFinHito">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="location.href='/Activo/ControlInterno/'" data-dismiss="modal">OK</button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -127,7 +125,7 @@
         cambioEmpresabusqueda($("#idEmpresa").val());
         $("#idEmpresa").change(function () { cambioEmpresabusqueda(this.value); })
         $("#CodGruBus").change(function () { cambioGrupoBusqueda($("#idEmpresa").val(), this.value); })
-        //initTable();
+        initTable();
     });
     function cambioEmpresabusqueda(IdEmpresa) {
         $("#CodGruBus").empty();
@@ -146,7 +144,7 @@
 
         cambioGrupoBusqueda(IdEmpresa, "");
     }
-    function cambioGrupoBusqueda(IdEmpresa,CodGru) {
+    function cambioGrupoBusqueda(IdEmpresa, CodGru) {
 
         $("#CodSGruBus").empty();
         $("#CodSGruBus").append('<option value="">--Seleccione Sub Grupo--</option>');
@@ -200,14 +198,14 @@
                     d.idEmpresa = $('#idEmpresa').val();
                     d.CodGru = $('#CodGruBus').val();
                     d.CodSGru = $('#CodSGruBus').val();
-                    d.CodActBus = $('#CodSGruBus').val();
+                    d.CodActBus = $('#CodActBus').val();
                 },
                 "dataSrc": ""
             },
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [6],
+                    targets: [5],
                     render: function (data) {
                         var numFormt = "";
                         if (data != null) {
@@ -218,7 +216,7 @@
                     }
                 },
                 {
-                    targets: [7],
+                    targets: [6],
                     render: function (data) {
                         var fecha = DateDatatable(data);
                         return fecha;
@@ -226,24 +224,14 @@
                 }
             ],
             columns: [
+                
                 {
                     "mData": null,
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
                         // if (o.Editable == true) {
-                        //boton = '<button class="btn btn-info btn-xs" type="button" data-toggle="modal" data-target="#ModalAddActivo" title="Editar" onclick="EditActivo(' + o.IdActivo + ')"><i class="fa fa-edit"></i></button> ';
-                        //}
-                        return boton;
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        var boton = '';
-                        // if (o.Editable == true) {
-                        boton += '<button class="btn btn-success btn-xs" type="button" title="Importar" onclick="ImportarActivoSofland(\'' + o.CodAct + '\')"><i class="fa fa-file-import"></i></button> ';
+                        boton += '<button class="btn btn-success btn-xs" type="button" title="Importar" onclick="SyncActivoSofland(\'' + o.CodAct + '\')"><i class="fa fa-sync"></i></button> ';
                         //}
                         return boton;
                     }
@@ -263,17 +251,17 @@
         //$("#grillaActivo").dataTable().fnDestroy();
         return table;
     }
-    function ImportarActivoSofland(CodAct) {
-        a = true;//confirm("Seguro de Eliminar el registro seleccionado?")
+    function SyncActivoSofland(CodAct) {
+        a = confirm("Seguro de Asociar el Código Seleccionado?")
         if (a) {
             $.ajax({
                 type: 'POST',
-                url: '/Activo/ImportaActivoSoftland',
-                data: { CodAct: CodAct, idEmpresa : $('#idEmpresa').val()},
+                url: '/Activo/SincronizarActivoConSoftland',
+                data: { IdActivo: "@Model.IdActivo", CodAct: CodAct },
                 success: function (data) {
                     if (data.result.Estado == "0") {
-                        toastr.success(data.result.Mensaje);
-                        RefreshLista();
+                        $("#msjFinHito").html(data.result.Mensaje);
+                        $('#modal-finHito').modal('show');
 
                     }
                     else {

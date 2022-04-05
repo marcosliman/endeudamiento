@@ -41,7 +41,17 @@ namespace tesoreria.Controllers
             }
             else
             {
-                
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var bancos = (from e in db.Banco
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
+                SelectList listaBancos = new SelectList(bancos.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaBancos"] = listaBancos;
                 return View();
             }
             

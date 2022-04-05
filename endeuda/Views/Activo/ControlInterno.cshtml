@@ -90,6 +90,7 @@
                             <tr>
                                 <th class="no-sort noExport" width="2%"><i class="fa fa-user-edit text-grey"></i></th>
                                 <th class="no-sort noExport" width="2%"><i class="fa fa-file-import"></i></th>
+                                <th class="no-sort noExport" width="2%"><i class="fa fa-sync"></i></th>
                                 <th>Empresa</th>
                                 <th>Num. Interno</th>
                                 <th>Cod. Softland</th>
@@ -149,7 +150,9 @@
         </div>
     </div>
 </div>
-
+<form method="post" action="/Activo/SincronizarActivo" name="frmSync" id="frmSync">
+    <input type="hidden" name="IdActivo" id="IdActivo" value="" />
+</form>
 
 <script>
     function ImportActivos() {
@@ -240,6 +243,17 @@
                         var boton = '';
                         if (row.IdEstado == 3 || row.IdEstado == 4) {
                             boton += '<button class="btn btn-danger btn-xs" type="button" title="Eliminar" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="far fa-trash-alt"></i></button> ';
+                        }
+                        return boton;
+                    }
+                },
+                {
+                    "mData": "IdActivo",
+                    "bSortable": false,
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        if (row.SincronizadoSoftland == false) {
+                            boton += '<button class="btn btn-success btn-xs" type="button" title="Sincronizar" onclick="SincronizarActivo(' + data+ ')"><i class="fa fa-sync"></i></button> ';
                         }
                         return boton;
                     }
@@ -370,7 +384,10 @@
         //$("#grillaActivo").dataTable().fnDestroy();
         return table;
     }
-
+    function SincronizarActivo(idActivo) {
+        $("#IdActivo").val(idActivo);
+        $('#frmSync').submit();
+    }
     function EditActivo(idActivo) {
         //$("#datosMovimiento").empty();
         $('#ModalAddActivo').modal('show');
