@@ -43,52 +43,50 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-md-2">
-                @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
-            </div>
-            <div class="col-md-2">
-                @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
-            </div>
-            <div class="col-md-2">
-            </div>
-            <div class="col-md-2">
-                <div class="row justify-content-end">
-                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+        <div class="form-group form-group-sm">
+            <div class="col-12 row">
+                <div class="col-md-2">
+                    @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                </div>
+                <div class="col-md-2">
+                    @Html.DropDownList("tipoFinanciamientoB", (SelectList)ViewData["listaTipoFinancimiento"], "--Seleccione Tipo Financiamiento--", htmlAttributes: new { @class = "form-control form-control-sm" })
                 </div>
             </div>
         </div>
+        <div class="form-group form-group-sm">
+            <div class="col-sm-12">
+                <button class="btn btn-primary btn-block" type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+            </div>
+        </div>
+            
+        
     </div>
 </div>
-    
-
-
-
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Licitaciones Activas</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body table-responsive">
-                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacion" data-order='[[ 1, "asc" ]]'>
-                    <thead class="thead-light">
-                        <tr>
-                            <th>Acción</th>
-                            <th>Número Licitación</th>
-                            <th>Empresa</th>
-                            <th>Tipo Financiamiento</th>
-                            <th>Monto</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Licitaciones Activas</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
         </div>
+    </div>
+    <div class="card-body table-responsive">
+        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacion" data-order='[[ 1, "asc" ]]'>
+            <thead class="thead-light">
+                <tr>
+                    <th>Acción</th>
+                    <th>Número Licitación</th>
+                    <th>Empresa</th>
+                    <th>Tipo Financiamiento</th>
+                    <th>Monto</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
    
 <form name="frmLicitacion" id="frmLicitacion" method="post">
     <input type="hidden" name="idLicitacion" id="idLicitacion" />
