@@ -99,11 +99,13 @@ namespace tesoreria.Controllers
                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
                 SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEmpresa);
                 ViewData["listaEmpresa"] = listaEmpresa;
-
+                
                 var tipoFinancimiento = (from e in db.TipoFinanciamiento
                                where e.Activo == true
-                               select new RetornoGenerico { Id = e.IdTipoFinanciamiento, Nombre = e.NombreTipoFinanciamiento }).OrderBy(c => c.Id).ToList();
-                SelectList listaTipoFinancimiento = new SelectList(tipoFinancimiento.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdTipoFinanciamiento);
+                               select new SelectListItem() { Value = e.IdTipoFinanciamiento.ToString(), Text = e.NombreTipoFinanciamiento,
+                                   Group = new SelectListGroup(){ Name=e.TipoContrato.NombreTipoContrato,Disabled=false } }).OrderBy(c => c.Group.Name).ToList();
+                SelectList listaTipoFinancimiento = new SelectList(tipoFinancimiento, "Value", "Text","Group.Name",0);                
+                
                 ViewData["listaTipoFinancimiento"] = listaTipoFinancimiento;
 
                 return View(registro);
