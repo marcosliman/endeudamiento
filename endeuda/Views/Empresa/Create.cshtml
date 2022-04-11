@@ -6,6 +6,9 @@
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
+<!-- Bootstrap4 Duallistbox -->
+<link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/bootstrap4-duallistbox/bootstrap-duallistbox.min.css">
+<script src="~/Plantilla/AdminLTE/plugins/bootstrap4-duallistbox/jquery.bootstrap-duallistbox.js"></script>
 @using (Ajax.BeginForm("Create", "Empresa", new AjaxOptions
 {
     InsertionMode = InsertionMode.Replace,
@@ -13,7 +16,7 @@
     OnSuccess = "Success_dl",
     OnFailure = "Failure_dl"
 
-}, new { id = "frmEdit" , @class = "form-horizontal"}))
+}, new { id = "frmEdit", @class = "form-horizontal" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(model => model.IdEmpresa);
@@ -23,7 +26,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">       
+    <div class="modal-body">
         <div class="ml-2">
             <div class="form-group form-group-sm row">
                 <label for="RazonSocial" class="col-sm-3 col-form-label col-form-label-sm">Razón Social</label>
@@ -49,7 +52,7 @@
                     @Html.EditorFor(model => model.AliasEmpresa, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
                 </div>
             </div>
-            
+
             <div class="form-group form-group-sm row">
                 <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Estado</label>
                 <div class="col-6">
@@ -58,8 +61,31 @@
                 </div>
             </div>
 
-        </div>           
+        </div>
+        <div class="ml-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label>Empresas Relacionadas</label>
+                        <select class="duallistbox required" id="empresas" multiple="multiple" name="empresas">
+                            @if (ViewData["listaEmpresas"] != null)
+                            {
+                                foreach (var item in ViewData["listaEmpresas"] as List<modelo.ViewModel.RetornoGenerico>)
+                                {
+                                    var select = "";
+                                    if (item.Seleccionado == true)
+                                    { select = " Selected "; }
+                                    <option value="@item.Id" @select>@item.Nombre</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+   
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
         <button type="submit" class="btn btn-primary btn-sm">@ViewBag.ValueBoton</button>
@@ -67,24 +93,29 @@
 }
 <script>
     $(document).ready(function () {
-       
+        $('#empresas').bootstrapDualListbox({
+            preserveSelectionOnMove: 'moved',
+            moveOnSelect: true,
+            nonSelectedFilter: '',
+            showFilterInputs: false
+        });
         $('#frmEdit').validate({
             debug: false,
             errorElement: "em",
             errorContainer: $("#warning")
-        });       
-        window.top.esconderCargando();           
+        });
+        window.top.esconderCargando();
     });
-    
-    function Success_dl(data) {        
+
+    function Success_dl(data) {
         esconderCargando();
         if (data.Estado == "0") {
-            toastr.success(data.Mensaje);            
+            toastr.success(data.Mensaje);
             $('#modal-registro').modal('hide');
             RefreshLista();
         }
         else {
-            toastr.error(data.Mensaje);           
+            toastr.error(data.Mensaje);
         }
     }
     function Failure_dl(data) {

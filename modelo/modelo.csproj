@@ -86,6 +86,7 @@
     <Compile Include="Models\Local\Proveedor.cs" />
     <Compile Include="Models\Local\Estado.cs" />
     <Compile Include="Models\Local\Empresa.cs" />
+    <Compile Include="Models\Local\EmpresaRelacionada.cs" />
     <Compile Include="Models\SoftLandContext.cs" />
     <Compile Include="Models\Local\Crypto.cs" />
     <Compile Include="Models\ErpContext.cs" />

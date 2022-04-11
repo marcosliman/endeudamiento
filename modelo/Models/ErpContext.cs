@@ -54,5 +54,6 @@ namespace modelo.Models
 
         public System.Data.Entity.DbSet<Local.Contrato_Amortizacion> Contrato_Amortizacion { get; set; }
         public System.Data.Entity.DbSet<Local.Contrato_DetAmortizacion> Contrato_DetAmortizacion { get; set; }
+        public System.Data.Entity.DbSet<Local.EmpresaRelacionada> EmpresaRelacionada { get; set; }
     }
 }
