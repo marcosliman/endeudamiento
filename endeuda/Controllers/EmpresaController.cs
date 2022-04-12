@@ -63,7 +63,7 @@ namespace tesoreria.Controllers
             }
 
             var empresas = (from emp in db.Empresa
-                            join eu in db.EmpresaRelacionada.Where(c => c.IdEmpresa == id) on emp.IdEmpresa equals eu.IdEmpresa into t_eu
+                            join eu in db.EmpresaRelacionada.Where(c => c.IdEmpresa == id) on emp.IdEmpresa equals eu.IdEmpresaRelacionada into t_eu
                             from l_eu in t_eu.DefaultIfEmpty()
                             where emp.Activo == true
                             select new RetornoGenerico { Id = emp.IdEmpresa, Nombre = emp.RazonSocial, Seleccionado = (l_eu != null) ? true : false }).OrderBy(c => c.Nombre).ToList();

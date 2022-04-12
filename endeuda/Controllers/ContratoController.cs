@@ -86,7 +86,33 @@ namespace tesoreria.Controllers
             return Json(registro, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Consolidado_Read()
+        {
+            var registro = (from c in db.Contrato.ToList()
 
+                            join e in db.Estado on c.IdEstado equals e.IdEstado
+                            join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
+                            join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
+                            join ca in db.ContratoActivo on c.IdContrato equals ca.IdContrato into t_ca
+                            from l_ca in t_ca.DefaultIfEmpty()
+                            join cam in db.Contrato_Amortizacion on c.IdContrato equals cam.IdContrato into t_cam
+                            from l_cam in t_cam.DefaultIfEmpty()
+                            where c.IdTipoContrato == 1
+                            select new 
+                            {
+                                IdContrato = c.IdContrato,
+                                IdTipoContrato = c.IdTipoContrato,
+                                RazonSocial = em.RazonSocial,
+                                Monto = c.Monto,
+                                TasaMensual = c.TasaMensual,
+                                Plazo = c.Plazo,
+
+                                NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
+                            }).AsEnumerable().ToList();
+            var listaretorno = registro.GroupBy(c => new { c.IdTipoContrato,c.RazonSocial })
+                .Select(c => new { c.Key.IdTipoContrato, c.Key.RazonSocial,SumaMontos=c.Sum(x=>x.Monto) });
+            return Json(listaretorno, JsonRequestBehavior.AllowGet);
+        }
 
         public ActionResult RegistrarContratoLeasing(int idContrato)
         {

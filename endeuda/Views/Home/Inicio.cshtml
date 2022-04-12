@@ -74,46 +74,16 @@
                 <div class="row">
                     <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grilla1" data-order='[[ 0, "asc" ]]'>
                             <thead class="thead-light">
                                 <tr>
                                     <th>Empresa</th>
-                                    <th>Cant. Leasing Contratados</th>
+                                    @*<th>Cant. Leasing Contratados</th>*@
                                     <th>Tasa Prom. de Endeu. en CLP $</th>
                                     <th>Tasa Prom. de Endeu. en UF</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>MAQSUR S.A.</th>
-                                    <td>68</td>
-                                    <td>4.6 %</td>
-                                    <td>5.4 %</td>
-                                </tr>
-                                <tr>
-                                    <th>TECSUR S.A.</th>
-                                    <td>23</td>
-                                    <td>4.6 %</td>
-                                    <td>No Tiene</td>
-                                </tr>
-                                <tr>
-                                    <th>BIOMASA</th>
-                                    <td>14</td>
-                                    <td>5.6 %</td>
-                                    <td>No Tiene</td>
-                                </tr>
-                                <tr>
-                                    <th>MQS</th>
-                                    <td>1</td>
-                                    <td>6.3 %</td>
-                                    <td>No Tiene</td>
-                                </tr>
-                                <tr>
-                                    <th>NOKS</th>
-                                    <td>1</td>
-                                    <td>6.9 %</td>
-                                    <td>No Tiene</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -273,7 +243,7 @@
     </div>
 </div>
 
-    
+
 <div class="row">
 
     <div class="col-md-6">
@@ -396,7 +366,7 @@
                                         <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
                                         <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
                                     </tr>
-                                    
+
                                 </tbody>
                             </table>
                         </div>
@@ -712,7 +682,7 @@
                                     </tr>
 
                                 </tbody>
-                            </table>    
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -899,67 +869,39 @@
 
 
 <script>
-        var data = [
-            {
-                id: 0,
-                text: 'Alicate PLano'
-            },
-            {
-                id: 1,
-                text: 'Alicate Universal'
-            },
-            {
-                id: 2,
-                text: 'Alicate Punta Redonda '
-            },
-            {
-                id: 3,
-                text: 'Destornillador estrella'
-            },
-            {
-                id: 4,
-                text: 'Destornillador Plano'
-            }
-        ];
-        $(document).ready(function () {
-            $('#grillaProductos').DataTable({
-                "searching": false,
-                buttons: [],
-            });
-            AbrirMenu('Solicitante');
-            $("#stockMaterial").hide();
-            $('#selectMaterial').select2({
-                placeholder: 'Busque Material',
-                language: "es",
-                minimumInputLength: 3,
-                data: data
-                /*ajax: {
-                    url: '/Producto/Productos_Read/',
-                    dataType: 'json'
-                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-                }*/
-            });
-            $('#selectMaterial').on('select2:select', function (e) {
-                var data = e.params.data;
-                $("#stockMaterial").show();
-                $('#selectMaterial').val(null).trigger('change');
-            });
-        })
 
-        function abreMaterial() {
-            $("#datosBuscar").empty();
-            $('#crear-material').modal('show');
-            tmpUrl = "/Home/SolicitudCreaMaterial";
-            $.ajax({
-                url: tmpUrl,
-                type: "Get",
-                data: {},
-                success: function (data) {
-                    $("#datosBuscar").empty();
-                    $("#datosBuscar").html(data);
-                    esconderCargando();
-                }
-            });
-        }
+    $(document).ready(function () {
+        AbrirMenu("Dashboard");
+        initTable();
+    });
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+    function initTable() {
+        var table = $('#grilla1').DataTable({
+            "scrollX": true,
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/Consolidado_Read/0',
+                "data": function (d) {
+
+                },
+                "dataSrc": ""
+            },
+            columns: [
+
+              
+                { "data": "RazonSocial" },
+/*                { "data": "LeasingContratados" },*/
+                { "data": "SumaMontos" },
+                { "data": "SumaTasaAnual" }
+            ]
+        });
+
+        return table;
+    }
+
 
 </script>
