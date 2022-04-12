@@ -100,18 +100,31 @@ namespace tesoreria.Controllers
                             where c.IdTipoContrato == 1
                             select new 
                             {
+                                em.IdEmpresa,
                                 IdContrato = c.IdContrato,
                                 IdTipoContrato = c.IdTipoContrato,
                                 RazonSocial = em.RazonSocial,
                                 Monto = c.Monto,
                                 TasaMensual = c.TasaMensual,
                                 Plazo = c.Plazo,
-
+                                MontoTasaMensual=c.Monto*c.TasaMensual,
                                 NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
                             }).AsEnumerable().ToList();
-            var listaretorno = registro.GroupBy(c => new { c.IdTipoContrato,c.RazonSocial })
-                .Select(c => new { c.Key.IdTipoContrato, c.Key.RazonSocial,SumaMontos=c.Sum(x=>x.Monto) });
-            return Json(listaretorno, JsonRequestBehavior.AllowGet);
+            var totales = registro.GroupBy(c => new { c.IdTipoContrato,c.RazonSocial,c.IdEmpresa })
+                .Select(c => new { c.Key.IdTipoContrato, c.Key.RazonSocial,c.Key.IdEmpresa,SumaMontos=c.Sum(x=>x.Monto),sumTasaMensual=c.Sum(x=>x.MontoTasaMensual) });
+
+
+            var listTasaPromedio = (from total in totales
+
+                            select new
+                            {
+                                total.IdTipoContrato,
+                                total.RazonSocial,
+                                total.SumaMontos,
+                                TasaPromedio=Math.Round(((total.sumTasaMensual / total.SumaMontos)*100),2)
+                            }
+                          ).ToList();
+            return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult RegistrarContratoLeasing(int idContrato)
