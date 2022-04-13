@@ -1161,8 +1161,17 @@ namespace tesoreria.Controllers
             }
             else
             {
-                var contrato = db.ContratoActivo.Find(idContrato);
-                return View(contrato);
+                ContratoActivo contratoActivo=new ContratoActivo();
+                var contrato = db.ContratoActivo.Where(c=>c.IdContrato==idContrato).FirstOrDefault();
+                if (contrato != null)
+                {
+                    contratoActivo = contrato;
+                }
+                else
+                {
+                    contratoActivo.IdContrato = idContrato;
+                }
+                return View(contratoActivo);
             }
         }
         public ActionResult DetAmortizacion_Read(int idContrato)
