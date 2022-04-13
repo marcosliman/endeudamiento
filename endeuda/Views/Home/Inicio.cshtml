@@ -3,7 +3,18 @@
 }
 <h5 class="h5 mb-0 text-gray-800">Demos un vistaso al desarrollo de los contratos y endeudamiento de todas las empresas.</h5>
 <br />
-
+<table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="indicadores" data-order='[[ 1, "asc" ]]'>
+    <thead>
+        <tr>
+            <th><img src="~/img/logo/banderachile.png" width="20" height="20" ;> UF <span id="valorUF"></span></th>
+            <th><img src="~/img/logo/banderachile.png" width="20" height="20" ;> UTM <span id="valorUTM"></span></th>
+            <th><img src="~/img/logo/banderachile.png" width="20" height="20" ;> IPC <span id="valorIPC"></span> </th>
+            <th><img src="~/img/logo/banderaeeuu.png" width="20" height="20"> USD <span id="valorUSD"></span> </th>
+            <th><img src="~/img/logo/euro.png" width="20" height="20"> EURO <span id="valorEUR"></span> </th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
 <div class="card card-outline card-info collapsed-card">
     <div class="card-header">
         <h3 class="card-title">Filtros</h3>
@@ -62,7 +73,7 @@
 
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header" style="background-color:lightgrey">
+            <div class="card-header text-white" style="background-color:midnightblue">
                 <h3 class="card-title">Consolidado de Endeudamiento Leasing por Empresa</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -78,7 +89,7 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Empresa</th>
-                                    @*<th>Cant. Leasing Contratados</th>*@
+                                    <th>Cant. Leasing Contratados</th>
                                     <th>Tasa Prom. de Endeu. en CLP $</th>
                                     <th>Tasa Prom. de Endeu. en UF</th>
                                 </tr>
@@ -107,7 +118,7 @@
                 <div class="row">
                     <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grilla2" data-order='[[ 0, "asc" ]]'>
                             <thead class="thead-light">
                                 <tr>
                                     <th>Empresa</th>
@@ -873,6 +884,16 @@
     $(document).ready(function () {
         AbrirMenu("Dashboard");
         initTable();
+        $.getJSON('https://mindicador.cl/api', function (data) {
+            var dailyIndicators = data;
+            $("#valorUF").text(SeparadorMiles(dailyIndicators.uf.valor.toString()));
+            $("#valorUTM").text(SeparadorMiles(dailyIndicators.utm.valor.toString()));
+            $("#valorIPC").text(SeparadorMiles(dailyIndicators.ipc.valor.toString()));
+            $("#valorUSD").text(SeparadorMiles(dailyIndicators.dolar.valor.toString()));
+            $("#valorEUR").text(SeparadorMiles(dailyIndicators.euro.valor.toString()));
+        }).fail(function () {
+            console.log('Error!');
+        });
     });
     function RefreshLista() {
         var table = initTable();
@@ -894,9 +915,9 @@
 
               
                 { "data": "RazonSocial" },
-/*                { "data": "LeasingContratados" },*/
-                { "data": "SumaMontos" },
-                { "data": "TasaPromedio" }
+                { "data": "CantidadReg" },
+                { "data": "TasaPromedio" },
+                { "data": "TasaPromedioUF" }
             ]
         });
 

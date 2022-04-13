@@ -111,7 +111,7 @@ namespace tesoreria.Controllers
                                 NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
                             }).AsEnumerable().ToList();
             var totales = registro.GroupBy(c => new { c.IdTipoContrato,c.RazonSocial,c.IdEmpresa })
-                .Select(c => new { c.Key.IdTipoContrato, c.Key.RazonSocial,c.Key.IdEmpresa,SumaMontos=c.Sum(x=>x.Monto),sumTasaMensual=c.Sum(x=>x.MontoTasaMensual) });
+                .Select(c => new { c.Key.IdTipoContrato, c.Key.RazonSocial,c.Key.IdEmpresa,SumaMontos=c.Sum(x=>x.Monto),sumTasaMensual=c.Sum(x=>x.MontoTasaMensual), CantidadReg = c.Count() });
 
 
             var listTasaPromedio = (from total in totales
@@ -121,7 +121,10 @@ namespace tesoreria.Controllers
                                 total.IdTipoContrato,
                                 total.RazonSocial,
                                 total.SumaMontos,
-                                TasaPromedio=Math.Round(((total.sumTasaMensual / total.SumaMontos)*100),2)
+                                TasaPromedio=Math.Round(((total.sumTasaMensual / total.SumaMontos)*100),2),
+                                total.CantidadReg,
+                                TasaPromedioUF="0"
+
                             }
                           ).ToList();
             return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
