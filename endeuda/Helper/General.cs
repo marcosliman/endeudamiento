@@ -57,6 +57,9 @@ namespace tesoreria.Helper
         PolActivo = 41,
         PolFinalizado = 42,
 
+        MutuoCreado = 60,
+        MutuoVigente = 61,
+        MutuoFinalizado = 62
 
     }
 
@@ -70,7 +73,8 @@ namespace tesoreria.Helper
     {
         ActivoContrato = 1,
         Poliza = 2,
-        Siniestro = 3
+        Siniestro = 3,
+        Mutuo = 4
     }
 
     public enum TipoFinanciamiento : int

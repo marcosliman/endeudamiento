@@ -2962,6 +2962,11 @@
     <Content Include="Views\Contrato\ImportAmortizacion.cshtml" />
     <Content Include="Views\Activo\ImportActivosInterno.cshtml" />
     <Content Include="Views\Activo\SincronizarActivo.cshtml" />
+    <Content Include="Views\Mutuo\AddMutuo.cshtml" />
+    <Content Include="Views\Mutuo\_MutuoGestion.cshtml" />
+    <Content Include="Views\Mutuo\ModalAddMutuo.cshtml" />
+    <Content Include="Views\Mutuo\AddDocumento.cshtml" />
+    <Content Include="Views\Mutuo\ModalNuevoPrestamo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
