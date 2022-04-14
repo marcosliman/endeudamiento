@@ -1,0 +1,140 @@
+﻿@model modelo.ViewModel.MutuoViewModel
+@{
+    ViewBag.Title = "Registrar Prestamo";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="card-body">
+    @using (Ajax.BeginForm("GrabarMutuo", "Mutuo", new AjaxOptions
+    {
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "post",
+        OnSuccess = "Success_dl",
+        OnFailure = "Failure_dl"
+
+    }, new { id = "frmAddMutuo", @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+
+    <input type="hidden" name="idMutuo" id="idMutuoA" value="@Model.IdMutuo" />
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad que Financia </label>
+        <div class="col-sm-2">
+            @Html.DropDownList("idEmpresaFinancia", (SelectList)ViewData["listaEmpresaF"], "--Seleccione Empresa Financiera--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+        </div>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad Receptora del Financiamiento </label>
+        <div class="col-sm-2">
+            @Html.DropDownList("idEmpresaReceptora", (SelectList)ViewData["listaEmpresaR"], "--Seleccione Empresa Receptora--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Monto a Financiar ($)</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm required numberMiles" name="montoPrestamo" id="montoPrestamo" value="@Model.MontoPrestamo" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm tasa required" name="tasaMensual" onblur="CalculoTasa()" id="tasaMensual" value="@Model.TasaMensual" />
+        </div>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Diaria</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm tasa required" name="tasaDiaria" id="tasaDiaria" readonly value="@Model.TasaDiaria" />
+        </div>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Prestamo</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control form-control-sm classFecha required" name="fechaPrestamo" id="fechaPrestamo" value="@Model.FechaPrestamoStr" />
+        </div>
+    </div>
+
+    }
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    @if (Model.PuedeEditar) { 
+        <button type="button" name="btnGrabar" id="btnGrabar" onclick="GrabarMutuo()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> @Model.TituloBoton</button>
+    }
+
+</div>
+<script>
+    $(document).ready(function () {
+        $('.classFecha').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: "es"
+        });
+        $('#frmAddMutuo').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning"),
+            rules: {
+                MontoPrestamo: { required: true },
+                idEmpresaFinancia: { required: true },
+                idEmpresaReceptora: { required: true },
+                TasaMensual: { required: true, number: true },
+                TasaDiaria: { required: true },
+                fechaPrestamo: { required: true }
+            }
+        });
+    });
+
+    function GrabarMutuo() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''))
+        });
+        if ($('#frmAddMutuo').valid()) {
+            $(".tasa").each(function () {
+                $(this).val($(this).val().toString().replace(/[$.]/g, ','))
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/Mutuo/GrabarMutuo/',
+                data: $("#frmAddMutuo").serialize(),
+                success: function (data) {
+                    Success(data);
+                },
+                failure: function (data) {
+                    Failure(data);
+                }
+            })
+
+        }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
+    }
+
+    function CalculoTasa(){
+        if ($("#tasaMensual").val().length > 0){
+            var tasaMensual = $("#tasaMensual").val().replace(",",".");
+            var tasaDiaria = tasaMensual / 30;
+            $("#tasaDiaria").val(tasaDiaria.toFixed(2));
+        }
+    }
+
+    function Success(data) {
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            CreateRegistro(data.idMutuo);
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+
+    function Failure(data) {
+        //esconderCargando();
+        toastr.error(data.Mensaje);
+    }
+
+
+    function Cerrar() {
+        $('#ModalRegistrarMutuo').modal('hide');
+        RefreshLista();
+    }
+
+</script>

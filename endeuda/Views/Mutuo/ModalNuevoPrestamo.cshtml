@@ -1,6 +1,6 @@
 ﻿@model modelo.ViewModel.MutuoViewModel
 @{
-    ViewBag.Title = "Abono Prestamo";
+    ViewBag.Title = "Nuevo Prestamo";
 }
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
@@ -12,45 +12,46 @@
     </button>
 </div>
 <div class="card-body">
-    @using (Ajax.BeginForm("GrabarAbonoMutuo", "Mutuo", new AjaxOptions
+    @using (Ajax.BeginForm("GrabarNuevoPrestamo", "Mutuo", new AjaxOptions
     {
         InsertionMode = InsertionMode.Replace,
         HttpMethod = "post",
         OnSuccess = "Success_dl",
         OnFailure = "Failure_dl"
 
-    }, new { id = "frmAddAbono", @class = "form-horizontal" }))
+    }, new { id = "frmAddNuevoPrestamo", @class = "form-horizontal" }))
     {
         @Html.AntiForgeryToken()
-    <input type="hidden" name="idMutuo" id="idMutuoA" value="@Model.IdMutuo" />
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad que Financia </label>
-        <div class="col-sm-3">
-            @Model.EmpresaFinancia
+        <input type="hidden" name="idMutuo" id="idMutuoA" value="@Model.IdMutuo" />
+
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad que Financia </label>
+            <div class="col-sm-3">
+                @Model.EmpresaFinancia
+            </div>
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad Receptora</label>
+            <div class="col-sm-3">
+                @Model.EmpresaReceptora
+            </div>
         </div>
-        <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad Receptora</label>
-        <div class="col-sm-3">
-            @Model.EmpresaReceptora
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Monto Prestamo ($)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm required numberMiles" name="montoPrestamo" id="montoPrestamo" />
+            </div>
         </div>
-    </div>
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Monto a Abonar ($)</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm required numberMiles" name="montoAbono" id="montoAbono" />
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Prestamo</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm classFecha required" name="fechaPrestamo" id="fechaPrestamo" />
+            </div>
         </div>
-    </div>
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Abono</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm classFecha required" name="fechaAbono" id="fechaAbono" />
-        </div>
-    </div>
 
     }
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-    <button type="button" name="btnGrabar" id="btnGrabar" onclick="GrabarAbono()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> Grabar Abono</button>
+    <button type="button" name="btnGrabar" id="btnGrabar" onclick="GrabarNuevoPrestamo()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> Grabar Prestamo</button>
 </div>
 <script>
     $(document).ready(function () {
@@ -59,26 +60,26 @@
             autoclose: true,
             language: "es"
         });
-        $('#frmAddAbono').validate({
+        $('#frmAddNuevoPrestamo').validate({
             debug: false,
             errorElement: "em",
             errorContainer: $("#warning"),
             rules: {
-                MontoAbono: { required: true },
-                fechaAbono: { required: true }
+                MontoPrestamo: { required: true },
+                fechaPrestamo: { required: true }
             }
         });
     });
 
-    function GrabarAbono() {
+    function GrabarNuevoPrestamo() {
         $(".numberMiles").each(function () {
             $(this).val($(this).val().toString().replace(/[$.]/g, ''))
         });
-        if ($('#frmAddAbono').valid()) {
+        if ($('#frmAddNuevoPrestamo').valid()) {
             $.ajax({
                 type: 'POST',
-                url: '/Mutuo/GrabarAbonoMutuo/',
-                data: $("#frmAddAbono").serialize(),
+                url: '/Mutuo/GrabarNuevoPrestamo/',
+                data: $("#frmAddNuevoPrestamo").serialize(),
                 success: function (data) {
                     Success(data);
                 },
@@ -96,7 +97,7 @@
     function Success(data) {
         if (data.Estado == "0") {
             toastr.success(data.Mensaje);
-            $('#ModalRegistrarAbono').modal('hide');
+            $('#ModalNuevoPrestamo').modal('hide');
             RefreshLista();
         }
         else {
@@ -111,7 +112,7 @@
 
 
     function Cerrar() {
-        $('#ModalRegistrarAbono').modal('hide');
+        $('#ModalNuevoPrestamo').modal('hide');
         RefreshLista();
     }
 

@@ -55,5 +55,11 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.Contrato_Amortizacion> Contrato_Amortizacion { get; set; }
         public System.Data.Entity.DbSet<Local.Contrato_DetAmortizacion> Contrato_DetAmortizacion { get; set; }
         public System.Data.Entity.DbSet<Local.EmpresaRelacionada> EmpresaRelacionada { get; set; }
+
+        /*mutuo*/
+        public System.Data.Entity.DbSet<Local.Mutuo> Mutuo { get; set; }
+        public System.Data.Entity.DbSet<Local.MutuoDocumento> MutuoDocumento { get; set; }
+        public System.Data.Entity.DbSet<Local.MutuoPrestamo> MutuoPrestamo { get; set; }
+        public System.Data.Entity.DbSet<Local.MutuoAbono> MutuoAbono { get; set; }
     }
 }

@@ -1,0 +1,92 @@
+﻿@model modelo.ViewModel.MutuoViewModel
+@{
+    ViewBag.Title = "Agregar Deuda";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+@{
+    var habilitaTab = "";
+    if (Model.ExisteMutuo == "N")
+    {
+        habilitaTab = " disabled ";
+    }
+}
+<div class="modal-header">
+    <h5 class="modal-title" id="addParcela">@ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<input type="hidden" name="idMutuo" id="idMutuo" value="@Model.IdMutuo" />
+<div class="card-body">
+    <div class="card card-primary card-outline card-outline-tabs">
+        <div class="card-header p-0 border-bottom-0">
+            <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link nav-link-mutuo active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Datos Deuda</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link nav-link-mutuo @habilitaTab" id="header2" data-toggle="pill" href="#" onclick="CargaTab('tab2',2)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">Documentos</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-four-tabContent">
+                <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+                </div>
+                <div class="tab-pane fade" id="tab2" role="tabpanel">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('.tab-pane').removeClass("show").removeClass("active");
+        CargaTab('tab1', '1')
+
+    });
+    function CargaTab(div, op) {
+        $('.tab-pane').removeClass("show").removeClass("active");
+        $('.nav-link-mutuo').removeClass("active");
+        $("#tab1").empty();
+        $("#tab2").empty();
+        $("#header" + op).addClass("active");
+        url = "";
+        if (op == 1) {
+            url = 'AddMutuo';
+            $("#tab1").addClass("show").addClass("active");
+        }
+        if (op == 2) {
+            url = 'AddDocumento';
+            $("#tab2").addClass("show").addClass("active");
+        }
+
+        $.ajax({
+            url: '/Mutuo/' + url,
+            data: { idMutuo: $("#idMutuo").val() },
+            async: true,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            global: true,
+            ifModified: false,
+            processData: true,
+            //data: { idDocumento: op },
+            //data: ReemplazoCadena(aux_busqueda),
+            beforeSend: function () {
+                $("#" + div).empty();
+                $("#" + div).html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (html) {
+                //html=decodeURIComponent(html);
+
+                $("#" + div).empty(),
+                    $("#" + div).append(html);
+            },
+            type: "post"
+        });
+    }
+
+</script>

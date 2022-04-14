@@ -1,0 +1,455 @@
+﻿<!doctype html>
+@{
+    ViewBag.Title = "Gestionar Mutuos";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+<div class="modal fade" id="ModalDetalleDeuda" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-detalledeuda" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 80%;">
+        @Html.Partial("ModalDetalleDeuda", null)
+    </div>
+</div>
+<div class="modal fade" id="ModalRegistrarAbono" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-registrarabono" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 80%;">
+        @Html.Partial("ModalRegistrarAbono", null)
+    </div>
+</div>
+<div class="modal fade" id="ModalProyectarAbono" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-proyectarabono" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 80%;">
+        @Html.Partial("ModalProyectarAbono", null)
+    </div>
+</div>
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Gestionar Mutuos</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Acá puedes revisar las deudas y abonos todas las empresas.</h6>
+<br />
+<div class="card">
+    <div class="card card-outline card-info collapsed-card">
+        <div class="card-header">
+            <h3 class="card-title">Registrar Deudas</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Autogenerado</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="Autogenerado" id="Autogenerado" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad que Financia </label>
+            <div class="col-sm-2">
+                <select class="form-control form-control-sm">
+                    <option value="0">---Seleccione Empresa---</option>
+                    <option value="1">MAQSUR S.A.</option>
+                    <option value="2">BIOMASA</option>
+                    <option value="3">TECSUR</option>
+                    <option value="4">MQS</option>
+                    <option value="5">NOK</option>
+                </select>
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad que Receptora del Financiamiento </label>
+            <div class="col-sm-2">
+                <select class="form-control form-control-sm">
+                    <option value="0">---Seleccione Empresa---</option>
+                    <option value="1">EMPRESA A</option>
+                    <option value="2">EMPRESA B</option>
+                    <option value="3">EMPRESA C</option>
+                    <option value="4">EMPRESA D</option>
+                    <option value="5">EMPRESA E</option>
+                    <option value="5">EMPRESA F</option>
+                    <option value="5">EMPRESA G</option>
+                    <option value="5">EMPRESA H</option>
+                </select>
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Monto a Financiar</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="MontoFinanciar" id="MontoFinanciar" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="TasaMensual" id="TasaMensual" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Diaria</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="TasaDiaria" id="TasaDiaria" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Inicio</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="FechaInicio" id="FechaInicio" />
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" style="background-color:lightblue">
+                <h3 class="card-title">Archivos relacionados</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Documento---</option>
+                            <option value="1">Contrato</option>
+                            <option value="2">Documento 1</option>
+                            <option value="3">Documento 2</option>
+                            <option value="4">Documento 3</option>
+                            <option value="8">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="col-sm-auto col-form-label">
+                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Documento---</option>
+                            <option value="1">Contrato</option>
+                            <option value="2">Documento 1</option>
+                            <option value="3">Documento 2</option>
+                            <option value="4">Documento 3</option>
+                            <option value="8">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="col-sm-auto col-form-label">
+                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Documento---</option>
+                            <option value="1">Contrato</option>
+                            <option value="2">Documento 1</option>
+                            <option value="3">Documento 2</option>
+                            <option value="4">Documento 3</option>
+                            <option value="8">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="col-sm-auto col-form-label">
+                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Documento---</option>
+                            <option value="1">Contrato</option>
+                            <option value="2">Documento 1</option>
+                            <option value="3">Documento 2</option>
+                            <option value="4">Documento 3</option>
+                            <option value="8">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="col-sm-auto col-form-label">
+                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Documento---</option>
+                            <option value="1">Contrato</option>
+                            <option value="2">Documento 1</option>
+                            <option value="3">Documento 2</option>
+                            <option value="4">Documento 3</option>
+                            <option value="8">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="col-sm-auto col-form-label">
+                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Documento---</option>
+                            <option value="1">Contrato</option>
+                            <option value="2">Documento 1</option>
+                            <option value="3">Documento 2</option>
+                            <option value="4">Documento 3</option>
+                            <option value="8">Otros</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <div class="col-sm-auto col-form-label">
+                            <button class="btn btn-primary btn-sm fileinput-button" id="btn_1"><i class="fa fa-upload"></i> Cargar Archivo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-11">
+            </div>
+            <div class="col-sm-1">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-1 my-lg-0">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal"><i class="fa fa-plus"></i>Añadir Nueva Deuda</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="card col-lg-12">
+        <div class="card card-outline card-info">
+            <div class="card-header">
+                <h3 class="card-title">Filtros</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Empresa Finaciera---</option>
+                            <option value="1">MAQSUR S.A.</option>
+                            <option value="2">BIOMASA</option>
+                            <option value="3">TECSUR</option>
+                            <option value="3">MQS</option>
+                            <option value="3">NOK</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="empresa" class="form-control">
+                            <option value="0">---Seleccione Empresa Receptora---</option>
+                            <option value="1">EMPRESA A</option>
+                            <option value="2">EMPRESA B</option>
+                            <option value="3">EMPRESA C</option>
+                            <option value="3">EMPRESA D</option>
+                            <option value="3">EMPRESA E</option>
+                            <option value="3">EMPRESA F</option>
+                            <option value="3">EMPRESA G</option>
+                            <option value="3">EMPRESA H</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-2">
+
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row justify-content-end">
+                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Detalle de Deudas</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                                <th class="no-sort" width="3%"><i class="fas fa-cash-register"></i></th>
+                                <th class="no-sort" width="3%"><i class="fas fa-calculator"></i></th>
+                                <th>Empresa Financiera</th>
+                                <th>Empresa Receptora</th>
+                                <th>Monto ($)</th>
+                                <th>Tasa Mensual</th>
+                                <th>Tasa Diaria</th>
+                                <th>Fecha de Inicio</th>
+                                <th class="no-sort" width="3%"><i class="far fa-trash-alt"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA A</td>
+                                <td>34,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA B</td>
+                                <td>15,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA C</td>
+                                <td>50,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA D</td>
+                                <td>20,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA E</td>
+                                <td>20,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA F</td>
+                                <td>20,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA G</td>
+                                <td>20,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                            <tr>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalDetalleDeuda" data-toggle="modal" data-target="#ModalDetalleDeuda" title="Detalle Venta"><i class="far fa-eye"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalRegistrarAbono" data-toggle="modal" data-target="#ModalRegistrarAbono" title="Registrar Abono"><i class="fas fa-cash-register"></i></button></td>
+                                <td><button class="btn btn-info btn-sm" type="button" id="ModalProyectarAbono" data-toggle="modal" data-target="#ModalProyectarAbono" title="Proyectar Abono"><i class="fas fa-calculator"></i></button></td>
+                                <td>MAQSUR SA</td>
+                                <td>EMPRESA H</td>
+                                <td>20,000,000,000</td>
+                                <td>15%</td>
+                                <td>0.5%</td>
+                                <td>01-07-2021</td>
+                                <td><button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crear"><i class="far fa-trash-alt"></i></button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("MutuoGestion");
+    });
+</script>
+@*
+    <script>
+        $(document).ready(function () {
+            $('#grillaProductos').DataTable({
+                "searching": false,
+                buttons: [],
+            });
+            AbrirMenu('ContratoBuscar');
+            $("#stockMaterial").hide();
+            $('#selectMaterial').select2({
+                placeholder: 'Busque Material',
+                language: "es",
+                minimumInputLength: 3,
+                data: data
+                /*ajax: {
+                    url: '/Producto/Productos_Read/',
+                    dataType: 'json'
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+                }*/
+            });
+            $('#selectMaterial').on('select2:select', function (e) {
+                var data = e.params.data;
+                $("#stockMaterial").show();
+                $('#selectMaterial').val(null).trigger('change');
+            });
+        })
+
+        function abreMaterial() {
+            $("#datosBuscar").empty();
+            $('#crear-material').modal('show');
+            tmpUrl = "/Home/SolicitudCreaMaterial";
+            $.ajax({
+                url: tmpUrl,
+                type: "Get",
+                data: {},
+                success: function (data) {
+                    $("#datosBuscar").empty();
+                    $("#datosBuscar").html(data);
+                    esconderCargando();
+                }
+            });
+        }
+
+    </script>
+*@
