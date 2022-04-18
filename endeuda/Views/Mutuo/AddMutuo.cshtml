@@ -81,6 +81,22 @@
         });
     });
 
+    $("#idEmpresaFinancia").change(function () {
+        $.ajax({
+            url: "/Mutuo/EmpresaRelacionada",
+            type: "Get",
+            data: { idEmpresa: $('#idEmpresaFinancia').val() },
+            success: function (data) {
+                var length = Object.keys(data).length;
+                $("#idEmpresaReceptora").empty();
+                $("#idEmpresaReceptora").append('<option value="">-- Seleccione Empresa Receptora --</option>');
+                for (var i = 0; i < length; i++) {
+                    $("#idEmpresaReceptora").append('<option value="' + data[i].Id + '">' + data[i].Nombre + '</option>');
+                };
+            }
+        });
+    });
+
     function GrabarMutuo() {
         $(".numberMiles").each(function () {
             $(this).val($(this).val().toString().replace(/[$.]/g, ''))

@@ -85,6 +85,20 @@ namespace tesoreria.Controllers
             return Json(registro, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult EmpresaRelacionada(int idEmpresa)
+        {
+            var registro = (from c in db.Empresa
+                            join r in db.EmpresaRelacionada on c.IdEmpresa equals r.IdEmpresaRelacionada
+                            where r.IdEmpresa == idEmpresa
+                            select new RetornoGenerico
+                            {
+                                Id = r.IdEmpresaRelacionada,
+                                Nombre = c.RazonSocial
+                            }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult PrestamoRelacionadas()
         {
             if (seguridad == null)
@@ -177,8 +191,9 @@ namespace tesoreria.Controllers
                 ViewData["listaEmpresaF"] = listaEmpresaF;
 
                 var empresaR = (from e in db.Empresa
-                                where e.Activo == true
-                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                                join r in db.EmpresaRelacionada on e.IdEmpresa equals r.IdEmpresaRelacionada
+                                where r.IdEmpresa == registro.IdEmpresaFinancia
+                                select new RetornoGenerico { Id = r.IdEmpresaRelacionada, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
                 SelectList listaEmpresaR = new SelectList(empresaR.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEmpresaReceptora);
                 ViewData["listaEmpresaR"] = listaEmpresaR;
 
@@ -502,6 +517,7 @@ namespace tesoreria.Controllers
 
         #endregion
 
+        #region Abono Mutuo
         public ActionResult ModalRegistrarAbono(int idMutuo)
         {
             if (seguridad == null)
@@ -582,6 +598,10 @@ namespace tesoreria.Controllers
             }
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
+
+        #endregion
+
+        #region Prestamo Mutuo
 
         public ActionResult ModalNuevoPrestamo(int idMutuo)
         {
@@ -664,6 +684,7 @@ namespace tesoreria.Controllers
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
 
+        #endregion
         public ActionResult ModalDetalleDeuda()
         {
             if (seguridad == null)
