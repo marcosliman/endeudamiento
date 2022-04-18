@@ -685,7 +685,7 @@ namespace tesoreria.Controllers
         }
 
         #endregion
-        public ActionResult ModalDetalleDeuda()
+        public ActionResult ModalDetalleDeuda(int idMutuo)
         {
             if (seguridad == null)
             {
@@ -693,7 +693,12 @@ namespace tesoreria.Controllers
             }
             else
             {
-                return View();
+                var mutuo = new MutuoViewModel();
+                mutuo.IdMutuo = idMutuo;
+                mutuo.FechaPrestamo = DateTime.Now;
+                mutuo.FechaPrestamoStr = mutuo.FechaPrestamo.ToString("dd-MM-yyyy");
+
+                return PartialView(mutuo);
             }
         }
         public ActionResult ModalProyectarAbono(int idMutuo)

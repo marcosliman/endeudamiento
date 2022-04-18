@@ -6,8 +6,10 @@
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
 }
 <div class="modal fade" id="ModalDetalleDeuda" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-detalledeuda" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 80%;">
-        @Html.Partial("ModalDetalleDeuda", null)
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 80%;">
+        <div class="modal-content">
+            <div id="datosDeuda"></div>
+        </div>
     </div>
 </div>
 
@@ -154,6 +156,21 @@
         });
     }
 
+    function VerDeuda(idMutuo) {
+        $.ajax({
+            url: "/Mutuo/ModalDetalleDeuda",
+            type: "Post",
+            data: { idMutuo: idMutuo },
+            beforeSend: function () {
+                $("#datosDeuda").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosDeuda").empty();
+                $("#datosDeuda").html(data);
+            }
+        });
+    }
+
     function NuevoCredito(idMutuo) {
         $.ajax({
             url: "/Mutuo/ModalNuevoPrestamo",
@@ -231,7 +248,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        boton = '<button class="btn btn-info btn-sm" type="button" onclick="VerDeuda(' + o.IdMutuo + ')"><i class="far fa-eye"></i></button> ';
+                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleDeuda" onclick="VerDeuda(' + o.IdMutuo + ')"><i class="far fa-eye"></i></button> ';
                         return boton;
                     }
                 },
