@@ -126,36 +126,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>MAQSUR S.A.</th>
-                                    <td>5,403,601,355.00</td>
-                                    <td>100,016.00</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <th>TECSUR S.A.</th>
-                                    <td>728,285,221.00</td>
-                                    <td>-</td>
-                                    <td>1,366,979.00</td>
-                                </tr>
-                                <tr>
-                                    <th>BIOMASA</th>
-                                    <td>1,659,903,914.00</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <th>MQS</th>
-                                    <td>188,623,881.00</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <th>NOKS</th>
-                                    <td>8,515,398.00</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
+                               
                             </tbody>
                         </table>
                     </div>
@@ -170,7 +141,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header" style="background-color:lightgrey">
+            <div class="card-header text-white" style="background-color:midnightblue">
                 <h3 class="card-title">Consolidado de Tipo de Activo en Leasing - Al 31-08-2021</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -181,14 +152,8 @@
             <div class="card-body">
                 <div class="row">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grilla3" data-order='[[ 0, "asc" ]]'>
                             <thead class="thead-light">
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th colspan="2">Monto Deuda Inicial</th>
-                                    <th></th>
-                                </tr>
                                 <tr>
                                     <th>Tipo Activo en Leasing</th>
                                     <th>Contratos</th>
@@ -198,48 +163,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>MAQUINARIA</th>
-                                    <td>73</td>
-                                    <td>254,100,016.00</td>
-                                    <td>-</td>
-                                    <td>4,552,805,876.00</td>
-                                </tr>
-                                <tr>
-                                    <th>BARCAZA</th>
-                                    <td>4</td>
-                                    <td>120,080,230.00</td>
-                                    <td>-</td>
-                                    <td>754,000,723.00</td>
-                                </tr>
-                                <tr>
-                                    <th>TERRENOS</th>
-                                    <td>3</td>
-                                    <td>156,619,716.00</td>
-                                    <td>3,267.00</td>
-                                    <td>208,790,385.00</td>
-                                </tr>
-                                <tr>
-                                    <th>CONSTRUCCIONES</th>
-                                    <td>2</td>
-                                    <td>-</td>
-                                    <td>35,166.00</td>
-                                    <td>588,127,924.00</td>
-                                </tr>
-                                <tr>
-                                    <th>VEHÍCULOS</th>
-                                    <td>8</td>
-                                    <td>230,131,558.00</td>
-                                    <td>-</td>
-                                    <td>164,425,724.00</td>
-                                </tr>
-                                <tr>
-                                    <th>EQUIPOS</th>
-                                    <td>3</td>
-                                    <td>89,943,428.00</td>
-                                    <td>-</td>
-                                    <td>21,466,915.00</td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -879,9 +802,10 @@
 <script>
 
     $(document).ready(function () {
-        AbrirMenu("Solicitante");
+        AbrirMenu("Home");
         initTable();
         initTable2();
+        initTable3();
         $.getJSON('https://mindicador.cl/api', function (data) {
             var dailyIndicators = data;
             $("#valorUF").text(SeparadorMiles(dailyIndicators.uf.valor.toString()));
@@ -896,7 +820,9 @@
     function RefreshLista() {
         var table = initTable();
         table.ajax.reload(function (json) { });
-        var table2 = initTable2();
+        var table = initTable2();
+        table.ajax.reload(function (json) { });
+        var table = initTable3();
         table.ajax.reload(function (json) { });
     }
     function initTable() {
@@ -942,6 +868,32 @@
                 { "data": "CantidadReg" },
                 { "data": "TasaPromedio" },
                 { "data": "TasaPromedioUF" }
+            ]
+        });
+
+        return table;
+    }
+
+    function initTable3() {
+        var table = $('#grilla3').DataTable({
+            "scrollX": true,
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/Consolidado3_Read/0',
+                "data": function (d) {
+
+                },
+                "dataSrc": ""
+            },
+            columns: [
+
+
+                { "data": "Familia" },
+                { "data": "CantidadReg" },
+                { "data": "SumaMontos" },
+                { "data": "UF" },
+                { "data": "DeudaVigente" }
             ]
         });
 

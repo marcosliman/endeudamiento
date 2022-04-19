@@ -173,6 +173,62 @@ namespace tesoreria.Controllers
             return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Consolidado3_Read()
+        {
+            var registro = (from c in db.Contrato.ToList()
+                            join e in db.Estado on c.IdEstado equals e.IdEstado
+                            join m in db.Moneda on c.IdMoneda equals m.IdMoneda
+                            join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
+                            join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
+                            join ca in db.ContratoActivo on c.IdContrato equals ca.IdContrato into t_ca
+                            from l_ca in t_ca.DefaultIfEmpty()
+
+                            join ac in db.Activo on l_ca.IdActivo equals ac.IdActivo into t_ac
+                            from l_ac in t_ac.DefaultIfEmpty()
+
+                            join fam in db.Familia on l_ac.IdFamilia equals fam.IdFamilia into t_fam
+                            from l_fam in t_fam.DefaultIfEmpty()
+
+                            join cam in db.Contrato_Amortizacion on c.IdContrato equals cam.IdContrato into t_cam
+                            from l_cam in t_cam.DefaultIfEmpty()
+
+
+                            where c.IdTipoContrato == 1
+                            select new
+                            {
+                                em.IdEmpresa,
+                                IdContrato = c.IdContrato,
+                                IdTipoContrato = c.IdTipoContrato,
+                                RazonSocial = em.RazonSocial,
+                                Monto = c.Monto,
+                                Moneda=m.NombreMoneda,
+                                IdFamilia=l_ac.IdFamilia,
+                                Familia=l_fam.NombreFamilia,
+                                TasaMensual = c.TasaMensual,
+                                Plazo = c.Plazo,
+                                MontoTasaMensual = c.Monto * c.TasaMensual,
+                                NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
+                            }).AsEnumerable().ToList();
+            var totales = registro.GroupBy(c => new { c.IdFamilia,c.Familia, c.RazonSocial,c.Moneda})
+                .Select(c => new { c.Key.IdFamilia,c.Key.Familia, c.Key.RazonSocial,c.Key.Moneda,SumaMontos = c.Sum(x => x.Monto), sumTasaMensual = c.Sum(x => x.MontoTasaMensual), CantidadReg = c.Count() });
+
+
+            var listTasaPromedio = (from total in totales
+
+                                    select new
+                                    {
+                                        total.IdFamilia,
+                                        total.Familia,
+                                        total.RazonSocial,
+                                        total.SumaMontos,
+                                        total.CantidadReg,
+                                        UF="0",
+                                        DeudaVigente="0"
+
+                                    }
+                          ).ToList();
+            return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult RegistrarContratoLeasing(int idContrato)
         {
             if (seguridad == null)

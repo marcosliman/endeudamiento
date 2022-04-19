@@ -40,6 +40,6 @@ namespace modelo.Models.Local
         public int IdEstado { get; set; }
         public int IdUsuarioRegistro { get; set; }
         public DateTime FechaRegistro { get; set; }
-        
+        public int IdMoneda { get; set; }
     }
 }

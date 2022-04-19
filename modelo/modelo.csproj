@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Local\Activo.cs" />
+    <Compile Include="Models\Local\Moneda.cs" />
     <Compile Include="Models\Local\MutuoDocumento.cs" />
     <Compile Include="Models\Local\Contrato_DetAmortizacion.cs" />
     <Compile Include="Models\Local\Contrato_Amortizacion.cs" />

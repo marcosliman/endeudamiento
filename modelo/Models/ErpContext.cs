@@ -61,5 +61,6 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.MutuoDocumento> MutuoDocumento { get; set; }
         public System.Data.Entity.DbSet<Local.MutuoPrestamo> MutuoPrestamo { get; set; }
         public System.Data.Entity.DbSet<Local.MutuoAbono> MutuoAbono { get; set; }
+        public System.Data.Entity.DbSet<Local.Moneda> Moneda { get; set; }
     }
 }
