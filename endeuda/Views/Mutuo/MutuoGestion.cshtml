@@ -6,8 +6,10 @@
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
 }
 <div class="modal fade" id="ModalDetalleDeuda" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-detalledeuda" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 80%;">
-        @Html.Partial("ModalDetalleDeuda", null)
+    <div class="modal-dialog modal-lg" role="document" style="max-width: 80%;">
+        <div class="modal-content">
+            <div id="datosDeuda"></div>
+        </div>
     </div>
 </div>
 
@@ -60,85 +62,73 @@
         <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalRegistrarMutuo" onclick="CreateRegistro(0)"><i class="fa fa-plus"></i> Nueva Deuda</button>
     </div>
 </nav>
-<div class="row">
-    <div class="card col-lg-12">
-        <div class="card card-outline card-info">
-            <div class="card-header">
-                <h3 class="card-title">Filtros</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                @Html.DropDownList("idEmpresaFinanciaB", (SelectList)ViewData["listaEmpresaF"], "--Seleccione Empresa Financiera--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-2">
-                        @Html.DropDownList("idEmpresaFinanciaB", (SelectList)ViewData["listaEmpresaF"], "--Seleccione Empresa Financiera--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.DropDownList("idEmpresaReceptoraB", (SelectList)ViewData["listaEmpresaR"], "--Seleccione Empresa Receptora--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
+            <div class="col-md-2">
+                @Html.DropDownList("idEmpresaReceptoraB", (SelectList)ViewData["listaEmpresaR"], "--Seleccione Empresa Receptora--", htmlAttributes: new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="col-md-2">
 
-                    </div>
-                    <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
 
-                    </div>
-                    <div class="col-md-2">
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row justify-content-end">
-                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
-                        </div>
-                    </div>
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Detalle de Deudas</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaMutuo" data-order='[[ 3, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
-                                <th class="no-sort" width="3%"><i class="fas fa-credit-card"></i></th>
-                                <th class="no-sort" width="3%"><i class="fas fa-cash-register"></i></th>
-                                <th class="no-sort" width="3%"><i class="fas fa-calculator"></i></th>
-                                <th>Empresa Financiera</th>
-                                <th>Empresa Receptora</th>
-                                <th>Monto ($)</th>
-                                <th>Tasa Mensual</th>
-                                <th>Tasa Diaria</th>
-                                <th>Fecha de Inicio</th>
-                                <th>Estado</th>
-                                <th class="no-sort" width="6%">Acción</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-
+</div>   
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Detalle de Deudas</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaMutuo" data-order='[[ 3, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                        <th class="no-sort" width="3%"><i class="fas fa-credit-card"></i></th>
+                        <th class="no-sort" width="3%"><i class="fas fa-cash-register"></i></th>
+                        <th class="no-sort" width="3%"><i class="fas fa-calculator"></i></th>
+                        <th>Empresa Financiera</th>
+                        <th>Empresa Receptora</th>
+                        <th>Monto ($)</th>
+                        <th>Tasa Mensual</th>
+                        <th>Tasa Diaria</th>
+                        <th>Fecha de Inicio</th>
+                        <th>Estado</th>
+                        <th class="no-sort" width="6%">Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function () {
@@ -162,6 +152,21 @@
             success: function (data) {
                 $("#datosMutuo").empty();
                 $("#datosMutuo").html(data);
+            }
+        });
+    }
+
+    function VerDeuda(idMutuo) {
+        $.ajax({
+            url: "/Mutuo/ModalDetalleDeuda",
+            type: "Post",
+            data: { idMutuo: idMutuo },
+            beforeSend: function () {
+                $("#datosDeuda").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosDeuda").empty();
+                $("#datosDeuda").html(data);
             }
         });
     }
@@ -243,7 +248,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        boton = '<button class="btn btn-info btn-sm" type="button" onclick="VerDeuda(' + o.IdMutuo + ')"><i class="far fa-eye"></i></button> ';
+                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleDeuda" onclick="VerDeuda(' + o.IdMutuo + ')"><i class="far fa-eye"></i></button> ';
                         return boton;
                     }
                 },
