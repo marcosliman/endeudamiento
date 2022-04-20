@@ -43,7 +43,22 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
-        
+        public ActionResult Leasing()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("Leasing", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                return View();
+            }
+        }
+
         public ActionResult ModalDetalleLeasing()
         {
             if (seguridad == null)

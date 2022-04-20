@@ -193,15 +193,14 @@ namespace tesoreria.Controllers
                             join ca in db.ContratoActivo on c.IdContrato equals ca.IdContrato into t_ca
                             from l_ca in t_ca.DefaultIfEmpty()
 
-                            join ac in db.Activo on l_ca.IdActivo equals ac.IdActivo into t_ac
+                            join ac in db.Activo on ((l_ca!=null)?l_ca.IdActivo:0) equals ac.IdActivo into t_ac
                             from l_ac in t_ac.DefaultIfEmpty()
 
-                            join fam in db.Familia on l_ac.IdFamilia equals fam.IdFamilia into t_fam
+                            join fam in db.Familia on ((l_ca != null) ? l_ac.IdFamilia:0) equals fam.IdFamilia into t_fam
                             from l_fam in t_fam.DefaultIfEmpty()
 
                             join cam in db.Contrato_Amortizacion on c.IdContrato equals cam.IdContrato into t_cam
                             from l_cam in t_cam.DefaultIfEmpty()
-
 
                             where c.IdTipoContrato == 1
                             select new
@@ -212,8 +211,8 @@ namespace tesoreria.Controllers
                                 RazonSocial = em.RazonSocial,
                                 Monto = c.Monto,
                                 Moneda=m.NombreTipoMoneda,
-                                IdFamilia=l_ac.IdFamilia,
-                                Familia=l_fam.NombreFamilia,
+                                IdFamilia=(l_ac!=null)?l_ac.IdFamilia:0,
+                                Familia=(l_fam!=null)?l_fam.NombreFamilia:"",
                                 TasaMensual = c.TasaMensual,
                                 Plazo = c.Plazo,
                                 MontoTasaMensual = c.Monto * c.TasaMensual,
@@ -1224,30 +1223,21 @@ namespace tesoreria.Controllers
         #endregion
 
         #region Amortizacion
-        public ActionResult AddAmortizacion(int idContrato)
-        {
-            if (seguridad == null)
+        public ActionResult AddAmortizacion(int idContrato,string soloVer)
+        {            
+            ContratoActivo contratoActivo=new ContratoActivo();
+            var contrato = db.ContratoActivo.Where(c=>c.IdContrato==idContrato).FirstOrDefault();
+            if (contrato != null)
             {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
+                contratoActivo = contrato;
             }
             else
             {
-                ContratoActivo contratoActivo=new ContratoActivo();
-                var contrato = db.ContratoActivo.Where(c=>c.IdContrato==idContrato).FirstOrDefault();
-                if (contrato != null)
-                {
-                    contratoActivo = contrato;
-                }
-                else
-                {
-                    contratoActivo.IdContrato = idContrato;
-                }
-                return View(contratoActivo);
+                contratoActivo.IdContrato = idContrato;
             }
+            ViewBag.soloVer = soloVer;
+            return View(contratoActivo);
+            
         }
         public ActionResult DetAmortizacion_Read(int idContrato)
         {

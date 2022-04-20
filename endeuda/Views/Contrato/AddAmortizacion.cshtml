@@ -101,18 +101,28 @@
                 }
             }
         };
+        var soloVer = "@ViewBag.soloVer";
+        var btnImport = [
+            {
+            text: 'Importar Amortización <i class="fa fa-file-import"></i>',
+            action: function (e, dt, node, config) {
+                    ImportParcelas();
+                }
+            },
+            $.extend(true, {}, buttonCommon, {
+                filename: "AmortizacionContrato_@Model.IdContrato"
+            })
+        ];
+        if(soloVer== "SI"){
+            var btnImport = [
+            
+            $.extend(true, {}, buttonCommon, {
+                filename: "AmortizacionContrato_@Model.IdContrato"
+            })
+        ];
+        }
         var table = $('#grillaParcela').DataTable({
-            buttons: [
-                {
-                    text: 'Importar Amortización <i class="fa fa-file-import"></i>',
-                    action: function (e, dt, node, config) {
-                        ImportParcelas();
-                    }
-                },
-                $.extend(true, {}, buttonCommon, {
-                    filename: "AmortizacionContrato_@Model.IdContrato"
-                })
-            ],
+            buttons: btnImport,
             "retrieve": true,
             'ajax': {
                 "type": "POST",

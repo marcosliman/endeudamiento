@@ -55,9 +55,6 @@
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
 </div>
-
-
-
 <script>
     $(document).ready(function () {
         $('.tab-pane').removeClass("show").removeClass("active");
@@ -92,7 +89,7 @@
 
         $.ajax({
             url: '/Contrato/' + url,
-            data: { idContrato: $("#idContrato").val() },
+            data: { idContrato: $("#idContrato").val(),soloVer:"SI" },
             async: true,
             contentType: "application/x-www-form-urlencoded",
             dataType: "html",
