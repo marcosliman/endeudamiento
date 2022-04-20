@@ -226,11 +226,11 @@ namespace tesoreria.Controllers
 
                             if (dbMutuo == null)
                             {
-                                var existeMutuo = db.Mutuo.Where(c => c.IdEmpresaFinancia == dato.IdEmpresaFinancia && c.IdEmpresaReceptora == dato.IdEmpresaReceptora
-                                                                && c.IdEstado != (int)Helper.Estado.MutuoFinalizado).FirstOrDefault();
+                                //var existeMutuo = db.Mutuo.Where(c => c.IdEmpresaFinancia == dato.IdEmpresaFinancia && c.IdEmpresaReceptora == dato.IdEmpresaReceptora
+                                //                                && c.IdEstado != (int)Helper.Estado.MutuoFinalizado).FirstOrDefault();
 
-                                if (existeMutuo == null)
-                                {
+                                //if (existeMutuo == null)
+                                //{
                                     var addMutuo = new Mutuo();
                                     addMutuo.IdEmpresaFinancia = dato.IdEmpresaFinancia;
                                     addMutuo.IdEmpresaReceptora = dato.IdEmpresaReceptora;
@@ -246,10 +246,10 @@ namespace tesoreria.Controllers
 
                                     dbContextTransaction.Commit();
                                     showMessageString = new { Estado = 0, Mensaje = "Prestamo registrado exitosamente", idMutuo = addMutuo.IdMutuo };
-                                }
-                                else {
-                                    showMessageString = new { Estado = 105, Mensaje = "Ya existe un prestamo vigente para la empresa que financia y la receptora"};
-                                }
+                                //}
+                                //else {
+                                //    showMessageString = new { Estado = 105, Mensaje = "Ya existe un prestamo vigente para la empresa que financia y la receptora"};
+                                //}
                             }
                             else {
                                 var existePrestamo = db.MutuoPrestamo.Where(c => c.IdMutuo == dbMutuo.IdMutuo).ToList();
@@ -347,17 +347,17 @@ namespace tesoreria.Controllers
             dynamic showMessageString = string.Empty;
             var mutuo = db.Mutuo.Find(idMutuo);
 
-            var documentos = db.MutuoDocumento.Where(c => c.IdMutuo == idMutuo).Count();
-            if (documentos > 0)
-            {
+            //var documentos = db.MutuoDocumento.Where(c => c.IdMutuo == idMutuo).Count();
+            //if (documentos > 0)
+            //{
                 mutuo.IdEstado = (int)Helper.Estado.MutuoVigente;
                 db.SaveChanges();
                 showMessageString = new { Estado = 0, Mensaje = "Mutuo ha sido habilitado Exitosamente" };
-            }
-            else
-            {
-                showMessageString = new { Estado = 100, Mensaje = "Existen Datos Incompletos" };
-            }
+            //}
+            //else
+            //{
+            //    showMessageString = new { Estado = 100, Mensaje = "Existen Datos Incompletos" };
+            //}
 
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
@@ -784,53 +784,143 @@ namespace tesoreria.Controllers
                         string dias = Convert.ToString(days);
                     }
 
-                    var amortizacion = db.MutuoAbono.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaAbono >= oPrimerDiaDelMes && c.FechaAbono <= oUltimoDiaDelMes)).FirstOrDefault();
-                    if (amortizacion != null) {
-                        montoAmortizacion = amortizacion.MontoAbono;
-                        fechaAmortizacion = amortizacion.FechaAbono;
+                    var auxAbono = 0;
+                    var amortizacion = db.MutuoAbono.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaAbono >= oPrimerDiaDelMes && c.FechaAbono <= oUltimoDiaDelMes)).ToList();
+                    if (amortizacion.Count() > 0) {
+                        foreach(var abono in amortizacion) {
+                            montoInicial = montoTotal;
+                            auxAbono++;
+                            proy = new ProyeccionMutuoViewModel();
+                            montoAmortizacion = abono.MontoAbono;
+                            fechaAmortizacion = abono.FechaAbono;
 
-                        TimeSpan difFechasN = oUltimoDiaDelMes - (DateTime)fechaAmortizacion;
-                        daysN = (int)difFechasN.TotalDays + 1;
+                            TimeSpan difFechasN = oUltimoDiaDelMes - (DateTime)fechaAmortizacion;
+                            daysN = (int)difFechasN.TotalDays + 1;
 
-                        interesNuevo = -(Math.Round(montoAmortizacion * (tasaDiaria * daysN) / 100));
+                            if (auxAbono == 1)
+                            {
+                                interes = Math.Round(montoInicial * (tasaDiaria * days) / 100);
+                            }
+                            else {
+                                interes = 0;
+                            }
+
+                            interesNuevo = -(Math.Round(montoAmortizacion * (tasaDiaria * daysN) / 100));
+
+                            montoPrestamo = 0;
+
+                            interesTotal = interes + interesNuevo;
+
+                            montoTotal = montoInicial + montoPrestamo + interesTotal - montoAmortizacion;
+
+                            proy.item = i;
+                            proy.FechaInicio = oPrimerDiaDelMes;
+                            proy.FechaInicioStr = oPrimerDiaDelMes.ToString("dd-MM-yyyy");
+                            proy.FechaTermino = oUltimoDiaDelMes;
+                            proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
+                            proy.CantidadDias = days;
+                            proy.Monto = montoInicial;
+                            proy.Interes = interes;
+                            proy.MontoTotal = montoTotal;
+                            proy.InteresTotal = interesTotal;
+                            proy.MontoAmortizacion = montoAmortizacion;
+                            proy.MontoPrestamo = montoPrestamo;
+                            proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
+                            proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
+                            proy.CantidadDiasNuevo = daysN;
+                            proy.InteresNuevo = interesNuevo;
+                            arrayProyeccion.Add(proy);
+
+                            montoInicial = montoTotal;
+
+                        }
+
                     }
 
-                    var nuevoCredito = db.MutuoPrestamo.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaPrestamo >= oPrimerDiaDelMes && c.FechaPrestamo <= oUltimoDiaDelMes)).FirstOrDefault();
-                    if (nuevoCredito != null)
+                    var auxCredito = 0;
+                    var nuevoCredito = db.MutuoPrestamo.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaPrestamo >= oPrimerDiaDelMes && c.FechaPrestamo <= oUltimoDiaDelMes)).ToList();
+                    if (nuevoCredito.Count() > 0)
                     {
-                        montoPrestamo = nuevoCredito.MontoPrestamo;
-                        fechaAmortizacion = nuevoCredito.FechaPrestamo;
+                        montoInicial = montoTotal;
+                        foreach (var cred in nuevoCredito) {
+                            auxCredito++;
+                            proy = new ProyeccionMutuoViewModel();
+                            montoPrestamo = cred.MontoPrestamo;
+                            fechaAmortizacion = cred.FechaPrestamo;
 
-                        TimeSpan difFechasN = oUltimoDiaDelMes - (DateTime)fechaAmortizacion;
-                        daysN = (int)difFechasN.TotalDays + 1;
+                            TimeSpan difFechasN = oUltimoDiaDelMes - (DateTime)fechaAmortizacion;
+                            daysN = (int)difFechasN.TotalDays + 1;
 
-                        interesNuevo = (Math.Round(montoPrestamo * (tasaDiaria * daysN) / 100));
+                            if (auxCredito == 1 && auxAbono == 0)
+                            {
+                                interes = Math.Round(montoInicial * (tasaDiaria * days) / 100);
+                            }
+                            else
+                            {
+                                interes = 0;
+                            }
+
+                            interesNuevo = (Math.Round(montoPrestamo * (tasaDiaria * daysN) / 100));
+
+                            montoAmortizacion = 0;
+
+                            interesTotal = interes + interesNuevo;
+
+                            montoTotal = montoInicial + montoPrestamo + interesTotal - montoAmortizacion;
+
+                            proy.item = i;
+                            proy.FechaInicio = oPrimerDiaDelMes;
+                            proy.FechaInicioStr = oPrimerDiaDelMes.ToString("dd-MM-yyyy");
+                            proy.FechaTermino = oUltimoDiaDelMes;
+                            proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
+                            proy.CantidadDias = days;
+                            proy.Monto = montoInicial;
+                            proy.Interes = interes;
+                            proy.MontoTotal = montoTotal;
+                            proy.InteresTotal = interesTotal;
+                            proy.MontoAmortizacion = montoAmortizacion;
+                            proy.MontoPrestamo = montoPrestamo;
+                            proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
+                            proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
+                            proy.CantidadDiasNuevo = daysN;
+                            proy.InteresNuevo = interesNuevo;
+                            arrayProyeccion.Add(proy);
+
+                            montoInicial = montoTotal;
+
+                        }
+
                     }
 
+                    if (auxAbono > 0 || auxCredito > 0)
+                    {
+                        montoInicial = montoTotal;
+                    }
 
-                    interes = Math.Round(montoInicial * (tasaDiaria * days)/100);
-                    interesTotal = interes + interesNuevo;
-                    montoTotal = montoInicial + montoPrestamo + interesTotal - montoAmortizacion;
-
-                    proy.item = i;
-                    proy.FechaInicio = oPrimerDiaDelMes;
-                    proy.FechaInicioStr = oPrimerDiaDelMes.ToString("dd-MM-yyyy");
-                    proy.FechaTermino = oUltimoDiaDelMes;
-                    proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
-                    proy.CantidadDias = days;
-                    proy.Monto = montoInicial;
-                    proy.Interes = interes;
-                    proy.MontoTotal = montoTotal;
-                    proy.InteresTotal = interesTotal;
-                    proy.MontoAmortizacion = montoAmortizacion;
-                    proy.MontoPrestamo = montoPrestamo;
-                    proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
-                    proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
-                    proy.CantidadDiasNuevo = daysN;
-                    proy.InteresNuevo = interesNuevo;
-                    arrayProyeccion.Add(proy);
-
-                    montoInicial = montoTotal;
+                    var existeDato = arrayProyeccion.Where(c => c.FechaInicio == oPrimerDiaDelMes && c.FechaTermino == oUltimoDiaDelMes).Count();
+                    if(existeDato == 0) {
+                        interes = Math.Round(montoInicial * (tasaDiaria * days) / 100);
+                        interesTotal = interes + interesNuevo;
+                        montoTotal = montoInicial + montoPrestamo + interesTotal - montoAmortizacion;
+                        proy.item = i;
+                        proy.FechaInicio = oPrimerDiaDelMes;
+                        proy.FechaInicioStr = oPrimerDiaDelMes.ToString("dd-MM-yyyy");
+                        proy.FechaTermino = oUltimoDiaDelMes;
+                        proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
+                        proy.CantidadDias = days;
+                        proy.Monto = montoInicial;
+                        proy.Interes = interes;
+                        proy.MontoTotal = montoTotal;
+                        proy.InteresTotal = interesTotal;
+                        proy.MontoAmortizacion = montoAmortizacion;
+                        proy.MontoPrestamo = montoPrestamo;
+                        proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
+                        proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
+                        proy.CantidadDiasNuevo = daysN;
+                        proy.InteresNuevo = interesNuevo;
+                        arrayProyeccion.Add(proy);
+                        montoInicial = montoTotal;
+                    }
 
                 }
             }
