@@ -469,6 +469,47 @@ namespace tesoreria.Controllers
                              select new RetornoGenerico { Id = 0, Nombre = t.DesSGru, ValorString = t.CodSGru }).OrderBy(c => c.Nombre).ToList();
             return Json(subgrupos, JsonRequestBehavior.AllowGet);
         }
+        public Activo ImportaActivoFromSoftland(int idEmpresa, string CodAct)
+        {
+            var empresa = db.Empresa.Find(idEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+            var activoSoftland = dbSoft.awfichaac.Find(CodAct);
+            //solo elimina cuando no hay registros asociados
+            var activoAdd = new Activo();
+            if (activoSoftland != null)
+            {                
+                activoAdd.IdEmpresa = idEmpresa;
+                activoAdd.NumeroInterno = CodAct;
+                activoAdd.CodSoftland = CodAct;
+                activoAdd.IdFamilia = null;
+                activoAdd.Descripcion = activoSoftland.DescAct;
+                activoAdd.Capacidad = "";
+                activoAdd.Marca = "";
+                activoAdd.Modelo = "";
+                activoAdd.Motor = "";
+                activoAdd.Chasis = "";
+                activoAdd.Serie = "";
+                activoAdd.Anio = ((DateTime)activoSoftland.FecIng).Year;
+                activoAdd.Grupo = activoSoftland.CodGru;
+                activoAdd.SubGrupo = activoSoftland.CodSGru;
+                activoAdd.Valor = activoSoftland.ValCom;
+                activoAdd.IdProveedor = activoSoftland.CodAux;
+                var auxiliar = dbSoft.cwtauxi.Find(activoSoftland.CodAux);
+                activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
+                activoAdd.IdCuenta = activoSoftland.CtaCom;
+                activoAdd.NumeroFactura = "";
+                activoAdd.Patente = "";
+                activoAdd.Glosa = "";
+                activoAdd.IdEstado = (int)Helper.Estado.ActCreado;
+                activoAdd.FechaRegistro = DateTime.Now;
+                activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                activoAdd.SincronizadoSoftland = true;
+                activoAdd.NumeroFactura = activoSoftland.NumFac;
+                db.Activo.Add(activoAdd);
+                db.SaveChanges();
+            }
+            return activoAdd;
+        }
         [HttpPost]
         public ActionResult ImportaActivoSoftland(int idEmpresa,string CodAct)
         {
@@ -484,40 +525,8 @@ namespace tesoreria.Controllers
                     //solo elimina cuando no hay registros asociados
                     if (activoSoftland != null)
                     {
-                        var activoAdd = new Activo();
-                        activoAdd.IdEmpresa = idEmpresa;
-
-                        activoAdd.NumeroInterno = CodAct;
-                        activoAdd.CodSoftland = CodAct;
-                        activoAdd.IdFamilia = null;
-                        activoAdd.Descripcion = activoSoftland.DescAct;
-                        activoAdd.Capacidad = "";
-                        activoAdd.Marca = "";
-                        activoAdd.Modelo = "";
-                        activoAdd.Motor = "";
-                        activoAdd.Chasis = "";
-                        activoAdd.Serie = "";
-                        activoAdd.Anio = ((DateTime)activoSoftland.FecIng).Year;
-                        activoAdd.Grupo = activoSoftland.CodGru;
-                        activoAdd.SubGrupo = activoSoftland.CodSGru;
-                        activoAdd.Valor = activoSoftland.ValCom;
-                        activoAdd.IdProveedor = activoSoftland.CodAux;                        
-                        var auxiliar = dbSoft.cwtauxi.Find(activoSoftland.CodAux);
-                        activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
-                        activoAdd.IdCuenta = activoSoftland.CtaCom;
-                        activoAdd.NumeroFactura = "";
-                        activoAdd.Patente = "";
-                        activoAdd.Glosa = "";
-                        activoAdd.IdEstado = (int)Helper.Estado.ActCreado;
-                        activoAdd.FechaRegistro = DateTime.Now;
-                        activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
-                        activoAdd.SincronizadoSoftland = true;
-                        activoAdd.NumeroFactura = activoSoftland.NumFac;
-                        db.Activo.Add(activoAdd);
-                        db.SaveChanges();
-
+                        var activoAdd = ImportaActivoFromSoftland(idEmpresa, CodAct);                        
                         dbContextTransaction.Commit();
-
                         showMessageString = new { Estado = 0, Mensaje = "Activo Importado con exito" };
                         return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
                     }
@@ -526,6 +535,39 @@ namespace tesoreria.Controllers
                         showMessageString = new { Estado = 500, Mensaje = "Error: No se pudo importar el activo" };
                         return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
                     }
+                }
+                catch (Exception ex)
+                {
+                    showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                    dbContextTransaction.Rollback();
+                    return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                }
+            }
+        }
+        [HttpPost]
+        public ActionResult ImportaActivoSoftland_Masivo(int idEmpresa, string[] activos)
+        {
+            dynamic showMessageString = string.Empty;
+
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var empresa = db.Empresa.Find(idEmpresa);
+                    SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+                    foreach(var CodAct in activos)
+                    {
+                        var activoSoftland = dbSoft.awfichaac.Find(CodAct);
+                        //solo elimina cuando no hay registros asociados
+                        if (activoSoftland != null)
+                        {
+                            var activoAdd = ImportaActivoFromSoftland(idEmpresa, CodAct);                            
+                        }
+                        
+                    }
+                    dbContextTransaction.Commit();
+                    showMessageString = new { Estado = 0, Mensaje = "Activos Importados exitosamente" };
+                    return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {

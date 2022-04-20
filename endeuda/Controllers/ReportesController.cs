@@ -83,6 +83,38 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public ActionResult ConsolidadoDeudaCreditosCon_Read()
+        {
+
+            var listaretorno = (from Con in db.Contrato
+                            join TCon in db.TipoContrato on Con.IdTipoContrato equals TCon.IdTipoContrato
+                            join Emp in db.Empresa on Con.IdEmpresa equals Emp.IdEmpresa
+                            join Bco in db.Banco on Con.IdBanco equals Bco.IdBanco
+                            join Est in db.Estado on Con.IdEstado equals Est.IdEstado
+                            where Con.IdTipoFinanciamiento==(int)Helper.TipoFinanciamiento.EstructuradoConGarantia
+                             //&& c.IdEmpresa == ((idEmpresa != null) ? idEmpresa : c.IdEmpresa)
+                            //&& c.IdBanco == ((idBanco != null) ? idBanco : c.IdBanco)
+                            //&& c.IdTipoFinanciamiento == ((idTipoFinanciamiento != null) ? idTipoFinanciamiento : c.IdTipoFinanciamiento)
+                            //&& c.NumeroContrato == ((numeroContrato != "") ? numeroContrato : c.NumeroContrato)
+                            select new 
+                            {
+                                IdContrato = Con.IdContrato,
+                                RazonSocial = Emp.RazonSocial,
+                                NombreBanco = Bco.NombreBanco,
+                                DeudaInicial=Con.Monto,
+                                Con.TipoGarantia,
+                                NumeroContrato = Con.NumeroContrato,
+                                TasaAnual = Con.TasaAnual,
+                                CuotaMes=0,
+                                CapitalPagado=0,
+                                SaldoInsoluto=0,
+                                Plazo = Con.Plazo,
+                                FechaInicio = Con.FechaInicio,
+                                FechaTermino = Con.FechaTermino
+                            }).AsEnumerable().ToList();
+           
+            return Json(listaretorno, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult ConsolidadoDeudaCreditosSin()
         {
             if (seguridad == null)
