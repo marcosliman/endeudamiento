@@ -89,7 +89,6 @@ namespace tesoreria.Controllers
         public ActionResult Consolidado_Read()
         {
             var registro = (from c in db.Contrato.ToList()
-
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
@@ -106,16 +105,16 @@ namespace tesoreria.Controllers
                                 RazonSocial = em.RazonSocial,
                                 Monto = c.Monto,
                                 TasaMensual = c.TasaMensual,
+                                c.TasaAnual,
                                 Plazo = c.Plazo,
                                 MontoTasaMensual=c.Monto*c.TasaMensual,
                                 NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
                             }).AsEnumerable().ToList();
+
             var totales = registro.GroupBy(c => new { c.IdTipoContrato,c.RazonSocial,c.IdEmpresa })
                 .Select(c => new { c.Key.IdTipoContrato, c.Key.RazonSocial,c.Key.IdEmpresa,SumaMontos=c.Sum(x=>x.Monto),sumTasaMensual=c.Sum(x=>x.MontoTasaMensual), CantidadReg = c.Count() });
 
-
             var listTasaPromedio = (from total in totales
-
                             select new
                             {
                                 total.IdTipoContrato,
@@ -124,7 +123,6 @@ namespace tesoreria.Controllers
                                 TasaPromedio=Math.Round(((total.sumTasaMensual / total.SumaMontos)*100),2),
                                 total.CantidadReg,
                                 TasaPromedioUF="0"
-
                             }
                           ).ToList();
             return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
@@ -177,7 +175,7 @@ namespace tesoreria.Controllers
         {
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado on c.IdEstado equals e.IdEstado
-                            join m in db.Moneda on c.IdMoneda equals m.IdMoneda
+                            join m in db.TipoMoneda on c.IdTipoMoneda equals m.IdTipoMoneda
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
                             join ca in db.ContratoActivo on c.IdContrato equals ca.IdContrato into t_ca
@@ -201,7 +199,7 @@ namespace tesoreria.Controllers
                                 IdTipoContrato = c.IdTipoContrato,
                                 RazonSocial = em.RazonSocial,
                                 Monto = c.Monto,
-                                Moneda=m.NombreMoneda,
+                                Moneda=m.NombreTipoMoneda,
                                 IdFamilia=l_ac.IdFamilia,
                                 Familia=l_fam.NombreFamilia,
                                 TasaMensual = c.TasaMensual,
@@ -291,7 +289,8 @@ namespace tesoreria.Controllers
                                     FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
                                     IdEstado = c.IdEstado,
                                     ExisteContrato = "S",
-                                    TituloBoton = "Actualizar Contrato"
+                                    TituloBoton = "Actualizar Contrato",
+                                    IdTipoMoneda=c.IdTipoMoneda
                                 }
                                   ).FirstOrDefault();
 
@@ -310,6 +309,7 @@ namespace tesoreria.Controllers
                     registro.IdEstado = 0;
                     registro.ExisteContrato = "N";
                     registro.TituloBoton = "Grabar Contrato";
+                    registro.IdTipoMoneda = 1;
                 }
 
                 var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
@@ -351,6 +351,11 @@ namespace tesoreria.Controllers
                     ViewData["listaOferta"] = listaOferta;
                 }
 
+                var tiposMoneda = (from e in db.TipoMoneda
+                             where e.Activo == true
+                             select new RetornoGenerico { Id = e.IdTipoMoneda, Nombre = e.NombreTipoMoneda }).OrderBy(c => c.Id).ToList();
+                SelectList listaMonedas = new SelectList(tiposMoneda.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdTipoMoneda);
+                ViewData["listaMonedas"] = listaMonedas;
 
                 var banco = (from e in db.Banco
                              where e.Activo == true
@@ -557,6 +562,7 @@ namespace tesoreria.Controllers
                                     contrato.Plazo = dato.Plazo;
                                     contrato.FechaInicio = dato.FechaInicio;
                                     contrato.FechaTermino = dato.FechaTermino;
+                                    contrato.IdTipoMoneda=dato.IdTipoMoneda;
                                     db.SaveChanges();
                                 }
                                 else
@@ -590,6 +596,7 @@ namespace tesoreria.Controllers
                                     addContrato.IdEstado = (int)Helper.Estado.ConCreado;
                                     addContrato.IdUsuarioRegistro = (int)seguridad.IdUsuario;
                                     addContrato.FechaRegistro = DateTime.Now;
+                                    addContrato.IdTipoMoneda = dato.IdTipoMoneda;
                                     db.Contrato.Add(addContrato);
                                     db.SaveChanges();
 

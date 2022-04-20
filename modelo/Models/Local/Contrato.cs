@@ -40,6 +40,8 @@ namespace modelo.Models.Local
         public int IdEstado { get; set; }
         public int IdUsuarioRegistro { get; set; }
         public DateTime FechaRegistro { get; set; }
-        public int IdMoneda { get; set; }
+        public int IdTipoMoneda { get; set; }
+        [ForeignKey("IdTipoMoneda")]
+        public virtual TipoMoneda TipoMoneda { get; set; }
     }
 }

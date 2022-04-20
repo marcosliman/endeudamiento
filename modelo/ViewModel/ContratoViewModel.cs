@@ -39,6 +39,7 @@ namespace modelo.ViewModel
         public string EsLicitacion { get; set; }
         public bool PuedeEliminar { get; set; }
         public string Descripcion { get; set; }
+        public int? IdTipoMoneda { get; set; }
     }
 
 }
