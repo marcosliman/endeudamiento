@@ -109,20 +109,32 @@ namespace tesoreria.Controllers
                                 Plazo = c.Plazo,
                                 MontoTasaMensual=c.Monto*c.TasaMensual,
                                 NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
+                                c.IdTipoMoneda
                             }).AsEnumerable().ToList();
 
-            var totales = registro.GroupBy(c => new { c.IdTipoContrato,c.RazonSocial,c.IdEmpresa })
-                .Select(c => new { c.Key.IdTipoContrato, c.Key.RazonSocial,c.Key.IdEmpresa,SumaMontos=c.Sum(x=>x.Monto),sumTasaMensual=c.Sum(x=>x.MontoTasaMensual), CantidadReg = c.Count() });
+            var tasaPorRegistro = (from c in registro
+                                   select new
+                                   {
+                                       c.IdEmpresa,
+                                       PorcMonto = c.Monto / registro.Where(x => x.IdEmpresa == c.IdEmpresa && x.IdTipoMoneda == c.IdTipoMoneda).Sum(x => x.Monto),
+                                       c.RazonSocial,
+                                       c.IdTipoMoneda,
+                                       c.TasaAnual
+                                   }).ToList();
+
+            var totales = tasaPorRegistro.GroupBy(c => new { c.RazonSocial,c.IdEmpresa })
+                .Select(c => new {  c.Key.RazonSocial,c.Key.IdEmpresa,
+                    TasaPromedio = c.Where(x=>x.IdTipoMoneda==1).Sum(x=>x.PorcMonto * x.TasaAnual),
+                    TasaPromedioUF = c.Where(x => x.IdTipoMoneda == 2).Sum(x => x.PorcMonto * x.TasaAnual), 
+                    CantidadReg = c.Count() });
 
             var listTasaPromedio = (from total in totales
                             select new
                             {
-                                total.IdTipoContrato,
                                 total.RazonSocial,
-                                total.SumaMontos,
-                                TasaPromedio=Math.Round(((total.sumTasaMensual / total.SumaMontos)*100),2),
+                                TasaPromedio=Math.Round(total.TasaPromedio,2),
                                 total.CantidadReg,
-                                TasaPromedioUF="0"
+                                TasaPromedioUF= Math.Round(total.TasaPromedioUF, 2)
                             }
                           ).ToList();
             return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
