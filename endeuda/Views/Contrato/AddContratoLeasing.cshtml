@@ -108,13 +108,14 @@
 
                     }
                 </div>
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
-                <div class="col-sm-2">
-                    <input type="text" class="form-control form-control-sm tasa" name="tasaMensual" id="tasaMensual" value="@Model.TasaMensual.ToString().Replace(",",".")" @disabled />
-                </div>
+
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control form-control-sm tasa" name="tasaAnual" id="tasaAnual" value="@Model.TasaAnual.ToString().Replace(",",".")" @disabled />
+                    <input type="text" class="form-control form-control-sm tasa" name="tasaAnual" id="tasaAnual" onblur="CalculoTasa()" value="@Model.TasaAnual.ToString().Replace(",",".")" @disabled />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm tasa" name="tasaMensual" id="tasaMensual" readonly value="@Model.TasaMensual.ToString().Replace(",",".")" @disabled />
                 </div>
             </div>
             <div class="form-group row">
@@ -404,6 +405,17 @@
     function Volver() {
         url = "/Contrato/ListaContratoLeasing";
         location.href = url;
+    }
+
+    function CalculoTasa() {
+        if ($("#tasaAnual").val().length > 0) {
+            var tasaMensual = $("#tasaAnual").val().replace(",", ".");
+            var tasaDiaria = tasaMensual / 12;
+            $("#tasaMensual").val(tasaDiaria.toFixed(2));
+        }
+        else {
+            $("#tasaMensual").val(0);
+        }
     }
 
 </script>
