@@ -2968,6 +2968,8 @@
     <Content Include="Views\Mutuo\AddDocumento.cshtml" />
     <Content Include="Views\Mutuo\ModalNuevoPrestamo.cshtml" />
     <Content Include="Views\Amortizacion\Leasing.cshtml" />
+    <Content Include="Views\Amortizacion\ModalContrato.cshtml" />
+    <Content Include="Views\Amortizacion\ModalAmortizacion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

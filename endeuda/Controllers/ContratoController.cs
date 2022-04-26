@@ -1097,21 +1097,23 @@ namespace tesoreria.Controllers
         }
         public ActionResult DetAmortizacion_Read(int idContrato)
         {
-            var registro = (from c in db.Contrato_Amortizacion
-                            join det in db.Contrato_DetAmortizacion on c.IdContratoAmortizacion equals det.IdContratoAmortizacion
-                            where c.IdContrato == idContrato
-                            select new 
+            var registro = (from ca in db.Contrato_Amortizacion.ToList()
+                            join d in db.Contrato_DetAmortizacion.ToList() on ca.IdContratoAmortizacion equals d.IdContratoAmortizacion
+                            where ca.IdContrato == idContrato
+                            select new AmortizacionViewModel
                             {
-                                det.Mes,
-                                det.CortoPlazo,
-                                det.LargoPlazo,
-                                det.FechaPago,
-                                det.Periodo,
-                                det.Cuota,
-                                det.IvaDiferido,
-                                det.Intereses,
-                                det.Amortizacion,
-                                det.Saldo_Insoluto
+                                Anio = 0,
+                                NombreMes = (d.Mes != null) ? d.Mes.NombreMes : string.Empty,
+                                CortoPlazo = d.CortoPlazo,
+                                LargoPlazo = d.LargoPlazo,
+                                FechaPago = d.FechaPago,
+                                FechaPagoStr = d.FechaPago.ToString("dd-MM-yyyy"),
+                                Periodo = d.Periodo,
+                                Cuota = d.Cuota,
+                                IvaDiferido = d.IvaDiferido,
+                                Intereses = d.Intereses,
+                                Amortizacion = d.Amortizacion,
+                                Saldo_Insoluto = d.Saldo_Insoluto
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);

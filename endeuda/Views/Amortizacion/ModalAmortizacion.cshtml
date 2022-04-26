@@ -1,0 +1,193 @@
+﻿@model modelo.ViewModel.ContratoViewModel
+@{
+    ViewBag.Title = "Detalle de Leasing";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">@Model.TituloBoton</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="ml-2">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaAmortizacion" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Mes</th>
+                            <th>Corto Plazo</th>
+                            <th>Largo Plazo</th>
+                            <th>Fecha de Pago</th>
+                            <th>Periodo</th>
+                            <th>Cuota</th>
+                            <th>IVA Diferido</th>
+                            <th>Interés</th>
+                            <th>Amortización</th>
+                            <th>Saldo Insoluto</th>
+                            <th>Comp. de Egre.</th>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>103,081,339.00</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>05/04/2021</td>
+                            <td>1</td>
+                            <td>2,295,695.00</td>
+                            <td>436,182.00</td>
+                            <td>365,940.00</td>
+                            <td>1,929,755.00</td>
+                            <td>101,151,584</td>
+                            <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00017239</a></td>
+
+                        </tr>
+                        <tr>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>0</td>
+                            <td>05/05/2022</td>
+                            <td>14</td>
+                            <td>2,295,695.00</td>
+                            <td>436,182.00</td>
+                            <td>365,940.00</td>
+                            <td>1,929,755.00</td>
+                            <td>101,151,584</td>
+                            <td class="no-sort" width="3%"><i class="fas fa-exclamation-circle" style='font-size:18px;color:red'></i></td>
+
+
+
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        RefreshLista();
+    });
+
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTable() {
+        var table = $('#grillaAmortizacion').DataTable({
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Amortizacion/ListaAmortizacion_Read/',
+                "data": function (d) {
+                    d.idContrato = "@(Model.IdContrato)";
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [5,6,7,8,9,10],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = "$ " + SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "NombreMes" },
+                { "data": "CortoPlazo" },
+                { "data": "LargoPlazo" },
+                {
+                    data: {
+                        _: "FechaPagoStr",
+                        sort: "FechaPago"
+                    }
+                },
+                { "data": "Periodo" },
+                { "data": "Cuota" },
+                { "data": "IvaDiferido" },
+                { "data": "Intereses" },
+                { "data": "Amortizacion" },
+                { "data": "Saldo_Insoluto" },
+                { "data": "Saldo_Insoluto" }
+            ]
+        });
+
+        return table;
+    }
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        toastr.error(data.Mensaje);
+        $('#modal-registro').modal('hide');
+    }
+    function ModalComprobanteModal(IdProgramacion, nroComprobante) {
+        var tmpUrl = "/Amortizacion/ComprobanteEgreso";
+        $("#datosComprobante").empty();
+        $('#modal-comprobante').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { IdProgramacion: IdProgramacion, nroComprobante: nroComprobante },
+            beforeSend: function () {
+                $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosComprobante").empty();
+                $("#datosComprobante").html(data);
+                esconderCargando();
+            }
+        });
+    }
+</script>

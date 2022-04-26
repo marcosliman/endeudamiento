@@ -61,6 +61,7 @@
     <Compile Include="Models\Local\MutuoAbono.cs" />
     <Compile Include="Models\Local\MutuoPrestamo.cs" />
     <Compile Include="Models\Local\Mutuo.cs" />
+    <Compile Include="Models\Local\Mes.cs" />
     <Compile Include="Models\Local\TipoContrato.cs" />
     <Compile Include="Models\Local\CategoriaDocumento.cs" />
     <Compile Include="Models\Local\Contrato.cs" />
@@ -121,6 +122,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModel\ConsolidadoLeasingViewModel.cs" />
     <Compile Include="ViewModel\CatDoctoViewModel.cs" />
+    <Compile Include="ViewModel\AmortizacionViewModel.cs" />
+    <Compile Include="ViewModel\ReporteContratoViewModel.cs" />
     <Compile Include="ViewModel\MutuoViewModel.cs" />
     <Compile Include="ViewModel\MutuoDocumentoViewModel.cs" />
     <Compile Include="ViewModel\ProyeccionMutuoViewModel.cs" />

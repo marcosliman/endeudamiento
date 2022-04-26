@@ -1,0 +1,118 @@
+﻿@model modelo.ViewModel.ContratoViewModel
+@{
+    ViewBag.Title = "Contrato Origen";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">@Model.TituloBoton</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.RazonSocial</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Nro. Contrato</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.NumeroContrato</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.NombreBanco</p></label>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Monto</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.Monto</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Crédito</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.NombreTipoFinanciamiento</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Garantía</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.TipoGarantia</p></label>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.TasaMensual %</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.TasaAnual %</p></label>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo Meses</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.Plazo</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.FechaInicioStr</p></label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
+                <label for="inputEmail3" class="col-sm-2 col-form-label"><p style="color:blue;font-size:10px;">@Model.FechaTerminoStr</p></label>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-6 col-form-label">Documentos cargados:</label>
+            </div>
+
+                <div class="class="files">
+                    <table class="table table-striped table-bordered" id="grillaDocumento" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Tipo Documento</th>
+                                <th>Nombre</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        RefreshListaDoc();
+    });
+
+    function RefreshListaDoc() {
+        var table = initTableDoc();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTableDoc() {
+        var table = $('#grillaDocumento').DataTable({
+            dom: '<"top"<"#id">>rt<"bottom"p><"clear">',
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Amortizacion/ListaDocumentoContrato_Read/',
+                "data": function (d) {
+                    d.idContrato = "@(Model.IdContrato)";
+                },
+                "dataSrc": ""
+            },
+            columns: [
+                { "data": "NombreTipoDocumento" },
+                { "data": "NombreOriginal" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton = '<button class="btn btn-info btn-sm" type="button" class="btn-link linkArchivo text-sm" onclick="Descargar(\'' + o.UrlDocumento + '\')"><i class="fa fa-file-download"></i> </button> ';
+                        return boton;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+
+    function Descargar(urlArchivo) {
+        location.href = "/Licitacion/Descargar?rutaArchivo=" + urlArchivo;
+    }
+
+</script>
