@@ -21,6 +21,8 @@ namespace modelo.Models.Local
         public int IdEstado { get; set; }
         public DateTime FechaRegistro { get; set; }
         public int IdUsuarioRegistro { get; set; }
+        public double CapitalActual { get; set; }
+        public double InteresTotal { get; set; }
 
     }
 }

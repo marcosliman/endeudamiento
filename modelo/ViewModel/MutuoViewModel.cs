@@ -17,6 +17,9 @@ namespace modelo.ViewModel
         public double TasaMensual { get; set; }
         public double TasaDiaria { get; set; }
         public double MontoPrestamo { get; set; }
+        public double CapitalActual { get; set; }
+        public double InteresTotal { get; set; }
+        public double? Porcentaje { get; set; }
         public DateTime FechaPrestamo { get; set; }
         public string FechaPrestamoStr { get; set; }
         public int IdEstado { get; set; }

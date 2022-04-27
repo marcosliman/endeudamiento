@@ -14,6 +14,7 @@ namespace tesoreria.Controllers
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         // GET: Contrato
+        #region Inicio
         public ActionResult MutuoInicio()
         {
             if (seguridad == null)
@@ -26,9 +27,150 @@ namespace tesoreria.Controllers
             }
             else
             {
+                var empresaF = (from e in db.Empresa
+                                where e.Activo == true
+                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresaF = new SelectList(empresaF.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresaF"] = listaEmpresaF;
+
                 return View();
             }
         }
+
+        public ActionResult GraficoDeudaVigente_Read(int? idEmpresaFinancia)
+        {
+            var mutuo = (from m in db.Mutuo.ToList()
+                         join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
+                         where m.IdEmpresaFinancia == ((idEmpresaFinancia != null) ? idEmpresaFinancia : m.IdEmpresaFinancia)
+                         && m.IdEstado == (int)Helper.Estado.MutuoVigente
+                         select new MutuoViewModel
+                         {
+                             //IdMutuo = m.IdMutuo,
+                             IdEmpresaFinancia = m.IdEmpresaFinancia,
+                             IdEmpresaReceptora = m.IdEmpresaReceptora,
+                             EmpresaReceptora = emr.RazonSocial,
+                             CapitalActual = m.CapitalActual
+                         } into x
+                         group x by new
+                         {
+                             x.IdEmpresaFinancia,
+                             x.IdEmpresaReceptora,
+                             x.EmpresaReceptora
+                         } into g
+                         select new MutuoViewModel
+                         {
+                             IdEmpresaFinancia = g.Key.IdEmpresaFinancia,
+                             IdEmpresaReceptora = g.Key.IdEmpresaReceptora,
+                             EmpresaReceptora = g.Key.EmpresaReceptora,
+                             CapitalActual = g.Sum(c => c.CapitalActual)
+                         }).AsEnumerable().ToList();
+
+            if (mutuo != null)
+            {
+                var totalCapital = mutuo.Sum(c => c.CapitalActual);
+                foreach (var p in mutuo)
+                {
+                    var porc = (p.CapitalActual * 100) / totalCapital;
+                    p.Porcentaje = Math.Round(Convert.ToDouble(porc),2);
+                }
+            }
+            GraficosViewModel grafico = new GraficosViewModel();
+            grafico.Empresa = mutuo;
+            return Json(grafico, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ListaSaldoVigente_Read(int? idEmpresaFinancia)
+        {
+            var registro = (from m in db.Mutuo.ToList()
+                            join em in db.Empresa.ToList() on m.IdEmpresaFinancia equals em.IdEmpresa
+                            join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
+                            join es in db.Estado.ToList() on m.IdEstado equals es.IdEstado
+                            where m.IdEmpresaFinancia == ((idEmpresaFinancia != null) ? idEmpresaFinancia : m.IdEmpresaFinancia)
+                            && m.IdEstado == (int)Helper.Estado.MutuoVigente
+                            select new MutuoViewModel
+                            {
+                                IdMutuo = m.IdMutuo,
+                                EmpresaFinancia = em.RazonSocial,
+                                EmpresaReceptora = emr.RazonSocial,
+                                MontoPrestamo = m.MontoPrestamo,
+                                CapitalActual = m.CapitalActual,
+                                InteresTotal = m.InteresTotal
+
+                            } into x
+                            group x by new
+                            {
+                                x.EmpresaFinancia,
+                                x.EmpresaReceptora
+                            } into g
+                            select new MutuoViewModel{
+                                EmpresaFinancia = g.Key.EmpresaFinancia,
+                                EmpresaReceptora = g.Key.EmpresaReceptora,
+                                CapitalActual = g.Sum(c=> c.CapitalActual),
+                                InteresTotal = g.Sum(c=> c.InteresTotal)
+                            }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GraficoAmortizacionDeuda_Read(int? idEmpresaFinancia)
+        {
+            var mutuo = (from m in db.Mutuo.ToList()
+                                    join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
+                                    where m.IdEmpresaFinancia == ((idEmpresaFinancia != null) ? idEmpresaFinancia : m.IdEmpresaFinancia)
+                                    && m.IdEstado == (int)Helper.Estado.MutuoVigente
+                                    select new MutuoViewModel
+                                    {
+                                        //IdMutuo = m.IdMutuo,
+                                        IdEmpresaFinancia = m.IdEmpresaFinancia,
+                                        IdEmpresaReceptora = m.IdEmpresaReceptora,
+                                        EmpresaReceptora = emr.RazonSocial,
+                                        MontoPrestamo = m.MontoPrestamo
+                                    } into x
+                         group x by new
+                         {
+                             x.IdEmpresaFinancia,
+                             x.IdEmpresaReceptora,
+                             x.EmpresaReceptora
+                         } into g
+                         select new MutuoViewModel
+                         {
+                             IdEmpresaFinancia = g.Key.IdEmpresaFinancia,
+                             IdEmpresaReceptora = g.Key.IdEmpresaReceptora,
+                             EmpresaReceptora = g.Key.EmpresaReceptora,
+                             MontoPrestamo = g.Sum(c => c.MontoPrestamo)
+                         }).AsEnumerable().ToList();
+
+            List<RetornoGrafico> arrayAbono = new List<RetornoGrafico>();
+            if (mutuo != null)
+            {
+                foreach (var p in mutuo)
+                {
+                    var ab = new RetornoGrafico();
+                    var abono = (from m in db.Mutuo
+                                 join a in db.MutuoAbono on m.IdMutuo equals a.IdMutuo
+                                 where m.IdEmpresaFinancia == p.IdEmpresaFinancia && m.IdEmpresaReceptora == p.IdEmpresaReceptora
+                                 && m.IdEstado == (int)Helper.Estado.MutuoVigente
+                                 select new
+                                 {
+                                     a.MontoAbono
+                                 }).ToList();
+                    //var abono = db.MutuoAbono.Where(c => c.IdMutuo == p.IdMutuo).ToList();
+                    double montoAbono = 0;
+                    if (abono != null)
+                    {
+                        montoAbono = abono.Sum(c=> c.MontoAbono);
+                    }
+                    ab.TotalPrecio = Math.Round(Convert.ToDouble(montoAbono), 0);
+                    arrayAbono.Add(ab);
+                }
+            }
+            GraficosViewModel grafico = new GraficosViewModel();
+            grafico.Empresa = mutuo;
+            grafico.DataAbono = arrayAbono;
+            return Json(grafico, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
 
         #region Mutuo
         public ActionResult MutuoGestion()
