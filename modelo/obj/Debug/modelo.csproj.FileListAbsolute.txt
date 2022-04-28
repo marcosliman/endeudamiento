@@ -56,3 +56,4 @@ C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.CoreCompile
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.CopyComplete
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.dll
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.pdb
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csprojAssemblyReference.cache

@@ -1,0 +1,86 @@
+﻿@model modelo.Models.Local.EmpresaAseguradora
+@{
+    ViewBag.Title = (Model.IdEmpresaAseguradora > 0) ? "Editar Empresa Aseguradora" : "Nueva Empresa Aseguradora";
+    ViewBag.ValueBoton = (Model.IdEmpresaAseguradora > 0) ? "Editar" : "Crear";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Ajax.BeginForm("CreateEmpresaAseguradora", "EmpresaAseguradora", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success_dl",
+    OnFailure = "Failure_dl"
+
+}, new { id = "frmEdit", @class = "form-horizontal" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.IdEmpresaAseguradora);
+    <div class="modal-header bg-azulmarca">
+        <h5 class="modal-title" id="exampleModalLabel" style="color:white"><i class="fas fa-file-contract"></i> @ViewBag.Title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="ml-2">
+
+
+            <div class="form-group form-group-sm row">
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Nombre Empresa Aseguradora</label>
+                <div class="col-9">
+                    @Html.EditorFor(model => model.NombreEmpresaAseguradora, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Estado</label>
+                <div class="col-6">
+                    @Html.CheckBoxFor(model => model.Activo, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
+                    <label class="" for="Activo">Activo</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm">@ViewBag.ValueBoton</button>
+    </div>
+}
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        window.top.esconderCargando();
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        $.notify(data.Message, "error");
+        $('#modal-registro').modal('hide');
+    }
+    function Success(data) {
+        if (data.Estado == "0") {
+            $.notify(data.Mensaje, "success");
+            RefreshLista();
+        }
+        else {
+            $.notify(data.Mensaje, "error");
+        }
+    }
+</script>

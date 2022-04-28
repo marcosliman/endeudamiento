@@ -432,3 +432,8 @@ C:\Reloncavi\Desarrollo\Endeudamiento\endeuda\bin\Remotion.Data.Linq.dll
 C:\Reloncavi\Desarrollo\Endeudamiento\endeuda\bin\Remotion.dll
 C:\Reloncavi\Desarrollo\Endeudamiento\endeuda\bin\Remotion.Interfaces.dll
 C:\Reloncavi\Desarrollo\Endeudamiento\endeuda\bin\LinqToExcel.xml
+C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\LinqToExcel.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\Remotion.Data.Linq.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\Remotion.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\Remotion.Interfaces.dll
+C:\Users\Usuario\Documents\GitHub\endeudamiento\endeuda\bin\LinqToExcel.xml

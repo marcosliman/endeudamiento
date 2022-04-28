@@ -131,6 +131,7 @@
     <Compile Include="ViewModel\SiniestroDocumentoViewModel.cs" />
     <Compile Include="ViewModel\SiniestroViewModel.cs" />
     <Compile Include="ViewModel\TipoPerdidaViewModel.cs" />
+    <Compile Include="ViewModel\EmpresaAseguradoraViewModel.cs" />
     <Compile Include="ViewModel\TipoSeguroViewModel.cs" />
     <Compile Include="ViewModel\FamiliaViewModel.cs" />
     <Compile Include="ViewModel\PolizaActivoViewModel.cs" />

@@ -262,6 +262,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\BeneficiarioController.cs" />
     <Compile Include="Controllers\BancosController.cs" />
+    <Compile Include="Controllers\EmpresaAseguradoraController.cs" />
     <Compile Include="Controllers\TipoPerdidaController.cs" />
     <Compile Include="Controllers\TipoSeguroController.cs" />
     <Compile Include="Controllers\FamiliaController.cs" />
@@ -2970,6 +2971,8 @@
     <Content Include="Views\Amortizacion\Leasing.cshtml" />
     <Content Include="Views\Amortizacion\ModalContrato.cshtml" />
     <Content Include="Views\Amortizacion\ModalAmortizacion.cshtml" />
+    <Content Include="Views\EmpresaAseguradora\Create.cshtml" />
+    <Content Include="Views\EmpresaAseguradora\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
