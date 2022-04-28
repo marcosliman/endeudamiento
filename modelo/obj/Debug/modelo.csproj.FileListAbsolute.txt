@@ -42,6 +42,7 @@ C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csproj.C
 C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csproj.CopyComplete
 C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.dll
 C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.pdb
+C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csprojAssemblyReference.cache
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\modelo.dll.config
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\modelo.dll
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\bin\Debug\modelo.pdb
@@ -56,4 +57,3 @@ C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.CoreCompile
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.csproj.CopyComplete
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.dll
 C:\Reloncavi\Desarrollo\Endeudamiento\modelo\obj\Debug\modelo.pdb
-C:\Users\Usuario\Documents\GitHub\endeudamiento\modelo\obj\Debug\modelo.csprojAssemblyReference.cache

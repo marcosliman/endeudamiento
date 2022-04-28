@@ -1,0 +1,279 @@
+﻿@{
+    ViewBag.Title = "Notificaciones";
+}
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Bandeja de Mensajes</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Inicio</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Outlook Microsoft</li>
+        <li class="breadcrumb-item active" aria-current="page">Bandeja</li>
+    </ol>
+</div>
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary card-outline">
+                <div class="card-body p-0 table-responsive">
+
+                    <div class="mailbox-messages m-1">
+                        <table class="table table-hover table-striped" id="grillaDetalle" data-order='[[4, "desc" ]]'>
+                            <thead>
+                                <tr>
+                                    <th class="noExport" style="width:10%">
+                                    </th>
+                                    <th>De</th>
+                                    <th>Asunto</th>
+                                    <th>Mensaje</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.mail-box-messages -->
+                </div>
+
+            </div>
+            <!-- /.card -->
+        </div>
+        <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>
+<div class="modal fade" id="modal-pago" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="editPago"></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $.fn.dataTable.moment('DD/MM/YYYY');
+        AbrirMenu("BandejaOutlook");
+        $('.checkbox-toggle').click(function () {
+            ClickCheckAll(this.id)
+        });
+        initTable();
+    });
+    function ClickCheckAll(idBtn) {
+        var clicks = $("#" + idBtn).data('clicks')
+        if (clicks) {
+            //Uncheck all checkboxes
+            $('.mailbox-messages input[type=\'checkbox\']').prop('checked', false)
+            $('.checkbox-toggle .far.fa-check-square').removeClass('fa-check-square').addClass('fa-square')
+        } else {
+            //Check all checkboxes
+            $('.mailbox-messages input[type=\'checkbox\']').prop('checked', true)
+            $('.checkbox-toggle .far.fa-square').removeClass('fa-square').addClass('fa-check-square')
+        }
+        $("#" + idBtn).data('clicks', !clicks)
+    }
+    function RefreshLista(idcuenta) {
+        CountNotificaciones();
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+    function initTable() {
+        var buttonCommon = ExcelCommon();
+        var table = $('#grillaDetalle').DataTable({
+            //dom: '<"top"Bf<"#id">><"toolbar">rt',
+            "searching": false,
+            "retrieve": true,
+            processing: true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Outlook/Bandeja_Read/',
+                "data": function (d) {
+                },
+                "dataSrc": ""
+            },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "ListaMensajes"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [4],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                }
+            ],
+            columns: [
+
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = "";//row.From.EmailAddress.Address;
+                        /*boton = '<div class="btn-group m-0">';
+                        boton += '<button type="button" class="btn btn-tool dropdown-toggle" data-toggle="dropdown">';
+                        boton += '<i class="fas fa-ellipsis-v"></i>';
+                        boton += '</button>';
+                        boton += '<div class="dropdown-menu" role="menu">    ';
+                        boton += '<a href="JavaScript:DetalleNoti(' + o.IdNotificacion + ',\'detalle\')" class="dropdown-item">Detalle</a>';
+                        boton += '<a href="JavaScript:ChangeNoti(' + o.IdNotificacion + ',\'eliminar\')" class="dropdown-item">Eliminar</a>';
+                        boton += '<a href="JavaScript:ChangeNoti(' + o.IdNotificacion + ',\'noleido\')" class="dropdown-item">No Leido</a>';
+                        boton += '</div>';*/
+                        return boton;
+                    }
+                },
+                {
+                    "mData": "From",
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        if (data != null) {
+                            boton = data.EmailAddress.Name;
+                        }
+                        return boton;
+                    }
+                },
+                {
+                    "mData": "Id",
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        var detalle = row.Subject;
+                        if (detalle != null) {
+                            //boton = '<a href="JavaScript:DetalleNoti(\'' + data + '\',\'detalle\')">' + detalle + '</a>';
+                            boton = '<a href="' + row.WebLink + '" target="_blank">' + detalle + '</a>';
+                        }
+
+                        if (row.IsRead == true) {
+                            return boton;
+                        }
+                        else {
+                            return '<b>' + boton + '</b>';
+                        }
+                    }
+                },
+                {
+                    "mData": "Id",
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        var detalle = row.BodyPreview;
+                        //boton = '<a href="JavaScript:DetalleNoti(\'' + data + '\',\'detalle\')">' + detalle + '</a>';
+                        boton = '<a href="' + row.WebLink + '" target="_blank">' + detalle + '</a>';
+                        if (row.IsRead == true) {
+                            return boton;
+                        }
+                        else {
+                            return '<b>' + boton + '</b>';
+                        }
+                    }
+                },
+                { "data": "ReceivedDateTime" }
+
+            ]
+        });
+
+        return table;
+    }
+    function DetalleNoti(id) {
+        var tmpUrl = "/Notificaciones/DetalleNotificacion";
+
+        $("#editPago").empty();
+        $('#modal-pago').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { id: id },
+            beforeSend: function () {
+                $("#editPago").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#editPago").empty();
+                $("#editPago").html(data);
+                esconderCargando();
+            }
+        });
+    }
+    function ChangeNotiMasivo(accion) {
+        var ids = new Array();
+        checkeados = 0;
+        $(".movimiento").each(function () {
+            if ($(this).prop("checked") == true) {
+                ids[ids.length] = $(this).val();
+                checkeados++;
+            }
+        })
+        if (checkeados > 0) {
+            var mensaje = "eliminar";
+            if (accion == "noleido") {
+                mensaje = "marcar como no leido";
+            }
+            a = confirm("¿Seguro de " + mensaje + " el registro seleccionado?");
+            if (a == true) {
+                $.ajax({
+                    url: '/Notificaciones/ChangeMasivo',
+                    data: { accion: accion, notificaciones: ids },
+                    type: 'POST',
+                    beforeSend: function () {
+                        mostrarCargando();
+                    },
+                    success: function (data) {
+                        esconderCargando();
+                        if (data.Estado == "0") {
+                            toastr.success(data.Mensaje);
+                            RefreshLista();
+                            ClickCheckAll("btnSelAll")
+                        }
+                        else {
+                            toastr.error(data.Mensaje);
+                        }
+                    },
+                    error: function (error) {
+                        toastr.error("Error");
+                        esconderCargando();
+                    }
+                })
+            }
+
+        }
+        else {
+            alert("Debe Seleccionar al menos un registro");
+        }
+
+    }
+    function ChangeNoti(IdNotificacion, accion) {
+        var ids = new Array();
+        ids[0] = IdNotificacion;
+        var mensaje = "eliminar";
+        if (accion == "noleido") {
+            mensaje = "marcar como no leido";
+        }
+        a = confirm("¿Seguro de " + mensaje + " el registro seleccionado?");
+        if (a == true) {
+            $.ajax({
+                url: '/Notificaciones/ChangeMasivo',
+                data: { accion: accion, notificaciones: ids },
+                type: 'POST',
+                beforeSend: function () {
+                    mostrarCargando();
+                },
+                success: function (data) {
+                    esconderCargando();
+                    if (data.Estado == "0") {
+                        toastr.success(data.Mensaje);
+                        RefreshLista();
+                        ClickCheckAll("btnSelAll")
+                    }
+                    else {
+                        toastr.error(data.Mensaje);
+                    }
+                },
+                error: function (error) {
+                    toastr.error("Error");
+                    esconderCargando();
+                }
+            })
+        }
+
+
+    }
+</script>

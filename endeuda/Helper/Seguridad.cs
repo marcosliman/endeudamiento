@@ -113,6 +113,7 @@ namespace tesoreria.Helper
         public string UsuarioSAG { get; set; }
         public int? IdUsuarioSAG { get; set; }
         public List<Perfil> PerfilAll { get; set; }
+        public string AccountId { get; set; }
     }
 
     public enum PerfilAcceso : int
