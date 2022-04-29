@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Reporte";
+    ViewBag.Title = "Reporte Cuotas Pagadas";
 }
 @{
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
@@ -102,7 +102,7 @@
                         </div>
                         <div class="col-sm-2">
                             <div class="row justify-content-end">
-                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-cog"></i> Generar</button>
+                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-cog"></i> Buscar</button>
                             </div>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h3 class="card-title">Detalle</h3>
+                <h3 class="card-title">Detalle - Cuotas Pagadas desde Enero del 2018 a Diciembre 2021</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -121,8 +121,6 @@
                 </div>
             </div>
             <div class="card-body">
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Cuotas Pagadas</label>
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle desde Enero del 2018 a Diciembre 2021.</label>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
@@ -140,193 +138,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>235142</td>
-                                <td>Itaú</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>440,000.00</td>
-                                <td>50,000,000.00</td>
-                                <td>1 de 49</td>
-                                <td>Noviembre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00017239</a></td>
-
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>235142</td>
-                                <td>Itaú</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>440,000.00</td>
-                                <td>49,560,000.00</td>
-                                <td>2 de 49</td>
-                                <td>Octubre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">000890256</a></td>
-
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>235142</td>
-                                <td>Itaú</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>49,120,000.00</td>
-                                <td>440,000.00</td>
-                                <td>3 de 49</td>
-                                <td>Septiembre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">000966685</a></td>
-
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>235142</td>
-                                <td>Itaú</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>48,780,000.00</td>
-                                <td>440,000.00</td>
-                                <td>4 de 49</td>
-                                <td>Agosto</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00035414</a></td>
-
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>235142</td>
-                                <td>Itaú</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>48,340,000.00</td>
-                                <td>440,000.00</td>
-                                <td>5 de 49</td>
-                                <td>Julio</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00058225</a></td>
-                            </tr>
-                            <tr>
-                                <td>6</td>
-                                <td>235142</td>
-                                <td>Itaú</td>
-                                <td>MAQSUR S.A.</td>
-                                <td>47,900,000.00</td>
-                                <td>440,000.00</td>
-                                <td>6 de 49</td>
-                                <td>Junio</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00254005</a></td>
-                            </tr>
-                            <tr>
-                                <td>7</td>
-                                <td>785462</td>
-                                <td>SCOTIABANK</td>
-                                <td>NOKS S.A.</td>
-                                <td>1,000,000.00</td>
-                                <td>500,000.00</td>
-                                <td>28 de 30</td>
-                                <td>Noviembre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00035689</a></td>
-                            </tr>
-                            <tr>
-                                <td>8</td>
-                                <td>785462</td>
-                                <td>SCOTIABANK</td>
-                                <td>NOKS S.A.</td>
-                                <td>500,000.00</td>
-                                <td>500,000.00</td>
-                                <td>29 de 30</td>
-                                <td>Octubre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">000110522</a></td>
-                            </tr>
-                            <tr>
-                                <td>9</td>
-                                <td>785462</td>
-                                <td>SCOTIABANK</td>
-                                <td>NOKS S.A.</td>
-                                <td>0.00</td>
-                                <td>500,000.00</td>
-                                <td>30 de 30</td>
-                                <td>Septiembre</td>
-                                <td>Op. de Compra</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00017457</a></td>
-                            </tr>
-                            <tr>
-                                <td>10</td>
-                                <td>52481689</td>
-                                <td>BBVA</td>
-                                <td>TEQS S.A.</td>
-                                <td>20,000,000.00</td>
-                                <td>500,000.00</td>
-                                <td>1 de 30</td>
-                                <td>Noviembre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">000241788</a></td>
-                            </tr>
-                            <tr>
-                                <td>11</td>
-                                <td>52481689</td>
-                                <td>BBVA</td>
-                                <td>TEQS S.A.</td>
-                                <td>19,500,000.00</td>
-                                <td>500,000.00</td>
-                                <td>2 de 30</td>
-                                <td>Octubre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00258959</a></td>
-                            </tr>
-                            <tr>
-                                <td>12</td>
-                                <td>52481689</td>
-                                <td>BBVA</td>
-                                <td>TEQS S.A.</td>
-                                <td>19,000,000.00</td>
-                                <td>500,000.00</td>
-                                <td>3 de 30</td>
-                                <td>Septiembre</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">0014279</a></td>
-                            </tr>
-                            <tr>
-                                <td>13</td>
-                                <td>52481689</td>
-                                <td>BBVA</td>
-                                <td>TEQS S.A.</td>
-                                <td>18,500,000.00</td>
-                                <td>500,000.00</td>
-                                <td>4 de 30</td>
-                                <td>Agosto</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">0005869</a></td>
-                            </tr>
-                            <tr>
-                                <td>14</td>
-                                <td>52481689</td>
-                                <td>BBVA</td>
-                                <td>TEQS S.A.</td>
-                                <td>18,000,000.00</td>
-                                <td>500,000.00</td>
-                                <td>5 de 30</td>
-                                <td>Julio</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00028239</a></td>
-                            </tr>
-                            <tr>
-                                <td>15</td>
-                                <td>52481689</td>
-                                <td>BBVA</td>
-                                <td>TEQS S.A.</td>
-                                <td>17,500,000.00</td>
-                                <td>500,000.00</td>
-                                <td>6 de 30</td>
-                                <td>Junio</td>
-                                <td>Cuota Normal</td>
-                                <td><a href="JavaScript:ModalComprobanteModal('1','00017239')">00034239</a></td>
-                            </tr>
-
-
-
                         </tbody>
                     </table>
                 </div>
@@ -336,174 +147,48 @@
     </div>
 </div>
 
+<!-- DataTable with Hover -->
 <script>
-        $(document).ready(function () {
-            AbrirMenu("CuotasPagadas");
-        });
-    function ModalComprobanteModal(IdProgramacion, nroComprobante) {
-        var tmpUrl = "/Reportes/CuotasPagadas";
-        $("#datosComprobante").empty();
-        $('#modal-comprobante').modal('show');
-        $.ajax({
-            url: tmpUrl,
-            type: "Get",
-            data: { IdProgramacion: IdProgramacion, nroComprobante: nroComprobante },
-            beforeSend: function () {
-                $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
-                mostrarCargando();
+$(document).ready(function () {
+    AbrirMenu("CuotasPagadas");
+    $('#selectEmpresa').select2({
+        placeholder: '---Seleccione Empresa---',
+        language: "es",
+        allowClear: true,
+    });
+    initTable();
+});
+function RefreshLista() {
+    var table = initTable();
+    table.ajax.reload(function (json) { });
+}
+function initTable() {
+    var table = $('#grillaEmpresa').DataTable({
+        "scrollX": true,
+        "retrieve": true,
+        'ajax': {
+            "type": "POST",
+            "url": '/Reportes/CuotasPagadas_Read/0',
+            "data": function (d) {
+
             },
-            success: function (data) {
-                $("#datosComprobante").empty();
-                $("#datosComprobante").html(data);
-                esconderCargando();
-            }
-        })
-        }
+            "dataSrc": ""
+        },
+        columns: [
+            { "data": "Item" },
+            { "data": "NroContrato" },
+            { "data": "Banco" },
+            { "data": "Empresa" },
+            { "data": "MontoContrato" },
+            { "data": "SaldoInsoluto" },
+            { "data": "Periodo" },
+            { "data": "FechaPago" },
+            { "data": "TipoPago" },
+            { "data": "ComprobanteEgreso" }
+        ]
+    });
+
+    return table;
+}
+
 </script>
-
-    @*
-        <!-- DataTable with Hover -->
-        <script>
-            $(document).ready(function () {
-                AbrirMenu("LibroVentas");
-                $('#grillaEmpresa').DataTable();
-                moment.locale('es');
-                $('#fecha').daterangepicker({
-                    autoUpdateInput: false,
-                    "locale": {
-                        format: "DD/MM/YYYY",
-                        "separator": " - ",
-                        "applyLabel": "Aplicar",
-                        "cancelLabel": "Limpiar",
-                        "fromLabel": "DE",
-                        "toLabel": "HASTA",
-                        "customRangeLabel": "Personalizar",
-                        "daysOfWeek": [
-                            "Dom",
-                            "Lun",
-                            "Mar",
-                            "Mie",
-                            "Jue",
-                            "Vie",
-                            "Sáb"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
-                    }
-                });
-
-                $('#fecha').on('apply.daterangepicker', function (ev, picker) {
-                    $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-                    //RefreshLista();
-                });
-
-
-                $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
-                    $(this).val('');
-                    //RefreshLista();
-                });
-                $('#selectEmpresa').select2({
-                    placeholder: '---Seleccione Empresa---',
-                    language: "es",
-                    allowClear: true,
-                });
-
-            });
-            function RefreshLista() {
-                var table = initTable();
-                table.ajax.reload(function (json) { });
-            }
-            function initTable() {
-                var table = $('#grillaEmpresa').DataTable({
-                    "scrollX": true,
-                    "retrieve": true,
-                    'ajax': {
-                        "type": "POST",
-                        "url": '/Vencidas/Vencidas_Read/0',
-                        "data": function (d) {
-
-                        },
-                        "dataSrc": ""
-                    },
-                    columns: [
-
-                        {
-                            "mData": null,
-                            "bSortable": false,
-                            "mRender": function (o, type, row) {
-                                var boton = '';
-                                boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
-                                return boton;
-                            }
-                        },
-                        { "data": "Sociedad" },
-                        { "data": "RutCliente" },
-                        { "data": "Cliente" },
-                        { "data": "Emisión" },
-                        { "data": "Vencimiento" },
-                        { "data": "Factura" },
-                        { "data": "Monto" },
-                        {
-                            "mData": null,
-                            "bSortable": false,
-                            "mRender": function (o, type, row) {
-                                var estado = 'NO';
-                                if (o.Activo == true) {
-                                    estado = "SI";
-                                }
-                                return estado;
-                            }
-                        }
-                    ]
-                });
-
-                return table;
-            }
-
-        </script>
-        <script>
-            $(document).ready(function () {
-
-                $('#frmEdit').validate({
-                    debug: false,
-                    errorElement: "em",
-                    errorContainer: $("#warning")
-                });
-                $('#perfiles').select2({
-                    theme: 'bootstrap4'
-                })
-                window.top.esconderCargando();
-            });
-
-            function Success_dl(data) {
-                esconderCargando();
-                if (data.Estado == "0") {
-                    toastr.success(data.Mensaje);
-                    $('#modal-registro').modal('hide');
-                    RefreshLista();
-                }
-                else {
-                    toastr.error(data.Mensaje);
-                }
-            }
-            function Failure_dl(data) {
-                esconderCargando();
-                toastr.error(data.Mensaje);
-                $('#modal-registro').modal('hide');
-            }
-
-        </script>
-    *@
