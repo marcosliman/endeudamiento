@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Registrar Póliza de Seguro";
 }
-
+<link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
     <ol class="breadcrumb">
@@ -18,29 +18,30 @@
     }
 }
 <input type="hidden" name="idPoliza" id="idPoliza" value="@Model.IdPoliza" />
-<div class="card-body">
-    <div class="card card-primary card-outline card-outline-tabs">
-        <div class="card-header p-0 border-bottom-0">
-            <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link nav-link-contrato active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Datos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link nav-link-contrato @habilitaTab" id="header3" data-toggle="pill" href="#" onclick="CargaTab('tab3',3)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">Documentos</a>
-                </li>
-            </ul>
-        </div>
-        <div class="card-body">
-            <div class="tab-content" id="custom-tabs-four-tabContent">
-                <div class="tab-pane fade show active" id="tab1" role="tabpanel">
-                </div>
-                <div class="tab-pane fade" id="tab3" role="tabpanel">
-                </div>
+<div class="card card-primary card-outline card-outline-tabs">
+    <div class="card-header p-0 border-bottom-0">
+        <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link nav-link-contrato active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">
+                    <span class="bs-stepper-circle">1</span> <span class="bs-stepper-label">Datos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-contrato @habilitaTab" id="header3" data-toggle="pill" href="#" onclick="CargaTab('tab3',3)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">
+                    <span class="bs-stepper-circle">2</span> <span class="bs-stepper-label">Documentos</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="custom-tabs-four-tabContent">
+            <div class="tab-pane fade show active" id="tab1" role="tabpanel">
+            </div>
+            <div class="tab-pane fade" id="tab3" role="tabpanel">
             </div>
         </div>
     </div>
 </div>
-
 
 <script>
     $(document).ready(function () {

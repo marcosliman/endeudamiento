@@ -15,9 +15,7 @@
                         <thead class="thead-light">
 
                             <tr>
-                                <th>Mes</th>
                                 <th>CortoPlazo</th>
-                                <th>LargoPlazo</th>
                                 <th>FechaPago</th>
                                 <th>Periodo</th>
                                 <th>Cuota</th>
@@ -135,7 +133,7 @@
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [6,7,8,9],
+                    targets: [4,5,6,7],
                     render: function (data) {
                         var numFormt = "";
                         if (data != null) {
@@ -146,7 +144,7 @@
                     }
                 },
                 {
-                    targets: [3],
+                    targets: [1],
                     render: function (data) {
                         var fecha = DateDatatable(data);
                         return fecha;
@@ -154,9 +152,7 @@
                 }
             ],
             columns: [
-                { "data": "NombreMes" },
                 { "data": "CortoPlazo" },
-                { "data": "LargoPlazo" },
                 { "data": "FechaPago" },
                 { "data": "Periodo" },
                 { "data": "Cuota" },

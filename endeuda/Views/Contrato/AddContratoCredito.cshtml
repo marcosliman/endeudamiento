@@ -125,11 +125,11 @@
 
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control form-control-sm tasa" name="tasaAnual" id="tasaAnual" onblur="CalculoTasa()" value="@Model.TasaAnual.ToString().Replace(",",".")" @disabled />
+                    <input type="text" class="form-control form-control-sm tasa numberMiles" name="tasaAnual" id="tasaAnual" onblur="CalculoTasa()" value="@Model.TasaAnual.ToString()" @disabled />
                 </div>
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control form-control-sm tasa" name="tasaMensual" id="tasaMensual" readonly value="@Model.TasaMensual.ToString().Replace(",",".")" @disabled />
+                    <input type="text" class="form-control form-control-sm tasa " name="tasaMensual" id="tasaMensual" readonly value="@Model.TasaMensual.ToString()" @disabled />
                 </div>
             </div>
             <div class="form-group row">
@@ -231,8 +231,8 @@
                 idTipoFinanciamiento: { required: true },
                 idBanco: { required: true },
                 monto: { required: true },
-                tasaMensual: { required: true, number: true },
-                tasaAnual: { required: true, number: true },
+                tasaMensual: { required: true},
+                tasaAnual: { required: true},
                 plazo: { required: true, digits: true },
                 fechaInicio: { required: true }
             }
@@ -428,9 +428,10 @@
 
     function CalculoTasa() {
         if ($("#tasaAnual").val().length > 0) {
-            var tasaMensual = $("#tasaAnual").val().replace(",", ".");
+            var tasaMensual = $("#tasaAnual").val().replace(/[$.]/g, '').replace(/[$,]/g, '.');
             var tasaDiaria = tasaMensual / 12;
-            $("#tasaMensual").val(tasaDiaria.toFixed(2));
+            var tasaInput = tasaDiaria.toFixed(2)
+            $("#tasaMensual").val(SeparadorMiles(tasaInput.toString()));
         }
         else {
             $("#tasaMensual").val(0);

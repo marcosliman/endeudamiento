@@ -106,6 +106,7 @@ namespace tesoreria.Controllers
                              join a in db.PermisoPerfil on v.IdMenu equals a.IdMenu into resp
                              from j in resp.DefaultIfEmpty()
                              where ((j == null) ? idPerfil : j.IdPerfil) == idPerfil
+                             && v.IdEstadoVigencia==1
                              select new
                              {
                                  Acceder = (j != null) ? j.Acceder : false,
@@ -120,6 +121,7 @@ namespace tesoreria.Controllers
             var lista = (from m in db.Menu
                          join mp in db.Menu on m.IdMenuPadre equals mp.IdMenu
                          where m.NivelMenu>1
+                         && m.IdEstadoVigencia == 1
                          select new PermisoViewModel
                          {
                              NombreGrupoPerfil = mp.NombreMenu,

@@ -14,123 +14,113 @@
 </div>
 <h6 class="h6 mb-0 text-gray-800">Acá puedes revisar las pólizas de seguro de todas las empresas.</h6>
 <br />
-
-
-
-    <div class="card col-lg-12">
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title">Filtros</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+<div class="card card-outline card-info collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-sm-2">
-                        @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.DropDownList("empresaAseguradoraB", (SelectList)ViewData["listaEmpresaAseguradora"], "--Seleccione Empresa Aseguradora--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        @Html.DropDownList("tipoSeguroB", (SelectList)ViewData["listaTipoSeguro"], "--Seleccione Tipo Seguro--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control" id="numeroPolizaB" name="numeroPolizaB" placeholder="Número Poliza">
-                    </div>
-                    <div class="col-md-2">
-                        <input type="text" class="form-control" id="numeroActivoB" name="numeroActivoB" placeholder="Número Activo">
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row justify-content-end">
-                            <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
-                        </div>
-                    </div>
+            <div class="col-md-2">
+                @Html.DropDownList("empresaAseguradoraB", (SelectList)ViewData["listaEmpresaAseguradora"], "--Seleccione Empresa Aseguradora--", htmlAttributes: new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("tipoSeguroB", (SelectList)ViewData["listaTipoSeguro"], "--Seleccione Tipo Seguro--", htmlAttributes: new { @class = "form-control form-control-sm" })
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="numeroPolizaB" name="numeroPolizaB" placeholder="Número Poliza">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control" id="numeroActivoB" name="numeroActivoB" placeholder="Número Activo">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Detalle de pólizas y activos</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="form-group row">
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Generar Envío Banco</button>
-                            </div>
-                        </nav>
-                    </div>
-                    <div class="col-sm-10">
-                    </div>
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaMasiva"><i class="fa fa-plus"></i>Carga Masiva</button>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
-                <div class="card-body table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPolizaActivo" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
-                                <th class="no-sort" width="3%"><i class="fas fa-fire"></i></th>
-                                <th width="20%">Num. Poliza</th>
-                                <th>Tipo Seguro</th>
-                                <th>Aseguradora</th>
-                                <th>Monto Aseg.</th>
-                                <th>Prima Men.</th>
-                                <th>Num. Pagos</th>
-                                <th>Moneda</th>
-                                <th width="20%">Venc. Seguro</th>
-                                <th>Beneficiario</th>
-                                <th>RUT Ben.</th>
-                                <th>Fecha Env. Banco</th>
-                                <th>Empresa</th>
-                                <th>Cod. Interno</th>
-                                <th>Tipo Activo</th>
-                                <th>Estado</th>
-                                <th>Descripcion</th>
-                                <th>Patente</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Motor</th>
-                                <th>Chasis</th>
-                                <th>Año</th>
-                                <th>Grupo</th>
-                                <th>Sub-grupo</th>
-                                <th>Val. Compra</th>
-                                <th>Fec. Ing.</th>
-                                <th>Glosa</th>
-                                <th>Fec. Baja</th>
-                                <th>Leasing</th>
-                                <th>Término Leas.</th>
-
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-
-            </div>
-
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Detalle de pólizas y activos</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
         </div>
     </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <div class="col-sm-1">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-1 my-lg-0">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Generar Envío Banco</button>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-sm-10">
+            </div>
+            <div class="col-sm-1">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-1 my-lg-0">
+                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#ModalCargaMasiva"><i class="fa fa-plus"></i>Carga Masiva</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPolizaActivo" data-order='[[ 0, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                        <th class="no-sort" width="3%"><i class="fas fa-fire"></i></th>
+                        <th width="20%">Num. Poliza</th>
+                        <th>Tipo Seguro</th>
+                        <th>Aseguradora</th>
+                        <th>Monto Aseg.</th>
+                        <th>Prima Men.</th>
+                        <th>Num. Pagos</th>
+                        <th>Moneda</th>
+                        <th width="20%">Venc. Seguro</th>
+                        <th>Beneficiario</th>
+                        <th>RUT Ben.</th>
+                        <th>Fecha Env. Banco</th>
+                        <th>Empresa</th>
+                        <th>Cod. Interno</th>
+                        <th>Tipo Activo</th>
+                        <th>Estado</th>
+                        <th>Descripcion</th>
+                        <th>Patente</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Motor</th>
+                        <th>Chasis</th>
+                        <th>Año</th>
+                        <th>Grupo</th>
+                        <th>Sub-grupo</th>
+                        <th>Val. Compra</th>
+                        <th>Fec. Ing.</th>
+                        <th>Glosa</th>
+                        <th>Fec. Baja</th>
+                        <th>Leasing</th>
+                        <th>Término Leas.</th>
+
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+
 </div>
 <form name="frmPoliza" id="frmPoliza" method="post">
     <input type="hidden" name="idPoliza" id="idPoliza" />
@@ -215,7 +205,7 @@
                     "mRender": function (o, type, row) {
                         var acciones = '';
                         //if (o.Editable == true) {
-                        var acciones = '<button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#ModalVistaPoliza" onclick="VistaPoliza(' + o.IdPoliza + ')"><i class="far fa-eye"></i></button>';
+                        var acciones = '<button class="btn btn-primary btn-sm" title="Detalla Poliza" type="button" onclick="VistaPoliza(' + o.IdPoliza + ')"><i class="far fa-eye"></i></button>';
                         //}
                         return acciones;
                     }
@@ -226,7 +216,7 @@
                     "mRender": function (o, type, row) {
                         var acciones = '';
                         //if (o.Editable == true) {
-                        var acciones = '<button class="btn btn-primary btn-sm" type="button" data-toggle="modal" data-target="#ModalSiniestro" onclick="RegistroSiniestro(' + o.IdPolizaActivo + ', ' + o.IdSiniestro + ')"><i class="fas fa-fire"></i></button>';
+                        var acciones = '<button class="btn btn-primary btn-sm" title="Registrar Siniestro" type="button" onclick="RegistroSiniestro(' + o.IdPolizaActivo + ', ' + o.IdSiniestro + ')"><i class="fas fa-fire"></i></button>';
                         //}
                         return acciones;
                     }
@@ -286,7 +276,9 @@
         return table;
     }
 
-    function RegistroSiniestro(idPolizaActivo,idSiniestro) {
+    function RegistroSiniestro(idPolizaActivo, idSiniestro) {
+        $("#datosPoliza").empty();
+        $('#ModalSiniestro').modal('show');
         url = "/Seguro/ModalAgregarSiniestro";
         $.ajax({
             url: url,
@@ -305,6 +297,8 @@
     }
 
     function VistaPoliza(idPoliza) {
+        $("#datosSiniestro").empty();
+        $('#ModalVistaPoliza').modal('show');
         $.ajax({
             url: "/Seguro/ModalVistaSeguro",
             type: "Post",

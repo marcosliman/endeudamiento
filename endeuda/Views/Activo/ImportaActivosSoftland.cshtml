@@ -266,6 +266,7 @@
     function ImportarActivoSofland(CodAct) {
         a = true;//confirm("Seguro de Eliminar el registro seleccionado?")
         if (a) {
+            mostrarCargando();
             $.ajax({
                 type: 'POST',
                 url: '/Activo/ImportaActivoSoftland',
@@ -274,14 +275,16 @@
                     if (data.result.Estado == "0") {
                         toastr.success(data.result.Mensaje);
                         RefreshLista();
-
+                        esconderCargando();
                     }
                     else {
                         toastr.error(data.result.Mensaje);
+                        esconderCargando();
                     }
                 },
                 failure: function (data) {
                     toastr.error(data.result.Mensaje);
+                    esconderCargando();
                 }
             })
         }

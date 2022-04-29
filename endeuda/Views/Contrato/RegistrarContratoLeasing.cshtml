@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Registrar Contrato Leasing";
 }
+<link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/bs-stepper/css/bs-stepper.min.css">
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
     <h5 class="h5 mb-0 text-gray-800">Nuevo Contrato Leasing</h5>
     <ol class="breadcrumb">
@@ -22,13 +23,19 @@
     <div class="card-header p-0 border-bottom-0">
         <ul class="nav nav-tabs" id="custom-tabs-four-tab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link nav-link-contrato active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">Datos</a>
+                <a class="nav-link nav-link-contrato active" id="header1" data-toggle="pill" href="#" onclick="CargaTab('tab1',1)" role="tab" aria-controls="custom-tabs-four-home" aria-selected="true">
+                    <span class="bs-stepper-circle">1</span> <span class="bs-stepper-label">Datos</span>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-contrato @habilitaTab" id="header2" data-toggle="pill" href="#" onclick="CargaTab('tab2',2)" role="tab" aria-controls="custom-tabs-four-pago" aria-selected="false">Amortización</a>
+                <a class="nav-link nav-link-contrato @habilitaTab" id="header2" data-toggle="pill" href="#" onclick="CargaTab('tab2',2)" role="tab" aria-controls="custom-tabs-four-pago" aria-selected="false">
+                    <span class="bs-stepper-circle">2</span> <span class="bs-stepper-label">Amortización</span>
+                </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-contrato @habilitaTab" id="header3" data-toggle="pill" href="#" onclick="CargaTab('tab3',3)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">Documentos</a>
+                <a class="nav-link nav-link-contrato @habilitaTab" id="header3" data-toggle="pill" href="#" onclick="CargaTab('tab3',3)" role="tab" aria-controls="custom-tabs-four-doc" aria-selected="false">
+                    <span class="bs-stepper-circle">3</span> <span class="bs-stepper-label">Documentos</span>
+                </a>
             </li>
         </ul>
     </div>

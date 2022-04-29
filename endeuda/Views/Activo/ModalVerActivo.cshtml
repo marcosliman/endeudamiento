@@ -57,12 +57,12 @@
                         <input type="text" class="form-control form-control-sm" name="descripcion" id="descripcion" placeholder="Ingrese una descripción del activo" value="@Model.Descripcion">
                     </div>
                 </div>
-                <div class="form-group form-group-sm row">
+                @*<div class="form-group form-group-sm row">
                     <label for="capacidad" class="col-sm-3 col-form-label col-form-label-sm">Capacidad</label>
                     <div class="col-6">
                         <input type="text" class="form-control form-control-sm" name="capacidad" id="capacidad" placeholder="Ingrese una capacidad del activo" value="@Model.Capacidad">
                     </div>
-                </div>
+                </div>*@
                 <div class="form-group form-group-sm row">
                     <label for="fecha" class="col-sm-3 col-form-label col-form-label-sm">Clasificación de Cuenta</label>
                     <div class="col-6">
@@ -73,7 +73,7 @@
                 <div class="form-group form-group-sm row">
                     <label for="valor" class="col-sm-3 col-form-label col-form-label-sm">Valor($)</label>
                     <div class="col-6">
-                        <input type="text" class="form-control form-control-sm number numberMiles" name="valor" id="valor" placeholder="Ingrese valor del activo" value="@Model.Valor">
+                        <input type="text" class="form-control form-control-sm numberMiles" name="valor" id="valor" placeholder="Ingrese valor del activo" value="@Model.Valor">
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
@@ -127,17 +127,17 @@
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">
-                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Chasis</label>
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Chasis/Serie</label>
                     <div class="col-6">
                         <input type="text" class="form-control form-control-sm" name="chasis" id="chasis" placeholder="Ingrese número chasis" value="@Model.Chasis">
                     </div>
                 </div>
-                <div class="form-group form-group-sm row">
+                @*<div class="form-group form-group-sm row">
                     <label for="serie" class="col-sm-3 col-form-label col-form-label-sm">Número Serie</label>
                     <div class="col-6">
                         <input type="text" class="form-control form-control-sm" name="serie" id="serie" placeholder="Ingrese número de serie del activo" value="@Model.Serie">
                     </div>
-                </div>
+                </div>*@
                 <div class="form-group form-group-sm row">
                     <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Patente</label>
                     <div class="col-6">
@@ -253,7 +253,7 @@
     }
     function GrabarActivo() {
         $(".numberMiles").each(function () {
-            $(this).val($(this).val().toString().replace(/[$,]/g, '').replace(/[$.]/g, ''))
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''));//.replace(/[$,]/g, '.')
         });
         
         if ($('#frmActivo').valid()) {
