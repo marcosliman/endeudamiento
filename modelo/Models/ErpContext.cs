@@ -25,6 +25,10 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.Familia> Familia { get; set; }
         public System.Data.Entity.DbSet<Local.Proveedor> Proveedor { get; set; }
 
+        public System.Data.Entity.DbSet<Local.MarcaProducto> MarcaProducto { get; set; }
+
+        public System.Data.Entity.DbSet<Local.ModeloProducto> ModeloProducto { get; set; }
+
         public System.Data.Entity.DbSet<Local.Licitacion> Licitacion { get; set; }
         public System.Data.Entity.DbSet<Local.TipoFinanciamiento> TipoFinanciamiento { get; set; }
         public System.Data.Entity.DbSet<Local.LicitacionActivo> LicitacionActivo { get; set; }

@@ -55,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Local\Activo.cs" />
+    <Compile Include="Models\Local\ModeloProducto.cs" />
+    <Compile Include="Models\Local\MarcaProducto.cs" />
     <Compile Include="Models\Local\MutuoDocumento.cs" />
     <Compile Include="Models\Local\Contrato_DetAmortizacion.cs" />
     <Compile Include="Models\Local\Contrato_Amortizacion.cs" />
@@ -126,6 +128,8 @@
     <Compile Include="ViewModel\ConsolidadoLeasingViewModel.cs" />
     <Compile Include="ViewModel\CatDoctoViewModel.cs" />
     <Compile Include="ViewModel\AmortizacionViewModel.cs" />
+    <Compile Include="ViewModel\ModeloProductoViewModel.cs" />
+    <Compile Include="ViewModel\MarcaProductoViewModel.cs" />
     <Compile Include="ViewModel\ReporteContratoViewModel.cs" />
     <Compile Include="ViewModel\MutuoViewModel.cs" />
     <Compile Include="ViewModel\MutuoDocumentoViewModel.cs" />

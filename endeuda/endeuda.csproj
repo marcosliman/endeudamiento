@@ -517,6 +517,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\ModeloProductoController.cs" />
+    <Compile Include="Controllers\MarcaProductoController.cs" />
     <Compile Include="Controllers\OutlookController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BeneficiarioController.cs" />
@@ -3241,6 +3243,10 @@
     <Content Include="Views\EmpresaAseguradora\Create.cshtml" />
     <Content Include="Views\EmpresaAseguradora\Index.cshtml" />
     <Content Include="Views\Outlook\Bandeja.cshtml" />
+    <Content Include="Views\MarcaProducto\Create.cshtml" />
+    <Content Include="Views\MarcaProducto\Index.cshtml" />
+    <Content Include="Views\ModeloProducto\Create.cshtml" />
+    <Content Include="Views\ModeloProducto\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
