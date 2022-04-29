@@ -13,5 +13,4 @@ namespace modelo.ViewModel
         public string Email { get; set; }
         public string Avatar { get; set; }
     }
-
 }

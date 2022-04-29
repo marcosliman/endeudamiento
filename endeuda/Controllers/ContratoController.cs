@@ -341,7 +341,7 @@ namespace tesoreria.Controllers
                                 }
                             }
 
-                            dato.FechaTermino = dato.FechaInicio.AddMonths(dato.Plazo);
+                            dato.FechaTermino = dato.FechaInicio.AddMonths(dato.Plazo-1);
                             if (dato.IdTipoContrato == (int)Helper.TipoContrato.Leasing) {
                                 dato.IdTipoFinanciamiento = (int)Helper.TipoFinanciamiento.Leasing;
                                 dato.IdTipoContrato = (int)Helper.TipoContrato.Leasing;
@@ -469,33 +469,37 @@ namespace tesoreria.Controllers
                                 }
                             }
 
-                            /*si es de oferta grabo los activos de la licitacion*/
-                            if (existeOferta == "S") {
-                                var activo = db.LicitacionActivo.Where(c => c.IdLicitacion == oferta.IdLicitacion).ToList();
-                                foreach (var ac in activo) {
-                                    var existeActivo = db.ContratoActivo.Where(c => c.IdContrato == idContrato && c.IdActivo == ac.IdActivo).FirstOrDefault();
-                                    if (existeActivo == null) {
-                                        var addActivo = new ContratoActivo();
-                                        addActivo.IdContrato = idContrato;
-                                        addActivo.IdActivo = ac.IdActivo;
-                                        db.ContratoActivo.Add(addActivo);
-                                        db.SaveChanges();
-
-                                        db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActEnContrato, ac.IdActivo);
-                                        db.SaveChanges();
-                                    }
-                                }
-
-                                db.Database.ExecuteSqlCommand("UPDATE Licitacion SET IdEstado = {0} WHERE IdLicitacion = {1}", (int)Helper.Estado.LicContrato, oferta.IdLicitacion);
-                                db.SaveChanges();
-
-                            }
-
-                            /*registro log contrato*/
-                            GrabaLogContrato(idContrato,1, textoLog);
+                            
 
                             if (swTran)
                             {
+                                /*si es de oferta grabo los activos de la licitacion*/
+                                if (existeOferta == "S")
+                                {
+                                    var activo = db.LicitacionActivo.Where(c => c.IdLicitacion == oferta.IdLicitacion).ToList();
+                                    foreach (var ac in activo)
+                                    {
+                                        var existeActivo = db.ContratoActivo.Where(c => c.IdContrato == idContrato && c.IdActivo == ac.IdActivo).FirstOrDefault();
+                                        if (existeActivo == null)
+                                        {
+                                            var addActivo = new ContratoActivo();
+                                            addActivo.IdContrato = idContrato;
+                                            addActivo.IdActivo = ac.IdActivo;
+                                            db.ContratoActivo.Add(addActivo);
+                                            db.SaveChanges();
+
+                                            db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActEnContrato, ac.IdActivo);
+                                            db.SaveChanges();
+                                        }
+                                    }
+
+                                    db.Database.ExecuteSqlCommand("UPDATE Licitacion SET IdEstado = {0} WHERE IdLicitacion = {1}", (int)Helper.Estado.LicContrato, oferta.IdLicitacion);
+                                    db.SaveChanges();
+
+                                }
+
+                                /*registro log contrato*/
+                                GrabaLogContrato(idContrato, 1, textoLog);
                                 dbContextTransaction.Commit();
                                 showMessageString = new { Estado = 0, Mensaje = mensaje, idContrato = idContrato };
                             }

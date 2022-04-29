@@ -15,7 +15,6 @@
                         <thead class="thead-light">
 
                             <tr>
-                                <th>CortoPlazo</th>
                                 <th>FechaPago</th>
                                 <th>Periodo</th>
                                 <th>Cuota</th>
@@ -133,7 +132,7 @@
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [4,5,6,7],
+                    targets: [3,4,5,6],
                     render: function (data) {
                         var numFormt = "";
                         if (data != null) {
@@ -144,7 +143,7 @@
                     }
                 },
                 {
-                    targets: [1],
+                    targets: [0],
                     render: function (data) {
                         var fecha = DateDatatable(data);
                         return fecha;
@@ -152,7 +151,6 @@
                 }
             ],
             columns: [
-                { "data": "CortoPlazo" },
                 { "data": "FechaPago" },
                 { "data": "Periodo" },
                 { "data": "Cuota" },

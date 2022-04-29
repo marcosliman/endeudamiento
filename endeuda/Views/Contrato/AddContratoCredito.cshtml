@@ -59,10 +59,10 @@
                     }
 
                 </div>
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Sustento</label>
+                @*<label for="inputEmail3" class="col-sm-2 col-form-label">Sustento</label>
                 <div class="col-sm-2">
                     <textarea name="motivoEleccion" id="motivoEleccion" class="form-control form-control-sm">@Model.MotivoEleccion</textarea>
-                </div>
+                </div>*@
             </div>
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Monto Contrato</label>
@@ -135,7 +135,7 @@
             <div class="form-group row">
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
                 <div class="col-sm-2">
-                    <input type="text" class="form-control form-control-sm" name="plazo" id="plazo" value="@Model.Plazo" @disabled />
+                    <input type="text" class="form-control form-control-sm" name="plazo" id="plazo" min="1" value="@Model.Plazo" @disabled />
                 </div>
                 <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
                 <div class="col-sm-2">

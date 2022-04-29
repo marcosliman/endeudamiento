@@ -248,7 +248,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalDetalleDeuda" onclick="VerDeuda(' + o.IdMutuo + ')"><i class="far fa-eye"></i></button> ';
+                        boton = '<button class="btn btn-info btn-sm" title="Detalle Deuda" type="button" data-toggle="modal" data-target="#ModalDetalleDeuda" onclick="VerDeuda(' + o.IdMutuo + ')"><i class="far fa-eye"></i></button> ';
                         return boton;
                     }
                 },
@@ -258,7 +258,7 @@
                     "mRender": function (o, type, row) {
                         var boton = '';
                         if(o.PuedeProcesar){
-                            boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalNuevoPrestamo" onclick="NuevoCredito(' + o.IdMutuo + ')"><i class="fas fa-credit-card"></i></button> ';
+                            boton = '<button class="btn btn-info btn-sm" title="Nuevo Préstamo" type="button" data-toggle="modal" data-target="#ModalNuevoPrestamo" onclick="NuevoCredito(' + o.IdMutuo + ')"><i class="fas fa-credit-card"></i></button> ';
                          }
                         return boton;
                     }
@@ -269,7 +269,7 @@
                     "mRender": function (o, type, row) {
                         var boton = '';
                         if(o.PuedeProcesar){
-                            boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalRegistrarAbono" onclick="Abono(' + o.IdMutuo + ')"><i class="fas fa-cash-register"></i></button> ';
+                            boton = '<button class="btn btn-info btn-sm" title="Abono Préstamo" type="button" data-toggle="modal" data-target="#ModalRegistrarAbono" onclick="Abono(' + o.IdMutuo + ')"><i class="fas fa-cash-register"></i></button> ';
                          }
                         return boton;
                     }
@@ -279,7 +279,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        boton = '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalProyectarAbono" onclick="Proyeccion(' + o.IdMutuo + ')"><i class="fas fa-calculator"></i></button> ';
+                        boton = '<button class="btn btn-info btn-sm" title="Proyección" type="button" data-toggle="modal" data-target="#ModalProyectarAbono" onclick="Proyeccion(' + o.IdMutuo + ')"><i class="fas fa-calculator"></i></button> ';
                         return boton;
                     }
                 },
