@@ -2,10 +2,11 @@
 @{
     ViewBag.Title = "Registrar Contrato Leasing";
     Layout = "~/Views/Shared/_Popup.cshtml";
+    var tipoContrato = (ViewBag.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing) ? "Leasing" : "de Crédito";
 }
 
 <div class="alert alert-success">
-    <h5><i class="icon fas fa-cloud"></i>Documentos Contrato Leasing</h5>
+    <h5><i class="icon fas fa-cloud"></i>Documentos Contrato @tipoContrato</h5>
     Aquí puede adjuntar los documentos para cada uno de los activos.
 </div>
 @foreach (var doc in Model as List<modelo.ViewModel.ContratoActivoViewModel>)

@@ -21,7 +21,9 @@ namespace modelo.ViewModel
         public string Familia { get; set; }
         public string Descripcion { get; set; }
         public string Capacidad { get; set; }
+        public int? IdMarcaProducto { get; set; }
         public string Marca { get; set; }
+        public int? IdModeloProducto { get; set; }
         public string Modelo { get; set; }
         public int? Anio { get; set; }
         public string Grupo { get; set; }

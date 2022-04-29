@@ -778,6 +778,7 @@ namespace tesoreria.Controllers
                     registro.IdEstado = 0;
                     registro.ExisteContrato = "N";
                     registro.TituloBoton = "Grabar Contrato";
+                    registro.IdTipoMoneda = 1;
                 }
 
                 var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
@@ -1379,9 +1380,10 @@ namespace tesoreria.Controllers
                                                     NombreTipoDocumento = t.NombreTipoDocumento,
                                                     UrlDocumento = d.UrlDocumento,
                                                     NombreOriginal = d.NombreOriginal
-                                                }).ToList()
+                                                }).ToList(),
+                                    IdTipoContrato=con.IdTipoContrato
                                 }).AsEnumerable().ToList();
-
+                
                 var tipoDocumento = (from e in db.TipoDocumento
                              where e.Activo == true && e.IdCategoriaDocumento == (int)Helper.CategoriaDocumento.ActivoContrato
                              select new RetornoGenerico { Id = e.IdTipoDocumento, Nombre = e.NombreTipoDocumento }).OrderBy(c => c.Id).ToList();
@@ -1392,8 +1394,10 @@ namespace tesoreria.Controllers
                 ViewData["puedeActivar"] = "N";
                 ViewData["urlRetorno"] = "/Contrato/ListaContratoCredito";
                 var conActivo = db.Contrato.Where(c => c.IdContrato == idContrato).FirstOrDefault();
+                ViewBag.IdTipoContrato = 0;
                 if (conActivo != null) {
-                    if(conActivo.IdEstado == (int)Helper.Estado.ConCreado) { 
+                    ViewBag.IdTipoContrato = conActivo.IdTipoContrato;
+                    if (conActivo.IdEstado == (int)Helper.Estado.ConCreado) { 
                         ViewData["puedeActivar"] = "S";
                     }
                     if (conActivo.IdTipoContrato == (int)Helper.TipoContrato.Leasing) {

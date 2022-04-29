@@ -142,7 +142,9 @@ namespace tesoreria.Controllers
                                     Grupo=ac.Grupo,
                                     SubGrupo=ac.SubGrupo,
                                     IdEstado=ac.IdEstado,
-                                    Activo=ac
+                                    Activo=ac,
+                                    IdMarcaProducto=ac.IdMarcaProducto,
+                                    IdModeloProducto=ac.IdModeloProducto
                                 }).FirstOrDefault();
 
                 if (registro == null) {
@@ -152,6 +154,8 @@ namespace tesoreria.Controllers
                     registro.IdEmpresa = 0;
                     registro.TituloBoton = "Grabar";
                     registro.IdCuenta = "";
+                    registro.IdMarcaProducto = 0;
+                    registro.IdModeloProducto = 0;
                 }
                 else
                 {
@@ -193,7 +197,16 @@ namespace tesoreria.Controllers
 
                 SelectList listaProveedor = new SelectList(proveedores.OrderBy(c => c.Nombre), "ValorString", "Nombre");
                 ViewData["listaProveedor"] = listaProveedor;
-              
+
+                //marca y modelo
+                var marcas = (from t in db.MarcaProducto
+                           select new RetornoGenerico { Id = t.IdMarcaProducto, Nombre = t.DescMarcaProducto }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaMarcas = new SelectList(marcas.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdMarcaProducto);
+                ViewData["listaMarcas"] = listaMarcas;
+                var modelos = (from t in db.ModeloProducto
+                              select new RetornoGenerico { Id = t.IdModeloProducto, Nombre = t.DescModeloProducto }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaModelos = new SelectList(modelos.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdModeloProducto);
+                ViewData["listaModelos"] = listaModelos;
                 return View(registro);
             }
         }
@@ -214,12 +227,13 @@ namespace tesoreria.Controllers
             }
             else
             {
-
+                var marca = db.MarcaProducto.Find(datos.IdMarcaProducto);
+                var modelo = db.ModeloProducto.Find(datos.IdModeloProducto);
                 datos.CodSoftland = validarDatos.ValidaStr(datos.CodSoftland);
                 datos.Descripcion = validarDatos.ValidaStr(datos.Descripcion);
                 datos.Capacidad = validarDatos.ValidaStr(datos.Capacidad);
-                datos.Marca = validarDatos.ValidaStr(datos.Marca);
-                datos.Modelo = validarDatos.ValidaStr(datos.Modelo);
+                datos.Marca = validarDatos.ValidaStr((marca!=null)?marca.DescMarcaProducto:"");
+                datos.Modelo = validarDatos.ValidaStr((modelo!=null)?modelo.DescModeloProducto:"");
                 datos.Grupo = validarDatos.ValidaStr(datos.Grupo);
                 datos.SubGrupo = validarDatos.ValidaStr(datos.SubGrupo);
                 datos.Motor = validarDatos.ValidaStr(datos.Motor);
@@ -228,7 +242,7 @@ namespace tesoreria.Controllers
                 datos.NumeroFactura = validarDatos.ValidaStr(datos.NumeroFactura);
                 datos.Patente = validarDatos.ValidaStr(datos.Patente);
                 datos.Glosa = validarDatos.ValidaStr(datos.Glosa);
-
+                
 
                 using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
@@ -237,11 +251,7 @@ namespace tesoreria.Controllers
                         var mensaje = "";
                         var idActivo = 0;
                         var activo = db.Activo.Where(c => c.IdActivo == datos.IdActivo).FirstOrDefault();
-
                         var estado = (int)Helper.Estado.ActCreado;
-
-
-
                         if (activo != null)
                         {
 
@@ -272,6 +282,8 @@ namespace tesoreria.Controllers
                             activo.NumeroFactura = datos.NumeroFactura;
                             activo.Patente = datos.Patente;
                             activo.Glosa = datos.Glosa;
+                            activo.IdMarcaProducto = datos.IdMarcaProducto;
+                            activo.IdModeloProducto = datos.IdModeloProducto;
                             if (activo.IdEstado == 3)
                             {
                                 activo.IdEstado = estado;

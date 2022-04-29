@@ -18,6 +18,7 @@ namespace modelo.ViewModel
         public string Descripcion { get; set; }
         public List<ContratoDocumentoViewModel> Archivos { get; set; }
         public int IdEstado { get; set; }
+        public int IdTipoContrato { get; set; }
     }
 
 }

@@ -85,7 +85,7 @@
                 </div>
 
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivo" data-order='[[ 2, "asc" ]]'>
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivo" data-order='[[ 3, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort noExport" width="2%"><i class="fa fa-user-edit text-grey"></i></th>
@@ -93,8 +93,7 @@
                                 <th class="no-sort noExport" width="2%"><i class="fa fa-sync"></i></th>
                                 <th>Empresa</th>
                                 <th>Num. Interno</th>
-                                <th>Cod. Softland</th>
-                                <th>Capacidad</th>
+                                <th>Cod. Softland</th>                               
                                 <th>Familia</th>
                                 <th>Descripción</th>
                                 <th>Marca</th>
@@ -214,16 +213,20 @@
                 },
                 "dataSrc": ""
             },
-            /*columnDefs: [
+            columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [5, 6],
-                    render: function (data) {
-                        var fecha = DateDatatable(data);
-                        return fecha;
+                    targets: [13],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
                     }
                 }
-            ],*/
+            ],
             columns: [
                 {
                     "mData": null,
@@ -261,7 +264,7 @@
                 { "data": "RazonSocial" },
                 { "data": "NumeroInterno" },
                 { "data": "CodSoftland" },
-                { "data": "Capacidad" },
+                //{ "data": "Capacidad" },
                 { "data": "Familia" },
                 { "data": "Descripcion" },
                 { "data": "Marca" },
