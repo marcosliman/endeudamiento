@@ -19,6 +19,7 @@ namespace modelo.ViewModel
         public List<ContratoDocumentoViewModel> Archivos { get; set; }
         public int IdEstado { get; set; }
         public int IdTipoContrato { get; set; }
+        public double? Valor { get; set; }
     }
 
 }

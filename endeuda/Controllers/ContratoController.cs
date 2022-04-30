@@ -1371,6 +1371,7 @@ namespace tesoreria.Controllers
                                     IdActivo = ac.IdActivo,
                                     NumeroInterno = ac.NumeroInterno,
                                     CodSoftland = ac.CodSoftland,
+                                    Valor = ac.Valor,
                                     Familia = (ac.Familia.NombreFamilia != null) ? ac.Familia.NombreFamilia : string.Empty,
                                     Archivos = (from d in db.ContratoActivoDocumento
                                                 join t in db.TipoDocumento on d.IdTipoDocumento equals t.IdTipoDocumento
@@ -1391,11 +1392,29 @@ namespace tesoreria.Controllers
                 ViewData["listaTipoDocumento"] = tipoDocumento;
 
                 /*verificacion activar contrato*/
+                double sumaActivo = 0;
+                double sumaAmortizacion = 0;
+                if (registro != null)
+                {
+                    sumaActivo = Convert.ToDouble(registro.Sum(c => c.Valor));
+                }
                 ViewData["puedeActivar"] = "N";
                 ViewData["urlRetorno"] = "/Contrato/ListaContratoCredito";
                 var conActivo = db.Contrato.Where(c => c.IdContrato == idContrato).FirstOrDefault();
                 ViewBag.IdTipoContrato = 0;
                 if (conActivo != null) {
+                    var amortizacion = (from a in db.Contrato_Amortizacion
+                                        join de in db.Contrato_DetAmortizacion on a.IdContratoAmortizacion equals de.IdContratoAmortizacion
+                                        select new { de.Cuota }).ToList();
+                    if (amortizacion != null)
+                    {
+                        sumaAmortizacion = Convert.ToDouble(amortizacion.Sum(c => c.Cuota));
+                    }
+
+                    ViewBag.SumaActivo = sumaActivo;
+                    ViewBag.SumaAmortizacion = sumaAmortizacion;
+                    ViewBag.MontoContrato = conActivo.Monto;
+
                     ViewBag.IdTipoContrato = conActivo.IdTipoContrato;
                     if (conActivo.IdEstado == (int)Helper.Estado.ConCreado) { 
                         ViewData["puedeActivar"] = "S";

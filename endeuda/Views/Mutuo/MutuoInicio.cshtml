@@ -136,7 +136,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <figure class="highcharts-figure" ">
+                <figure class="highcharts-figure">
                     <div id="chartEstadistico"></div>
 
                 </figure>
@@ -266,7 +266,7 @@
 
                 datCategoria = "[" + datCategoria.substring(0, datCategoria.length - 2) + "]";
                 var categoria = JSON.parse(datCategoria)
-                console.log(categoria)
+
                 CreateChartDeuda(categoria); // Create Chart using the defined arrays
             },
             failure: function (data) {

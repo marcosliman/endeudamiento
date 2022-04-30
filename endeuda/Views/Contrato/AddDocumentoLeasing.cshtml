@@ -3,6 +3,10 @@
     ViewBag.Title = "Registrar Contrato Leasing";
     Layout = "~/Views/Shared/_Popup.cshtml";
     var tipoContrato = (ViewBag.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing) ? "Leasing" : "de Crédito";
+
+    var montoContrato = ViewBag.MontoContrato;
+    var sumaActivo = ViewBag.SumaActivo;
+    var sumaAmortizacion = ViewBag.SumaAmortizacion;
 }
 
 <div class="alert alert-success">
@@ -90,12 +94,13 @@
         </div>
     </div>
 }
-<div class="card-footer">
-    @if (ViewData["puedeActivar"] == "S")
-    {
-        <button type="button" onclick="ConfirmaActivar()" name="btnCrear" id="btnCrear" class="btn btn-success btn-sm float-right">Activar Contrato</button>
-    }
-</div>
+    <div class="card-footer">
+
+        @if (ViewData["puedeActivar"] == "S")
+        {
+            <button type="button" onclick="ConfirmaActivar()" name="btnCrear" id="btnCrear" class="btn btn-success btn-sm float-right">Activar Contrato</button>
+        }
+    </div>
 
 <div class="modal fade" id="ConfirmActivar" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -104,13 +109,37 @@
                 <h4 class="modal-title">Confirmación Activación Contrato</h4>
             </div>
             <div class="modal-body">
-                <label>¿Está seguro de activar el CONTRATO seleccionado?</label>
+                @{
+                    var montoValido = "S";
+                    if (sumaActivo != montoContrato)
+                    {
+                        montoValido = "N";
+                        <label class="text-danger">La suma de los valores de los activos @sumaActivo es distinto del monto del contrato @montoContrato, debe corregir esta situación para poder activar el contrato</label>
+                    }
+                    if (sumaAmortizacion != montoContrato)
+                    {
+                        montoValido = "N";
+                        <label class="text-danger">La suma de las cuotas de la amortización @sumaAmortizacion es distinto del monto del contrato @montoContrato, debe corregir esta situación para poder activar el contrato</label>
+                    }
+                    if (montoValido == "S")
+                    {
+                        <label>¿Está seguro de activar el CONTRATO seleccionado?</label>
+                    }
+                }
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
-                <a class="btn btn-danger" data-dismiss="modal">
-                    No Acepto
-                </a>
+                @if (montoValido == "S")
+                {
+                    <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
+                    <a class="btn btn-danger" data-dismiss="modal">
+                        No Acepto
+                    </a>
+                }
+                else
+                {
+                    <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                }
+
             </div>
         </div>
     </div>
