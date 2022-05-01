@@ -158,7 +158,7 @@
                     </div>
                 }
                 <div class="table-responsive mt-1">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaContratoActivo" data-order='[[ 0, "asc" ]]'>
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaContratoActivo" data-order='[[ 1, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
                                 <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
@@ -166,7 +166,7 @@
                                 <th>Familia</th>
                                 <th>Descripcion</th>
                                 <th>Clasif. Cuenta</th>
-                                <th>Monto</th>
+                                <th>Valor Ad.</th>
                                 <th>Modelo</th>
                                 <th>Año</th>
                                 <th>Marca</th>
@@ -190,7 +190,7 @@
 </form>
 
 <div class="modal fade" id="ModalAsociarActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div id="datosActivo"></div>
         </div>
@@ -370,7 +370,20 @@
                 },
                 "dataSrc": ""
             },
-
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [5],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
             columns: [
                 {
                     "mData": null,

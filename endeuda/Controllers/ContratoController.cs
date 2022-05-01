@@ -874,7 +874,7 @@ namespace tesoreria.Controllers
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
                                 Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
-                                NombreCuenta = "",
+                                NombreCuenta = ac.IdCuenta,
                                 Descripcion = ac.Descripcion,
                                 Marca = ac.Marca,
                                 Modelo = ac.Modelo,
@@ -882,7 +882,7 @@ namespace tesoreria.Controllers
                                 Chasis = ac.Chasis,
                                 Anio = ac.Anio,
                                 Valor = ac.Valor,
-                                NombreProveedor = "",//(prv != null) ? prv.NombreProveedor : string.Empty,
+                                NombreProveedor = ac.NombreProveedor,
                                 NumeroFactura = ac.NumeroFactura,
                                 Patente = ac.Patente,
                                 Editable = (con.IdLicitacionOferta != null) ? false : true
