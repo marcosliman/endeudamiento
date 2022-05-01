@@ -223,7 +223,7 @@ namespace tesoreria.Controllers
                              from l_cda in t_cda.DefaultIfEmpty()
                              select new
                              {
-                                 Periodo = l_cda.Periodo,
+                                 Periodo = (l_cda!=null)?l_cda.Periodo:(int?)null,
                                  IdContrato = c.IdContrato,
                                  NroContrato = c.NumeroContrato,
                                  IdBanco = b.IdBanco,
@@ -231,11 +231,11 @@ namespace tesoreria.Controllers
                                  IdEmpresa = c.IdEmpresa,
                                  Empresa=e.RazonSocial,
                                  Monto = c.Monto,
-                                 FechaPago=l_cda.FechaPago,
-                                 SaldoInsoluto = l_cda.Saldo_Insoluto,
-                                 Cuota = l_cda.Cuota,
-                                 Mes=l_cda.Mes,
-                                 TipoPago="Tipo Pago",
+                                 FechaPago= (l_cda != null) ? l_cda.FechaPago : (DateTime?)null,
+                                 SaldoInsoluto = (l_cda != null) ? l_cda.Saldo_Insoluto : (double?)null,
+                                 Cuota = (l_cda != null) ? l_cda.Cuota : (double?)null,
+                                 Mes= (l_cda != null) ? l_cda.IdMes : (int?)null,
+                                 TipoPago ="Tipo Pago",
                                  ComprobanteEgreso="Comprobante Egreso",
                              }).Distinct().ToList();
 
