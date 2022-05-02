@@ -67,5 +67,6 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.MutuoAbono> MutuoAbono { get; set; }
 
         public System.Data.Entity.DbSet<Local.Mes> Mes { get; set; }
+        public System.Data.Entity.DbSet<Local.ComprobanteDetAmortizacion> ComprobanteDetAmortizacion { get; set; }
     }
 }

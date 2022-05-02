@@ -1,0 +1,214 @@
+﻿@model modelo.ViewModel.ComprobanteEgresoViewModel
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+@if (Model.cwcpbte != null)
+{
+
+    ViewBag.Title = "Detalle Pago";
+    double sumaDebe = 0;
+    double sumaHaber = 0;
+    var tipoCpbte = (Model.cwcpbte.CpbTip == "I") ? "INGRESO" : ((Model.cwcpbte.CpbTip == "E") ? "EGRESO" : "TRASPASO");
+    var estado = (Model.cwcpbte.CpbEst == "V") ? "VIGENTE" : ((Model.cwcpbte.CpbEst == "N") ? "NULO" : "PENDIENTE");
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">COMPROBANTE DE @tipoCpbte</h5>
+        <button type="button" class="close" onclick="CerrarModalhijaCE()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
+    <div class="modal fade" id="modal-comprobante" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div id="datosComprobante"></div>
+            </div>
+        </div>
+    </div>
+    <div class="m-2 cuerpoPDF" id="paraPrint">
+        <div class="card">
+            <div class="card-body">
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <th width="34%" class="col-auto">
+                                @Model.soempre.NomB<br />
+                                @Model.soempre.Dire<br />
+                                @Model.soempre.Giro<br />
+                                @Model.soempre.Ciud<br />
+                                @Model.soempre.Comu<br />
+                                @Model.soempre.Fono
+                            </th>
+                            <th width="33%" class="col-auto">
+                                <img src="~/img/logo/logo1.png" width="150" />
+                            </th>
+                            <th width="33%" class="col-auto">
+                                <table width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th align="right" class="text-right">Cpte:</th>
+                                            <td align="left" class="text-left">@Model.NroComprobanteEgreso</td>
+                                        </tr>
+                                        <tr>
+                                            <th align="right" class="text-right">Área de negocios:</th>
+                                            <td align="left" class="text-left">@Model.AreaNegocio</td>
+                                        </tr>
+                                        <tr>
+                                            <th align="right" class="text-right">Tipo:</th>
+                                            <td align="left" class="text-left">@tipoCpbte</td>
+                                        </tr>
+                                        <tr>
+                                            <th align="right" class="text-right">Fecha:</th>
+                                            <td align="left" class="text-left">@(((DateTime)Model.CpbFec).ToString("dd/MM/yyyy"))</td>
+                                        </tr>
+                                        <tr>
+                                            <th align="right" class="text-right">Estado:</th>
+                                            <td align="left" class="text-left">@estado</td>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+
+                <dl class="row">
+                    <dt class="col-sm-4">
+                    </dt>
+                    <dd class="col-sm-4 text-center font-weight-bold"><u>COMPROBANTE EGRESO</u><br /><em class="small"><strong>@Model.cwcpbte.CpbGlo</strong></em></dd>
+                    <dt class="col-sm-4">
+
+                    </dt>
+                </dl>
+                <table class="table table-hover dataTable dtr-inline table-sm small" width="100%" id="grillaEgresosModal" data-order='[[ 1, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>CUENTA</th>
+                            <th>DESCRIPCION</th>
+                            <th>C.COSTO</th>
+                            <th>AUXILIAR</th>
+                            <th>TD</th>
+                            <th>N°DOCTO</th>
+                            <th>DR</th>
+                            <th>N°REFER.</th>
+                            <th class="text-right">DEBE</th>
+                            <th class="text-right">HABER</th>
+                            <th>DESCRIPCION</th>
+                        </tr>
+                    </thead>
+                    <tbody id="indexTbody">
+                        @if (Model.detalleComprobante != null)
+                        {
+                            foreach (var item in Model.detalleComprobante)
+                            {
+                                sumaDebe = (item.MovDebe == null) ? sumaDebe + 0 : sumaDebe + (double)item.MovDebe;
+                                sumaHaber = (item.MovHaber == null) ? sumaHaber + 0 : sumaHaber + (double)item.MovHaber;
+                                <tr>
+                                    <td>@item.PctCod</td>
+                                    <td>@item.PCDESC</td>
+                                    <td></td>
+                                    <td>@item.RutAux</td>
+                                    <td>@item.TtdCod</td>
+                                    <td>@item.NumDoc</td>
+                                    <td>@item.MovTipDocRef</td>
+                                    <td>@item.MovNumDocRef</td>
+                                    <td class="text-right">@(String.Format("{0:N0}", item.MovDebe))</td>
+                                    <td class="text-right">@(String.Format("{0:N0}", item.MovHaber))</td>
+                                    <td>@item.MovGlosa</td>
+                                </tr>
+
+                            }
+                        }
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th colspan="3">TOTAL GENERAL</th>
+                            <th class="text-right">@(String.Format("{0:N0}", sumaDebe))</th>
+                            <th class="text-right">@(String.Format("{0:N0}", sumaHaber))</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+                <br /><br /><br /><br />
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <th class="border-bottom border-dark col-auto" width="30%"></th>
+                            <th width="50%" class="col-auto" style="width:40%">&nbsp;</th>
+                            <th class="border-bottom border-dark" width="30%" class="col-auto"></th>
+                        </tr>
+                        <tr>
+                            <th align="center" class="text-center">@((Model.wisusuarios != null) ? Model.wisusuarios.Nombre : "")</th>
+                            <th></th>
+                            <th align="center" class="text-center">Encargado Dpto. Contabilidad</th>
+                        </tr>
+                    </thead>
+                </table>
+                <br />
+                <table width="100%">
+                    <thead>
+                        <tr>
+                            <th width="33%" class="col-auto"></th>
+                            <th width="33%" class="col-auto"></th>
+                            <th width="33%" class="col-auto text-right small">@DateTime.Now.ToString("dddd"), @DateTime.Now.Day de @DateTime.Now.ToString("MMMM") de @DateTime.Now.ToString("Y")</th>
+                        </tr>
+
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+    $(document).ready(function () {
+        window.top.esconderCargando();
+        var deModal = "@ViewBag.deModal";
+        if (deModal == "True") {
+            $('#modal-comprobanteModal').on('hidden.bs.modal', function (e) {
+                $('body').addClass("modal-open")
+            });
+            $('#modal-comprobante').on('hidden.bs.modal', function (e) {
+                $('body').addClass("modal-open")
+            });
+        }
+
+    });
+
+    function Imprimir() {
+        var mode ="iframe";
+        var close;
+        var extraCss;
+        var print = "";
+        var keepAttr;
+        var headElements = '<meta charset="utf-8" />';
+        var options = { mode: mode, popClose: close, extraCss: extraCss, retainAttr: keepAttr, extraHead: headElements };
+        $('#paraPrint').printArea(options);
+    }
+    </script>
+
+}
+else
+{
+    <div class="modal-body">
+        <p>Comprobante no exise en Softland</p>
+    </div>
+}
+<script>
+    function CerrarModalhijaCE() {
+        $('#modal-comprobante').modal('hide');
+        $('#modal-comprobanteModal').modal('hide');
+    }
+</script>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary btn-sm" onclick="Imprimir()"><i class="fa fa-print"></i> Imprimir</button>
+    <button type="button" class="btn btn-secondary btn-sm" onclick="CerrarModalhijaCE()">Cerrar</button>
+</div>

@@ -1,0 +1,271 @@
+﻿@model modelo.Models.Local.Contrato
+@{
+    ViewBag.Title = (Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing) ? "Amortizaciones de Leasing" : "Amortizaciones de Otros Créditos";
+    var NombreMenu = (Model.IdTipoContrato==(int)tesoreria.Helper.TipoContrato.Leasing)?"Leasing": "OtrosCreditos";
+    var urlVolver= (Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing) ? "/Amortizacion/Leasing" : "OtrosCreditos";
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+    var TieneCrear = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Crear);
+    var TieneEditar = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Editar);
+    var TieneEliminar = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Eliminar);
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item"><a href="@urlVolver">Amortización</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Contrato Nro. @Model.NumeroContrato</li>
+    </ol>
+</div>
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title">Datos del Contrato</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body pb-0">
+        <h5 class="text-bold text-blue">Nro. Contrato @Model.NumeroContrato</h5>
+
+        <div class="row">
+            <div class=" col-md-10">
+                <div class="form-group form-group-sm row">
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Empresa</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @Model.Empresa.RazonSocial
+                    </div>
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Banco</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @Model.Banco.NombreBanco
+                    </div>
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Monto</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @String.Format("{0:N2}", Model.Monto)
+                    </div>
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Plazo Meses</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @Model.Plazo
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Tasa Mensual</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @String.Format("{0:N2}", Model.TasaMensual)
+                    </div>
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Tasa Anual</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @String.Format("{0:N2}", Model.TasaAnual)
+                    </div>
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Inicio</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @Model.FechaInicio.ToString("dd-MM-yyyy")
+                    </div>
+                    <label class="col-sm-1 col-form-label col-form-label-sm">Término</label>
+                    <div class="col-sm-2 col-form-label-sm" style="color:blue;font-size:10px;">
+                        @Model.FechaTermino.ToString("dd-MM-yyyy")
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2 justify-content-end text-right">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="location.href='@urlVolver'"><i class="fa fa-undo"></i> Volver</button>
+                
+            </div>
+        </div>
+
+
+    </div>
+</div>
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title"><b>Detalle de Cuotas</b></h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaParcela" data-order='[[ 1, "asc" ]]'>
+                <thead class="thead-light">
+
+                    <tr>
+                        <th>FechaPago</th>
+                        <th>Periodo</th>
+                        <th>Cuota</th>
+                        <th>IvaDiferido</th>
+                        <th>Intereses</th>
+                        <th>Amortizacion</th>
+                        <th>Saldo_Insoluto</th>
+                        <th class="no-sort">Cpbte. Egreso</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-AsocCpbte" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="modal-AsocCpbte" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content" id="datosAsociar">
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        AbrirMenu("@NombreMenu");
+        RefreshLista();
+    });
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+    function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            extend: 'excelHtml5',
+            title: '',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >=1) ?
+                            texto.replace(/[$,]/g, '').replace(/[$.]/g, '').replace(/[UF.]/g, '') :
+                            texto;
+                    }
+                }
+            }
+        };
+        var btnImport = [
+            $.extend(true, {}, buttonCommon, {
+                filename: "AmortizacionContrato_@Model.IdContrato"
+            })
+        ];
+        var table = $('#grillaParcela').DataTable({
+            buttons: btnImport,
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Contrato/DetAmortizacion_Read/',
+                "data": function (d) {
+                    d.IdContrato = @Model.IdContrato;
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [3,4,5,6],
+                    render: function (data) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = "$" + SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                },
+                {
+                    targets: [0],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "FechaPago" },
+                { "data": "Periodo" },
+                { "data": "Cuota" },
+                { "data": "IvaDiferido" },
+                { "data": "Intereses" },
+                { "data": "Amortizacion" },
+                { "data": "Saldo_Insoluto" },
+                {
+                    mData: null,
+                    mRender: function (data, type, row) {
+                        var boton = '';
+                        var TieneCrear = "@TieneCrear";
+                        var tieneCpbtes = row.Cpbtes.length;
+                        console.log(tieneCpbtes)
+                        if (TieneCrear == "True") {
+                            
+                            if (tieneCpbtes > 0) {
+                                var guias = "<ul class='list-unstyled'>";
+                                for (i = 0; i < row.Cpbtes.length; i++) {
+                                    guias = guias + '<li><a href="JavaScript:ModalComprobante(\'' + row.Cpbtes[i].CpbNum + '\',\'' + row.Cpbtes[i].CpbAno + '\',\'' + row.Cpbtes[i].BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + row.Cpbtes[i].CpbNum + '</a></li>';
+                                }
+                                guias = guias + "</ul>";
+                                boton = guias;
+                                boton += '<a class="btn-warning btn-sm text-nowrap ml-1" href="JavaScript:AsociarCpbteManual(\'' + row.IdContratoDetAmortizacion + '\')" title="Cambiar Comprobante Egreso"><i class="fa fa-edit"></i> Cambiar Cpbte.</a>';
+                            }
+                            else {
+                                //boton += '<a class="btn-primary btn-sm text-nowrap ml-1" href="JavaScript:GenerarCpbte(\'' + row.IdMovDetalleCuota + '\')" title="Generar Comprobante Ingreso"><i class="fa fa-plus"></i> Generar Cpbte.</a>';
+                                boton += '<a class="btn-info btn-sm text-nowrap ml-1" href="JavaScript:AsociarCpbteManual(\'' + row.IdContratoDetAmortizacion + '\')" title="Asociar Comprobante Egreso"><i class="fa fa-plus"></i> Asociar Cpbte.</a>';
+                            }
+                        }
+                        else {
+                            if (tieneCpbtes>0) {
+                                var guias = "<ul class='list-unstyled'>";
+                                for (i = 0; i < row.Cpbtes.length; i++) {
+                                    guias = guias + '<li><a href="JavaScript:ModalComprobante(\'' + row.Cpbtes[i].CpbNum + '\',\'' + row.Cpbtes[i].CpbAno + '\',\'' + row.Cpbtes[i].BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + row.Cpbtes[i].CpbNum + '</a></li>';
+                                }
+                                guias = guias + "</ul>";
+                                boton = guias;
+                            }
+                        }
+                        return boton;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+    function ModalComprobante(CpbNum, CpbAno, baseSoftland) {
+        var tmpUrl = "/CpteSoftland/ComprobanteSoftland";
+        $("#datosComprobante").empty();
+        $('#modal-comprobante').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { CpbNum: CpbNum, CpbAno: CpbAno, baseSoftland: baseSoftland, deModal: false },
+            beforeSend: function () {
+                $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosComprobante").empty();
+                $("#datosComprobante").html(data);
+                esconderCargando();
+            }
+        });
+    }
+    function AsociarCpbteManual(IdContratoDetAmortizacion) {
+        $('#modal-AsocCpbte').modal('show');
+        $.ajax({
+            url: "/Amortizacion/AsociarCpbteEgreso",
+            type: "Post",
+            data: { IdContratoDetAmortizacion: IdContratoDetAmortizacion },
+            beforeSend: function () {
+                $("#datosAsociar").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosAsociar").empty();
+                $("#datosAsociar").html(data);
+            }
+        });
+    }
+</script>

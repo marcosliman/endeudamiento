@@ -39,5 +39,11 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Softland.awfichaac> awfichaac { get; set; }
         public System.Data.Entity.DbSet<Softland.awtgrup> awtgrup { get; set; }
         public System.Data.Entity.DbSet<Softland.awtsubgr> awtsubgr { get; set; }
+        //comprobante
+        public System.Data.Entity.DbSet<Softland.cwcpbte> cwcpbte { get; set; }
+        public System.Data.Entity.DbSet<Softland.cwmovim> cwmovim { get; set; }
+        public System.Data.Entity.DbSet<Softland.soempre> soempre { get; set; }
+        public System.Data.Entity.DbSet<Softland.wisusuarios> wisusuarios { get; set; }
+        public System.Data.Entity.DbSet<Softland.cwtaren> cwtaren { get; set; }
     }
 }

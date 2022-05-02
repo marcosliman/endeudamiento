@@ -1180,8 +1180,9 @@ namespace tesoreria.Controllers
             var registro = (from ca in db.Contrato_Amortizacion.ToList()
                             join d in db.Contrato_DetAmortizacion.ToList() on ca.IdContratoAmortizacion equals d.IdContratoAmortizacion
                             where ca.IdContrato == idContrato
-                            select new AmortizacionViewModel
+                            select new
                             {
+                                d.IdContratoDetAmortizacion,
                                 Anio = 0,
                                 NombreMes = (d.Mes != null) ? d.Mes.NombreMes : string.Empty,
                                 CortoPlazo = d.CortoPlazo,
@@ -1193,7 +1194,8 @@ namespace tesoreria.Controllers
                                 IvaDiferido = d.IvaDiferido,
                                 Intereses = d.Intereses,
                                 Amortizacion = d.Amortizacion,
-                                Saldo_Insoluto = d.Saldo_Insoluto
+                                Saldo_Insoluto = d.Saldo_Insoluto,
+                                Cpbtes = db.ComprobanteDetAmortizacion.Where(y=>y.IdContratoDetAmortizacion==d.IdContratoDetAmortizacion).ToList()
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);

@@ -1,0 +1,405 @@
+﻿@model modelo.Models.Local.Contrato_DetAmortizacion
+@{
+    ViewBag.Title = "Asociar Comprobante";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+   
+}
+<input type="hidden" name="IdContratoDetAmortizacion" id="IdContratoDetAmortizacion" value="@Model.IdContratoDetAmortizacion" />
+<div class="modal-header">
+    <h5 class="modal-title" id="addParcela">@ViewBag.Title</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="ml-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Datos de la cuota</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body pb-0">
+                <div class="form-group form-group-sm row">
+                    <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Periodo</label>
+                    <div class="col-auto col-form-label-sm">
+                        @Model.Periodo
+                    </div>
+                    <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Amoortización</label>
+                    <div class="col-auto col-form-label-sm">
+                        @(String.Format("{0:N0}", Model.Amortizacion))
+                    </div>
+                    <label for="Alias" class="col-sm-auto col-form-label col-form-label-sm">Fecha</label>
+                    <div class="col-auto col-form-label-sm">
+                        @Model.FechaPago.ToString("dd-MM-yyyy")
+                    </div>
+                    
+                </div>
+
+            </div>
+        </div>
+        <div class="card card-success">
+            <div class="card-header ">
+                <h3 class="card-title">Comprobante Asociado</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaCpbteMov" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>N° Comprobante</th>
+                            <th>Fecha</th>
+                            <th>Monto Cpbte.</th>
+                            <th>Glosa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="indexTbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card card-info">
+            <div class="card-header ">
+                <h3 class="card-title">Buscar Comprobante</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
+                    <div class="form-inline my-2 my-lg-0">
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        Año
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" placeholder="Año Cpbte." id="AnoCpbte" name="AnoCpbte" value="@Model.FechaPago.Year">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <i class="far fa-calendar-alt"></i>
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm" placeholder="Fecha Cpbte." id="fechaCpbte" name="fechaCpbte" value="">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" id="NroCpbte" placeholder="Nro. Cpbte." name="NroCpbte" value="">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group">
+                                <input type="text" class="form-control form-control-sm" id="busGlosa" placeholder="Glosa" name="busGlosa" value="">
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="input-group">
+                                <button name="btnFiltrar" id="btnFiltrar" class="btn btn-info btn-xs" onclick="RefreshListaBusqueda();"><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </nav>
+                <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaCpbteBus" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>N° Comprobante</th>
+                            <th>Fecha</th>
+                            <th>Monto</th>
+                            <th>Glosa</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="indexTbody"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+</div>
+
+<div class="modal fade" id="modal-comprobanteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobanteModal"></div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function ModalComprobanteModal(CpbNum, CpbAno, baseSoftland) {
+        var tmpUrl = "/CpteSoftland/ComprobanteSoftland";
+        $("#datosComprobanteModal").empty();
+        $('#modal-comprobanteModal').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { CpbNum: CpbNum, CpbAno: CpbAno, baseSoftland: baseSoftland,deModal:true },
+            beforeSend: function () {
+                $("#datosComprobanteModal").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosComprobanteModal").empty();
+                $("#datosComprobanteModal").html(data);
+                esconderCargando();
+            }
+        });
+    }
+    function RefreshListaBusqueda() {
+        var table = initTableBusqueda();
+        table.ajax.reload(function (json) { });
+    }
+    function initTableBusqueda() {
+        var table = $('#grillaCpbteBus').DataTable({
+            buttons: [],
+            "retrieve": true,
+            processing: true,
+            searching: false,
+            'ajax': {
+                "type": "POST",
+                "url": '/Amortizacion/ComprobantesEgrBusqueda_Read',
+                "data": function (d) {
+                    d.IdContratoDetAmortizacion = "@Model.IdContratoDetAmortizacion";
+                    d.AnoCpbte = $("#AnoCpbte").val();
+                    d.CpbNum = $("#NroCpbte").val();
+                    d.busGlosa = $("#busGlosa").val();
+                    d.rangoFecha = $("#fechaCpbte").val();
+                    d.IdCuotaPago = $("#IdCuotaPago").val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                {
+                    targets: 1,
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                },
+                {
+                    targets: 2,
+                    render: function (data) {
+                        if (data != null & data != "") {
+                            var numFormt = SeparadorMiles(data.toString());
+                            return "$" + numFormt;
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": "CpbNum",
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        boton = '<a href="JavaScript:ModalComprobanteModal(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland +'\')">' + row.CpbNum+'</a> ';
+                        return boton;
+                    }
+                },
+                { "data": "CpbFec" },
+                { "data": "Monto" },
+                { "data": "CpbGlo" },
+                {
+                    "mData": "CpbNum",
+                    "bSortable": false,
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        if (row.seleccionado == true) {
+                            boton = '<a class="btn-danger btn-xs text-nowrap" href="JavaScript:QuitarCpbtePrograma(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland+'\')"><i class="fa fa-trash"></i> Quitar</a>';
+
+                        }
+                        else {
+                            boton = '<a class="btn-primary btn-xs text-nowrap" href="JavaScript:AsociarComprobante(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland +'\')"><i class="fa fa-plus"></i> Asociar</a>';
+                        }
+
+                        return boton;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+    function RefreshListCpbMov() {
+        var table = initTableCpbMov();
+        table.ajax.reload(function (json) { });
+    }
+    function initTableCpbMov() {
+        var table = $('#grillaCpbteMov').DataTable({
+            buttons: [],
+            "retrieve": true,
+            processing: true,
+            searching: false,
+            'ajax': {
+                "type": "POST",
+                "url": '/Amortizacion/ComprobantesDetAmortizacion_Read',
+                "data": function (d) {
+                    d.IdContratoDetAmortizacion = "@Model.IdContratoDetAmortizacion";
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                {
+                    targets: 1,
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                },
+                {
+                    targets: 2,
+                    render: function (data) {
+                        if (data != null & data != "") {
+                            var numFormt = SeparadorMiles(data.toString());
+                            return "$" + numFormt;
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": "CpbNum",
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        boton = '<a href="JavaScript:ModalComprobanteModal(\'' + row.CpbNum + '\',\'' + row.CpbAno+'\')">' + row.CpbNum+'</a> ';
+                        return boton;
+                    }
+                },
+                { "data": "CpbFec" },
+                { "data": "Monto" },
+                { "data": "CpbGlo" },
+                {
+                    "mData": "CpbNum",
+                    "bSortable": false,
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        boton = '<a class="btn-danger btn-xs text-nowrap" href="JavaScript:QuitarCpbtePrograma(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'busqueda\')"><i class="fa fa-trash"></i> Quitar</a>';
+                        return boton;
+                    }
+                }
+            ]
+        });
+
+        return table;
+    }
+    $(document).ready(function () {
+        initTableCpbMov();
+        moment.locale('es');
+        $.fn.dataTable.moment('DD/MM/YYYY');
+        $('#fechaCpbte').daterangepicker({
+            autoUpdateInput: false,
+            "locale": {
+                format: "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Aplicar",
+                "cancelLabel": "Limpiar",
+                "fromLabel": "DE",
+                "toLabel": "HASTA",
+                "customRangeLabel": "Personalizar",
+                "daysOfWeek": [
+                    "Dom",
+                    "Lun",
+                    "Mar",
+                    "Mie",
+                    "Jue",
+                    "Vie",
+                    "Sáb"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+        $('#fechaCpbte').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            RefreshListaAbono();
+        });
+
+        $('#fechaCpbte').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            RefreshListaAbono();
+        });
+    });
+
+    function AsociarComprobante(CpbNum, CpbAno) {
+        $.ajax({
+            url: "/Amortizacion/AsociarComprobanteDet/",
+            type: "Post",
+            data: { CpbNum: CpbNum, CpbAno: CpbAno, IdContratoDetAmortizacion:'@Model.IdContratoDetAmortizacion'},
+
+            success: function (data) {
+                if (data.Estado == 0) {
+                    RefreshLista();
+                    toastr.success(data.Mensaje);
+                    Cerrar();
+                }
+                else {
+                    toastr.error(data.Mensaje);
+                }
+            }
+        });
+    }
+    function Cerrar() {
+        $('#modal-AsocCpbte').modal('hide');
+    }
+    function QuitarCpbtePrograma(CpbNum, CpbAno) {
+        a = confirm("¿Seguro de quitar el comprobante seleccionado?")
+        if (a == true) {
+            $.ajax({
+                url: "/Amortizacion/QuitarCpbtePrograma",
+                type: "Post",
+                data: { CpbNum: CpbNum, CpbAno: CpbAno, tipo: "indivivual", IdContratoDetAmortizacion:'@Model.IdContratoDetAmortizacion'},
+                success: function (data) {
+                    if (data.Estado == 0) {
+                        RefreshListaBusqueda();
+                        RefreshLista();
+                        RefreshListCpbMov();
+                        toastr.success(data.Mensaje);
+
+                    }
+                    else {
+                        toastr.error(data.Mensaje);
+                    }
+                }
+            });
+        }
+    }
+</script>

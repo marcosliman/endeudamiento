@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
+using System.Globalization;
 namespace tesoreria.Controllers
 {
     public class AmortizacionController : Controller
@@ -113,7 +114,175 @@ namespace tesoreria.Controllers
                 return View(contrato);
             }
         }
+        public ActionResult AmortizacionContrato(int IdContrato)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            //else if (seguridad != null && !seguridad.TienePermiso("Leasing", Helper.TipoAcceso.Acceder))
+            //{
+            //    return RedirectToAction("Inicio", "Home");
+            //}
+            else
+            {
+                var contrato = db.Contrato.Find(IdContrato);
+                return View(contrato);
+            }
+        }
+        public ActionResult AsociarCpbteEgreso(int IdContratoDetAmortizacion)
+        {
+            var detalleCuota = db.Contrato_DetAmortizacion.Find(IdContratoDetAmortizacion);
+            var fecha = detalleCuota.FechaPago.ToString("dd-MM-yyyy");
+            ViewBag.FechaPago = fecha;
+            var comprobantes = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).ToList();
+            ViewData["listaComprobantes"] = comprobantes;
+            return View(detalleCuota);
+        }
+        public JsonResult ComprobantesEgrBusqueda_Read(int IdContratoDetAmortizacion, string AnoCpbte, string CpbNum, string rangoFecha, string busGlosa)
+        {
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("es-ES");
+            DateTime? fechaInicio = null;
+            DateTime? fechaFin = null;
+            if (rangoFecha != "")
+            {
+                var fechas = rangoFecha.Split('-');
+                fechaInicio = Convert.ToDateTime(fechas[0]);
+                fechaFin = Convert.ToDateTime(fechas[1]);
+            }
+            var detalleCuota = db.Contrato_DetAmortizacion.Find(IdContratoDetAmortizacion);
+            var contrato = detalleCuota.Contrato_Amortizacion.Contrato;
+            var empresa = db.Empresa.Find(contrato.IdEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+            var comprobantes = (from mov in dbSoft.cwmovim
+                                join cpb in dbSoft.cwcpbte on new { mov.CpbAno, mov.CpbNum } equals new { cpb.CpbAno, cpb.CpbNum }
+                                where cpb.CpbTip == "E" && cpb.CpbNum != "00000000" && cpb.CpbAno == AnoCpbte && cpb.CpbEst == "V"
+                                && ((CpbNum == "") ? true : cpb.CpbNum.Contains(CpbNum))
+                                && ((busGlosa == "") ? true : cpb.CpbGlo.Contains(busGlosa))
+                                && ((fechaInicio != null) ? cpb.CpbFec >= fechaInicio : true) &&
+                                   ((fechaFin != null) ? cpb.CpbFec <= fechaFin : true)
+                                select new { cpb.CpbNum, cpb.CpbFec, cpb.CpbGlo, mov.MovHaber, cpb.CpbAno } into x
+                                group x by new { x.CpbNum, x.CpbFec, x.CpbGlo, x.CpbAno } into g
+                                select new
+                                {
+                                    g.Key.CpbNum,
+                                    g.Key.CpbFec,
+                                    g.Key.CpbGlo,
+                                    Monto = g.Sum(c => c.MovHaber),
+                                    g.Key.CpbAno
+                                }).ToList();
+            var cpbteCuota = (from cd in db.ComprobanteDetAmortizacion
+                              where cd.IdContratoDetAmortizacion == IdContratoDetAmortizacion
+                              select new { cd.CpbNum, cd.CpbAno, cd.Monto }).ToList();
 
+            var cpbteOtras = (from cd in db.ComprobanteDetAmortizacion
+                              where cd.IdContratoDetAmortizacion != IdContratoDetAmortizacion
+                              select new { cd.CpbNum, cd.CpbAno, cd.Monto }).ToList();
+            var listaRetorno = (from c in comprobantes
+                                where
+                                (c.Monto - cpbteOtras.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Sum(y => y.Monto)) > 0
+                                && cpbteCuota.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() == 0
+                                select new
+                                {
+                                    c.CpbAno,
+                                    c.CpbNum,
+                                    c.CpbFec,
+                                    c.CpbGlo,
+                                    c.Monto,
+                                    seleccionado = (cpbteCuota.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() > 0) ? true : false,
+                                    ocupado = (cpbteOtras.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() > 0) ? true : false,
+                                    BaseSoftland = empresa.BaseSoftland,
+                                }).ToList();
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult ComprobantesDetAmortizacion_Read(int IdContratoDetAmortizacion)
+        {
+            var listaRetorno = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).ToList();
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult AsociarComprobanteDet(string CpbNum, string CpbAno, int IdContratoDetAmortizacion)
+        {
+            dynamic showMessageString = string.Empty;
+            try
+            {
+                var cuotaPago = db.Contrato_DetAmortizacion.Find(IdContratoDetAmortizacion);
+                var contrato = cuotaPago.Contrato_Amortizacion.Contrato;
+                var empresa = db.Empresa.Find(contrato.IdEmpresa);
+                SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+                var comprobante = dbSoft.cwcpbte.Where(c => c.CpbNum == CpbNum && c.CpbAno == CpbAno).FirstOrDefault();
+                var existeCpbteDetalle = db.ComprobanteDetAmortizacion.Where(c => c.CpbNum == CpbNum && c.CpbAno == CpbAno && c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).FirstOrDefault();
+                showMessageString = new
+                {
+                    Estado = 0,
+                    Mensaje = "Comprobante asociado exitosamente"
+                };
+                if (existeCpbteDetalle != null)
+                {
+                    showMessageString = new
+                    {
+                        Estado = 100,
+                        Mensaje = "Comprobante ya Asociado"
+                    };                    
+                }
+                else
+                {
+                    var montoCpbte = dbSoft.cwmovim.Where(c => c.CpbAno == CpbAno && c.CpbNum == CpbNum).Sum(c => c.MovHaber);
+                    /*if(movDetalle.Monto== montoCpbte)
+                    {*/
+                    var cpbteMOv = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).ToList();
+                    db.ComprobanteDetAmortizacion.RemoveRange(cpbteMOv);
+                    db.SaveChanges();
+                    ComprobanteDetAmortizacion regitro = new ComprobanteDetAmortizacion();
+                    regitro.IdContratoDetAmortizacion = IdContratoDetAmortizacion;
+                    regitro.FechaRegistro = DateTime.Now;
+                    regitro.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                    regitro.CpbNum = CpbNum;
+                    regitro.CpbAno = CpbAno;
+                    regitro.CpbMes = comprobante.CpbMes;
+                    regitro.CpbFec = comprobante.CpbFec;
+                    regitro.Monto = (double)montoCpbte;
+                    regitro.CpbGlo = comprobante.CpbGlo;
+                    regitro.BaseSoftland=empresa.BaseSoftland;
+                    regitro.EsCreado = false;
+                    regitro.AsociadoManual = true;
+                    db.ComprobanteDetAmortizacion.Add(regitro);
+                    
+                }
+                db.SaveChanges();
+
+            }
+            catch (Exception e)
+            {
+                showMessageString = new
+                {
+                    Estado = 100,
+                    Mensaje = "Error al Asociar el Cpbte. Contable"
+                };
+            }
+
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult QuitarCpbtePrograma(string CpbNum, string CpbAno, int IdContratoDetAmortizacion)
+        {
+            dynamic showMessageString = string.Empty;
+            try
+            {
+                var existeCpbteDetalle = db.ComprobanteDetAmortizacion.Where(c => c.CpbNum == CpbNum && c.CpbAno == CpbAno && c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).FirstOrDefault();
+                if (existeCpbteDetalle != null)
+                {
+                    db.ComprobanteDetAmortizacion.Remove(existeCpbteDetalle);                    
+                    db.SaveChanges();
+                }
+                showMessageString = new { Estado = 0, Mensaje = "Comprobante Eliminado exitosamente" };
+            }
+            catch
+            {
+                showMessageString = new { Estado = 100, Mensaje = "Error al quitar comprobante" };
+            }
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult ModalContrato(int idContrato)
         {
             if (seguridad == null)

@@ -517,6 +517,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\CpteSoftlandController.cs" />
     <Compile Include="Controllers\ModeloProductoController.cs" />
     <Compile Include="Controllers\MarcaProductoController.cs" />
     <Compile Include="Controllers\OutlookController.cs" />
@@ -3247,6 +3248,9 @@
     <Content Include="Views\MarcaProducto\Index.cshtml" />
     <Content Include="Views\ModeloProducto\Create.cshtml" />
     <Content Include="Views\ModeloProducto\Index.cshtml" />
+    <Content Include="Views\Amortizacion\AmortizacionContrato.cshtml" />
+    <Content Include="Views\Amortizacion\AsociarCpbteEgreso.cshtml" />
+    <Content Include="Views\CpteSoftland\ComprobanteSoftland.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
