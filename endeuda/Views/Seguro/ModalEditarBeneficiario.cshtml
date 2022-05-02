@@ -1,0 +1,109 @@
+﻿
+@{
+    ViewBag.Title = "Editar Beneficiario";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+@using (Ajax.BeginForm("EditarBeneficiario", "Seguro", new AjaxOptions
+{
+    InsertionMode = InsertionMode.Replace,
+    HttpMethod = "post",
+    OnSuccess = "Success_dl",
+    OnFailure = "Failure_dl"
+
+}, new { id = "frmEditBeneficiario", @class = "form-horizontal" }))
+{
+<input type="hidden" name="idPolizaActivo" id="idPolizaActivo" value="@Model.IdPolizaActivo" />
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Beneficiario</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="ml-2">
+                <div class="form-group form-group-sm row">
+                    <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Beneficiario</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm required" name="beneficiario" id="beneficiario" value="@Model.Beneficiario" />
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Rut Beneficiario</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm required" name="rutBeneficiario" id="rutBeneficiario" value="@Model.RutBeneficiario" />
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Número pag. inicial</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm required" name="paginaInicial" id="paginaInicial" value="@Model.PaginaInicial" />
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Número pag. término</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm required" name="paginaTermino" id="paginaTermino" value="@Model.PaginaTermino" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+            <button type="button" id="btnEditarBeneficiario" onclick="GrabarEditarBeneficiario()" class="btn btn-primary btn-sm">Editar</button>
+        </div>
+    </div>
+}
+    <script>
+        $(document).ready(function () {
+
+            $('#frmEditBeneficiario').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning"),
+                rules: {
+                    beneficiario: { required: true },
+                    rutBeneficiario: { required: true },
+                    paginaInicial: { required: true, digits: true },
+                    paginaTermino: { required: true, digits: true },
+                }
+            });
+        });
+
+        function GrabarEditarBeneficiario() {
+            if ($('#frmEditBeneficiario').valid()) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/Seguro/EditarBeneficiario/',
+                    data: $("#frmEditBeneficiario").serialize(),
+                    success: function (data) {
+                        Success_b(data);
+                    },
+                    failure: function (data) {
+                        Failure_b(data);
+                    }
+                })
+
+            }
+        }
+
+        function Success_b(data) {
+            esconderCargando();
+            if (data.result.Estado == "0") {
+                toastr.success(data.result.Mensaje);
+                $('#ModalEditarBeneficiario').modal('hide');
+                RefreshListaActivo();
+            }
+            else {
+                toastr.error(data.result.Mensaje);
+            }
+        }
+        function Failure_b(data) {
+            esconderCargando();
+            toastr.error(data.result.Mensaje);
+            $('#ModalEditarBeneficiarioo').modal('hide');
+        }
+
+    </script>

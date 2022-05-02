@@ -64,8 +64,6 @@ namespace tesoreria.Controllers
                                 RazonSocial = p.Empresa.RazonSocial,
                                 NombreTipoSeguro = p.TipoSeguro.NombreTipoSeguro,
                                 NombreEmpresaAseguradora = p.EmpresaAseguradora.NombreEmpresaAseguradora,
-                                Beneficiario = p.Beneficiario,
-                                RutBeneficiario = p.RutBeneficiario,
                                 MontoAsegurado = p.MontoAsegurado,
                                 FechaVencimiento = p.FechaVencimiento,
                                 FechaVencimientoStr = p.FechaVencimiento.ToString("dd-MM-yyyy"),
@@ -132,8 +130,6 @@ namespace tesoreria.Controllers
                                     PrimaMensual = p.PrimaMensual,
                                     NumeroPagos = p.NumeroPagos,
                                     FechaVencimientoStr = p.FechaVencimiento.ToString("dd-MM-yyyy"),
-                                    Beneficiario = p.Beneficiario,
-                                    RutBeneficiario = p.RutBeneficiario,
                                     FechaEnvioBanco = p.FechaEnvioBanco,
                                     FechaEnvioBancoStr = p.FechaEnvioBanco.ToString("dd-MM-yyyy"),
                                     IdEstado = p.IdEstado,
@@ -202,7 +198,7 @@ namespace tesoreria.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    dato.Beneficiario = validarDatos.ValidaStr(dato.Beneficiario);
+                    //dato.Beneficiario = validarDatos.ValidaStr(dato.Beneficiario);
                     using (var dbContextTransaction = db.Database.BeginTransaction())
                     {
                         try
@@ -229,8 +225,6 @@ namespace tesoreria.Controllers
                                     poliza.MontoAsegurado = dato.MontoAsegurado;
                                     poliza.NumeroPagos = dato.NumeroPagos;
                                     poliza.PrimaMensual = dato.PrimaMensual;
-                                    poliza.Beneficiario = dato.Beneficiario;
-                                    poliza.RutBeneficiario = dato.RutBeneficiario;
                                     poliza.FechaVencimiento = dato.FechaVencimiento;
                                     poliza.FechaEnvioBanco = dato.FechaEnvioBanco;
                                     db.SaveChanges();
@@ -257,8 +251,6 @@ namespace tesoreria.Controllers
                                     addPoliza.MontoAsegurado = dato.MontoAsegurado;
                                     addPoliza.NumeroPagos = dato.NumeroPagos;
                                     addPoliza.PrimaMensual = dato.PrimaMensual;
-                                    addPoliza.Beneficiario = dato.Beneficiario;
-                                    addPoliza.RutBeneficiario = dato.RutBeneficiario;
                                     addPoliza.FechaVencimiento = dato.FechaVencimiento;
                                     addPoliza.FechaEnvioBanco = dato.FechaEnvioBanco;
                                     addPoliza.IdEstado = (int)Helper.Estado.PolCreado;
@@ -600,6 +592,75 @@ namespace tesoreria.Controllers
             }
         }
 
+        public ActionResult ModalEditarBeneficiario(int idActivoPoliza)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                var polizaActivo = db.PolizaActivo.Find(idActivoPoliza);
+                return PartialView(polizaActivo);
+            }
+        }
+
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+
+        public ActionResult EditarBeneficiario(PolizaActivo dato)
+        {
+            dynamic showMessageString = string.Empty;
+            //validar que los datos ingresados sean correctos
+            var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
+            tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+            if (seguridad == null)
+            {
+                showMessageString = new { Estado = 1000, Mensaje = "Se finalizó la sesión" };
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var mensaje = "";
+
+                            var p = db.PolizaActivo.Find(dato.IdPolizaActivo);
+                            mensaje = "Beneficiario póliza de seguro actualizado con éxito";
+
+                            if (p != null) {
+
+                                //validar datos
+                                dato.Beneficiario = validarDatos.ValidaStr(dato.Beneficiario);
+
+                                p.RutBeneficiario = dato.RutBeneficiario;
+                                p.Beneficiario = dato.Beneficiario;
+                                p.PaginaInicial = dato.PaginaInicial;
+                                p.PaginaTermino = dato.PaginaTermino;
+                                db.SaveChanges();
+                                dbContextTransaction.Commit();
+                            }
+                            showMessageString = new { Estado = 0, Mensaje = mensaje };
+
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                        }
+                    }
+                }
+                else
+                {
+                    showMessageString = new { Estado = 103, Mensaje = "Se ha producido un error" };
+                }
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion
 
         #region Documento Poliza
@@ -816,8 +877,8 @@ namespace tesoreria.Controllers
                                 NombreTipoMoneda = (p.TipoMoneda.NombreTipoMoneda != null) ? p.TipoMoneda.NombreTipoMoneda : string.Empty,
                                 FechaVencimiento = p.FechaVencimiento,
                                 FechaVencimientoStr = p.FechaVencimiento.ToString("dd-MM-yyyy"),
-                                Beneficiario = p.Beneficiario,
-                                RutBeneficiario = p.RutBeneficiario,
+                                Beneficiario = rel.Beneficiario,
+                                RutBeneficiario = rel.RutBeneficiario,
                                 FechaEnvioBanco = p.FechaEnvioBanco,
                                 FechaEnvioBancoStr = p.FechaEnvioBanco.ToString("dd-MM-yyyy"),
                                 RazonSocial = p.Empresa.RazonSocial,
@@ -904,8 +965,6 @@ namespace tesoreria.Controllers
                                     PrimaMensual = p.PrimaMensual,
                                     NumeroPagos = p.NumeroPagos,
                                     FechaVencimientoStr = p.FechaVencimiento.ToString("dd-MM-yyyy"),
-                                    Beneficiario = p.Beneficiario,
-                                    RutBeneficiario = p.RutBeneficiario,
                                     FechaEnvioBanco = p.FechaEnvioBanco,
                                     FechaEnvioBancoStr = p.FechaEnvioBanco.ToString("dd-MM-yyyy"),
                                     IdEstado = p.IdEstado,

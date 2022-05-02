@@ -29,8 +29,6 @@ namespace modelo.Models.Local
         [ForeignKey("IdTipoMoneda")]
         public virtual TipoMoneda TipoMoneda { get; set; }
         public DateTime FechaVencimiento { get; set; }
-        public string Beneficiario { get; set; }
-        public string RutBeneficiario { get; set; }
         public DateTime FechaEnvioBanco { get; set; }
         public int IdEstado { get; set; }
         public DateTime FechaRegistro { get; set; }

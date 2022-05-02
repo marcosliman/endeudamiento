@@ -14,5 +14,9 @@ namespace modelo.Models.Local
         public int IdPolizaActivo { get; set; }
         public int IdPoliza { get; set; }
         public int IdActivo { get; set; }
+        public string Beneficiario { get; set; }
+        public string RutBeneficiario { get; set; }
+        public int? PaginaInicial { get; set; }
+        public int? PaginaTermino { get; set; }
     }
 }

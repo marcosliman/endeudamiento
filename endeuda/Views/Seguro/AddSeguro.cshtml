@@ -59,14 +59,6 @@
             </div>
         </div>
         <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Beneficiario</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required" name="Beneficiario" id="Beneficiario" value="@Model.Beneficiario" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">RUT beneficiario</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required" name="RutBeneficiario" id="RutBeneficiario" value="@Model.RutBeneficiario" />
-            </div>
             <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha envío bancos</label>
             <div class="col-sm-2">
                 <input type="text" class="form-control form-control-sm required classFecha" name="FechaEnvioBanco" id="FechaEnvioBanco" value="@Model.FechaEnvioBancoStr" />
@@ -111,10 +103,11 @@
                     </div>
                 </div>
                 <div class="table-responsive mt-1">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPolizaActivo" data-order='[[ 0, "asc" ]]'>
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPolizaActivo" data-order='[[ 2, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                                <th class="no-sort"><i class="fa fa-edit"></i></th>
+                                <th class="no-sort"><i class="far fa-trash-alt"></i></th>
                                 <th>Cod. Interno</th>
                                 <th>Tipo Activo</th>
                                 <th>Estado</th>
@@ -136,28 +129,6 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerActivo"><i class="far fa-eye"></i></button></td>
-                                <td>00253</td>
-                                <td>Maquinaria</td>
-                                <td>Activo</td>
-                                <td>Volquete Volvo</td>
-                                <td>01-582-256-52</td>
-                                <td>Volvo</td>
-                                <td>V2</td>
-                                <td>Diesel v2</td>
-                                <td>A233</td>
-                                <td>2010</td>
-                                <td>A</td>
-                                <td>A1</td>
-                                <td>2,500,000.00</td>
-                                <td>08/05/2012</td>
-                                <td>Operativo</td>
-                                <td></td>
-                                <td>05849</td>
-                                <td>01-08-2031</td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>
@@ -176,6 +147,14 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="ModalEditarBeneficiario" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosBeneficiario"></div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function () {
         initTableActivo();
@@ -198,8 +177,6 @@
                 PrimaMensual: { required: true, number: true },
                 NumeroPagos: { required: true, digits: true },
                 fechaVencimiento: { required: true },
-                beneficiario: { required: true },
-                rutBeneficiario: { required: true },
                 fechaEnvioBanco: { required: true }
             }
         });
@@ -266,6 +243,23 @@
         });
     }
 
+    function EditBeneficiario(idActivoPoliza) {
+        $('#ModalEditarBeneficiario').modal('show');
+        $.ajax({
+            url: "/Seguro/ModalEditarBeneficiario",
+            type: "Post",
+            data: { idActivoPoliza: idActivoPoliza },
+            beforeSend: function () {
+                $("#datosBeneficiario").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosBeneficiario").empty();
+                $("#datosBeneficiario").html(data);
+            }
+        });
+    }
+
+
     function EliminarActivo(idPolizaActivo) {
         a = confirm("Seguro de Eliminar el registro seleccionado?")
         if (a) {
@@ -324,7 +318,18 @@
                     "mRender": function (o, type, row) {
                         var acciones = '';
                         //if (o.Editable == true) {
-                            var acciones = '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarActivo(' + o.IdPolizaActivo + ')"><i class="far fa-trash-alt"></i></button>';
+                        acciones += '<button class="btn btn-info btn-sm" type="button" onclick="EditBeneficiario(' + o.IdPolizaActivo + ')"><i class="fa fa-edit"></i></button> ';
+                        //}
+                        return acciones;
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var acciones = '';
+                        //if (o.Editable == true) {
+                        acciones += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarActivo(' + o.IdPolizaActivo + ')"><i class="far fa-trash-alt"></i></button>';
                         //}
                         return acciones;
                     }
