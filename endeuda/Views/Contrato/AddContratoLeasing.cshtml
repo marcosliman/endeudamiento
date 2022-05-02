@@ -357,7 +357,15 @@
             title: 'ACTIVOS ',
             extend: 'excelHtml5',
             exportOptions: {
-                columns: "thead th:not(.noExport)"
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
+                    }
+                }
             }
         };
         var table = $('#grillaContratoActivo').DataTable({

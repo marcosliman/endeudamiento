@@ -28,7 +28,11 @@
                     <div class="col-auto col-form-label-sm">
                         @Model.Periodo
                     </div>
-                    <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Amoortización</label>
+                    <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Cuota</label>
+                    <div class="col-auto col-form-label-sm">
+                        @(String.Format("{0:N0}", Model.Cuota))
+                    </div>
+                    <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Amortización</label>
                     <div class="col-auto col-form-label-sm">
                         @(String.Format("{0:N0}", Model.Amortizacion))
                     </div>
@@ -36,7 +40,7 @@
                     <div class="col-auto col-form-label-sm">
                         @Model.FechaPago.ToString("dd-MM-yyyy")
                     </div>
-                    
+
                 </div>
 
             </div>

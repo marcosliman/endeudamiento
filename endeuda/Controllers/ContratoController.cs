@@ -1266,8 +1266,8 @@ namespace tesoreria.Controllers
                     string sheetName = "Sheet1";
                     var excelFile = new ExcelQueryFactory(pathToExcelFile);
                     var artistAlbums = from a in excelFile.Worksheet<DetAmortizacionViewModel>(sheetName) select a;
-                    
-                    
+
+                    var ivaObligacion = 1.19;
                     foreach (var a in artistAlbums)
                     {
                         try
@@ -1285,6 +1285,8 @@ namespace tesoreria.Controllers
                                     periodo.Intereses = a.Intereses;
                                     periodo.Amortizacion = a.Amortizacion;
                                     periodo.Saldo_Insoluto = a.Saldo_Insoluto;
+                                    periodo.Obligacion = a.Cuota * ivaObligacion;
+                                    periodo.EsMes = 0;
                                     db.SaveChanges();                                    
                                 }
                                 else
@@ -1300,6 +1302,8 @@ namespace tesoreria.Controllers
                                     detPeriodo.Intereses = a.Intereses;
                                     detPeriodo.Amortizacion = a.Amortizacion;
                                     detPeriodo.Saldo_Insoluto = a.Saldo_Insoluto;
+                                    detPeriodo.Obligacion = a.Cuota * ivaObligacion;
+                                    detPeriodo.EsMes = 0;
                                     db.Contrato_DetAmortizacion.Add(detPeriodo);
                                     db.SaveChanges();
                                 }
@@ -1490,12 +1494,12 @@ namespace tesoreria.Controllers
                     var amortizacion = (from a in db.Contrato_Amortizacion
                                         join de in db.Contrato_DetAmortizacion on a.IdContratoAmortizacion equals de.IdContratoAmortizacion
                                         where a.IdContrato == idContrato
-                                        select new { de.Cuota }).ToList();
+                                        select new { de.Amortizacion }).ToList();
                     if (amortizacion != null)
                     {
-                        sumaAmortizacion = Convert.ToDouble(amortizacion.Sum(c => c.Cuota));
+                        sumaAmortizacion = Convert.ToDouble(amortizacion.Sum(c => c.Amortizacion));
                     }
-
+                    sumaAmortizacion = Math.Round(sumaAmortizacion, 0);
                     ViewBag.SumaActivo = sumaActivo;
                     if (conActivo.TipoFinanciamiento.IdTipoContrato == (int)Helper.TipoContrato.Contrato && conActivo.IdTipoFinanciamiento != (int)Helper.TipoFinanciamiento.EstructuradoConGarantia) {
                         ViewBag.SumaActivo = conActivo.Monto;

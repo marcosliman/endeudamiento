@@ -60,28 +60,39 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaContrato_Read(int? idTipoContrato, int? idEmpresa, int? anio, int? idMes)
+        public ActionResult ListaContrato_Read(int? idTipoContrato, int? IdEmpresa, int? Anio, int? IdMes)
         {
-            var registro = (from c in db.Contrato.ToList()
-                            where c.IdTipoContrato == ((idTipoContrato != null) ? idTipoContrato : c.IdTipoContrato)
-                             && c.IdEmpresa == ((idEmpresa != null) ? idEmpresa : c.IdEmpresa)
-                            select new ReporteContratoViewModel
-                            {
-                                IdContrato = c.IdContrato,
-                                Empresa = c.Empresa.RazonSocial,
-                                Acreedor = c.Banco.NombreBanco,
-                                NumeroContrato = c.NumeroContrato,
-                                Moneda = c.TipoMoneda.NombreTipoMoneda,
-                                TasaMensual = c.TasaMensual,
-                                TasaAnual = c.TasaAnual,
-                                Total = 0,
-                                Total1 = 0,
-                                Total2 = 0,
-                                Total3 = 0,
-                                TotalGeneral = 0
-                            }).AsEnumerable().ToList();
+            var inicioMes="01-"+IdMes.ToString()+"-"+Anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
 
-            return Json(registro, JsonRequestBehavior.AllowGet);
+            var contratos = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_AMORTIZACION_CONTRATO @fechaInicio={0},@fechaFin={1}", fechaInicio, fechaFin).ToList();
+
+            //var contratos = (from c in db.Contrato.ToList()
+            //                where c.IdTipoContrato == ((idTipoContrato != null) ? idTipoContrato : c.IdTipoContrato)
+            //                 && c.IdEmpresa == ((IdEmpresa != null) ? IdEmpresa : c.IdEmpresa)
+            //                select new ReporteContratoViewModel
+            //                {
+            //                    IdContrato = c.IdContrato,
+            //                    Empresa = c.Empresa.RazonSocial,
+            //                    Acreedor = c.Banco.NombreBanco,
+            //                    NumeroContrato = c.NumeroContrato,
+            //                    Moneda = c.TipoMoneda.NombreTipoMoneda,
+            //                    TasaMensual = c.TasaMensual,
+            //                    TasaAnual = c.TasaAnual,
+            //                    Total = 0,
+            //                    Total1 = 0,
+            //                    Total2 = 0,
+            //                    Total3 = 0,
+            //                    TotalGeneral = 0
+            //                }).AsEnumerable().ToList();
+            return Json(contratos, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult Leasing()
@@ -104,7 +115,7 @@ namespace tesoreria.Controllers
 
                 var mes = (from m in db.Mes
                            select new RetornoGenerico { Id = m.IdMes, Nombre = m.NombreMes }).OrderBy(c => c.Id).ToList();
-                SelectList listaMes = new SelectList(mes.OrderBy(c => c.Nombre), "Id", "Nombre");
+                SelectList listaMes = new SelectList(mes.OrderBy(c => c.Id), "Id", "Nombre",DateTime.Now.Month);
                 ViewData["listaMes"] = listaMes;
 
                 var contrato = new ContratoViewModel();
@@ -156,7 +167,7 @@ namespace tesoreria.Controllers
             SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
             var comprobantes = (from mov in dbSoft.cwmovim
                                 join cpb in dbSoft.cwcpbte on new { mov.CpbAno, mov.CpbNum } equals new { cpb.CpbAno, cpb.CpbNum }
-                                where cpb.CpbTip == "E" && cpb.CpbNum != "00000000" && cpb.CpbAno == AnoCpbte && cpb.CpbEst == "V"
+                                where cpb.CpbTip == "T" && cpb.CpbNum != "00000000" && cpb.CpbAno == AnoCpbte && cpb.CpbEst == "V"
                                 && ((CpbNum == "") ? true : cpb.CpbNum.Contains(CpbNum))
                                 && ((busGlosa == "") ? true : cpb.CpbGlo.Contains(busGlosa))
                                 && ((fechaInicio != null) ? cpb.CpbFec >= fechaInicio : true) &&

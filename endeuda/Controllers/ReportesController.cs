@@ -26,6 +26,22 @@ namespace tesoreria.Controllers
             }
             else
             {
+                var empresa = (from e in db.Empresa
+                                where e.Activo == true
+                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var bancos = (from e in db.Banco
+                                where e.Activo == true
+                                select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
+                SelectList listaBancos = new SelectList(bancos.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaBancos"] = listaBancos;
+
+                var meses = (from e in db.Mes
+                              select new RetornoGenerico { Id = e.IdMes, Nombre = e.NombreMes }).OrderBy(c => c.Id).ToList();
+                SelectList listaMes = new SelectList(meses.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaMes"] = listaMes;
                 return View();
             }
         }
@@ -45,7 +61,7 @@ namespace tesoreria.Controllers
                             //&& c.IdBanco == ((idBanco != null) ? idBanco : c.IdBanco)
                             //&& c.IdTipoFinanciamiento == ((idTipoFinanciamiento != null) ? idTipoFinanciamiento : c.IdTipoFinanciamiento)
                             //&& c.NumeroContrato == ((numeroContrato != "") ? numeroContrato : c.NumeroContrato)
-                            select new ConsolidadoLeasingViewModel
+                            select new //ConsolidadoLeasingViewModel
                             {
                                 IdContrato = Con.IdContrato,
                                 RazonSocial = Emp.RazonSocial,
@@ -59,14 +75,17 @@ namespace tesoreria.Controllers
                                 Total = Math.Round(Con.Monto, 2),
                                 TasaAnual = Con.TasaAnual,
                                 PuedeEliminar = (Con.IdEstado != (int)Helper.Estado.ConCreado) ? false : true,
-                                NombreEstado = Est.NombreEstado
+                                NombreEstado = Est.NombreEstado,
+                                Act.Valor,
+                                Con.TipoMoneda.NombreTipoMoneda
+
                             }).AsEnumerable().ToList();
             
-            var listaretorno = registro.GroupBy(c => new { c.IdContrato, c.RazonSocial, c.NombreBanco, c.NumeroContrato, c.NombreFamilia,c.DescripcionActivo,c.Plazo,c.FechaInicio,c.FechaTermino,c.Total })
-                .Select(c => new { c.Key.IdContrato, c.Key.RazonSocial,c.Key.NombreBanco,c.Key.NumeroContrato,c.Key.NombreFamilia,c.Key.DescripcionActivo,c.Key.Plazo,c.Key.FechaInicio,c.Key.FechaTermino,Total = c.Sum(x => x.Monto)}).ToList();
+            //var listaretorno = registro.GroupBy(c => new { c.IdContrato, c.RazonSocial, c.NombreBanco, c.NumeroContrato, c.NombreFamilia,c.DescripcionActivo,c.Plazo,c.FechaInicio,c.FechaTermino,c.Total })
+            //    .Select(c => new { c.Key.IdContrato, c.Key.RazonSocial,c.Key.NombreBanco,c.Key.NumeroContrato,c.Key.NombreFamilia,c.Key.DescripcionActivo,c.Key.Plazo,c.Key.FechaInicio,c.Key.FechaTermino,Total = c.Sum(x => x.Monto)}).ToList();
 
 
-            return Json(listaretorno, JsonRequestBehavior.AllowGet);
+            return Json(registro, JsonRequestBehavior.AllowGet);
         }
         public ActionResult ConsolidadoDeudaCreditosCon()
         {

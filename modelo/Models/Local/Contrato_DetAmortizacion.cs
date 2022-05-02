@@ -27,6 +27,7 @@ namespace modelo.Models.Local
         public double Intereses { get; set; }
         public double Amortizacion { get; set; }
         public double Saldo_Insoluto { get; set; }
-
+        public double Obligacion { get; set; }
+        public int EsMes { get; set; }
     }
 }
