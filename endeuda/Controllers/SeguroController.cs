@@ -461,10 +461,16 @@ namespace tesoreria.Controllers
                 idEmpresa = poliza.IdEmpresa;
             }
 
-            var registro = (from ac in db.Activo
-                            join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
+            var activoPoliza = db.PolizaActivo.Where(c => c.IdPoliza == idPoliza).AsEnumerable().ToList();
+            if (activoPoliza.Count() == 0)
+            {
+                activoPoliza = new List<PolizaActivo>();
+            }
+
+            var registro = (from ac in db.Activo.ToList()
+                            join em in db.Empresa.ToList() on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
-                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            join f in db.Familia.ToList() on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
                             //join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             //from prv in prw.DefaultIfEmpty()
@@ -472,6 +478,7 @@ namespace tesoreria.Controllers
                                 && ac.CodSoftland == ((codigoActivo != "") ? codigoActivo : ac.CodSoftland)
                                 && ac.IdEmpresa == idEmpresa
                                 && ac.IdEstado == (int)Helper.Estado.ActDisponible
+                                && activoPoliza.Where(x => x.IdActivo == ac.IdActivo).Count() == 0
                             select new ActivoViewModel
                             {
                                 IdActivo = ac.IdActivo,
@@ -529,8 +536,8 @@ namespace tesoreria.Controllers
                                     db.SaveChanges();
 
                                     /*cambio el estado del activo*/
-                                    existeActivo.IdEstado = (int)Helper.Estado.ActEnPoliza;
-                                    db.SaveChanges();
+                                    /*existeActivo.IdEstado = (int)Helper.Estado.ActEnPoliza;
+                                    db.SaveChanges();*/
                                 }
                             }
 

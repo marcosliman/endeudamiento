@@ -527,8 +527,8 @@ namespace tesoreria.Controllers
                                             db.ContratoActivo.Add(addActivo);
                                             db.SaveChanges();
 
-                                            db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActEnContrato, ac.IdActivo);
-                                            db.SaveChanges();
+                                            /*db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActEnContrato, ac.IdActivo);
+                                            db.SaveChanges();*/
                                         }
                                     }
 
@@ -607,19 +607,19 @@ namespace tesoreria.Controllers
                                 db.Database.ExecuteSqlCommand("UPDATE Licitacion SET IdEstado = {0} WHERE IdLicitacion = {1}", (int)Helper.Estado.LicFinalizada, oferta.IdLicitacion);
                                 db.SaveChanges();
 
-                                foreach (var act in dbActivo)
+                                /*foreach (var act in dbActivo)
                                 {
                                     db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActLicitacion, act.IdActivo);
                                     db.SaveChanges();
-                                }
+                                }*/
                             }
                         }
                         else {
-                            foreach (var act in dbActivo)
+                            /*foreach (var act in dbActivo)
                             {
                                 db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActDisponible, act.IdActivo);
                                 db.SaveChanges();
-                            }
+                            }*/
                         }
 
                         
@@ -990,10 +990,16 @@ namespace tesoreria.Controllers
                 idEmpresa = contrato.IdEmpresa;
             }
 
-            var registro = (from ac in db.Activo
-                            join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
+            var activoContrato = db.ContratoActivo.Where(c => c.IdContrato == idContrato).AsEnumerable().ToList();
+            if (activoContrato.Count() == 0)
+            {
+                activoContrato = new List<ContratoActivo>();
+            }
+
+            var registro = (from ac in db.Activo.ToList()
+                            join em in db.Empresa.ToList() on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
-                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
+                            join f in db.Familia.ToList() on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
                             //join pr in db.Proveedor on ac.IdProveedor equals pr.IdProveedor into prw
                             //from prv in prw.DefaultIfEmpty()
@@ -1001,6 +1007,7 @@ namespace tesoreria.Controllers
                                 && ac.CodSoftland == ((codigoActivo != "") ? codigoActivo : ac.CodSoftland)
                                 && ac.IdEmpresa == idEmpresa
                                 && ac.IdEstado == (int)Helper.Estado.ActDisponible
+                                && activoContrato.Where(x => x.IdActivo == ac.IdActivo).Count() == 0
                             select new ActivoViewModel
                             {
                                 IdActivo = ac.IdActivo,
@@ -1059,8 +1066,8 @@ namespace tesoreria.Controllers
                                     db.SaveChanges();
 
                                     /*cambio el estado del activo*/
-                                    existeActivo.IdEstado = (int)Helper.Estado.ActEnContrato;
-                                    db.SaveChanges();
+                                    /*existeActivo.IdEstado = (int)Helper.Estado.ActEnContrato;
+                                    db.SaveChanges();*/
 
                                     /*log de cambios*/
                                     textoLog += " Nuevo activo: "+addActivo.Activo.NumeroInterno + "; ";

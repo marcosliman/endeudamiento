@@ -36,10 +36,10 @@ namespace tesoreria.Helper
 
         ActCreado =3,
         ActDisponible = 4,
-        ActLicitacion = 5,
-        ActEnContrato = 6,
+        //ActLicitacion = 5,
+        //ActEnContrato = 6,
         ActBaja=7,
-        ActEnPoliza=8,
+        //ActEnPoliza=8,
 
         LicCreada=15,
         LicFinalizada=16,
