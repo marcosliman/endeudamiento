@@ -14,6 +14,7 @@ namespace modelo.ViewModel
         public string Autogenerado { get; set; }
         public int IdEmpresa { get; set; }
         public string RazonSocial { get; set; }
+        public int IdTipoContrato { get; set; }
         public int IdTipoFinanciamiento { get; set; }
         public string NombreTipoFinanciamiento { get; set; }
         public double? Monto { get; set; }

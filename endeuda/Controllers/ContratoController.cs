@@ -150,7 +150,8 @@ namespace tesoreria.Controllers
                                     IdEstado = c.IdEstado,
                                     ExisteContrato = "S",
                                     TituloBoton = "Actualizar Contrato",
-                                    IdTipoMoneda=c.IdTipoMoneda
+                                    IdTipoMoneda=c.IdTipoMoneda,
+                                    Descripcion = (c.Descripcion != null) ? c.Descripcion : string.Empty
                                 }
                                   ).FirstOrDefault();
 
@@ -170,6 +171,38 @@ namespace tesoreria.Controllers
                     registro.ExisteContrato = "N";
                     registro.TituloBoton = "Grabar Contrato";
                     registro.IdTipoMoneda = 1;
+                }
+                else {
+                    if (registro.Descripcion.Length == 0)
+                    {
+                        var activo = (from ca in db.ContratoActivo
+                                      join a in db.Activo on ca.IdActivo equals a.IdActivo
+                                      join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
+                                      from fv in fw.DefaultIfEmpty()
+                                      where ca.IdContrato == idContrato
+                                      select new { fv.NombreFamilia } into x
+                                      group x by new { x.NombreFamilia } into g
+                                      select new
+                                      {
+                                          cont = g.Count(),
+                                          g.Key.NombreFamilia
+                                      }).ToList();
+
+                        var desc = "";
+                        if (activo != null)
+                        {
+                            foreach (var a in activo)
+                            {
+                                desc += a.cont.ToString() + " " + ((a.NombreFamilia != null) ? a.NombreFamilia : "Familia No asociada") + ", ";
+
+
+
+                            }
+
+                        }
+
+                        registro.Descripcion = desc;
+                    }
                 }
 
                 var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
@@ -305,6 +338,10 @@ namespace tesoreria.Controllers
                             var contrato = db.Contrato.Find(dato.IdContrato);
                             var contratoEdit = db.Contrato.Find(dato.IdContrato);
 
+                            //validar datos
+                            dato.Descripcion = validarDatos.ValidaStr(dato.Descripcion);
+                            dato.TipoGarantia = validarDatos.ValidaStr(dato.TipoGarantia);
+
                             /*verifico si el origen es una licitacion*/
                             var existeOferta = "N";
                             var oferta = new LicitacionOfertaViewModel();
@@ -423,6 +460,7 @@ namespace tesoreria.Controllers
                                     contrato.FechaInicio = dato.FechaInicio;
                                     contrato.FechaTermino = dato.FechaTermino;
                                     contrato.IdTipoMoneda=dato.IdTipoMoneda;
+                                    contrato.Descripcion = dato.Descripcion;
                                     db.SaveChanges();
                                 }
                                 else
@@ -457,6 +495,7 @@ namespace tesoreria.Controllers
                                     addContrato.IdUsuarioRegistro = (int)seguridad.IdUsuario;
                                     addContrato.FechaRegistro = DateTime.Now;
                                     addContrato.IdTipoMoneda = dato.IdTipoMoneda;
+                                    addContrato.Descripcion = dato.Descripcion;
                                     db.Contrato.Add(addContrato);
                                     db.SaveChanges();
 
@@ -617,6 +656,9 @@ namespace tesoreria.Controllers
             dynamic showMessageString = string.Empty;
             var contrato = db.Contrato.Find(idContrato);
             var activos = db.ContratoActivo.Where(c => c.IdContrato == idContrato).Count();
+            if (contrato.TipoFinanciamiento.IdTipoContrato == (int)Helper.TipoContrato.Contrato && contrato.IdTipoFinanciamiento != (int)Helper.TipoFinanciamiento.EstructuradoConGarantia) {
+                activos = 1;
+            }
             if (activos > 0)
             {
                 contrato.IdEstado = (int)Helper.Estado.ConActivo;
@@ -759,7 +801,8 @@ namespace tesoreria.Controllers
                                     IdEstado = c.IdEstado,
                                     ExisteContrato = "S",
                                     TituloBoton = "Actualizar Contrato",
-                                    IdTipoMoneda = c.IdTipoMoneda
+                                    IdTipoMoneda = c.IdTipoMoneda,
+                                    Descripcion = (c.Descripcion != null) ? c.Descripcion : string.Empty
                                 }
                                   ).FirstOrDefault();
 
@@ -779,6 +822,38 @@ namespace tesoreria.Controllers
                     registro.ExisteContrato = "N";
                     registro.TituloBoton = "Grabar Contrato";
                     registro.IdTipoMoneda = 1;
+                }
+                else {
+                    if (registro.Descripcion.Length == 0)
+                    {
+                        var activo = (from ca in db.ContratoActivo
+                                      join a in db.Activo on ca.IdActivo equals a.IdActivo
+                                      join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
+                                      from fv in fw.DefaultIfEmpty()
+                                      where ca.IdContrato == idContrato
+                                      select new { fv.NombreFamilia } into x
+                                      group x by new { x.NombreFamilia } into g
+                                      select new
+                                      {
+                                          cont = g.Count(),
+                                          g.Key.NombreFamilia
+                                      }).ToList();
+
+                        var desc = "";
+                        if (activo != null)
+                        {
+                            foreach (var a in activo)
+                            {
+                                desc += a.cont.ToString() + " " + ((a.NombreFamilia != null) ? a.NombreFamilia : "Familia No asociada") + ", ";
+
+
+
+                            }
+
+                        }
+
+                        registro.Descripcion = desc;
+                    }
                 }
 
                 var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
@@ -1405,6 +1480,7 @@ namespace tesoreria.Controllers
                 if (conActivo != null) {
                     var amortizacion = (from a in db.Contrato_Amortizacion
                                         join de in db.Contrato_DetAmortizacion on a.IdContratoAmortizacion equals de.IdContratoAmortizacion
+                                        where a.IdContrato == idContrato
                                         select new { de.Cuota }).ToList();
                     if (amortizacion != null)
                     {
@@ -1412,6 +1488,9 @@ namespace tesoreria.Controllers
                     }
 
                     ViewBag.SumaActivo = sumaActivo;
+                    if (conActivo.TipoFinanciamiento.IdTipoContrato == (int)Helper.TipoContrato.Contrato && conActivo.IdTipoFinanciamiento != (int)Helper.TipoFinanciamiento.EstructuradoConGarantia) {
+                        ViewBag.SumaActivo = conActivo.Monto;
+                    }
                     ViewBag.SumaAmortizacion = sumaAmortizacion;
                     ViewBag.MontoContrato = conActivo.Monto;
 

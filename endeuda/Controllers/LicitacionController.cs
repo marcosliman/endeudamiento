@@ -80,6 +80,7 @@ namespace tesoreria.Controllers
                                   select new LicitacionViewModel {
                                       IdLicitacion = l.IdLicitacion,
                                       IdEmpresa = l.IdEmpresa,
+                                      IdTipoContrato = l.TipoFinanciamiento.IdTipoContrato,
                                       IdTipoFinanciamiento = l.IdTipoFinanciamiento,
                                       Autogenerado = l.Autogenerado,
                                       Monto = l.Monto,
@@ -90,6 +91,7 @@ namespace tesoreria.Controllers
                 if (registro == null) {
                     registro = new LicitacionViewModel();
                     registro.IdEmpresa = 0;
+                    registro.IdTipoContrato = 0;
                     registro.IdTipoFinanciamiento = 0;
                     registro.ExisteLicitacion = "N";
                 }
@@ -144,7 +146,7 @@ namespace tesoreria.Controllers
                                 mensaje = "Licitación actualizada con éxito";
                                 idLicitacion = dato.IdLicitacion;
                                 licitacion.IdEmpresa = dato.IdEmpresa;
-                                licitacion.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
+                                //licitacion.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
                                 licitacion.Monto = dato.Monto;
                                 db.SaveChanges();
                             }
@@ -288,10 +290,14 @@ namespace tesoreria.Controllers
 
                     if (dbLicitacion != null)
                     {
+                        var verificaActivo = "S";
+                        if (dbLicitacion.TipoFinanciamiento.IdTipoContrato == (int)Helper.TipoContrato.Contrato && dbLicitacion.IdTipoFinanciamiento != (int)Helper.TipoFinanciamiento.EstructuradoConGarantia) {
+                            verificaActivo = "N";
+                        }
                         var existeActivo = db.LicitacionActivo.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
                         var existeOferta = db.LicitacionOferta.Where(c => c.IdLicitacion == idLicitacion).FirstOrDefault();
 
-                        if (existeActivo != null && existeOferta != null)
+                        if ((existeActivo != null || verificaActivo == "N") && existeOferta != null)
                         {
                             dbLicitacion.IdEstado = (int)Helper.Estado.LicFinalizada;
                             db.SaveChanges();
