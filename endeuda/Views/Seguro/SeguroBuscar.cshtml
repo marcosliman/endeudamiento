@@ -63,7 +63,7 @@
                 <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
                     <div class="form-inline my-1 my-lg-0">
                         <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Generar Envío Banco</button>
-                        OPER. LEASING,	ITEM,	RUT BENEFICIARIO,	N° DE EQUIPO,	FAMILIA	DESCRIPCIÓN	MARCA,	MODELO,	N° MOTOR,	N° CHASIS,	AÑO FABRICACIÓN,	No PAG. INC.,	No PAG. TERM.,VALOR (CLP)
+                        @*OPER. LEASING,	ITEM,	RUT BENEFICIARIO,	N° DE EQUIPO,	FAMILIA	DESCRIPCIÓN	MARCA,	MODELO,	N° MOTOR,	N° CHASIS,	AÑO FABRICACIÓN,	No PAG. INC.,	No PAG. TERM.,VALOR (CLP)*@
 
                     </div>
                 </nav>
@@ -86,6 +86,7 @@
                         <th>Num. Pagos</th>
                         <th>Moneda</th>
                         <th width="20%">Venc. Seguro</th>
+                        <th>Siniestro</th>
                         <th>Beneficiario</th>
                         <th>RUT Ben.</th>
                         <th>Fecha Env. Banco</th>
@@ -230,6 +231,7 @@
                         sort: "FechaVencimiento"
                     }
                 },
+                { "data": "TieneSiniestro" },
                 { "data": "Beneficiario" },
                 { "data": "RutBeneficiario" },
                 {

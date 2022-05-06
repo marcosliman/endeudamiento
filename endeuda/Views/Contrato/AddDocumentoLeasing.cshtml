@@ -135,14 +135,14 @@
                             debe corregir esta situación para poder activar el contrato
                         </div>
                     }
-                    else
+                    @*else
                     {
                         <div class="alert alert-success">
                             <h5><i class="icon fas fa-check-circle"></i></h5>
                             La suma de los valores de los activos <b>@(String.Format("{0:N0}", @sumaActivo))</b> <br />
                             es igual al monto del contrato <b>@(String.Format("{0:N0}", @montoContrato))</b>
                         </div>
-                    }
+                    }*@
                     if (sumaAmortizacion != montoContrato)
                     {
                         montoValido = "N";
@@ -153,14 +153,14 @@
                             debe corregir esta situación para poder activar el contrato
                         </div>
                     }
-                    else
+                    @*else
                     {
                     <div class="alert alert-success">
                         <h5><i class="icon fas fa-check-circle"></i></h5>
                         La suma de las cuotas de la amortización <b>@(String.Format("{0:N0}", sumaAmortizacion))</b><br />
                         es igual al monto del contrato <b>@(String.Format("{0:N0}", montoContrato))</b>
                     </div>
-                    }
+                    }*@
                     if (montoValido == "S")
                     {
                         <label>¿Está seguro de activar el CONTRATO seleccionado?</label>

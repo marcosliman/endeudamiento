@@ -42,14 +42,14 @@ namespace tesoreria.Controllers
             else
             {
                 var empresa = (from e in db.Empresa
-                                where e.Activo == true
-                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
                 SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
                 ViewData["listaEmpresa"] = listaEmpresa;
 
                 var mes = (from m in db.Mes
-                               select new RetornoGenerico { Id = m.IdMes, Nombre = m.NombreMes }).OrderBy(c => c.Id).ToList();
-                SelectList listaMes = new SelectList(mes.OrderBy(c => c.Nombre), "Id", "Nombre");
+                           select new RetornoGenerico { Id = m.IdMes, Nombre = m.NombreMes }).OrderBy(c => c.Id).ToList();
+                SelectList listaMes = new SelectList(mes.OrderBy(c => c.Id), "Id", "Nombre", DateTime.Now.Month);
                 ViewData["listaMes"] = listaMes;
 
                 var contrato = new ContratoViewModel();
@@ -70,9 +70,9 @@ namespace tesoreria.Controllers
             }
             var fechaMesSgte = fechaInicio.AddMonths(1);
             var fechaFin = fechaMesSgte.AddDays(-1);
-
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
             var contratos = db.Database.SqlQuery<ReporteContratoViewModel>(
-                   "SP_AMORTIZACION_CONTRATO @fechaInicio={0},@fechaFin={1}", fechaInicio, fechaFin).ToList();
+                   "SP_AMORTIZACION_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3}", fechaInicio, fechaFin, idTipoContrato, IdEmpresa).ToList();
 
             //var contratos = (from c in db.Contrato.ToList()
             //                where c.IdTipoContrato == ((idTipoContrato != null) ? idTipoContrato : c.IdTipoContrato)

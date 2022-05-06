@@ -48,5 +48,21 @@ namespace tesoreria.Controllers
 
             return Json(listaProd, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult Auxiliares_Read(string q, int IdEmpresa)
+        {
+            var empresaSoft = db.Empresa.Find(IdEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresaSoft.BaseSoftland);
+
+            var listaProd = (from aux in dbSoft.cwtauxi
+                             where aux.ClaCli == "S" && aux.ActAux == "S"
+                             && (aux.RutAux.Replace(".", "").Replace("-", "").Contains(q.Replace(".", "").Replace("-", "")) || aux.NomAux.Contains(q))
+                             select new
+                             {
+                                 id = aux.CodAux,
+                                 text = aux.RutAux + " : " + aux.NomAux
+                             }).ToList();
+
+            return Json(listaProd, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿
+﻿@model modelo.Models.Local.PolizaActivo
 @{
     ViewBag.Title = "Editar Beneficiario";
 }
@@ -14,7 +14,7 @@
 
 }, new { id = "frmEditBeneficiario", @class = "form-horizontal" }))
 {
-<input type="hidden" name="idPolizaActivo" id="idPolizaActivo" value="@Model.IdPolizaActivo" />
+    <input type="hidden" name="idPolizaActivo" id="idPolizaActivo" value="@Model.IdPolizaActivo" />
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Editar Beneficiario</h5>
@@ -24,18 +24,33 @@
         </div>
         <div class="modal-body">
             <div class="ml-2">
-                <div class="form-group form-group-sm row">
-                    <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Beneficiario</label>
-                    <div class="col-6">
-                        <input type="text" class="form-control form-control-sm required" name="beneficiario" id="beneficiario" value="@Model.Beneficiario" />
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Auxiliar</label>
+                    <div class="col-sm-6">
+                        <select class="form-control select2 js-data-example-ajax" name="beneficiario" id="beneficiario">
+                            @if (Model.CodAux != null)
+                            {
+                                <option value="@Model.CodAux" selected="selected">@Model.RutBeneficiario : @Model.Beneficiario</option>
+                            }
+                            else
+                            {
+                                <option value=""></option>
+                            }
+                        </select>
                     </div>
                 </div>
-                <div class="form-group form-group-sm row">
-                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Rut Beneficiario</label>
-                    <div class="col-6">
-                        <input type="text" class="form-control form-control-sm required" name="rutBeneficiario" id="rutBeneficiario" value="@Model.RutBeneficiario" />
+                @*<div class="form-group form-group-sm row">
+                        <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Beneficiario</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control form-control-sm required" name="beneficiario" id="beneficiario" value="@Model.Beneficiario" />
+                        </div>
                     </div>
-                </div>
+                    <div class="form-group form-group-sm row">
+                        <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Rut Beneficiario</label>
+                        <div class="col-6">
+                            <input type="text" class="form-control form-control-sm required" name="rutBeneficiario" id="rutBeneficiario" value="@Model.RutBeneficiario" />
+                        </div>
+                    </div>*@
                 <div class="form-group form-group-sm row">
                     <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Número pag. inicial</label>
                     <div class="col-6">
@@ -56,7 +71,7 @@
         </div>
     </div>
 }
-    <script>
+<script>
         $(document).ready(function () {
 
             $('#frmEditBeneficiario').validate({
@@ -69,6 +84,30 @@
                     paginaInicial: { required: true, digits: true },
                     paginaTermino: { required: true, digits: true },
                 }
+            });
+            $('#beneficiario').select2({
+                placeholder: 'Busque Cliente',
+                language: "es",
+                minimumInputLength: 3,
+                allowClear: true,
+                ajax: {
+                    url: '/Beneficiario/Auxiliares_Read',
+                    data: function (params) {
+                        var query = {
+                            q: params.term,
+                            IdEmpresa: "@Model.Poliza.IdEmpresa"
+                        }
+                        return query;
+                    },
+                    delay: 250,
+                    dataType: 'json',
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+
             });
         });
 
@@ -106,4 +145,4 @@
             $('#ModalEditarBeneficiarioo').modal('hide');
         }
 
-    </script>
+</script>

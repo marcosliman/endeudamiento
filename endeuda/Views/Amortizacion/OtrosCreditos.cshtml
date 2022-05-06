@@ -27,27 +27,13 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-2">
-                @Html.DropDownList("idEmpresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                @Html.DropDownList("IdEmpresaFiltro", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
             <div class="col-md-2">
-                <select name="idAnioB" class="form-control">
-                    <option>--Seleccione Año--</option>
-                    <option value="1">2021</option>
-                    <option value="2">2022</option>
-                    <option value="3">2023</option>
-                    <option value="4">2024</option>
-                    <option value="5">2025</option>
-                    <option value="6">2026</option>
-                    <option value="7">2027</option>
-                    <option value="8">2028</option>
-                    <option value="9">2029</option>
-                    <option value="10">2030</option>
-                    <option value="11">2031</option>
-                    <option value="12">2032</option>
-                </select>
+                <input type="text" class="form-control form-control-sm" placeholder="Año" id="AnioFiltro" name="AnioFiltro" value="@DateTime.Now.Year">
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("idMesB", (SelectList)ViewData["listaMes"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                @Html.DropDownList("IdMesFiltro", (SelectList)ViewData["listaMes"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
             <div class="col-md-2">
 
@@ -83,7 +69,7 @@
 
                     </div>
                     <div class="form-inline my-2 my-lg-0">
-                        <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-download"></i> Exportar Comprobante Contable de Ajuste</button>
+                        <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-download"></i> Generar Comprobante Contable de Ajuste del Mes, separados por Tipo moneda (solicitar valor de cambio)</button>
                     </div>
                 </nav>
                 <div class="table-responsive">
@@ -195,16 +181,16 @@
                 "url": '/Amortizacion/ListaContrato_Read/',
                 "data": function (d) {
                     d.idTipoContrato = "@((int)tesoreria.Helper.TipoContrato.Contrato)";
-                    d.IdEmpresa = $('#idEmpresaB').val();
-                    d.IdAnio = $('#idAnioB').val();
-                    d.IdMes = $('#idMesB').val();
+                    d.IdEmpresa = $('#IdEmpresaFiltro').val();
+                    d.Anio = $('#AnioFiltro').val();
+                    d.IdMes = $('#IdMesFiltro').val();
                 },
                 "dataSrc": ""
             },
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [6],
+                    targets: [6, 7, 8, 9, 10, 11],
                     render: function (data, type, row) {
                         var numFormt = "";
                         if (data != null) {

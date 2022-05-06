@@ -630,14 +630,17 @@ namespace tesoreria.Controllers
 
                             var p = db.PolizaActivo.Find(dato.IdPolizaActivo);
                             mensaje = "Beneficiario póliza de seguro actualizado con éxito";
-
+                            var empresa = db.Empresa.Find(p.Poliza.IdEmpresa);
+                            SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+                            var uxiliar = dbSoft.cwtauxi.Find(dato.Beneficiario);
                             if (p != null) {
 
                                 //validar datos
                                 dato.Beneficiario = validarDatos.ValidaStr(dato.Beneficiario);
 
-                                p.RutBeneficiario = dato.RutBeneficiario;
-                                p.Beneficiario = dato.Beneficiario;
+                                p.RutBeneficiario = uxiliar.RutAux;
+                                p.Beneficiario = uxiliar.NomAux;
+                                p.CodAux=dato.Beneficiario;
                                 p.PaginaInicial = dato.PaginaInicial;
                                 p.PaginaTermino = dato.PaginaTermino;
                                 db.SaveChanges();
@@ -901,7 +904,8 @@ namespace tesoreria.Controllers
                                 FechaRegistroActivoStr = "",
                                 Glosa = a.Glosa,
                                 FechaBaja = a.FechaBaja,
-                                FechaBajaStr = ""
+                                FechaBajaStr = "",
+                                TieneSiniestro = (db.Siniestro.Where(x => x.IdPolizaActivo == rel.IdPolizaActivo).Count() > 0) ? "SI" : "NO"
 
                             }).AsEnumerable().ToList();
 

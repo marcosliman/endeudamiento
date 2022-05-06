@@ -81,7 +81,7 @@
                 <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Infraseguro</label>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm" name="Infraseguro" id="Infraseguro" value="@Model.Infraseguro" />
+                        <input type="text" class="form-control form-control-sm numberMiles" name="Infraseguro" id="Infraseguro" value="@Model.Infraseguro" />
                     </div>
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Deducible</label>
                     <div class="col-sm-2">
@@ -121,7 +121,22 @@
             errorContainer: $("#warning"),
             rules: {
                 numeroLiquidacion: { required: true },
-                montoLiquidacion: { required: true, digits: true },
+                montoLiquidacion:
+                {
+                    required:
+                    {
+                        depends: function () {
+                            var estado = $('#idEstado').val();
+
+                            if (estado == '52' || estado == '53') {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                    }
+                },
                 fechaDeclaracion: { required: true },
                 numeroSiniestro: { required: true },
                 fechaSiniestro: { required: true },
@@ -129,10 +144,55 @@
                 idPerdidaReclamada: { required: true },
                 idPerdidaDeterminada: { required: true },
                 idEstado: { required: true },
-                Liquidador: { required: true },
-                Infraseguro: { required: true },
-                Deducible: { required: true, digits: true },
-                Indemnizacion: { required: true, digits: true }
+                Liquidador: { required: true },                
+                Infraseguro:
+                {
+                    required:
+                    {
+                        depends: function () {
+                            var estado =$('#idEstado').val();
+
+                            if (estado == '52' || estado=='53') {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                    }
+                },
+                deducible:
+                {
+                    required:
+                    {
+                        depends: function () {
+                            var estado = $('#idEstado').val();
+
+                            if (estado == '52' || estado == '53') {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                    }
+                },
+                indemnizacion:
+                {
+                    required:
+                    {
+                        depends: function () {
+                            var estado = $('#idEstado').val();
+
+                            if (estado == '52' || estado == '53') {
+                                return true;
+                            }
+                            else {
+                                return false;
+                            }
+                        }
+                    }
+                }
             }
         });
     });

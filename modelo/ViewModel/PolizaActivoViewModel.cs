@@ -62,7 +62,7 @@ namespace modelo.ViewModel
         public DateTime? FechaBaja { get; set; }
         public string FechaBajaStr { get; set; }
         public string NumeroLeasing { get; set; }
-        
+        public string TieneSiniestro { get; set; }
     }
 
 }

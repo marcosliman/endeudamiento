@@ -16,11 +16,11 @@ namespace modelo.ViewModel
         public double? TasaMensual { get; set; }
         public double? TasaAnual { get; set; }
         public string Moneda { get; set; }
-        public double Total { get; set; }
-        public double Total1 { get; set; }
-        public double Total2 { get; set; }
-        public double Total3 { get; set; }
-        public double TotalGeneral { get; set; }
+        public double? Total { get; set; }
+        public double? Total1 { get; set; }
+        public double? Total2 { get; set; }
+        public double? Total3 { get; set; }
+        public double? TotalGeneral { get; set; }
     }
 
 }
