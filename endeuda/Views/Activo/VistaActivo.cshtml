@@ -1,0 +1,165 @@
+﻿@model modelo.ViewModel.ActivoViewModel
+@{
+    ViewBag.Title = "Detalle del Activo";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+    var esReadOnly = (Model.IdEstado == 3 || Model.IdEstado==0) ? "" : "readonly='readonly'";
+    var sincronizadoSoft = (Model.Activo != null) ? Model.Activo.SincronizadoSoftland : false;
+    var codSoftReadonly = (sincronizadoSoft == true) ? "readonly='readonly'" : esReadOnly;
+}
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="addActivo">Detalle del Activo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="card-body">
+        @using (Ajax.BeginForm("GrabarActivo", "Activo", new AjaxOptions
+        {
+            OnBegin = "mostrarCargando",
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "post",
+            OnSuccess = "Success",
+            OnFailure = "Failure"
+
+        }, new { id = "frmActivo" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="idActivo" id="idActivo" value="@Model.IdActivo" />
+            <div class="ml-2">
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Empresa</label>
+                    <div class="col-6">
+                        @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="numeroInterno" class="col-sm-3 col-form-label col-form-label-sm">Número de Activo</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm required" readonly name="numeroInterno" id="numeroInterno" placeholder="Ingrese el identificador del activo" value="@Model.NumeroInterno">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="codSoftland" class="col-sm-3 col-form-label col-form-label-sm required">Código Softland</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="codSoftland" readonly id="codSoftland" placeholder="Ingrese Código Softland" value="@Model.CodSoftland">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Familia de Activo</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownList("idFamilia", (SelectList)ViewData["listaFamilia"], "--Seleccione Familia--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Descripción</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="descripcion" readonly id="descripcion" placeholder="Ingrese una descripción del activo" value="@Model.Descripcion">
+                    </div>
+                </div>
+                @*<div class="form-group form-group-sm row">
+                    <label for="capacidad" class="col-sm-3 col-form-label col-form-label-sm">Capacidad</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="capacidad" id="capacidad" placeholder="Ingrese una capacidad del activo" value="@Model.Capacidad">
+                    </div>
+                </div>*@
+                <div class="form-group form-group-sm row">
+                    <label for="fecha" class="col-sm-3 col-form-label col-form-label-sm">Clasificación de Cuenta</label>
+                    <div class="col-6">
+                        @Html.DropDownList("idCuenta", (SelectList)ViewData["listaCuentas"], "--Seleccione Cuenta--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                       
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="valor" class="col-sm-3 col-form-label col-form-label-sm">Valor de Adquisición($)</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm numberMiles" name="valor" id="valor" placeholder="Ingrese valor del activo" value="@Model.Valor">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="marca" class="col-sm-3 col-form-label col-form-label-sm">Marca</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownList("IdMarcaProducto", (SelectList)ViewData["listaMarcas"], "--Seleccione Marca--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="modelo" class="col-sm-3 col-form-label col-form-label-sm">Modelo</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownList("IdModeloProducto", (SelectList)ViewData["listaModelos"], "--Seleccione Modelo--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="anio" class="col-sm-3 col-form-label col-form-label-sm">Año</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm digits" name="anio" id="anio" placeholder="Ingrese Año del activo" value="@Model.Anio">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="grupo" class="col-sm-3 col-form-label col-form-label-sm">Grupo</label>
+                    <div class="col-6">
+                        @Html.DropDownList("grupo", (SelectList)ViewData["listaGrupos"], "--Seleccione Grupo--", htmlAttributes: new { @class = "form-control form-control-sm" })
+
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="subGrupo" class="col-sm-3 col-form-label col-form-label-sm">SubGrupo</label>
+                    <div class="col-6">
+                        @Html.DropDownList("subGrupo", (SelectList)ViewData["listaSubGrupos"], "--Seleccione Sub Grupo--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Proveedor</label>
+                    <div class="col-6">
+                        @Html.DropDownList("idProveedor", (SelectList)ViewData["listaProveedor"], "--Seleccione Proveedor--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                       
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Factura</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" name="numeroFactura" readonly id="numeroFactura" placeholder="Ingrese la factura correspondiente" value="@Model.NumeroFactura">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Motor</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="motor" readonly id="motor" placeholder="Ingrese número motor" value="@Model.Motor">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Chasis/Serie</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="chasis" readonly id="chasis" placeholder="Ingrese número chasis/serie" value="@Model.Chasis">
+                    </div>
+                </div>
+                @*<div class="form-group form-group-sm row">
+                    <label for="serie" class="col-sm-3 col-form-label col-form-label-sm">Número Serie</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="serie" id="serie" placeholder="Ingrese número de serie del activo" value="@Model.Serie">
+                    </div>
+                </div>*@
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Patente</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" name="patente" readonly id="patente" placeholder="Ingrese el número de patente" value="@Model.Patente">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="glosa" class="col-sm-3 col-form-label col-form-label-sm">Glosa</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" name="glosa" readonly id="glosa" placeholder="Ingrese Glosa" value="@Model.Glosa">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+    </div>
+
+<script>
+    $(document).ready(function () {
+
+    });
+
+</script>

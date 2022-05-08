@@ -3252,6 +3252,8 @@
     <Content Include="Views\Amortizacion\AsociarCpbteEgreso.cshtml" />
     <Content Include="Views\CpteSoftland\ComprobanteSoftland.cshtml" />
     <Content Include="Views\Seguro\ModalEditarBeneficiario.cshtml" />
+    <Content Include="Views\Contrato\AddDocumentoContrato.cshtml" />
+    <Content Include="Views\Activo\VistaActivo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

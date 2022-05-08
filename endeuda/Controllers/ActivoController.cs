@@ -781,5 +781,116 @@ namespace tesoreria.Controllers
                 }
             }
         }
+
+        public ActionResult VistaActivo(int IdActivo)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                List<RetornoGenerico> cuentas = new List<RetornoGenerico>();
+                List<RetornoGenerico> proveedores = new List<RetornoGenerico>();
+                List<RetornoGenerico> grupos = new List<RetornoGenerico>();
+                List<RetornoGenerico> subgrupos = new List<RetornoGenerico>();
+
+                var registro = (from ac in db.Activo
+                                where ac.IdActivo == IdActivo
+
+                                select new ActivoViewModel
+                                {
+                                    IdActivo = ac.IdActivo,
+                                    IdEmpresa = ac.IdEmpresa,
+                                    NumeroInterno = ac.NumeroInterno,
+                                    CodSoftland = ac.CodSoftland,
+                                    IdFamilia = ac.IdFamilia,
+                                    Familia = (ac.Familia.NombreFamilia != null) ? ac.Familia.NombreFamilia : string.Empty,
+                                    Descripcion = ac.Descripcion,
+                                    Capacidad = ac.Capacidad,
+                                    Marca = ac.Marca,
+                                    Modelo = ac.Modelo,
+                                    Motor = ac.Motor,
+                                    Chasis = ac.Chasis,
+                                    Serie = ac.Serie,
+                                    Anio = ac.Anio,
+                                    Valor = ac.Valor,
+                                    IdProveedor = ac.IdProveedor,
+                                    IdCuenta = ac.IdCuenta,
+                                    NumeroFactura = ac.NumeroFactura,
+                                    Patente = ac.Patente,
+                                    TituloBoton = "Editar",
+                                    Grupo = ac.Grupo,
+                                    SubGrupo = ac.SubGrupo,
+                                    IdEstado = ac.IdEstado,
+                                    Activo = ac,
+                                    IdMarcaProducto = ac.IdMarcaProducto,
+                                    IdModeloProducto = ac.IdModeloProducto
+                                }).FirstOrDefault();
+
+                if (registro == null)
+                {
+                    registro = new ActivoViewModel();
+                    registro.IdActivo = 0;
+                    registro.IdProveedor = "";
+                    registro.IdEmpresa = 0;
+                    registro.TituloBoton = "Grabar";
+                    registro.IdCuenta = "";
+                    registro.IdMarcaProducto = 0;
+                    registro.IdModeloProducto = 0;
+                }
+                else
+                {
+                    var empresaSel = db.Empresa.Find(registro.IdEmpresa);
+                    SoftLandContext dbSoft = new SoftLandContext(empresaSel.BaseSoftland);
+                    cuentas = (from t in dbSoft.cwpctas
+                               select new RetornoGenerico { Id = 0, Nombre = t.PCCODI + ": " + t.PCDESC, ValorString = t.PCCODI }).OrderBy(c => c.Nombre).ToList();
+                    var auxiliar = dbSoft.cwtauxi.Find(registro.IdProveedor);
+                    proveedores = (from aux in dbSoft.cwtauxi
+                                   where aux.CodAux == registro.IdProveedor
+                                   select new RetornoGenerico { Id = 0, Nombre = aux.RutAux + " : " + aux.NomAux, ValorString = aux.CodAux }).OrderBy(c => c.Id).ToList();
+
+                    grupos = (from t in dbSoft.awtgrup
+                              select new RetornoGenerico { Id = 0, Nombre = t.DesGru, ValorString = t.CodGru }).OrderBy(c => c.Nombre).ToList();
+                    subgrupos = (from t in dbSoft.awtsubgr
+                                 where ((registro.Grupo != "") ? t.CodGru == registro.Grupo : true)
+                                 select new RetornoGenerico { Id = 0, Nombre = t.DesSGru, ValorString = t.CodSGru }).OrderBy(c => c.Nombre).ToList();
+                }
+                SelectList listaGrupos = new SelectList(grupos.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.Grupo);
+                ViewData["listaGrupos"] = listaGrupos;
+
+                SelectList listaSubGrupos = new SelectList(subgrupos.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.SubGrupo);
+                ViewData["listaSubGrupos"] = listaSubGrupos;
+
+                SelectList listaCuentas = new SelectList(cuentas.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.IdCuenta);
+                ViewData["listaCuentas"] = listaCuentas;
+
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEmpresa);
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var familia = (from e in db.Familia
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdFamilia, Nombre = e.NombreFamilia }).OrderBy(c => c.Id).ToList();
+                SelectList listaFamilia = new SelectList(familia.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdFamilia);
+                ViewData["listaFamilia"] = listaFamilia;
+
+                SelectList listaProveedor = new SelectList(proveedores.OrderBy(c => c.Nombre), "ValorString", "Nombre");
+                ViewData["listaProveedor"] = listaProveedor;
+
+                //marca y modelo
+                var marcas = (from t in db.MarcaProducto
+                              select new RetornoGenerico { Id = t.IdMarcaProducto, Nombre = t.DescMarcaProducto }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaMarcas = new SelectList(marcas.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdMarcaProducto);
+                ViewData["listaMarcas"] = listaMarcas;
+                var modelos = (from t in db.ModeloProducto
+                               select new RetornoGenerico { Id = t.IdModeloProducto, Nombre = t.DescModeloProducto }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaModelos = new SelectList(modelos.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdModeloProducto);
+                ViewData["listaModelos"] = listaModelos;
+                return View(registro);
+            }
+        }
     }
 }

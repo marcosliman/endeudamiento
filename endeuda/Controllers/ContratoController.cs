@@ -1435,8 +1435,220 @@ namespace tesoreria.Controllers
         }
         #endregion
 
-        #region Documento Leasing
-        public ActionResult AddDocumentoLeasing(int idContrato)
+        #region Documento Contrato
+        public ActionResult AddDocumentoContrato(int idContrato)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var registro = (from ac in db.Activo
+                                join rel in db.ContratoActivo on ac.IdActivo equals rel.IdActivo
+                                join con in db.Contrato on rel.IdContrato equals con.IdContrato
+                                where rel.IdContrato == idContrato
+                                select new ContratoActivoViewModel
+                                {
+                                    IdContratoActivo = rel.IdContratoActivo,
+                                    IdActivo = ac.IdActivo,
+                                    NumeroInterno = ac.NumeroInterno,
+                                    CodSoftland = ac.CodSoftland,
+                                    Valor = ac.Valor,
+                                    Familia = (ac.Familia.NombreFamilia != null) ? ac.Familia.NombreFamilia : string.Empty,
+                                    IdTipoContrato = con.IdTipoContrato
+                                }).AsEnumerable().ToList();
+
+                var tipoDocumento = (from e in db.TipoDocumento
+                             where e.Activo == true && e.IdCategoriaDocumento == (int)Helper.CategoriaDocumento.ActivoContrato
+                             select new RetornoGenerico { Id = e.IdTipoDocumento, Nombre = e.NombreTipoDocumento }).OrderBy(c => c.Id).ToList();
+                //SelectList listaTipoDocumento = new SelectList(tipoDocumento.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaTipoDocumento"] = tipoDocumento;
+
+                //verificacion activar contrato
+                double sumaActivo = 0;
+                double sumaAmortizacion = 0;
+                if (registro != null)
+                {
+                    sumaActivo = Convert.ToDouble(registro.Sum(c => c.Valor));
+                }
+                ViewData["puedeActivar"] = "N";
+                ViewData["urlRetorno"] = "/Contrato/ListaContratoCredito";
+                var conActivo = db.Contrato.Where(c => c.IdContrato == idContrato).FirstOrDefault();
+                ViewBag.IdTipoContrato = 0;
+                if (conActivo != null) {
+                    var amortizacion = (from a in db.Contrato_Amortizacion
+                                        join de in db.Contrato_DetAmortizacion on a.IdContratoAmortizacion equals de.IdContratoAmortizacion
+                                        where a.IdContrato == idContrato
+                                        select new { de.Amortizacion }).ToList();
+                    if (amortizacion != null)
+                    {
+                        sumaAmortizacion = Convert.ToDouble(amortizacion.Sum(c => c.Amortizacion));
+                    }
+                    sumaAmortizacion = Math.Round(sumaAmortizacion, 0);
+                    ViewBag.SumaActivo = sumaActivo;
+                    if (conActivo.TipoFinanciamiento.IdTipoContrato == (int)Helper.TipoContrato.Contrato && conActivo.IdTipoFinanciamiento != (int)Helper.TipoFinanciamiento.EstructuradoConGarantia) {
+                        ViewBag.SumaActivo = conActivo.Monto;
+                    }
+                    ViewBag.SumaAmortizacion = sumaAmortizacion;
+                    ViewBag.MontoContrato = conActivo.Monto;
+
+                    ViewBag.IdTipoContrato = conActivo.IdTipoContrato;
+                    if (conActivo.IdEstado == (int)Helper.Estado.ConCreado) { 
+                        ViewData["puedeActivar"] = "S";
+                    }
+                    if (conActivo.IdTipoContrato == (int)Helper.TipoContrato.Leasing) {
+                        ViewData["urlRetorno"] = "/Contrato/ListaContratoLeasing";
+                    }
+                }
+
+                var contrato = new ContratoDocumento();
+                contrato.IdContrato = idContrato;
+
+                return View(contrato);
+            }
+        }
+
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+
+        public ActionResult GrabarContratoDocumento(ContratoDocumento dato, HttpPostedFileBase archivo)
+        {
+            dynamic showMessageString = string.Empty;
+            //validar que los datos ingresados sean correctos
+            var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
+            ContratoDocumento addDocumento = new ContratoDocumento();
+            tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+            if (seguridad == null)
+            {
+                showMessageString = new { Estado = 1000, Mensaje = "Se finalizó la sesión" };
+            }
+            else
+            {
+                if (ModelState.IsValid)
+                {
+                    using (var dbContextTransaction = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            var mensaje = "";
+
+                            if (archivo != null)
+                            {
+                                var contrato = db.Contrato.Where(c => c.IdContrato == dato.IdContrato).FirstOrDefault();
+                                var pathDocumento = "";
+                                var fileName = dato.IdTipoDocumento.ToString()+'_'+Path.GetFileName(archivo.FileName);
+                                var carpeta = "Contrato/"+ contrato.IdContrato;
+                                var pathData = "~/App_Data";
+                                var pathCarpeta = Path.Combine(Server.MapPath(pathData), carpeta); ;
+                                if (!Directory.Exists(pathCarpeta))
+                                {
+                                    DirectoryInfo di = Directory.CreateDirectory(pathCarpeta);
+                                }
+                                string carpetaSolicitud = contrato.IdContrato.ToString();
+                                var pathCarpetaSolicitud = Path.Combine(pathCarpeta, carpetaSolicitud);
+                                if (!Directory.Exists(pathCarpetaSolicitud))
+                                {
+                                    DirectoryInfo di = Directory.CreateDirectory(pathCarpetaSolicitud);
+                                }
+                                pathDocumento = pathData + "/" + carpeta + "/" + carpetaSolicitud + "/" + fileName;
+                                var physicalPath = Path.Combine(pathCarpetaSolicitud, fileName);
+                                archivo.SaveAs(physicalPath);
+
+                                addDocumento.IdContrato = (int)contrato.IdContrato;
+                                addDocumento.IdTipoDocumento = dato.IdTipoDocumento;
+                                addDocumento.FechaRegistro = DateTime.Now;
+                                addDocumento.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                                addDocumento.NombreOriginal = fileName;
+                                addDocumento.UrlDocumento = pathDocumento;
+                                db.ContratoDocumento.Add(addDocumento);
+                                db.SaveChanges();
+                                mensaje = "Archivo Cargado con exito";
+
+                                //registro log contrato
+                                var textoLog = "";
+                                textoLog += " Agrega Documento: " + addDocumento.NombreOriginal;
+                                GrabaLogContrato(contrato.IdContrato, 3, textoLog);
+                            }
+
+                            dbContextTransaction.Commit();
+                            showMessageString = new { Estado = 0, Mensaje = mensaje };
+
+                        }
+                        catch (Exception ex)
+                        {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                        }
+                    }
+                }
+                else
+                {
+                    showMessageString = new { Estado = 103, Mensaje = "Se ha producido un error" };
+                }
+            }
+            //return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ListaContratoDocumento_Read(int idContrato)
+        {
+            var registro = (from c in db.ContratoDocumento
+                            join td in db.TipoDocumento on c.IdTipoDocumento equals td.IdTipoDocumento
+                            where c.IdContrato == idContrato
+                            select new ContratoDocumentoViewModel
+                            {
+                                IdContratoDocumento = c.IdContratoDocumento,
+                                IdContrato = idContrato,
+                                NombreTipoDocumento = td.NombreTipoDocumento,
+                                NombreOriginal = c.NombreOriginal,
+                                UrlDocumento = c.UrlDocumento
+                            }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteContratoDocumento(int idContratoDocumento)
+        {
+            dynamic showMessageString = string.Empty;
+            var dbArchivo = db.ContratoDocumento.Find(idContratoDocumento);
+
+            var contrato = (from c in db.ContratoDocumento
+                            where c.IdContratoDocumento == idContratoDocumento
+                            select new { c.IdContrato,c.NombreOriginal }).FirstOrDefault();
+
+            var archivo = Server.MapPath(dbArchivo.UrlDocumento);
+            if (System.IO.File.Exists(archivo))
+            {
+                System.IO.File.Delete(archivo);
+            }
+            var textoLog = "";
+            textoLog += " Elimina Documento: " + contrato.NombreOriginal;
+
+            db.Database.ExecuteSqlCommand("DELETE FROM ContratoDocumento WHERE IdContratoDocumento = {0}", idContratoDocumento);
+            db.SaveChanges();
+
+
+            //registro log contrato
+            if(contrato != null) { 
+                GrabaLogContrato(contrato.IdContrato, 3, textoLog);
+            }
+
+
+            showMessageString = new { Estado = 0, Mensaje = "Archivo Eliminado" };
+
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        } 
+
+        #endregion
+
+        #region Documento Activo
+        /*public ActionResult AddDocumentoLeasing(int idContrato)
         {
             if (seguridad == null)
             {
@@ -1479,7 +1691,7 @@ namespace tesoreria.Controllers
                 //SelectList listaTipoDocumento = new SelectList(tipoDocumento.OrderBy(c => c.Nombre), "Id", "Nombre");
                 ViewData["listaTipoDocumento"] = tipoDocumento;
 
-                /*verificacion activar contrato*/
+                //verificacion activar contrato
                 double sumaActivo = 0;
                 double sumaAmortizacion = 0;
                 if (registro != null)
@@ -1576,7 +1788,7 @@ namespace tesoreria.Controllers
                                 db.SaveChanges();
                                 mensaje = "Archivo Cargado con exito";
 
-                                /*registro log contrato*/
+                                //registro log contrato
                                 var textoLog = "";
                                 textoLog += " Agrega Documento: " + addDocumento.NombreOriginal;
                                 GrabaLogContrato(contrato.IdContrato, 3, textoLog);
@@ -1642,7 +1854,7 @@ namespace tesoreria.Controllers
             db.SaveChanges();
 
 
-            /*registro log contrato*/
+            //registro log contrato
             if(contrato != null) { 
                 GrabaLogContrato(contrato.IdContrato, 3, textoLog);
             }
@@ -1651,7 +1863,7 @@ namespace tesoreria.Controllers
             showMessageString = new { Estado = 0, Mensaje = "Archivo Eliminado" };
 
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
-        }
+        } */
 
         #endregion
 
@@ -1902,7 +2114,13 @@ namespace tesoreria.Controllers
             else
             {
 
-                var registro = (from ac in db.Activo
+                var tipoDocumento = (from e in db.TipoDocumento
+                                     where e.Activo == true && e.IdCategoriaDocumento == (int)Helper.CategoriaDocumento.ActivoContrato
+                                     select new RetornoGenerico { Id = e.IdTipoDocumento, Nombre = e.NombreTipoDocumento }).OrderBy(c => c.Id).ToList();
+                //SelectList listaTipoDocumento = new SelectList(tipoDocumento.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaTipoDocumento"] = tipoDocumento;
+
+                /*var registro = (from ac in db.Activo
                                 join rel in db.ContratoActivo on ac.IdActivo equals rel.IdActivo
                                 join con in db.Contrato on rel.IdContrato equals con.IdContrato
                                 where rel.IdContrato == idContrato
@@ -1923,7 +2141,8 @@ namespace tesoreria.Controllers
                                                     UrlDocumento = d.UrlDocumento,
                                                     NombreOriginal = d.NombreOriginal
                                                 }).ToList()
-                                }).AsEnumerable().ToList();
+                                }).AsEnumerable().ToList();*/
+                var registro = db.Contrato.Find(idContrato);
 
                 return View(registro);
             }

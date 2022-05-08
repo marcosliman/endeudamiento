@@ -193,8 +193,62 @@ namespace tesoreria.Controllers
             }
             else
             {
+                var banco = (from e in db.Banco
+                             where e.Activo == true
+                             select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
+                SelectList listaBanco = new SelectList(banco.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaBanco"] = listaBanco;
+
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+
                 return View();
             }
+        }
+
+        public ActionResult ListaActivosFinanciados_Read(int? idEmpresa, int? idBanco, string numeroActivo)
+        {
+            var registro = (from a in db.Activo.ToList()
+                                join f in db.Familia.ToList() on a.IdFamilia equals f.IdFamilia into fw
+                                from fv in fw.DefaultIfEmpty()
+                                join Emp in db.Empresa.ToList() on a.IdEmpresa equals Emp.IdEmpresa
+                                join ca in db.ContratoActivo.ToList() on a.IdActivo equals ca.IdActivo
+                                join c in db.Contrato.ToList() on ca.IdContrato equals c.IdContrato
+                                join m in db.TipoMoneda.ToList() on c.IdTipoMoneda equals m.IdTipoMoneda
+                                join Bco in db.Banco.ToList() on c.IdBanco equals Bco.IdBanco
+                                join Est in db.Estado.ToList() on a.IdEstado equals Est.IdEstado
+                                join sa in db.PolizaActivo.ToList() on a.IdActivo equals sa.IdActivo into saw
+                                from sav in saw.DefaultIfEmpty()
+                                //join s in db.Poliza.ToList() on sav.IdPoliza equals s.IdPoliza into sw
+                                //from sv in sw.DefaultIfEmpty()
+                                where Emp.IdEmpresa == ((idEmpresa != null) ? idEmpresa : Emp.IdEmpresa)
+                                && c.IdBanco == ((idBanco != null) ? idBanco : c.IdBanco)
+                                && a.NumeroInterno == ((numeroActivo != "") ? numeroActivo : a.NumeroInterno)
+                                && c.IdEstado == (int)Helper.Estado.ConActivo
+                                select new ReporteActivoFinanciadoViewModel
+                                {
+                                    IdActivo = a.IdActivo,
+                                    NumeroActivo = a.NumeroInterno,
+                                    Descripcion = a.Descripcion,
+                                    Familia = (fv != null) ? fv.NombreFamilia : string.Empty,
+                                    RazonSocial = Emp.RazonSocial,
+                                    NombreBanco = Bco.NombreBanco,
+                                    NumeroContrato = c.NumeroContrato,
+                                    Numerocuotas = c.Plazo,
+                                    FechaInicio = c.FechaInicio,
+                                    FechaInicioStr = c.FechaInicio.ToString("dd-MM-yyyy"),
+                                    MontoContrato = c.Monto,
+                                    TasaAnual = c.TasaAnual,
+                                    Moneda = m.NombreTipoMoneda,
+                                    //NumeroPoliza = (sv != null) ? sv.NumeroPoliza : string.Empty,
+                                    NumeroPoliza = "",
+                                    EstadoActivo = Est.NombreEstado
+                                }).AsEnumerable().ToList();
+
+            return Json(registro, JsonRequestBehavior.AllowGet);
         }
         public ActionResult ModalCalcularPrepago()
         {
