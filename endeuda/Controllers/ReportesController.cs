@@ -359,5 +359,94 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+
+        public ActionResult PrestamosRelacionadas()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("PrestamosRelacionadas", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var empresaF = (from e in db.Empresa
+                                where e.Activo == true
+                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresaF = new SelectList(empresaF.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresaF"] = listaEmpresaF;
+
+                var empresaR = (from e in db.Empresa
+                                where e.Activo == true
+                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresaR = new SelectList(empresaR.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresaR"] = listaEmpresaR;
+
+                return View();
+            }
+        }
+
+        public ActionResult PrestamosRelacionadas_Read(int? idEmpresaFinancia, int? idEmpresaReceptora)
+        {
+            var consulta = "select mu.IdMutuo,emp.RazonSocial as EmiteDeuda,emp2.RazonSocial as RecibeDeuda, Sum(mu.MontoPrestamo) as MontoPrestamo,mu.FechaPrestamo, MUTUO.SumaAbono as MontoAbono, mu.InteresTotal, Sum(mu.MontoPrestamo) - Sum(MUTUO.SumaAbono) as Saldo " +
+                          "from Empresa emp " +
+                          "left " +
+                          "join Mutuo mu on emp.IdEmpresa = mu.IdEmpresaFinancia " +
+                          "Left " +
+                          "join (select idmutuo,sum(muab.MontoAbono) as SumaAbono from mutuoabono muab group by IdMutuo) as MUTUO on MUTUO.IdMutuo = mu.IdMutuo " +
+                          "left join Empresa Emp2 on mu.IdEmpresaReceptora = Emp2.IdEmpresa " +
+                          "group by emp.RazonSocial,emp2.RazonSocial,mu.IdMutuo,MUTUO.SumaAbono,mu.FechaPrestamo, mu.InteresTotal";
+            //select emp.RazonSocial,emp2.RazonSocial, Sum(mu.MontoPrestamo)--,Interes, montonfinal,Saldo
+            //from Empresa emp
+            //left join Mutuo mu on emp.IdEmpresa = mu.IdEmpresaFinancia
+            //left join MutuoAbono muab on mu.IdMutuo=muab.IdMutuo
+            //left join Empresa Emp2 on mu.IdEmpresaReceptora = Emp2.IdEmpresa
+            //group by emp.RazonSocial,emp2.RazonSocial,mu.IdMutuo
+
+            var contratos = db.Database.SqlQuery<ReporteRelacionadViewModel>(
+                 consulta).ToList();
+            return Json(contratos, JsonRequestBehavior.AllowGet);
+
+            //var registros = (from emp in db.Empresa
+
+            //                 join mu in db.Mutuo on emp.IdEmpresa equals mu.IdEmpresaFinancia into t_mu
+            //                 from l_mu in t_mu.DefaultIfEmpty()
+
+            //                 join muab in db.MutuoAbono on l_mu.IdMutuo equals muab.IdMutuo into t_muab
+            //                 from l_muab in t_muab.DefaultIfEmpty()
+
+            //                 join empb in db.Empresa on l_mu.IdEmpresaReceptora equals empb.IdEmpresa into t_empb
+            //                 from empb in t_empb.DefaultIfEmpty()
+
+            //                 where l_mu.IdEmpresaFinancia == ((idEmpresaFinancia != null) ? idEmpresaFinancia : l_mu.IdEmpresaFinancia)
+            //                 && l_mu.IdEmpresaReceptora == ((idEmpresaReceptora != null) ? idEmpresaReceptora : l_mu.IdEmpresaReceptora)
+
+            //                 select new
+            //                 {
+            //                     IdMutuo= (l_muab != null) ? l_muab.IdMutuo : 0,
+            //                     MontoAbono= (l_muab != null) ? l_muab.MontoAbono : 0,
+            //                     EmiteDeuda =emp.RazonSocial,
+            //                     RecibeDeuda= (empb != null) ? empb.RazonSocial : null,
+            //                     FechaPrestamo = (l_mu != null) ? l_mu.FechaPrestamo : (DateTime?)null,
+            //                     MontoPrestamo = (l_mu != null) ? l_mu.MontoPrestamo : 0,
+            //                     Interes= (l_mu != null) ? l_mu.InteresTotal : 0
+            //                 }).Distinct().ToList();
+
+            //var totales = registros.GroupBy(c => new { c.IdMutuo,c.EmiteDeuda, c.RecibeDeuda,c.FechaPrestamo})
+            //    .Select(c => new {
+            //        c.Key.IdMutuo,
+            //        c.Key.EmiteDeuda,
+            //        c.Key.RecibeDeuda,
+            //        c.Key.FechaPrestamo,
+            //        Monto = c.Sum(x => x.MontoPrestamo),
+            //        PagosRealizados=c.Sum(x=>x.MontoAbono),
+            //        Interes = c.Sum(x => x.Interes),
+            //        Saldo="0",
+            //    }).ToList();
+
+            //return Json(totales, JsonRequestBehavior.AllowGet);
+        }
     }
 }
