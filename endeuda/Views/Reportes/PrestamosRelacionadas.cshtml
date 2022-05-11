@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "Prestamos Relacionadas";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Reporte </h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<h6 class="h6 mb-0 text-gray-800">Préstamos entre empresas Relacionadas</h6>
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-outline card-info collapsed-card">
+                <div class="card-header">
+                    <h3 class="card-title">Filtros</h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            @Html.DropDownList("idEmpresaFinanciaB", (SelectList)ViewData["listaEmpresaF"], "--Seleccione Empresa Financiera--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                        </div>
+                        <div class="col-md-2">
+                            @Html.DropDownList("idEmpresaReceptoraB", (SelectList)ViewData["listaEmpresaR"], "--Seleccione Empresa Receptora--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                        </div>
+                        <div class="col-md-2">
+
+                        </div>
+                        <div class="col-md-2">
+
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row justify-content-end">
+                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Detalle - Cuotas Pagadas desde Enero del 2018 a Diciembre 2021</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Empresa Financia</th>
+                                <th>Empresa Receptora</th>
+                                <th>Fecha Préstamo</th>
+                                <th>Monto Préstamo</th>
+                                <th>Pagos Realizados ($)</th>
+                                <th>Interes</th>
+                                <th>Saldo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DataTable with Hover -->
+<script>
+$(document).ready(function () {
+    AbrirMenu("CuotasPagadas");
+    $('#selectEmpresa').select2({
+        placeholder: '---Seleccione Empresa---',
+        language: "es",
+        allowClear: true,
+    });
+    initTable();
+});
+function RefreshLista() {
+    var table = initTable();
+    table.ajax.reload(function (json) { });
+}
+function initTable() {
+    var table = $('#grillaEmpresa').DataTable({
+        "scrollX": true,
+        "retrieve": true,
+        'ajax': {
+            "type": "POST",
+            "url": '/Reportes/PrestamosRelacionadas_Read/0',
+            "data": function (d) {
+                d.idEmpresaFinancia = $('#idEmpresaFinanciaB').val();
+                d.idEmpresaReceptora = $('#idEmpresaReceptoraB').val();
+
+            },
+            "dataSrc": ""
+        },
+        columnDefs: [
+        { targets: '_all', className: 'align-middle' },
+        {
+            targets: [3, 4],
+            render: function (data, type, row) {
+                var numFormt = "";
+                if (data != null) {
+                    var num = data.toString();
+                    //numFormt = row.NombreTipoMoneda+" "+SeparadorMiles(num);
+                    numFormt = SeparadorMiles(num);
+                }
+                return numFormt;
+            }
+        },
+        {
+            targets: [2],
+            render: function (data) {
+                var fecha = DateDatatable(data);
+                return fecha;
+            }
+        }
+    ],
+
+        columns: [
+            { "data": "EmiteDeuda" },
+            { "data": "RecibeDeuda" },
+            { "data": "FechaPrestamo" },
+            { "data": "MontoPrestamo" },
+            { "data": "MontoAbono" },
+            { "data": "InteresTotal" },
+            { "data": "Saldo" }
+        ]
+    });
+
+    return table;
+}
+
+</script>
