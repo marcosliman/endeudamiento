@@ -13,6 +13,8 @@ namespace modelo.Models.Local
         [Display(Name = "Código ContratoActivo")]
         public int IdContratoActivo { get; set; }
         public int IdContrato { get; set; }
+        [ForeignKey("IdContrato")]
+        public virtual Contrato Contrato { get; set; }
         public int IdActivo { get; set; }
         [ForeignKey("IdActivo")]
         public virtual Activo Activo { get; set; }

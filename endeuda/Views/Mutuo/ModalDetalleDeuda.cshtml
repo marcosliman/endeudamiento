@@ -4,6 +4,7 @@
 }
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
+    ViewBag.ValorCambio = (Model.IdTipoMoneda != 2) ? "" : ViewBag.ValorCambio;
 }
 
 <div class="modal-content">
@@ -13,34 +14,77 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
-        <div class="card-body">
-            <div class="row">
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al: @Model.FechaPrestamo</label>
-                <div class="table-responsive mt-1">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaDeuda" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Item</th>
-                                <th>Inicio de Periodo</th>
-                                <th>Fin de Periodo</th>
-                                <th>Días</th>
-                                <th>Monto ($)</th>
-                                <th>Intereses</th>
-                                <th>Pago Amortización</th>
-                                <th>Nuevo Préstamo</th>
-                                <th>Fecha</th>
-                                <th>Días</th>
-                                <th>Intereses</th>
-                                <th>Interés Total</th>
-                                <th>Monto Final</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+    <div class="modal-body">        
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Detalle al: @ViewBag.oUltimoDiaDelMesStr</label>
+                </div>
+                @if (Model.IdTipoMoneda != 1)
+                {
+
+
+                    <div class="form-group row">
+                        @if (Model.IdTipoMoneda == 2)
+                        {
+                            <div class="col-sm-2">
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Fecha Cambio</span>
+                                    </div>
+                                    <input type="text" class="form-control classFecha" name="FechaCambio" id="FechaCambio" onchange="ValorUfByFecha(this.value)" placeholder="Fecha Cambio" value="@ViewBag.oUltimoDiaDelMesStr">
+                                </div>
+                            </div>
+                        }                        
+                        <div class="col-sm-2">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Valor Cambio</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm numberMiles" name="ValorCambio" id="ValorCambio" value="@ViewBag.ValorCambio" />
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <button class="btn btn-primary btn-sm justify-content-end" type="button" id="CalcularProyeccion" onclick="Deuda()"><i class="fa fa-sync"></i> Calcular Detalle</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    
+                    <div class="table-responsive mt-1">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaDeuda" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Inicio de Periodo</th>
+                                    <th>Fin de Periodo</th>
+                                    <th>Días</th>
+                                    <th>Monto ($)</th>
+                                    <th>Intereses</th>
+                                    <th>Pago Amortización</th>
+                                    <th>Nuevo Préstamo</th>
+                                    <th>Fecha</th>
+                                    <th>Días</th>
+                                    <th>Intereses</th>
+                                    <th>Interés Total</th>
+                                    <th>Monto Final</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
+        
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
@@ -49,9 +93,23 @@
 
 <script>
     $(document).ready(function () {
+        $('.classFecha').datepicker({
+            format: 'dd/mm/yyyy',
+            autoclose: true,
+            language: "es"
+        });
         Deuda();
     });
-
+    function ValorUfByFecha(valor) {       
+        $.ajax({
+            url: "/FuncionesGenerales/JsonResultInidicadorUF",
+            type: "Post",
+            data: { fecha: valor},
+            success: function (data) {
+                $("#ValorCambio").val(SeparadorMiles(data.Valor.toString()));
+            }
+        });        
+    }
     function Deuda() {
         var table = initTableP();
         table.ajax.reload(function (json) { });
@@ -66,6 +124,7 @@
                 "data": function (d) {
                     d.idMutuo = "@Model.IdMutuo";
                     d.fechaProyeccion = "@Model.FechaPrestamo";
+                    d.ValorCambio = $("#ValorCambio").val();
                 },
                 "dataSrc": ""
             },

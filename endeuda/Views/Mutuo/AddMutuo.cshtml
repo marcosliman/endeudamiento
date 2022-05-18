@@ -34,6 +34,10 @@
         <div class="col-sm-2">
             <input type="text" class="form-control form-control-sm required numberMiles" name="montoPrestamo" id="montoPrestamo" value="@Model.MontoPrestamo" />
         </div>
+        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Moneda</label>
+        <div class="col-sm-2">
+            @Html.DropDownList("IdTipoMoneda", (SelectList)ViewData["listaMonedas"], "--Seleccione Tipo Moneda--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+        </div>
     </div>
     <div class="form-group row">
         <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>

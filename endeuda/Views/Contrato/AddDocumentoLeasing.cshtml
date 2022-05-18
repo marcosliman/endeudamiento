@@ -168,7 +168,11 @@
                 }
             </div>
             <div class="modal-footer">
-                @if (montoValido == "S")
+                <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
+                <a class="btn btn-danger" data-dismiss="modal">
+                    No Acepto
+                </a>
+                @*@if (montoValido == "S")
                 {
                     <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
                     <a class="btn btn-danger" data-dismiss="modal">
@@ -178,7 +182,7 @@
                 else
                 {
                     <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
-                }
+                }*@
 
             </div>
         </div>

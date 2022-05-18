@@ -105,21 +105,24 @@
                                 <th>Valor</th>
                                 <th>G/D</th>
                                 <th>Mes/Año</th>
-                                <th>Fecha. Cobro</th>
+                                
+                                
+                                
                                 <th>CC MQS S.A.</th>
                                 <th>CC MQS SUR S.A.</th>
                                 <th>Num. Factura</th>
                                 <th>Valor Factura</th>
-                                <th>Operación/Contrato Leas.</th>
+
                                 <th>Patente</th>
-                                <th>Fecha. Patente</th>
+                                
+                                
                                 <th>Leasing</th>
                                 <th>Banco</th>
                                 <th>Descripción</th>
                                 <th>Poliza</th>
                                 <th>Num. Endose</th>
                                 <th>Fec. Solicitud</th>
-                                <th>Emp. Propietaria</th>
+
                                 <th>Tipo Propiedad</th>
                             </tr>
                         </thead>
@@ -216,7 +219,7 @@
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [13],
+                    targets: [13,19],
                     render: function (data, type, row) {
                         var numFormt = "";
                         if (data != null) {
@@ -244,7 +247,7 @@
                     "bSortable": false,
                     "mRender": function (o, type, row) {
                         var boton = '';
-                        if (row.IdEstado == 3 || row.IdEstado == 4) {
+                        if (row.EnContrato==false) {
                             boton += '<button class="btn btn-danger btn-xs" type="button" title="Eliminar" onclick="EliminarActivo(' + o.IdActivo + ')"><i class="far fa-trash-alt"></i></button> ';
                         }
                         return boton;
@@ -264,61 +267,24 @@
                 { "data": "RazonSocial" },
                 { "data": "NumeroInterno" },
                 { "data": "CodSoftland" },
-                //{ "data": "Capacidad" },
                 { "data": "Familia" },
                 { "data": "Descripcion" },
                 { "data": "Marca" },
                 { "data": "Modelo" },
                 { "data": "Motor" },
                 { "data": "Chasis" },
-                //{ "data": "Serie" },
                 { "data": "Anio" },
                 { "data": "Valor" },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
+                { "data": "CampoGD" },
+                { "data": "MesAnio" },
+                { "data": "Cc_Mqs" },
+                { "data": "Cc_MqsSur" },
                 { "data": "NumeroFactura" },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                { "data": "NumeroContrato" },
+                { "data": "ValorFactura" },
                 { "data": "Patente" },
+                { "data": "Leasing" },
+                { "data": "Banco" },
+                { "data": "DescripcionLeasing" },
                 {
                     "mData": null,
                     "bSortable": false,
@@ -339,49 +305,8 @@
                     "mRender": function (o, type, row) {
                         return '';
                     }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                }
+                },                
+                { "data": "TipoPropiedad" }
             ]
         });
         //$("#grillaActivo").dataTable().fnDestroy();

@@ -8,11 +8,15 @@ using System.Net;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using modelo.ViewModel;
+using modelo.Models;
+using modelo.Models.Inmobiliaria;
+using System.Data.Entity;
 namespace tesoreria.Controllers
 {
     public class FuncionesGeneralesController : Controller
     {
         // GET: FuncionesGenerales
+        private InmobContext dbInmob = new InmobContext();
         public ActionResult Index()
         {
             return View();
@@ -64,6 +68,27 @@ namespace tesoreria.Controllers
             }
             return EsEmpresa;
         }
+        public SII_ValoresUF JsonInidicadorUF(string fecha)
+        {
+            var FechaUF = (fecha != "") ? Convert.ToDateTime(fecha) : DateTime.Now.Date;
+            var indicadorLocal = dbInmob.SII_ValoresUF.Where(c => DbFunctions.TruncateTime(c.Fecha) == FechaUF).FirstOrDefault();
+            if (indicadorLocal == null)
+            {
+                var ultFecha = dbInmob.SII_ValoresUF.Max(c => c.Fecha);
+                indicadorLocal = dbInmob.SII_ValoresUF.Where(c => c.Fecha == ultFecha).FirstOrDefault();
+            }
+            return indicadorLocal;
+        }
+        public JsonResult JsonResultInidicadorUF(string fecha)
+        {
+            var FechaUF = (fecha != "") ? Convert.ToDateTime(fecha) : DateTime.Now.Date;
+            var indicadorLocal = dbInmob.SII_ValoresUF.Where(c => DbFunctions.TruncateTime(c.Fecha) == FechaUF).FirstOrDefault();
+            if (indicadorLocal == null)
+            {
+                var ultFecha = dbInmob.SII_ValoresUF.Max(c => c.Fecha);
+                indicadorLocal = dbInmob.SII_ValoresUF.Where(c => c.Fecha == ultFecha).FirstOrDefault();
+            }
+            return Json(indicadorLocal , JsonRequestBehavior.AllowGet);
+        }
     }
-
 }

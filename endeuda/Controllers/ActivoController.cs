@@ -35,16 +35,17 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaActivo_Read(string numeroInterno, string codigoSoftland)
         {
+            var contratoNull = new Contrato();
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
                             join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
-                            where  ac.NumeroInterno == ((numeroInterno != "") ? numeroInterno : ac.NumeroInterno)
+                            where ac.NumeroInterno == ((numeroInterno != "") ? numeroInterno : ac.NumeroInterno)
                             && ac.CodSoftland == ((codigoSoftland != "") ? codigoSoftland : ac.CodSoftland)
-                            select new 
+                            select new
                             {
-                                IdActivo =  ac.IdActivo,
+                                IdActivo = ac.IdActivo,
                                 RazonSocial = (emv != null) ? emv.RazonSocial : string.Empty,
                                 NumeroInterno = ac.NumeroInterno,
                                 CodSoftland = ac.CodSoftland,
@@ -62,10 +63,49 @@ namespace tesoreria.Controllers
                                 Patente = ac.Patente,
                                 ac.IdEstado,
                                 ac.NumeroContrato,
-                                ac.SincronizadoSoftland
-            }).AsEnumerable().ToList();
-
-            return Json(registro, JsonRequestBehavior.AllowGet);
+                                ac.SincronizadoSoftland,
+                                ac.CampoGD,
+                                ac.MesAnio,
+                                ac.DescCC_Mqs,
+                                ac.DescCC_MqsSur,
+                                ac.ValorFactura,
+                                EnContrato = (db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).Count() > 0) ? true : false,
+                                ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).FirstOrDefault()
+                            }).AsEnumerable().ToList();
+            var listaRetorno = (from reg in registro
+                                select new { 
+                                reg.IdActivo,
+                                reg.RazonSocial,
+                                reg.NumeroInterno,
+                                reg.CodSoftland,
+                                reg.Familia,
+                                reg.Descripcion,
+                                reg.Capacidad,
+                                reg.Marca,
+                                reg.Modelo,
+                                reg.Motor,
+                                reg.Chasis,
+                                reg.Serie,
+                                reg.Anio,
+                                reg.Valor,
+                                reg.NumeroFactura,
+                                reg.Patente,
+                                reg.IdEstado,
+                                reg.NumeroContrato,
+                                reg.SincronizadoSoftland,
+                                reg.CampoGD,
+                                reg.MesAnio,
+                                Cc_Mqs=reg.DescCC_Mqs,
+                                Cc_MqsSur=reg.DescCC_MqsSur,
+                                reg.ValorFactura,
+                                reg.EnContrato,
+                                Leasing=(reg.ContratoActivo!=null)?((reg.ContratoActivo.Contrato.IdTipoContrato==1)?reg.ContratoActivo.Contrato.NumeroContrato:""):"",
+                                Banco = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Banco.NombreBanco : "") : "",
+                                DescripcionLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Descripcion : "") : "",
+                                TipoPropiedad= (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdEstado == (int)Helper.Estado.ConActivo) ? "Leasing" : "Propio") : "Propio"
+                                    //(Propio (parte siendo propio) o leasing vigente (al finalizar leasing pasa a ser propio))
+                                }).ToList();
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ControlInternoBuscar()
@@ -146,7 +186,8 @@ namespace tesoreria.Controllers
                                     IdMarcaProducto=ac.IdMarcaProducto,
                                     IdModeloProducto=ac.IdModeloProducto
                                 }).FirstOrDefault();
-
+                var codiCCLtda = "";
+                var codiCCMaquinariasa = "";
                 if (registro == null) {
                     registro = new ActivoViewModel();
                     registro.IdActivo = 0;
@@ -173,6 +214,8 @@ namespace tesoreria.Controllers
                     subgrupos = (from t in dbSoft.awtsubgr
                                      where ((registro.Grupo != "") ? t.CodGru == registro.Grupo : true)
                                      select new RetornoGenerico { Id = 0, Nombre = t.DesSGru, ValorString = t.CodSGru }).OrderBy(c => c.Nombre).ToList();
+                    codiCCLtda = registro.Activo.CodiCC_MqsSur;
+                    codiCCMaquinariasa = registro.Activo.CodiCC_Mqs;
                 }
                 SelectList listaGrupos = new SelectList(grupos.OrderBy(c => c.Nombre), "ValorString", "Nombre", registro.Grupo);
                 ViewData["listaGrupos"] = listaGrupos;
@@ -207,6 +250,22 @@ namespace tesoreria.Controllers
                               select new RetornoGenerico { Id = t.IdModeloProducto, Nombre = t.DescModeloProducto }).OrderBy(c => c.Nombre).ToList();
                 SelectList listaModelos = new SelectList(modelos.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdModeloProducto);
                 ViewData["listaModelos"] = listaModelos;
+                //Centro de costo Ltda
+                var empresaLtda = db.Empresa.Find((int)Helper.Constantes.IdEmpresaPrincipal);
+                SoftLandContext dbSoftLtda = new SoftLandContext(empresaLtda.BaseSoftland);
+                var cCostoLtda = (from t in dbSoftLtda.cwtccos
+                             where t.Activo=="S"
+                             select new RetornoGenerico { Id = 0, Nombre =t.CodiCC+": "+ t.DescCC, ValorString = t.CodiCC }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaCCostoLtda = new SelectList(cCostoLtda.OrderBy(c => c.Nombre), "ValorString", "Nombre", codiCCLtda);
+                ViewData["listaCCostoLtda"] = listaCCostoLtda;
+                //Centro de costo Maquinariasa
+                var empresaMaquinariasa = db.Empresa.Find((int)Helper.Constantes.IdEmpresaMaquinariasa);
+                SoftLandContext dbSoftMaquinariasa = new SoftLandContext(empresaMaquinariasa.BaseSoftland);
+                var cCostoMaquinariasa = (from t in dbSoftMaquinariasa.cwtccos
+                                  where t.Activo == "S"
+                                  select new RetornoGenerico { Id = 0, Nombre = t.CodiCC + ": " + t.DescCC, ValorString = t.CodiCC }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaCCostoMaquinariasa = new SelectList(cCostoMaquinariasa.OrderBy(c => c.Nombre), "ValorString", "Nombre", codiCCMaquinariasa);
+                ViewData["listaCCostoMaquinariasa"] = listaCCostoMaquinariasa;
                 return View(registro);
             }
         }
@@ -242,7 +301,22 @@ namespace tesoreria.Controllers
                 datos.NumeroFactura = validarDatos.ValidaStr(datos.NumeroFactura);
                 datos.Patente = validarDatos.ValidaStr(datos.Patente);
                 datos.Glosa = validarDatos.ValidaStr(datos.Glosa);
-                
+                datos.CampoGD = validarDatos.ValidaStr(datos.CampoGD);
+                datos.MesAnio=validarDatos.ValidaStr(datos.MesAnio);
+                datos.CodiCC_Mqs=validarDatos.ValidaStr(datos.CodiCC_Mqs);
+                datos.CodiCC_MqsSur=validarDatos.ValidaStr(datos.CodiCC_MqsSur);
+
+                //centro de costo
+                var empresaLtda = db.Empresa.Find((int)Helper.Constantes.IdEmpresaPrincipal);
+                SoftLandContext dbSoftLtda = new SoftLandContext(empresaLtda.BaseSoftland);
+                var cCostoLtda = dbSoftLtda.cwtccos.Find(datos.CodiCC_MqsSur);
+                datos.DescCC_MqsSur = (cCostoLtda != null) ? cCostoLtda.DescCC : "";
+
+                //Centro de costo Maquinariasa
+                var empresaMaquinariasa = db.Empresa.Find((int)Helper.Constantes.IdEmpresaMaquinariasa);
+                SoftLandContext dbSoftMaquinariasa = new SoftLandContext(empresaMaquinariasa.BaseSoftland);
+                var cCostoMaquinariasa = dbSoftMaquinariasa.cwtccos.Find(datos.CodiCC_Mqs);
+                datos.DescCC_Mqs = (cCostoMaquinariasa != null) ? cCostoMaquinariasa.DescCC : "";
 
                 using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
@@ -287,7 +361,14 @@ namespace tesoreria.Controllers
                             if (activo.IdEstado == 3)
                             {
                                 activo.IdEstado = estado;
-                            }                            
+                            }
+                            activo.CampoGD=datos.CampoGD;
+                            activo.MesAnio = datos.MesAnio;
+                            activo.CodiCC_Mqs = datos.CodiCC_Mqs;
+                            activo.DescCC_Mqs= datos.DescCC_Mqs;
+                            activo.CodiCC_MqsSur= datos.CodiCC_MqsSur;
+                            activo.DescCC_MqsSur=datos.DescCC_MqsSur;
+                            activo.ValorFactura=datos.ValorFactura;
                             db.SaveChanges();
                             showMessageString = new { Estado = 0, Mensaje = mensaje };
                         }
@@ -328,6 +409,13 @@ namespace tesoreria.Controllers
                             activoAdd.FechaRegistro = DateTime.Now;
                             activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
                             activoAdd.SincronizadoSoftland = false;
+                            activoAdd.CampoGD = datos.CampoGD;
+                            activoAdd.MesAnio = datos.MesAnio;
+                            activoAdd.CodiCC_Mqs = datos.CodiCC_Mqs;
+                            activoAdd.DescCC_Mqs=datos.DescCC_Mqs;
+                            activoAdd.CodiCC_MqsSur = datos.CodiCC_MqsSur;
+                            activoAdd.DescCC_MqsSur=datos.DescCC_MqsSur;
+                            activoAdd.ValorFactura = datos.ValorFactura;
                             db.Activo.Add(activoAdd);
                             db.SaveChanges();
 

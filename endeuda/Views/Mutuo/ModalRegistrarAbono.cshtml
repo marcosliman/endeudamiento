@@ -1,6 +1,6 @@
 ﻿@model modelo.ViewModel.MutuoViewModel
 @{
-    ViewBag.Title = "Abono Prestamo";
+    ViewBag.Title = "Abono Préstamo";
 }
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
@@ -11,47 +11,80 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-<div class="card-body">
-    @using (Ajax.BeginForm("GrabarAbonoMutuo", "Mutuo", new AjaxOptions
-    {
-        InsertionMode = InsertionMode.Replace,
-        HttpMethod = "post",
-        OnSuccess = "Success_dl",
-        OnFailure = "Failure_dl"
+<div class="modal-body">
+    <div class="card">
+        <div class="card-body">
+            @using (Ajax.BeginForm("GrabarAbonoMutuo", "Mutuo", new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "post",
+                OnSuccess = "Success_dl",
+                OnFailure = "Failure_dl"
 
-    }, new { id = "frmAddAbono", @class = "form-horizontal" }))
-    {
-        @Html.AntiForgeryToken()
-    <input type="hidden" name="idMutuo" id="idMutuoA" value="@Model.IdMutuo" />
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad que Financia </label>
-        <div class="col-sm-3">
-            @Model.EmpresaFinancia
-        </div>
-        <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad Receptora</label>
-        <div class="col-sm-3">
-            @Model.EmpresaReceptora
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Monto a Abonar ($)</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm required numberMiles" name="montoAbono" id="montoAbono" />
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Abono</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm classFecha required" name="fechaAbono" id="fechaAbono" />
-        </div>
-    </div>
+            }, new { id = "frmAddAbono", @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="idMutuo" id="idMutuoA" value="@Model.IdMutuo" />
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad que Financia </label>
+                    <div class="col-sm-9">
+                        @Model.EmpresaFinancia
+                    </div>                    
+                </div>
+                <div class="form-group row">                  
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Entidad Receptora</label>
+                    <div class="col-sm-9">
+                        @Model.EmpresaReceptora
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Monto a Abonar ($)</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm required numberMiles" name="montoAbono" id="montoAbono" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha Abono</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm classFecha required" name="fechaAbono" id="fechaAbono" />
+                    </div>
+                </div>
 
-    }
+            }
+        </div>
+        <div class="card-footer">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+            <button type="button" name="btnGrabar" id="btnGrabar" onclick="GrabarAbono()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> Grabar Abono</button>
+        </div>
+    </div>
+    
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">Abonos Registrados</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaMutuoAbono" data-order='[[ 2, "desc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort" width="3%"><i class="fa fa-trash"></i></th>
+                            <th>Monto Abono</th>
+                            <th>Fecha Abono</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-    <button type="button" name="btnGrabar" id="btnGrabar" onclick="GrabarAbono()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> Grabar Abono</button>
-</div>
+
 <script>
     $(document).ready(function () {
         $('.classFecha').datepicker({
@@ -68,6 +101,7 @@
                 fechaAbono: { required: true }
             }
         });
+        initTableMutuoAbono();
     });
 
     function GrabarAbono() {
@@ -114,5 +148,77 @@
         $('#ModalRegistrarAbono').modal('hide');
         RefreshLista();
     }
+    function RefreshListaAbono() {
+        var table = initTableMutuoAbono();
+        table.ajax.reload(function (json) { });
+    }
+    function initTableMutuoAbono() {
+        var table = $('#grillaMutuoAbono').DataTable({
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Mutuo/ListaMutuoAbono_Read/',
+                "data": function (d) {
+                    d.IdMutuo = "@Model.IdMutuo";
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [1],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                },
+                {
+                    targets: [2],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                }
+            ],
+            columns: [
+                {
+                    "mData": "IdMutuoAbono",
+                    "bSortable": false,
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        boton += '<button class="btn btn-danger btn-xs" title="Eliminar Préstamo" type="button" onclick="DeleteAbono(' + data + ')"><i class="far fa-trash-alt"></i></button> ';
+                        return boton;
+                    }
+                },
+                { "data": "MontoAbono" },
+                { "data": "FechaAbono" },
 
+            ]
+        });
+
+        return table;
+    }
+    function DeleteAbono(IdMutuoAbono) {
+        a = confirm("Seguro de Eliminar el registro seleccionado?")
+        if (a) {
+            $.ajax({
+                url: "/Mutuo/DeleteMutuoAbono",
+                type: "Post",
+                data: {
+                    IdMutuoAbono: IdMutuoAbono
+                },
+                success: function (data) {
+                    toastr.success(data.Mensaje);
+                    RefreshListaAbono();
+                },
+                failure: function (data) {
+                    toastr.error(data.Mensaje);
+                }
+            });
+        }
+    }
 </script>

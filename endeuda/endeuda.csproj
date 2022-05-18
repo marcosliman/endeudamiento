@@ -3028,6 +3028,7 @@
     <Content Include="Scripts\umd\popper.js" />
     <Content Include="Scripts\umd\popper.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\Reportes\PrestamosRelacionadas.cshtml" />
     <Content Include="Web.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
@@ -3254,7 +3255,6 @@
     <Content Include="Views\Seguro\ModalEditarBeneficiario.cshtml" />
     <Content Include="Views\Contrato\AddDocumentoContrato.cshtml" />
     <Content Include="Views\Activo\VistaActivo.cshtml" />
-    <Content Include="Views\Reportes\PrestamosRelacionadas.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

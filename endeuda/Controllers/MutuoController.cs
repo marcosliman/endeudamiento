@@ -13,6 +13,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        FuncionesGeneralesController funcionesGral = new FuncionesGeneralesController();
         // GET: Contrato
         #region Inicio
         public ActionResult MutuoInicio()
@@ -207,9 +208,10 @@ namespace tesoreria.Controllers
                             join em in db.Empresa.ToList() on m.IdEmpresaFinancia equals em.IdEmpresa
                             join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
                             join es in db.Estado.ToList() on m.IdEstado equals es.IdEstado
+                            join tm in db.TipoMoneda.ToList() on m.IdTipoMoneda equals tm.IdTipoMoneda
                             where m.IdEmpresaFinancia == ((idEmpresaFinancia != null) ? idEmpresaFinancia : m.IdEmpresaFinancia)
                             && m.IdEmpresaReceptora == ((idEmpresaReceptora != null) ? idEmpresaReceptora : m.IdEmpresaReceptora)
-                            select new MutuoViewModel
+                            select new 
                             {
                                 IdMutuo = m.IdMutuo,
                                 EmpresaFinancia = em.RazonSocial,
@@ -221,7 +223,8 @@ namespace tesoreria.Controllers
                                 FechaPrestamoStr = m.FechaPrestamo.ToString("dd-MM-yyyy"),
                                 NombreEstado = es.NombreEstado,
                                 PuedeProcesar = (m.IdEstado != (int)Helper.Estado.MutuoVigente) ? false : true,
-                                PuedeEliminar = (m.IdEstado != (int)Helper.Estado.MutuoCreado) ? false : true
+                                PuedeEliminar = (m.IdEstado != (int)Helper.Estado.MutuoCreado) ? false : true,
+                                tm.NombreTipoMoneda
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -314,7 +317,8 @@ namespace tesoreria.Controllers
                                     IdEstado = c.IdEstado,
                                     ExisteMutuo = "S",
                                     TituloBoton = "Actualizar Mutuo",
-                                    PuedeEditar = (c.IdEstado != (int)Helper.Estado.MutuoCreado) ? false : true
+                                    PuedeEditar = (c.IdEstado != (int)Helper.Estado.MutuoCreado) ? false : true,
+                                    IdTipoMoneda=c.IdTipoMoneda
                                 }).FirstOrDefault();
 
                 if (registro == null) {
@@ -324,6 +328,7 @@ namespace tesoreria.Controllers
                     registro.IdEmpresaReceptora = 0;
                     registro.TituloBoton = "Grabar Mutuo";
                     registro.PuedeEditar = true;
+                    registro.IdTipoMoneda = 1;
                 }
 
                 var empresaF = (from e in db.Empresa
@@ -338,6 +343,12 @@ namespace tesoreria.Controllers
                                 select new RetornoGenerico { Id = r.IdEmpresaRelacionada, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
                 SelectList listaEmpresaR = new SelectList(empresaR.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEmpresaReceptora);
                 ViewData["listaEmpresaR"] = listaEmpresaR;
+
+                var tiposMoneda = (from e in db.TipoMoneda
+                                   where e.Activo == true
+                                   select new RetornoGenerico { Id = e.IdTipoMoneda, Nombre = e.NombreTipoMoneda }).OrderBy(c => c.Id).ToList();
+                SelectList listaMonedas = new SelectList(tiposMoneda.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdTipoMoneda);
+                ViewData["listaMonedas"] = listaMonedas;
 
                 return View(registro);
             }
@@ -365,7 +376,7 @@ namespace tesoreria.Controllers
                         try
                         {
                             var dbMutuo = db.Mutuo.Find(dato.IdMutuo);
-
+                            var regValoruF = funcionesGral.JsonInidicadorUF(dato.FechaPrestamo.ToString());
                             if (dbMutuo == null)
                             {
                                 //var existeMutuo = db.Mutuo.Where(c => c.IdEmpresaFinancia == dato.IdEmpresaFinancia && c.IdEmpresaReceptora == dato.IdEmpresaReceptora
@@ -383,6 +394,8 @@ namespace tesoreria.Controllers
                                     addMutuo.IdEstado = (int)Helper.Estado.MutuoCreado;
                                     addMutuo.IdUsuarioRegistro = (int)seguridad.IdUsuario;
                                     addMutuo.FechaRegistro = DateTime.Now;
+                                    addMutuo.IdTipoMoneda = dato.IdTipoMoneda;                                    
+                                    addMutuo.ValorCambio = regValoruF.Valor;
                                     db.Mutuo.Add(addMutuo);
                                     db.SaveChanges();
 
@@ -408,6 +421,8 @@ namespace tesoreria.Controllers
                                     dbMutuo.FechaPrestamo = dato.FechaPrestamo;
                                     dbMutuo.TasaMensual = dato.TasaMensual;
                                     dbMutuo.TasaDiaria = dato.TasaDiaria;
+                                    dbMutuo.IdTipoMoneda = dato.IdTipoMoneda;
+                                    dbMutuo.ValorCambio = regValoruF.Valor;
                                     db.SaveChanges();
 
                                     dbContextTransaction.Commit();
@@ -687,7 +702,44 @@ namespace tesoreria.Controllers
                 return View(registro);
             }
         }
+        public ActionResult ListaMutuoAbono_Read(int IdMutuo)
+        {
+            var registro = db.MutuoAbono.Where(c => c.IdMutuo == IdMutuo).ToList();
 
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult DeleteMutuoAbono(int IdMutuoAbono)
+        {
+            dynamic showMessageString = string.Empty;
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var dbMutuoAbono = db.MutuoAbono.Find(IdMutuoAbono);
+
+                    if (dbMutuoAbono != null)
+                    {
+                        db.MutuoAbono.Remove(dbMutuoAbono);
+                        db.SaveChanges();
+                        dbContextTransaction.Commit();
+                        showMessageString = new { Estado = 0, Mensaje = "Registro Eliminado con exito" };
+                    }
+                    else
+                    {
+                        dbContextTransaction.Rollback();
+                        showMessageString = new { Estado = 500, Mensaje = "Préstamos no existe" };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    dbContextTransaction.Rollback();
+                    showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                }
+
+                return Json(showMessageString, JsonRequestBehavior.AllowGet);
+            }
+        }
         [HttpPost]
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult GrabarAbonoMutuo(MutuoAbono dato)
@@ -772,7 +824,44 @@ namespace tesoreria.Controllers
                 return View(registro);
             }
         }
+        public ActionResult ListaMutuoPrestamo_Read(int IdMutuo)
+        {
+            var registro =db.MutuoPrestamo.Where(c=>c.IdMutuo== IdMutuo).ToList();
 
+            return Json(registro, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public JsonResult DeleteMutuoPrestamo(int IdMutuoPrestamo)
+        {
+            dynamic showMessageString = string.Empty;
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var dbMutuoPrestamo = db.MutuoPrestamo.Find(IdMutuoPrestamo);
+
+                    if (dbMutuoPrestamo != null)
+                    {
+                        db.MutuoPrestamo.Remove(dbMutuoPrestamo);
+                        db.SaveChanges();
+                        dbContextTransaction.Commit();
+                        showMessageString = new { Estado = 0, Mensaje = "Registro Eliminado con exito" };
+                    }
+                    else
+                    {
+                        dbContextTransaction.Rollback();
+                        showMessageString = new { Estado = 500, Mensaje = "Préstamos no existe" };
+                    }
+                }
+                catch (Exception ex)
+                {
+                    dbContextTransaction.Rollback();
+                    showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
+                }
+
+                return Json(showMessageString, JsonRequestBehavior.AllowGet);
+            }
+        }
         [HttpPost]
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult GrabarNuevoPrestamo(MutuoPrestamo dato)
@@ -836,10 +925,20 @@ namespace tesoreria.Controllers
             else
             {
                 var mutuo = new MutuoViewModel();
+                var tMutuo = db.Mutuo.Find(idMutuo);
+                mutuo.IdTipoMoneda=(tMutuo!=null)?tMutuo.IdTipoMoneda:0;
                 mutuo.IdMutuo = idMutuo;
                 mutuo.FechaPrestamo = DateTime.Now;
                 mutuo.FechaPrestamoStr = mutuo.FechaPrestamo.ToString("dd-MM-yyyy");
-
+                DateTime oPrimerDiaDelMes;
+                DateTime oUltimoDiaDelMes;
+                oPrimerDiaDelMes = new DateTime(mutuo.FechaPrestamo.Year, mutuo.FechaPrestamo.Month, 1);
+                //agregamos 1 mes al objeto anterior y restamos 1 día.
+                oUltimoDiaDelMes = oPrimerDiaDelMes.AddMonths(1).AddDays(-1);
+                ViewBag.oUltimoDiaDelMes=oUltimoDiaDelMes;
+                ViewBag.oUltimoDiaDelMesStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
+                var regUf=funcionesGral.JsonInidicadorUF(oUltimoDiaDelMes.ToString());
+                ViewBag.ValorCambio = regUf.Valor;
                 return PartialView(mutuo);
             }
         }
@@ -851,14 +950,12 @@ namespace tesoreria.Controllers
             }
             else
             {
-                var mutuo = new Mutuo();
-                mutuo.IdMutuo = idMutuo;
-
+                var mutuo = db.Mutuo.Find(idMutuo);
                 return PartialView(mutuo);
             }
         }
 
-        public ActionResult ListProyectar_Read(int? idMutuo,DateTime fechaProyeccion)
+        public ActionResult ListProyectar_Read(int? idMutuo,DateTime fechaProyeccion,string ValorCambio)
         {
             var registro = (from m in db.Mutuo.ToList()
                             where m.IdMutuo == ((idMutuo != null) ? idMutuo : m.IdMutuo)
@@ -869,10 +966,16 @@ namespace tesoreria.Controllers
                                 TasaMensual = m.TasaMensual,
                                 TasaDiaria = m.TasaDiaria,
                                 FechaPrestamo = m.FechaPrestamo,
-                                FechaPrestamoStr = m.FechaPrestamo.ToString("dd-MM-yyyy")
+                                FechaPrestamoStr = m.FechaPrestamo.ToString("dd-MM-yyyy"),
+                                m.IdTipoMoneda
                             }).FirstOrDefault();
 
-
+            double valorCambio = 1;
+            if (registro.IdTipoMoneda != 1 && ValorCambio!="")
+            {
+                valorCambio=Convert.ToDouble(ValorCambio);
+            }
+            
             List<ProyeccionMutuoViewModel> arrayProyeccion = new List<ProyeccionMutuoViewModel>();
             if (registro != null)
             {
@@ -910,7 +1013,7 @@ namespace tesoreria.Controllers
 
                         oPrimerDiaDelMes = new DateTime(fecha.Year, fecha.Month, fecha.Day);
                         TimeSpan difFechas = oUltimoDiaDelMes - oPrimerDiaDelMes;
-                        days = (int)difFechas.TotalDays;
+                        days = (int)difFechas.TotalDays+1;
                     }
                     else
                     {
@@ -995,14 +1098,14 @@ namespace tesoreria.Controllers
 
                             if (auxCredito == 1 && auxAbono == 0)
                             {
-                                interes = Math.Round(montoInicial * (tasaDiaria * days) / 100);
+                                interes = montoInicial * (tasaDiaria * days) / 100;
                             }
                             else
                             {
                                 interes = 0;
                             }
 
-                            interesNuevo = (Math.Round(montoPrestamo * (tasaDiaria * daysN) / 100));
+                            interesNuevo = (montoPrestamo * (tasaDiaria * daysN) / 100);
 
                             montoAmortizacion = 0;
 
@@ -1066,8 +1169,27 @@ namespace tesoreria.Controllers
 
                 }
             }
-
-            return Json(arrayProyeccion, JsonRequestBehavior.AllowGet);
+            var decRound = 0;
+            var listaRetorno = arrayProyeccion.Select(c => 
+            new {
+                c.item,
+                c.FechaInicio,
+                c.FechaInicioStr,
+                c.FechaTermino,
+                c.FechaTerminoStr,
+                c.CantidadDias,
+                Monto=Math.Round(c.Monto*valorCambio, decRound),
+                Interes = Math.Round(c.Interes * valorCambio, decRound),
+                MontoTotal= Math.Round(c.MontoTotal * valorCambio, decRound),
+                InteresTotal= Math.Round(c.InteresTotal * valorCambio, decRound),
+                MontoAmortizacion= Math.Round(c.MontoAmortizacion * valorCambio, decRound),
+                MontoPrestamo= Math.Round(c.MontoPrestamo * valorCambio, decRound),
+                c.FechaNuevo,
+                c.FechaNuevoStr,
+                c.CantidadDiasNuevo,
+                InteresNuevo= Math.Round(c.InteresNuevo * valorCambio, decRound)
+            }).ToList();
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
     }
 }

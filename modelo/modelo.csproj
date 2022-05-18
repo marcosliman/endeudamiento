@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\InmobContext.cs" />
+    <Compile Include="Models\Inmobiliaria\SII_ValoresUF.cs" />
     <Compile Include="Models\Local\Activo.cs" />
     <Compile Include="Models\Local\ComprobanteDetAmortizacion.cs" />
     <Compile Include="Models\Local\ContratoDocumento.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="ViewModel\MutuoDocumentoViewModel.cs" />
     <Compile Include="ViewModel\ProyeccionMutuoViewModel.cs" />
     <Compile Include="ViewModel\DetAmortizacionViewModel.cs" />
+    <Compile Include="ViewModel\ReporteRelacionadViewModel.cs" />
     <Compile Include="ViewModel\SiniestroDocumentoViewModel.cs" />
     <Compile Include="ViewModel\SiniestroViewModel.cs" />
     <Compile Include="ViewModel\TipoPerdidaViewModel.cs" />

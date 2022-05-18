@@ -23,6 +23,7 @@ namespace modelo.Models.Local
         public int IdUsuarioRegistro { get; set; }
         public double CapitalActual { get; set; }
         public double InteresTotal { get; set; }
-
+        public int IdTipoMoneda { get; set; }
+        public double? ValorCambio { get; set; }
     }
 }

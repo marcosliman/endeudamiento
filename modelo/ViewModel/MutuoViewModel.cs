@@ -29,6 +29,7 @@ namespace modelo.ViewModel
         public bool PuedeProcesar { get; set; }
         public bool PuedeEliminar { get; set; }
         public bool PuedeEditar { get; set; }
+        public int IdTipoMoneda { get; set; }
     }
 
 }

@@ -49,5 +49,12 @@ namespace modelo.Models.Local
         public int? IdUsuarioRegistro { get; set; }
         public bool SincronizadoSoftland { get; set; }
         public string NumeroContrato { get; set; }
+        public string CampoGD { get; set; }
+        public string MesAnio { get; set; }
+        public string CodiCC_Mqs { get; set; }
+        public string CodiCC_MqsSur { get; set; }
+        public string DescCC_Mqs { get; set; }
+        public string DescCC_MqsSur { get; set; }
+        public double? ValorFactura { get; set; }
     }
 }

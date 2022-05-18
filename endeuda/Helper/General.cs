@@ -22,6 +22,7 @@ namespace tesoreria.Helper
         public const string iconoBotonEliminar = "fa fa-remove";
         public const string iconoBotonVolver = "fa fa-repeat";
         public const int IdEmpresaPrincipal = 1;
+        public const int IdEmpresaMaquinariasa = 5;
     }
 
     public enum TipoEstado : int

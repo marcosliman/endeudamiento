@@ -17,24 +17,35 @@
         <form name="frmProyeccion" id="frmProyeccion" method="post">
             <div class="card">
                 <div class="card-body">
-                    <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha Final de la Proyección </label>
-                        <div class="col-sm-3">
-                            <input type="text" class="form-control form-control-sm classFecha required" name="fechaProyeccion" id="fechaProyeccion" />
-                        </div>
-                        <div class="col-sm-5">
-                        </div>
-                        <div class="col-sm-1">
-                            <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                                <div class="form-inline my-1 my-lg-0">
-                                    <button class="btn btn-primary btn-sm justify-content-end" type="button" id="CalcularProyeccion" onclick="GenerarProyeccion()"><i class="fa fa-filter"></i>    Calcular Abonos</button>
+                                       
+                    <div class="form-group row">                        
+                        <div class="col-sm-2">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Fecha Proyección</span>
                                 </div>
-                            </nav>
+                                <input type="text" class="form-control classFecha required" name="fechaProyeccion" id="fechaProyeccion" onchange="ValorUfByFecha(this.value)" placeholder="Fecha Proyección" value="">
+                            </div>
                         </div>
+                        @if (Model.IdTipoMoneda != 1)
+                        {
+                            <div class="col-sm-2">
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Valor Cambio</span>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm numberMiles required" name="ValorCambio" id="ValorCambio" value="" />
+                                </div>
+                            </div>
+                        }
+                        <div class="col-sm-5">
+                            <button class="btn btn-primary btn-sm justify-content-end" type="button" id="CalcularProyeccion" onclick="GenerarProyeccion()"><i class="fa fa-filter"></i> Calcular Abonos</button>
+                        </div>
+                    </div>                   
 
-                    </div>
                 </div>
             </div>
+            
         </form>
         <div class="card">
             <div class="card-body">
@@ -71,7 +82,9 @@
     </div>
 </div>
 <script>
+    var IdTipoMoneda = "@Model.IdTipoMoneda";
     $(document).ready(function () {
+
         $('.classFecha').datepicker({
             format: 'dd/mm/yyyy',
             autoclose: true,
@@ -84,7 +97,20 @@
             errorContainer: $("#warning")
         });
     });
+    function ValorUfByFecha(valor) {
+        console.log(IdTipoMoneda)
+        if (IdTipoMoneda == "2") {
+            $.ajax({
+                url: "/FuncionesGenerales/JsonResultInidicadorUF",
+                type: "Post",
+                data: { fecha: valor },
+                success: function (data) {
+                    $("#ValorCambio").val(SeparadorMiles(data.Valor.toString()));
+                }
+            });
+        }
 
+    }
     function GenerarProyeccion() {
         if ($('#frmProyeccion').valid()) {
             var table = initTableP();
@@ -101,6 +127,7 @@
                 "data": function (d) {
                     d.idMutuo = "@Model.IdMutuo";
                     d.fechaProyeccion = $('#fechaProyeccion').val();
+                    d.ValorCambio = $("#ValorCambio").val();
                 },
                 "dataSrc": ""
             },
