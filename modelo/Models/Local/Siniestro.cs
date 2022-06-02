@@ -16,11 +16,12 @@ namespace modelo.Models.Local
         [ForeignKey("IdPolizaActivo")]
         public virtual PolizaActivo PolizaActivo { get; set; }
         public string NumeroLiquidacion { get; set; }
-        public double MontoLiquidacion { get; set; }
+        public double? MontoLiquidacion { get; set; }
         public DateTime FechaDeclaracion { get; set; }
         public string NumeroSiniestro { get; set; }
         public DateTime FechaSiniestro { get; set; }
         public string DetalleSiniestro { get; set; }
+        public double? MontoReclamado { get; set; }
         public int IdPerdidaReclamada { get; set; }
         [ForeignKey("IdPerdidaReclamada")]
         public virtual TipoPerdida TipoPerdidaReclamada { get; set; }
@@ -30,8 +31,8 @@ namespace modelo.Models.Local
         public int IdEstado { get; set; }
         public string Liquidador { get; set; }
         public string Infraseguro { get; set; }
-        public double Deducible { get; set; }
-        public double Indemnizacion { get; set; }
+        public double? Deducible { get; set; }
+        public double? Indemnizacion { get; set; }
         public int IdUsuarioRegistro { get; set; }
         public DateTime FechaRegistro { get; set; }
 

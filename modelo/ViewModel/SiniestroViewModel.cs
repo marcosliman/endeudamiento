@@ -20,6 +20,7 @@ namespace modelo.ViewModel
         public string DetalleSiniestro { get; set; }
         public int IdPerdidaReclamada { get; set; }
         public int IdPerdidaDeterminada { get; set; }
+        public double? MontoReclamado { get; set; }
         public int IdEstado { get; set; }
         public string Liquidador { get; set; }
         public string Infraseguro { get; set; }

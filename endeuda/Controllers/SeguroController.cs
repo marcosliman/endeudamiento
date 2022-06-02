@@ -1089,7 +1089,8 @@ namespace tesoreria.Controllers
                                      NumeroSiniestro = s.NumeroSiniestro,
                                      FechaSiniestro = s.FechaSiniestro,
                                      DetalleSiniestro = s.DetalleSiniestro,
-                                     IdPerdidaReclamada = s.IdPerdidaReclamada,
+                                     //IdPerdidaReclamada = s.IdPerdidaReclamada,
+                                     MontoReclamado = s.MontoReclamado,
                                      IdPerdidaDeterminada = s.IdPerdidaDeterminada,
                                      IdEstado = s.IdEstado,
                                      Liquidador = s.Liquidador,
@@ -1105,6 +1106,7 @@ namespace tesoreria.Controllers
                     siniestro = new SiniestroViewModel();
                     siniestro.IdSiniestro = 0;
                     siniestro.IdPolizaActivo = IdPolizaActivo;
+                    siniestro.MontoReclamado = null;
                     siniestro.IdPerdidaReclamada = 0;
                     siniestro.IdPerdidaDeterminada = 0;
                     siniestro.IdEstado = 0;
@@ -1193,7 +1195,8 @@ namespace tesoreria.Controllers
                                     siniestro.NumeroSiniestro = dato.NumeroSiniestro;
                                     siniestro.FechaSiniestro = dato.FechaSiniestro;
                                     siniestro.DetalleSiniestro = dato.DetalleSiniestro;
-                                    siniestro.IdPerdidaReclamada = dato.IdPerdidaReclamada;
+                                    siniestro.MontoReclamado = dato.MontoReclamado;
+                                    //siniestro.IdPerdidaReclamada = dato.IdPerdidaReclamada;
                                     siniestro.IdPerdidaDeterminada = dato.IdPerdidaDeterminada;
                                     siniestro.IdEstado = dato.IdEstado;
                                     siniestro.Liquidador = dato.Liquidador;
@@ -1223,7 +1226,8 @@ namespace tesoreria.Controllers
                                     addSiniestro.NumeroSiniestro = dato.NumeroSiniestro;
                                     addSiniestro.FechaSiniestro = dato.FechaSiniestro;
                                     addSiniestro.DetalleSiniestro = dato.DetalleSiniestro;
-                                    addSiniestro.IdPerdidaReclamada = dato.IdPerdidaReclamada;
+                                    addSiniestro.MontoReclamado = dato.MontoReclamado;
+                                    //addSiniestro.IdPerdidaReclamada = dato.IdPerdidaReclamada;
                                     addSiniestro.IdPerdidaDeterminada = dato.IdPerdidaDeterminada;
                                     addSiniestro.IdEstado = dato.IdEstado;
                                     addSiniestro.Liquidador = dato.Liquidador;

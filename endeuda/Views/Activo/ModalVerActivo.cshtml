@@ -120,12 +120,12 @@
                         <input type="text" class="form-control" name="numeroFactura" id="numeroFactura" placeholder="Ingrese la factura correspondiente" value="@Model.NumeroFactura">
                     </div>
                 </div>
-                <div class="form-group form-group-sm row">
-                    <label for="ValorFactura" class="col-sm-3 col-form-label col-form-label-sm">Valor Factura</label>
-                    <div class="col-6">
-                        <input type="text" class="form-control numberMiles" name="ValorFactura" id="ValorFactura" placeholder="Ingrese valor de la factura" value="@Model.Activo.ValorFactura">
-                    </div>
-                </div>
+                <!--<div class="form-group form-group-sm row">
+        <label for="ValorFactura" class="col-sm-3 col-form-label col-form-label-sm">Valor Factura</label>
+        <div class="col-6">
+            <input type="text" class="form-control numberMiles" name="ValorFactura" id="ValorFactura" placeholder="Ingrese valor de la factura" value="@Model.Activo.ValorFactura">
+        </div>
+    </div> -->
                 <div class="form-group form-group-sm row">
                     <label for="motor" class="col-sm-3 col-form-label col-form-label-sm">Motor</label>
                     <div class="col-6">
@@ -171,7 +171,7 @@
                 <div class="form-group form-group-sm row">
                     <label for="Cc_Mqs" class="col-sm-3 col-form-label col-form-label-sm">C.C. MQS S.A</label>
                     <div class="col-6">
-                        @Html.DropDownList("CodiCC_Mqs", (SelectList)ViewData["listaCCostoMaquinariasa"], "--Seleccione Centro de Costo--", htmlAttributes: new { @class = "form-control form-control-sm" })                        
+                        @Html.DropDownList("CodiCC_Mqs", (SelectList)ViewData["listaCCostoMaquinariasa"], "--Seleccione Centro de Costo--", htmlAttributes: new { @class = "form-control form-control-sm" })
                     </div>
                 </div>
                 <div class="form-group form-group-sm row">

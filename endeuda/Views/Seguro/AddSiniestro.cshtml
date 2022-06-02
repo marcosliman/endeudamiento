@@ -61,7 +61,7 @@
                 <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Reclamada</label>
                     <div class="col-sm-3">
-                        @Html.DropDownList("idPerdidaReclamada", (SelectList)ViewData["listaReclamado"], "--Seleccione Perdida Reclamada--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                        <input type="text" class="form-control form-control-sm numberMiles" name="montoReclamado" id="montoReclamado" value="@Model.MontoReclamado" />
                     </div>
                     <label for="inputEmail3" class="col-sm-3 col-form-label">Pérdida Determinada</label>
                     <div class="col-sm-3">
@@ -141,7 +141,8 @@
                 numeroSiniestro: { required: true },
                 fechaSiniestro: { required: true },
                 detalleSiniestro: { required: true },
-                idPerdidaReclamada: { required: true },
+                montoReclamado: { required: true },
+                //idPerdidaReclamada: { required: true },
                 idPerdidaDeterminada: { required: true },
                 idEstado: { required: true },
                 Liquidador: { required: true },                
