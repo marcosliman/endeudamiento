@@ -197,6 +197,7 @@ namespace tesoreria.Controllers
                     registro.IdCuenta = "";
                     registro.IdMarcaProducto = 0;
                     registro.IdModeloProducto = 0;
+                    registro.Activo = new Activo();
                 }
                 else
                 {
@@ -317,7 +318,11 @@ namespace tesoreria.Controllers
                 SoftLandContext dbSoftMaquinariasa = new SoftLandContext(empresaMaquinariasa.BaseSoftland);
                 var cCostoMaquinariasa = dbSoftMaquinariasa.cwtccos.Find(datos.CodiCC_Mqs);
                 datos.DescCC_Mqs = (cCostoMaquinariasa != null) ? cCostoMaquinariasa.DescCC : "";
-
+                //Grupo Activo
+                var empresaSel = db.Empresa.Find(datos.IdEmpresa);
+                SoftLandContext dbSoft = new SoftLandContext(empresaSel.BaseSoftland);
+                var grupo=dbSoft.awtgrup.Find(datos.Grupo);
+                var descGrupo = (grupo != null) ? grupo.DesGru : "";
                 using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
                     try
@@ -369,6 +374,7 @@ namespace tesoreria.Controllers
                             activo.CodiCC_MqsSur= datos.CodiCC_MqsSur;
                             activo.DescCC_MqsSur=datos.DescCC_MqsSur;
                             activo.ValorFactura=datos.ValorFactura;
+                            activo.DesGrupo = descGrupo;
                             db.SaveChanges();
                             showMessageString = new { Estado = 0, Mensaje = mensaje };
                         }
@@ -397,8 +403,7 @@ namespace tesoreria.Controllers
                             activoAdd.SubGrupo = datos.SubGrupo;
                             activoAdd.Valor = datos.Valor;
                             activoAdd.IdProveedor = datos.IdProveedor;
-                            var empresaSoft = db.Empresa.Find(datos.IdEmpresa);
-                            SoftLandContext dbSoft = new SoftLandContext(empresaSoft.BaseSoftland);
+                                                        
                             var auxiliar = dbSoft.cwtauxi.Find(datos.IdProveedor);
                             activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
                             activoAdd.IdCuenta = datos.IdCuenta;
@@ -416,6 +421,7 @@ namespace tesoreria.Controllers
                             activoAdd.CodiCC_MqsSur = datos.CodiCC_MqsSur;
                             activoAdd.DescCC_MqsSur=datos.DescCC_MqsSur;
                             activoAdd.ValorFactura = datos.ValorFactura;
+                            activoAdd.DesGrupo = descGrupo;
                             db.Activo.Add(activoAdd);
                             db.SaveChanges();
 

@@ -485,9 +485,14 @@ namespace tesoreria.Controllers
             }
 
             //var activoLicitacion = new LicitacionActivo();
-            var activoLicitacion = db.LicitacionActivo.Where(c => c.IdLicitacion == idLicitacion).AsEnumerable().ToList();
+            var activoLicitacion = db.LicitacionActivo.AsEnumerable().ToList();
             if (activoLicitacion.Count() == 0) {
                 activoLicitacion = new List<LicitacionActivo>();
+            }
+            var activoContrato = db.ContratoActivo.AsEnumerable().ToList();
+            if (activoContrato.Count() == 0)
+            {
+                activoContrato = new List<ContratoActivo>();
             }
 
             var registro = (from ac in db.Activo.ToList()
@@ -502,6 +507,7 @@ namespace tesoreria.Controllers
                                 && ac.IdEmpresa == idEmpresa
                                 && ac.IdEstado == (int)Helper.Estado.ActDisponible
                                 && activoLicitacion.Where(x=>x.IdActivo ==ac.IdActivo).Count()==0
+                                && activoContrato.Where(x => x.IdActivo == ac.IdActivo).Count() == 0
                             select new ActivoViewModel
                             {
                                 IdActivo = ac.IdActivo,

@@ -175,7 +175,7 @@
     function RefreshLista() {
         //$('#grillaActivo').empty();
         var table = initTable();
-        table.ajax.reload(function (json) { });
+        table.ajax.reload(function (json) { },false);
     }
 
     function initTable() {

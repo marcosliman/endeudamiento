@@ -27,44 +27,16 @@
     <div class="card-body">
         <div class="row">
             <div class="col-sm-2">
-                @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
             </div>
             <div class="col-sm-2">
-                @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
             </div>
             <div class="col-sm-2">
-                <select name="anio" class="form-control form-control-sm">
-                    <option>--Seleccione Año--</option>
-                    <option value="1">2021</option>
-                    <option value="2">2022</option>
-                    <option value="3">2023</option>
-                    <option value="4">2024</option>
-                    <option value="5">2025</option>
-                    <option value="6">2026</option>
-                    <option value="7">2027</option>
-                    <option value="8">2028</option>
-                    <option value="9">2029</option>
-                    <option value="10">2030</option>
-                    <option value="11">2031</option>
-                    <option value="12">2032</option>
-                </select>
+                <input type="text" name="anioBus" id="anioBus" value="@DateTime.Now.Year" class="form-control form-control-sm filtroRepote" />                
             </div>
             <div class="col-sm-2">
-                <select name="empresa" class="form-control form-control-sm">
-                    <option>--Seleccione Mes--</option>
-                    <option value="1">Enero</option>
-                    <option value="2">Febrero</option>
-                    <option value="3">Marzo</option>
-                    <option value="4">Abril</option>
-                    <option value="5">Mayo</option>
-                    <option value="6">Junio</option>
-                    <option value="7">Julio</option>
-                    <option value="8">Agosto</option>
-                    <option value="9">Septiembre</option>
-                    <option value="10">Octubre</option>
-                    <option value="11">Noviembre</option>
-                    <option value="12">Diciembre</option>
-                </select>
+                @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMeses"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })                
             </div>
         </div>
     </div>
@@ -74,7 +46,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header text-white" style="background-color:midnightblue">
-                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Empresa - Al 31-08-2021</h3>
+                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Empresa - Al @ViewBag.FechaActual</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -106,7 +78,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header text-white" style="background-color:midnightblue">
-                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Moneda - Al 31-08-2021</h3>
+                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Moneda - Al @ViewBag.FechaActual</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -142,7 +114,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header text-white" style="background-color:midnightblue">
-                <h3 class="card-title">Consolidado de Tipo de Activo en Leasing - Al 31-08-2021</h3>
+                <h3 class="card-title">Consolidado de Tipo de Activo en Leasing - Al @ViewBag.FechaActual</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -816,6 +788,7 @@
         }).fail(function () {
             console.log('Error!');
         });
+        $(".filtroRepote").change(RefreshLista)
     });
     function RefreshLista() {
         var table = initTable();
@@ -826,20 +799,57 @@
         table.ajax.reload(function (json) { });
     }
     function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Consolidado de Endeudamiento Leasing por Empresa',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >= 2) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
         var table = $('#grilla1').DataTable({
-            "scrollX": true,
             "retrieve": true,
             'ajax': {
                 "type": "POST",
                 "url": '/Contrato/Consolidado_Read/0',
                 "data": function (d) {
-
+                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                    d.IdBanco = $("#IdBancoBus").val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
                 },
                 "dataSrc": ""
             },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "ConsolidadoLeasing_Empresa"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [2, 3],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
             columns: [
 
-              
+
                 { "data": "RazonSocial" },
                 { "data": "CantidadReg" },
                 { "data": "TasaPromedio" },
@@ -850,19 +860,55 @@
         return table;
     }
     function initTable2() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Consolidado de Endeudamiento Leasing por Moneda',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >= 1) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
         var table = $('#grilla2').DataTable({
-            "scrollX": true,
             "retrieve": true,
             'ajax': {
                 "type": "POST",
                 "url": '/Contrato/Consolidado2_Read/0',
                 "data": function (d) {
-
+                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                    d.IdBanco = $("#IdBancoBus").val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
                 },
                 "dataSrc": ""
             },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "ConsolidadoLeasing_Moneda"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [1,2, 3],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
             columns: [
-
 
                 { "data": "RazonSocial" },
                 { "data": "TotalCLP" },
@@ -875,6 +921,22 @@
     }
 
     function initTable3() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Consolidado por tipo de Deuda',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >= 1) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
         var table = $('#grilla3').DataTable({
             "scrollX": true,
             "retrieve": true,
@@ -882,13 +944,33 @@
                 "type": "POST",
                 "url": '/Contrato/Consolidado3_Read/0',
                 "data": function (d) {
-
+                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                    d.IdBanco = $("#IdBancoBus").val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
                 },
                 "dataSrc": ""
             },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Consolidado_TipoDeuda"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [1, 2, 3,4],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
             columns: [
-
-
                 { "data": "Familia" },
                 { "data": "CantidadReg" },
                 { "data": "TotalCLP" },

@@ -172,38 +172,38 @@ namespace tesoreria.Controllers
                     registro.TituloBoton = "Grabar Contrato";
                     registro.IdTipoMoneda = 1;
                 }
-                else {
-                    if (registro.Descripcion.Length == 0)
-                    {
-                        var activo = (from ca in db.ContratoActivo
-                                      join a in db.Activo on ca.IdActivo equals a.IdActivo
-                                      join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
-                                      from fv in fw.DefaultIfEmpty()
-                                      where ca.IdContrato == idContrato
-                                      select new { fv.NombreFamilia } into x
-                                      group x by new { x.NombreFamilia } into g
-                                      select new
-                                      {
-                                          cont = g.Count(),
-                                          g.Key.NombreFamilia
-                                      }).ToList();
+                //else {
+                //    if (registro.Descripcion.Length == 0)
+                //    {
+                //        var activo = (from ca in db.ContratoActivo
+                //                      join a in db.Activo on ca.IdActivo equals a.IdActivo
+                //                      join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
+                //                      from fv in fw.DefaultIfEmpty()
+                //                      where ca.IdContrato == idContrato
+                //                      select new { fv.NombreFamilia } into x
+                //                      group x by new { x.NombreFamilia } into g
+                //                      select new
+                //                      {
+                //                          cont = g.Count(),
+                //                          g.Key.NombreFamilia
+                //                      }).ToList();
 
-                        var desc = "";
-                        if (activo != null)
-                        {
-                            foreach (var a in activo)
-                            {
-                                desc += a.cont.ToString() + " " + ((a.NombreFamilia != null) ? a.NombreFamilia : "Familia No asociada") + ", ";
+                //        var desc = "";
+                //        if (activo != null)
+                //        {
+                //            foreach (var a in activo)
+                //            {
+                //                desc += a.cont.ToString() + " " + ((a.NombreFamilia != null) ? a.NombreFamilia : "Familia No asociada") + ", ";
 
 
 
-                            }
+                //            }
 
-                        }
+                //        }
 
-                        registro.Descripcion = desc;
-                    }
-                }
+                //        registro.Descripcion = desc;
+                //    }
+                //}
 
                 var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
                 var idLicitacion = 0;
@@ -574,65 +574,74 @@ namespace tesoreria.Controllers
 
                     if (dbContrato != null)
                     {
-
-                        var dbArchivo = (from doc in db.ContratoActivoDocumento
-                                         join of in db.ContratoActivo on doc.IdContratoActivo equals of.IdContratoActivo
-                                         where of.IdContrato == dbContrato.IdContrato
-                                         select new
-                                         {
-                                             doc.IdContratoActivoDocumento,
-                                             of.IdContrato,
-                                             of.IdContratoActivo,
-                                             doc.UrlDocumento
-                                         }).ToList();
-                        foreach (var arc in dbArchivo)
+                        if (dbContrato.IdEstado == 30)
                         {
-                            var archivo = Server.MapPath(arc.UrlDocumento);
-                            if (System.IO.File.Exists(archivo))
+                            var amortizacion = db.Contrato_Amortizacion.Where(c => c.IdContrato == idContrato).FirstOrDefault();
+                            var detAmortizacion = db.Contrato_DetAmortizacion.Where(c => c.IdContratoAmortizacion == amortizacion.IdContratoAmortizacion).ToList();
+                            db.Contrato_DetAmortizacion.RemoveRange(detAmortizacion);
+                            db.Contrato_Amortizacion.Remove(amortizacion);                            
+                            db.SaveChanges();
+                            var dbArchivo = (from doc in db.ContratoActivoDocumento
+                                             join of in db.ContratoActivo on doc.IdContratoActivo equals of.IdContratoActivo
+                                             where of.IdContrato == dbContrato.IdContrato
+                                             select new
+                                             {
+                                                 doc.IdContratoActivoDocumento,
+                                                 of.IdContrato,
+                                                 of.IdContratoActivo,
+                                                 doc.UrlDocumento
+                                             }).ToList();
+                            foreach (var arc in dbArchivo)
                             {
-                                System.IO.File.Delete(archivo);
+                                var archivo = Server.MapPath(arc.UrlDocumento);
+                                if (System.IO.File.Exists(archivo))
+                                {
+                                    System.IO.File.Delete(archivo);
+                                }
+
+                                db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivoDocumento WHERE IdContratoActivoDocumento = {0}", arc.IdContratoActivoDocumento);
+                                db.SaveChanges();
                             }
 
-                            db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivoDocumento WHERE IdContratoActivoDocumento = {0}", arc.IdContratoActivoDocumento);
-                            db.SaveChanges();
-                        }
-
-                        /*si viene de licitacion devuelvo el activo a la licitación, caso contrario lo dejo disponible*/
-                        var dbActivo = db.ContratoActivo.Where(c => c.IdContrato == idContrato);
-                        if (dbContrato.IdLicitacionOferta != null)
-                        {
-                            var oferta = db.LicitacionOferta.Find(dbContrato.IdLicitacionOferta);
-                            if (oferta != null)
+                            /*si viene de licitacion devuelvo el activo a la licitación, caso contrario lo dejo disponible*/
+                            var dbActivo = db.ContratoActivo.Where(c => c.IdContrato == idContrato);
+                            if (dbContrato.IdLicitacionOferta != null)
                             {
-                                db.Database.ExecuteSqlCommand("UPDATE Licitacion SET IdEstado = {0} WHERE IdLicitacion = {1}", (int)Helper.Estado.LicFinalizada, oferta.IdLicitacion);
-                                db.SaveChanges();
+                                var oferta = db.LicitacionOferta.Find(dbContrato.IdLicitacionOferta);
+                                if (oferta != null)
+                                {
+                                    db.Database.ExecuteSqlCommand("UPDATE Licitacion SET IdEstado = {0} WHERE IdLicitacion = {1}", (int)Helper.Estado.LicFinalizada, oferta.IdLicitacion);
+                                    db.SaveChanges();
 
+                                    /*foreach (var act in dbActivo)
+                                    {
+                                        db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActLicitacion, act.IdActivo);
+                                        db.SaveChanges();
+                                    }*/
+                                }
+                            }
+                            else
+                            {
                                 /*foreach (var act in dbActivo)
                                 {
-                                    db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActLicitacion, act.IdActivo);
+                                    db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActDisponible, act.IdActivo);
                                     db.SaveChanges();
                                 }*/
                             }
+
+                            db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivo WHERE IdContrato = {0}", dbContrato.IdContrato);
+                            db.SaveChanges();
+
+                            db.Contrato.Remove(dbContrato);
+                            db.SaveChanges();
+                            dbContextTransaction.Commit();
+                            showMessageString = new { Estado = 0, Mensaje = "Registro Eliminado con exito" };
                         }
-                        else {
-                            /*foreach (var act in dbActivo)
-                            {
-                                db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActDisponible, act.IdActivo);
-                                db.SaveChanges();
-                            }*/
+                        else
+                        {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 500, Mensaje = "No exposible eliminar el contrato seleccionado" };
                         }
-
-                        
-
-
-                        db.Database.ExecuteSqlCommand("DELETE FROM ContratoActivo WHERE IdContrato = {0}", dbContrato.IdContrato);
-                        db.SaveChanges();
-
-
-                        db.Contrato.Remove(dbContrato);
-                        db.SaveChanges();
-                        dbContextTransaction.Commit();
-                        showMessageString = new { Estado = 0, Mensaje = "Registro Eliminado con exito" };
                     }
                     else
                     {
@@ -651,7 +660,7 @@ namespace tesoreria.Controllers
         }
 
         [HttpPost]
-        public JsonResult ActivarContrato(int idContrato)
+        public JsonResult ActivarContrato(int idContrato,string descripcion)
         {
             dynamic showMessageString = string.Empty;
             var contrato = db.Contrato.Find(idContrato);
@@ -662,6 +671,7 @@ namespace tesoreria.Controllers
             if (activos > 0)
             {
                 contrato.IdEstado = (int)Helper.Estado.ConActivo;
+                contrato.Descripcion = descripcion;
                 db.SaveChanges();
                 showMessageString = new { Estado = 0, Mensaje = "Contrato Activado Exitosamente" };
             }
@@ -823,38 +833,38 @@ namespace tesoreria.Controllers
                     registro.TituloBoton = "Grabar Contrato";
                     registro.IdTipoMoneda = 1;
                 }
-                else {
-                    if (registro.Descripcion.Length == 0)
-                    {
-                        var activo = (from ca in db.ContratoActivo
-                                      join a in db.Activo on ca.IdActivo equals a.IdActivo
-                                      join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
-                                      from fv in fw.DefaultIfEmpty()
-                                      where ca.IdContrato == idContrato
-                                      select new { fv.NombreFamilia } into x
-                                      group x by new { x.NombreFamilia } into g
-                                      select new
-                                      {
-                                          cont = g.Count(),
-                                          g.Key.NombreFamilia
-                                      }).ToList();
+                //else {
+                //    if (registro.Descripcion.Length == 0)
+                //    {
+                //        var activo = (from ca in db.ContratoActivo
+                //                      join a in db.Activo on ca.IdActivo equals a.IdActivo
+                //                      join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
+                //                      from fv in fw.DefaultIfEmpty()
+                //                      where ca.IdContrato == idContrato
+                //                      select new { fv.NombreFamilia } into x
+                //                      group x by new { x.NombreFamilia } into g
+                //                      select new
+                //                      {
+                //                          cont = g.Count(),
+                //                          g.Key.NombreFamilia
+                //                      }).ToList();
 
-                        var desc = "";
-                        if (activo != null)
-                        {
-                            foreach (var a in activo)
-                            {
-                                desc += a.cont.ToString() + " " + ((a.NombreFamilia != null) ? a.NombreFamilia : "Familia No asociada") + ", ";
+                //        var desc = "";
+                //        if (activo != null)
+                //        {
+                //            foreach (var a in activo)
+                //            {
+                //                desc += a.cont.ToString() + " " + ((a.NombreFamilia != null) ? a.NombreFamilia : "Familia No asociada") + ", ";
 
 
 
-                            }
+                //            }
 
-                        }
+                //        }
 
-                        registro.Descripcion = desc;
-                    }
-                }
+                //        registro.Descripcion = desc;
+                //    }
+                //}
 
                 var licitacionOferta = db.LicitacionOferta.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).FirstOrDefault();
                 var idLicitacion = 0;
@@ -990,7 +1000,7 @@ namespace tesoreria.Controllers
                 idEmpresa = contrato.IdEmpresa;
             }
 
-            var activoContrato = db.ContratoActivo.Where(c => c.IdContrato == idContrato).AsEnumerable().ToList();
+            var activoContrato = db.ContratoActivo.AsEnumerable().ToList();
             if (activoContrato.Count() == 0)
             {
                 activoContrato = new List<ContratoActivo>();
@@ -1076,7 +1086,8 @@ namespace tesoreria.Controllers
 
                             /*registro log contrato*/
                             GrabaLogContrato(idContrato, 4, textoLog);
-
+                            //Actualizar descripcion
+                            UpdateDescripcion(idContrato);
                             var mensaje = "";
                             mensaje = "Asociación realizada con éxito";
 
@@ -1097,7 +1108,35 @@ namespace tesoreria.Controllers
             }
             return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
         }
+        public void UpdateDescripcion(int IdContrato)
+        {
+            var contrato = db.Contrato.Find(IdContrato);
+            if (contrato.IdEstado == 30)
+            {
+                var activo = (from ca in db.ContratoActivo
+                              join a in db.Activo on ca.IdActivo equals a.IdActivo
+                              
+                              where ca.IdContrato == IdContrato
+                              select new { a.DesGrupo } into x
+                              group x by new { x.DesGrupo } into g
+                              select new
+                              {
+                                  cont = g.Count(),
+                                  g.Key.DesGrupo
+                              }).ToList();
 
+                var desc = "";
+                if (activo != null)
+                {
+                    foreach (var a in activo)
+                    {
+                        desc += a.cont.ToString() + " " + ((a.DesGrupo != null) ? a.DesGrupo : "") + ", ";
+                    }
+                }
+                contrato.Descripcion = (desc.Length>0)?desc.Substring(0, desc.Length - 2) :desc;
+                db.SaveChanges();
+            }
+        }
         [HttpPost]
         public JsonResult DeleteAsociacionActivo(int idContratoActivo)
         {
@@ -1107,7 +1146,7 @@ namespace tesoreria.Controllers
                 try
                 {
                     var dbContratoActivo = db.ContratoActivo.Find(idContratoActivo);
-
+                    var IdContrato = dbContratoActivo.IdContrato;
                     if (dbContratoActivo != null)
                     {
 
@@ -1144,6 +1183,9 @@ namespace tesoreria.Controllers
 
                         db.ContratoActivo.Remove(dbContratoActivo);
                         db.SaveChanges();
+                        //actualizar descripción
+                        UpdateDescripcion(IdContrato);
+
                         dbContextTransaction.Commit();
                         showMessageString = new { Estado = 0, Mensaje = "Asociación eliminada con exito" };
                     }
@@ -1181,6 +1223,29 @@ namespace tesoreria.Controllers
             ViewBag.soloVer = soloVer;
             return View(contratoActivo);
             
+        }
+        [HttpPost]
+        public JsonResult DeleteAmortizacion(int IdContrato)
+        {
+            dynamic showMessageString = string.Empty;
+            var contrato = db.Contrato.Find(IdContrato);
+            var existeAmortizacion = db.Contrato_Amortizacion.Where(c => c.IdContrato == IdContrato).FirstOrDefault();
+            if (existeAmortizacion != null)
+            {
+                var detAmortizacion = db.Contrato_DetAmortizacion.Where(c => c.IdContratoAmortizacion == existeAmortizacion.IdContratoAmortizacion).ToList();
+                db.Contrato_DetAmortizacion.RemoveRange(detAmortizacion);               
+                db.Contrato_Amortizacion.Remove(existeAmortizacion);
+                db.SaveChanges();
+                showMessageString = new { Estado = 0, Mensaje = "Detalle Eliminado" };
+
+            }
+            else
+            {
+                showMessageString = new { Estado = 100, Mensaje = "No Existe amortización" };
+            }
+            
+
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
         public ActionResult DetAmortizacion_Read(int idContrato)
         {
@@ -1506,8 +1571,7 @@ namespace tesoreria.Controllers
                     }
                 }
 
-                var contrato = new ContratoDocumento();
-                contrato.IdContrato = idContrato;
+                var contrato = db.Contrato.Find(idContrato);
 
                 return View(contrato);
             }
@@ -1925,36 +1989,35 @@ namespace tesoreria.Controllers
                                 FechaTermino = c.FechaTermino,
                                 FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
                                 PuedeEliminar = (c.IdEstado != (int)Helper.Estado.ConCreado) ? false : true,
-                                NombreEstado = e.NombreEstado
+                                NombreEstado = e.NombreEstado,
+                                Descripcion=c.Descripcion
                             }).AsEnumerable().ToList();
 
-            foreach (var reg in registro) {
-                var activo = (from ca in db.ContratoActivo
-                                   join a in db.Activo on ca.IdActivo equals a.IdActivo
-                                  join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
-                                  from fv in fw.DefaultIfEmpty()
-                              where ca.IdContrato == reg.IdContrato
-                                   select new { fv.NombreFamilia } into x
-                                   group x by new { x.NombreFamilia } into g
-                                   select new
-                                   {
-                                       cont = g.Count(),
-                                       g.Key.NombreFamilia
-                                   }).ToList();
+            //foreach (var reg in registro) {
+            //    var activo = (from ca in db.ContratoActivo
+            //                       join a in db.Activo on ca.IdActivo equals a.IdActivo
+            //                      join f in db.Familia on a.IdFamilia equals f.IdFamilia into fw
+            //                      from fv in fw.DefaultIfEmpty()
+            //                  where ca.IdContrato == reg.IdContrato
+            //                       select new { fv.NombreFamilia } into x
+            //                       group x by new { x.NombreFamilia } into g
+            //                       select new
+            //                       {
+            //                           cont = g.Count(),
+            //                           g.Key.NombreFamilia
+            //                       }).ToList();
 
-                var desc = "";
-                if (activo != null) {
-                    foreach (var a in activo) {
-                        desc += a.cont.ToString() + " " + ((a.NombreFamilia!=null)? a.NombreFamilia:"Familia No asociada") + ", ";
+            //    var desc = "";
+            //    if (activo != null) {
+            //        foreach (var a in activo) {
+            //            desc += a.cont.ToString() + " " + ((a.NombreFamilia!=null)? a.NombreFamilia:"Familia No asociada") + ", ";                       
 
-                       
-
-                    }
+            //        }
                     
-                }
+            //    }
 
-                reg.Descripcion = desc;
-            }
+            //    reg.Descripcion = desc;
+            //}
 
             return Json(registro, JsonRequestBehavior.AllowGet);
         }
@@ -2213,13 +2276,17 @@ namespace tesoreria.Controllers
                     }
                 }*/
 
-        public ActionResult Consolidado_Read()
+        public ActionResult Consolidado_Read(int? IdEmpresa,int? IdBanco,int? anio,int? IdMes)
         {
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
                             where c.IdTipoContrato == 1
+                            && ((IdEmpresa!=null)?em.IdEmpresa== IdEmpresa : true)
+                            && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
+                            //&& ((anio != null) ? c.FechaInicio.Year == anio : true)
+                            //&& ((IdMes != null) ? c.FechaInicio.Month == IdMes : true)
                             select new
                             {
                                 em.IdEmpresa,
@@ -2265,13 +2332,17 @@ namespace tesoreria.Controllers
                           ).ToList();
             return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult Consolidado2_Read()
+        public ActionResult Consolidado2_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes)
         {
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
                             where c.IdTipoContrato == 1
+                            && ((IdEmpresa != null) ? em.IdEmpresa == IdEmpresa : true)
+                            && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
+                            //&& ((anio != null) ? c.FechaInicio.Year == anio : true)
+                            //&& ((IdMes != null) ? c.FechaInicio.Month == IdMes : true)
                             select new
                             {
                                 em.IdEmpresa,
@@ -2300,7 +2371,7 @@ namespace tesoreria.Controllers
             return Json(totales, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Consolidado3_Read()
+        public ActionResult Consolidado3_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes)
         {
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado on c.IdEstado equals e.IdEstado
@@ -2320,6 +2391,8 @@ namespace tesoreria.Controllers
                             from l_cam in t_cam.DefaultIfEmpty()
 
                             where c.IdTipoContrato == 1
+                            && ((IdEmpresa != null) ? em.IdEmpresa == IdEmpresa : true)
+                            && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
                             select new
                             {
                                 em.IdEmpresa,

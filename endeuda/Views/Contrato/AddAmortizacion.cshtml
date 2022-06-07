@@ -81,6 +81,30 @@
         var table = initTable();
         table.ajax.reload(function (json) { });
     }
+    function LimpiarAmortizacion(IdContrato) {
+        a = confirm("Seguro de limpiar la amortizacion almacenada?")
+        if (a) {
+            $.ajax({
+                url: "/Contrato/DeleteAmortizacion",
+                type: "Post",
+                data: {
+                    IdContrato: IdContrato
+                },
+                success: function (data) {
+                    if (data.Estado == 0) {
+                        toastr.success(data.Mensaje);
+                        RefreshLista();
+                    }
+                    else {
+                        toastr.error(data.Mensaje);
+                    }
+                },
+                failure: function (data) {
+                    toastr.error("error");
+                }
+            });
+        }
+    }
     function initTable() {
         var buttonCommon = {
             text: 'Exportar a Excel',
@@ -108,11 +132,18 @@
             },
             $.extend(true, {}, buttonCommon, {
                 filename: "AmortizacionContrato_@Model.IdContrato"
-            })
+            }),
+            {
+                text: 'Limpiar Amortización <i class="fa fa-trash"></i>',
+                //className: 'btn btn-danger btn-sm',
+                action: function (e, dt, node, config) {
+                    LimpiarAmortizacion("@Model.IdContrato");
+                }
+            }
         ];
         if(soloVer== "SI"){
             var btnImport = [
-            
+
             $.extend(true, {}, buttonCommon, {
                 filename: "AmortizacionContrato_@Model.IdContrato"
             })

@@ -164,6 +164,7 @@ namespace tesoreria.Controllers
             }
             else
             {
+                var fechaActual = DateTime.Now;
                 var empresa = (from e in db.Empresa
                                where e.Activo == true
                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
@@ -175,6 +176,13 @@ namespace tesoreria.Controllers
                                select new RetornoGenerico { Id = e.IdBanco, Nombre = e.NombreBanco }).OrderBy(c => c.Id).ToList();
                 SelectList listaBancos = new SelectList(bancos.OrderBy(c => c.Nombre), "Id", "Nombre");
                 ViewData["listaBancos"] = listaBancos;
+
+                var meses = (from e in db.Mes
+                              select new RetornoGenerico { Id = e.IdMes, Nombre = e.NombreMes }).OrderBy(c => c.Id).ToList();
+                SelectList listaMeses = new SelectList(meses.OrderBy(c => c.Id), "Id", "Nombre", fechaActual.Month);
+                ViewData["listaMeses"] = listaMeses;
+
+                ViewBag.FechaActual = fechaActual.ToString("dd-MM-yyyy");
                 return View();
             }
             

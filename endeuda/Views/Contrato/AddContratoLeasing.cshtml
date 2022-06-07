@@ -135,12 +135,7 @@
                     </div>
                 }
             </div>
-            <div class="form-group row">
-                <label for="descripcion" class="col-sm-2 col-form-label">Descripción</label>
-                <div class="col-sm-2">
-                    <textarea class="form-control" name="descripcion" id="descripcion" rows="1">@Model.Descripcion</textarea>
-                </div>
-            </div>
+            
         </div>
         <div class="card-footer">
             <button type="button" onclick="Volver()" class="btn btn-secondary btn-sm" data-dismiss="modal">Volver</button>
@@ -405,7 +400,7 @@
                     "mRender": function (o, type, row) {
                         var acciones = '';
                          if (o.Editable == true) {
-                            var acciones = '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarActivo(' + o.IdContratoActivo + ')"><i class="far fa-trash-alt"></i></button>';
+                            var acciones = '<button class="btn btn-danger btn-sm" type="button" onclick="EliminarActivo(' + o.IdContratoActivo + ')"><i class="far fa-trash-alt"></i></button>';
                          }
                         return acciones;
                     }

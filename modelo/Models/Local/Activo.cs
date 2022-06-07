@@ -28,6 +28,7 @@ namespace modelo.Models.Local
         public string Modelo { get; set; }
         public int? Anio { get; set; }
         public string Grupo { get; set; }
+        public string DesGrupo { get; set; }
         public string SubGrupo { get; set; }
         public string IdCuenta { get; set; }
         public double? Valor { get; set; }
