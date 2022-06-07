@@ -114,6 +114,7 @@
                     d.idEmpresaAseguradora = $('#empresaAseguradoraB').val();
                     d.idTipoSeguro = $('#tipoSeguroB').val();
                     d.numeroPoliza = $('#numeroPolizaB').val();
+                    //d.IdEstado = 40;
                 },
                 "dataSrc": ""
             },
@@ -139,7 +140,7 @@
                         var boton = '';
                         boton = '<button class="btn btn-info btn-sm" type="button" onclick="CreateRegistro(' + o.IdPoliza + ')"><i class="fa fa-edit"></i></button> ';
                         if (o.PuedeEliminar) {
-                            boton += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarPoliza(' + o.IdPoliza + ')"><i class="far fa-trash-alt"></i></button> ';
+                            boton += '<button class="btn btn-danger btn-sm" type="button" onclick="EliminarPoliza(' + o.IdPoliza + ')"><i class="far fa-trash-alt"></i></button> ';
                         }
                         return boton;
                     }

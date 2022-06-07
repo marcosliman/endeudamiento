@@ -65,8 +65,8 @@
             </div>
         </div>
         <div class="card-footer">
-            <button type="button" onclick="Volver()" class="btn btn-secondary btn-sm" data-dismiss="modal">Volver</button>
-            <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarPoliza()" class="btn btn-primary btn-sm float-right">@Model.TituloBoton</button>
+            <button type="button" onclick="Volver()" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Volver</button>
+            <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarPoliza()" class="btn btn-primary btn-sm float-right">@Model.TituloBoton <i class="fa fa-save"></i></button>
         </div>
     }
     @if (Model.ExistePoliza == "S")
@@ -111,6 +111,8 @@
                                 <th>Cod. Interno</th>
                                 <th>Tipo Activo</th>
                                 <th>Estado</th>
+                                <th>Rut Beneficiario</th>
+                                <th>Beneficiario</th>
                                 <th>Descripcion</th>
                                 <th>Patente</th>
                                 <th>Marca</th>
@@ -288,7 +290,7 @@
     function initTableActivo() {
         var buttonCommon = {
             text: 'Exportar a Excel',
-            title: 'ACTIVOS ',
+            title: 'Activos Poliza @Model.NumeroPoliza',
             extend: 'excelHtml5',
             exportOptions: {
                 columns: "thead th:not(.noExport)"
@@ -297,7 +299,7 @@
         var table = $('#grillaPolizaActivo').DataTable({
             buttons: [
                 $.extend(true, {}, buttonCommon, {
-                    filename: "Activos",
+                    filename: "ActivosPoliza_@Model.NumeroPoliza",
                     sheetName: "Activos"
                 })
             ],
@@ -329,7 +331,7 @@
                     "mRender": function (o, type, row) {
                         var acciones = '';
                         //if (o.Editable == true) {
-                        acciones += '<button class="btn btn-primary btn-sm" type="button" onclick="EliminarActivo(' + o.IdPolizaActivo + ')"><i class="far fa-trash-alt"></i></button>';
+                        acciones += '<button class="btn btn-danger btn-sm" type="button" onclick="EliminarActivo(' + o.IdPolizaActivo + ')"><i class="far fa-trash-alt"></i></button>';
                         //}
                         return acciones;
                     }
@@ -337,6 +339,8 @@
                 { "data": "NumeroInterno" },
                 { "data": "Familia" },
                 { "data": "NombreEstado" },
+                { "data": "RutBeneficiario" },
+                { "data": "Beneficiario" },
                 { "data": "Descripcion" },
                 { "data": "Patente" },
                 { "data": "Marca" },

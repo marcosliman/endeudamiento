@@ -49,7 +49,7 @@ namespace tesoreria.Controllers
             }
         }
 
-        public ActionResult ListaSeguro_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza)
+        public ActionResult ListaSeguro_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza,int? IdEstado)
         {
             var registro = (from p in db.Poliza.ToList()
                             join e in db.Estado.ToList() on p.IdEstado equals e.IdEstado
@@ -57,6 +57,7 @@ namespace tesoreria.Controllers
                             && p.IdEmpresaAseguradora == ((idEmpresaAseguradora != null) ? idEmpresaAseguradora : p.IdEmpresaAseguradora)
                             && p.IdTipoSeguro == ((idTipoSeguro != null) ? idTipoSeguro : p.IdTipoSeguro)
                             && p.NumeroPoliza == ((numeroPoliza != "") ? numeroPoliza : p.NumeroPoliza)
+                            && p.IdEstado == ((IdEstado != null) ? IdEstado : p.IdEstado)
                             select new PolizaViewModel
                             {
                                 IdPoliza = p.IdPoliza,
@@ -398,7 +399,7 @@ namespace tesoreria.Controllers
                             //join pr in db.Proveedor.ToList() on ac.IdProveedor equals pr.IdProveedor into prw
                             //from prv in prw.DefaultIfEmpty()
                             where rel.IdPoliza == idPoliza
-                            select new ActivoViewModel
+                            select new 
                             {
                                 IdPolizaActivo = rel.IdPolizaActivo,
                                 IdActivo = ac.IdActivo,
@@ -423,7 +424,9 @@ namespace tesoreria.Controllers
                                 FechaRegistroStr = "",
                                 FechaBajaStr = "",
                                 NombreEstado = e.NombreEstado,
-                                NumeroLeasing = ""
+                                NumeroLeasing = "",
+                                rel.RutBeneficiario,
+                                rel.Beneficiario
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
