@@ -3255,6 +3255,7 @@
     <Content Include="Views\Seguro\ModalEditarBeneficiario.cshtml" />
     <Content Include="Views\Contrato\AddDocumentoContrato.cshtml" />
     <Content Include="Views\Activo\VistaActivo.cshtml" />
+    <Content Include="Views\Seguro\ImportActivos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

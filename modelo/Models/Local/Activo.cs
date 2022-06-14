@@ -30,6 +30,7 @@ namespace modelo.Models.Local
         public string Grupo { get; set; }
         public string DesGrupo { get; set; }
         public string SubGrupo { get; set; }
+        public string DesSGru { get; set; }
         public string IdCuenta { get; set; }
         public double? Valor { get; set; }
         public string IdProveedor { get; set; }
@@ -57,5 +58,6 @@ namespace modelo.Models.Local
         public string DescCC_Mqs { get; set; }
         public string DescCC_MqsSur { get; set; }
         public double? ValorFactura { get; set; }
+        public DateTime? FecIngBaja { get; set; }
     }
 }

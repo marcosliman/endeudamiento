@@ -40,17 +40,17 @@
                     </div>
                 </div>
                 @*<div class="form-group form-group-sm row">
-                        <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Beneficiario</label>
-                        <div class="col-6">
-                            <input type="text" class="form-control form-control-sm required" name="beneficiario" id="beneficiario" value="@Model.Beneficiario" />
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm row">
-                        <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Rut Beneficiario</label>
-                        <div class="col-6">
-                            <input type="text" class="form-control form-control-sm required" name="rutBeneficiario" id="rutBeneficiario" value="@Model.RutBeneficiario" />
-                        </div>
-                    </div>*@
+            <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Beneficiario</label>
+            <div class="col-6">
+                <input type="text" class="form-control form-control-sm required" name="beneficiario" id="beneficiario" value="@Model.Beneficiario" />
+            </div>
+        </div>
+        <div class="form-group form-group-sm row">
+            <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Rut Beneficiario</label>
+            <div class="col-6">
+                <input type="text" class="form-control form-control-sm required" name="rutBeneficiario" id="rutBeneficiario" value="@Model.RutBeneficiario" />
+            </div>
+        </div>*@
                 <div class="form-group form-group-sm row">
                     <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Número pag. inicial</label>
                     <div class="col-6">
@@ -61,6 +61,12 @@
                     <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Número pag. término</label>
                     <div class="col-6">
                         <input type="text" class="form-control form-control-sm required" name="paginaTermino" id="paginaTermino" value="@Model.PaginaTermino" />
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Valor Prima</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm required numberMiles" name="ValorPrima" id="ValorPrima" value="@Model.ValorPrima" />
                     </div>
                 </div>
             </div>
@@ -111,22 +117,29 @@
             });
         });
 
-        function GrabarEditarBeneficiario() {
-            if ($('#frmEditBeneficiario').valid()) {
-                $.ajax({
-                    type: 'POST',
-                    url: '/Seguro/EditarBeneficiario/',
-                    data: $("#frmEditBeneficiario").serialize(),
-                    success: function (data) {
-                        Success_b(data);
-                    },
-                    failure: function (data) {
-                        Failure_b(data);
-                    }
-                })
+    function GrabarEditarBeneficiario() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''))
+        });
+        if ($('#frmEditBeneficiario').valid()) {
+            
+            $.ajax({
+                type: 'POST',
+                url: '/Seguro/EditarBeneficiario/',
+                data: $("#frmEditBeneficiario").serialize(),
+                success: function (data) {
+                    Success_b(data);
+                },
+                failure: function (data) {
+                    Failure_b(data);
+                }
+            })
 
-            }
         }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
+    }
 
         function Success_b(data) {
             esconderCargando();

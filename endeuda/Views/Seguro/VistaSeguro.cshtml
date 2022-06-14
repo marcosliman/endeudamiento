@@ -135,7 +135,27 @@
                 },
                 "dataSrc": ""
             },
-
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [12],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                },
+                {
+                    targets: [17],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                }
+            ],
             columns: [
                 { "data": "NumeroInterno" },
                 { "data": "Familia" },
@@ -153,8 +173,8 @@
                 { "data": "FechaRegistroStr" },
                 { "data": "Glosa" },
                 { "data": "FechaRegistroStr" },
-                { "data": "NumeroLeasing" },
-                { "data": "FechaBajaStr" }
+                { "data": "Leasing" },
+                { "data": "TerminoLeasing" }
             ]
         });
         return table;

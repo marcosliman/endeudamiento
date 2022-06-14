@@ -3,141 +3,134 @@
     ViewBag.Title = "Registrar Póliza de Seguro";
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
+<div class="card">
+    <div class="card-body">
+        @using (Ajax.BeginForm("GrabarSeguro", "Seguro", new AjaxOptions
+        {
+            InsertionMode = InsertionMode.Replace,
+            HttpMethod = "post",
+            OnSuccess = "Success_dl",
+            OnFailure = "Failure_dl"
 
-<div class="card-body">
-    @using (Ajax.BeginForm("GrabarSeguro", "Seguro", new AjaxOptions
-    {
-        InsertionMode = InsertionMode.Replace,
-        HttpMethod = "post",
-        OnSuccess = "Success_dl",
-        OnFailure = "Failure_dl"
+        }, new { id = "frmPoliza", @class = "form-horizontal" }))
+        {
+            <input type="hidden" name="idPoliza" id="idPolizaA" value="@Model.IdPoliza" />
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Número Poliza</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm required" name="NumeroPoliza" id="NumeroPoliza" value="@Model.NumeroPoliza" />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Seguro</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idTipoSeguro", (SelectList)ViewData["listaTipoSeguro"], "--Seleccione Tipo Seguro--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                </div>
+            </div>
+            <div class="form-group row">
 
-    }, new { id = "frmPoliza", @class = "form-horizontal" }))
-    {
-        <input type="hidden" name="idPoliza" id="idPolizaA" value="@Model.IdPoliza" />
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
-            <div class="col-sm-2">
-                @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Número Poliza</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required" name="NumeroPoliza" id="NumeroPoliza" value="@Model.NumeroPoliza" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Seguro</label>
-            <div class="col-sm-2">
-                @Html.DropDownList("idTipoSeguro", (SelectList)ViewData["listaTipoSeguro"], "--Seleccione Tipo Seguro--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-            </div>
-        </div>
-        <div class="form-group row">
-
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa aseguradora</label>
-            <div class="col-sm-2">
-                @Html.DropDownList("idEmpresaAseguradora", (SelectList)ViewData["listaEmpresaAseguradora"], "--Seleccione Empresa Aseguradora--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Monto asegurado</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required numberMiles" name="MontoAsegurado" id="MontoAsegurado" value="@Model.MontoAsegurado" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Prima mensual</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required" name="PrimaMensual" id="PrimaMensual" value="@Model.PrimaMensual" />
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Número pagos</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required" name="NumeroPagos" id="NumeroPagos" value="@Model.NumeroPagos" />
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de moneda</label>
-            <div class="col-sm-2">
-                @Html.DropDownList("idTipoMoneda", (SelectList)ViewData["listaTipoMoneda"], "--Seleccione Tipo Moneda--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-            </div>
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha venc. seguro</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required classFecha" name="FechaVencimiento" id="FechaVencimiento" value="@Model.FechaVencimientoStr" />
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha envío bancos</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control form-control-sm required classFecha" name="FechaEnvioBanco" id="FechaEnvioBanco" value="@Model.FechaEnvioBancoStr" />
-            </div>
-        </div>
-        <div class="card-footer">
-            <button type="button" onclick="Volver()" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Volver</button>
-            <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarPoliza()" class="btn btn-primary btn-sm float-right">@Model.TituloBoton <i class="fa fa-save"></i></button>
-        </div>
-    }
-    @if (Model.ExistePoliza == "S")
-    {
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Búsqueda de Activos</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa aseguradora</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idEmpresaAseguradora", (SelectList)ViewData["listaEmpresaAseguradora"], "--Seleccione Empresa Aseguradora--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Monto asegurado</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm required numberMiles" name="MontoAsegurado" id="MontoAsegurado" value="@Model.MontoAsegurado" />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Prima mensual</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm required numberMiles" name="PrimaMensual" id="PrimaMensual" value="@Model.PrimaMensual" />
                 </div>
             </div>
-            <div class="card-body">
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de activos cubiertos por la Póliza</label>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Número pagos</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm required" name="NumeroPagos" id="NumeroPagos" value="@Model.NumeroPagos" />
                 </div>
-                <div class="form-group row">
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="AsociarActivo()" data-toggle="modal" data-target="#ModalAsociarActivo"><i class="fa fa-plus"></i>Buscar Activo</button>
-                            </div>
-                        </nav>
-                    </div>
-                    <div class="col-sm-10">
-                    </div>
-                    <div class="col-sm-1">
-                        <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                            <div class="form-inline my-1 my-lg-0">
-                                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#cargamasiva"><i class="fa fa-plus"></i>Carga Masiva</button>
-                            </div>
-                        </nav>
-                    </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de moneda</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idTipoMoneda", (SelectList)ViewData["listaTipoMoneda"], "--Seleccione Tipo Moneda--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                 </div>
-                <div class="table-responsive mt-1">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPolizaActivo" data-order='[[ 2, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="no-sort"><i class="fa fa-edit"></i></th>
-                                <th class="no-sort"><i class="far fa-trash-alt"></i></th>
-                                <th>Cod. Interno</th>
-                                <th>Tipo Activo</th>
-                                <th>Estado</th>
-                                <th>Rut Beneficiario</th>
-                                <th>Beneficiario</th>
-                                <th>Descripcion</th>
-                                <th>Patente</th>
-                                <th>Marca</th>
-                                <th>Modelo</th>
-                                <th>Motor</th>
-                                <th>Chasis</th>
-                                <th>Año</th>
-                                <th>Grupo</th>
-                                <th>Sub-grupo</th>
-                                <th>Val. Compra</th>
-                                <th>Fec. Ing.</th>
-                                <th>Glosa</th>
-                                <th>Fec. Baja</th>
-                                <th>Leasing</th>
-                                <th>Término Leas.</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha venc. seguro</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm required classFecha" name="FechaVencimiento" id="FechaVencimiento" value="@Model.FechaVencimientoStr" />
                 </div>
             </div>
-        </div>
-    }
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha envío bancos</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm required classFecha" name="FechaEnvioBanco" id="FechaEnvioBanco" value="@Model.FechaEnvioBancoStr" />
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" onclick="Volver()" class="btn btn-secondary btn-sm" data-dismiss="modal"><i class="fas fa-undo-alt"></i> Volver</button>
+                <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarPoliza()" class="btn btn-primary btn-sm float-right">@Model.TituloBoton <i class="fa fa-save"></i></button>
+            </div>
+        }
+    </div>
 </div>
+@if (Model.ExistePoliza == "S")
+{
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">Búsqueda de Activos</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación registre el detalle de activos cubiertos por la Póliza</label>
+            </div>
+            <div class="form-group row">
+                <div class="col-sm-2">
+                    <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="AsociarActivo()" data-toggle="modal" data-target="#ModalAsociarActivo"><i class="fa fa-plus"></i> Buscar Activo</button>
+                </div>
+                <div class="col-sm-8">
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary btn-sm float-right" type="button" onclick="ImportActivos()" ><i class="fa fa-file-import"></i> Carga Masiva</button>
+                </div>
+            </div>
+            <div class="table-responsive mt-1">
+                <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaPolizaActivo" data-order='[[ 2, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="no-sort"><i class="fa fa-edit"></i></th>
+                            <th class="no-sort"><i class="far fa-trash-alt"></i></th>
+                            <th>Cod. Interno</th>
+                            <th>Tipo Activo</th>
+                            <th>Estado</th>
+                            <th>Rut Beneficiario</th>
+                            <th>Beneficiario</th>
+                            <th>Descripcion</th>
+                            <th>Patente</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Motor</th>
+                            <th>Chasis</th>
+                            <th>Año</th>
+                            <th>Grupo</th>
+                            <th>Sub-grupo</th>
+                            <th>Val. Compra</th>
+                            <th>Fec. Ing.</th>
+                            <th>Glosa</th>
+                            <th>Fec. Baja</th>
+                            <th>Leasing</th>
+                            <th>Término Leas.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
 <form name="frmPolizaAcc" id="frmPolizaAcc" method="post">
     <input type="hidden" name="idPoliza" id="idPolizaAcc" />
 </form>
@@ -156,8 +149,33 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="ModalArchivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div id="datosArchivo"></div>
 
+        </div>
+    </div>
+</div>
 <script>
+    function ImportActivos() {
+        $("#datosArchivo").empty();
+        $('#ModalArchivo').modal('show');
+        $.ajax({
+            url: "/Seguro/ImportActivos",
+            type: "Post",
+            data: {
+                IdPoliza : '@Model.IdPoliza'
+            },
+            beforeSend: function () {
+                $("#datosArchivo").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosArchivo").empty();
+                $("#datosArchivo").html(data);
+            }
+        });
+    }
     $(document).ready(function () {
         initTableActivo();
         $('.classFecha').datepicker({
@@ -175,8 +193,8 @@
                 idEmpresaAseguradora: { required: true },
                 idTipoSeguro: { required: true },
                 idTipoMoneda: { required: true },
-                montoAsegurado: { required: true, digits: true },
-                PrimaMensual: { required: true, number: true },
+                montoAsegurado: { required: true},
+                PrimaMensual: { required: true},
                 NumeroPagos: { required: true, digits: true },
                 fechaVencimiento: { required: true },
                 fechaEnvioBanco: { required: true }
@@ -312,7 +330,27 @@
                 },
                 "dataSrc": ""
             },
-
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [16],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                },
+                {
+                    targets: [17,19,21],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                }
+            ],
             columns: [
                 {
                     "mData": null,
@@ -351,11 +389,11 @@
                 { "data": "Grupo" },
                 { "data": "SubGrupo" },
                 { "data": "Valor" },
-                { "data": "FechaRegistroStr" },
+                { "data": "FecIngBaja" },
                 { "data": "Glosa" },
-                { "data": "FechaRegistroStr" },
-                { "data": "NumeroLeasing" },
-                { "data": "FechaBajaStr" }
+                { "data": "FechaBaja" },
+                { "data": "Leasing" },
+                { "data": "TerminoLeasing" }
             ]
         });
         return table;

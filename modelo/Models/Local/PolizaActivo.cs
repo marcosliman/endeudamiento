@@ -16,10 +16,13 @@ namespace modelo.Models.Local
         [ForeignKey("IdPoliza")]
         public virtual Poliza Poliza { get; set; }
         public int IdActivo { get; set; }
+        [ForeignKey("IdActivo")]
+        public virtual Activo Activo { get; set; }
         public string Beneficiario { get; set; }
         public string RutBeneficiario { get; set; }
         public int? PaginaInicial { get; set; }
         public int? PaginaTermino { get; set; }
         public string CodAux { get; set; }
+        public double? ValorPrima { get; set; }
     }
 }

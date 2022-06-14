@@ -1,4 +1,5 @@
-﻿@{
+﻿@model modelo.Models.Local.Poliza
+@{
     ViewBag.Title = "Importación de Activos";
     Layout = "~/Views/Shared/_Popup.cshtml";
 }
@@ -9,7 +10,6 @@
     </button>
 </div>
 <div class="card">
-
     <!-- /.card-header -->
     <div class="card-body table-responsive">
         <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaEjemplo" data-order='[[ 1, "asc" ]]'>
@@ -17,17 +17,10 @@
 
                 <tr>
                     <th>NumeroInterno</th>
-                    <th>CodSoftland</th>
-                    <th>Descripcion</th>                    
-                    <th>Marca</th>
-                    <th>Modelo</th>
-                    <th>Motor</th>
-                    <th>Chasis</th>
-                    <th>Anio</th>
-                    <th>Valor</th>
-                    <th>NumeroFactura</th>
-                    <th>NumeroContrato</th>
-                    <th>Patente</th>
+                    <th>RutBeneficiario</th>
+                    <th>PaginaInicial</th>
+                    <th>PaginaTermino</th>
+                    <th>ValorPrima</th>                    
                 </tr>
             </thead>
             <tbody></tbody>
@@ -36,7 +29,7 @@
 
 </div>
 <div class="card-body">
-    @using (Ajax.BeginForm("ImportPlanillaActivoInterno", "Activo", new AjaxOptions
+    @using (Ajax.BeginForm("ImportaPlanillaActivos", "Seguro", new AjaxOptions
     {
         OnBegin = "mostrarCargando()",
         InsertionMode = InsertionMode.Replace,
@@ -46,14 +39,10 @@
 
     }, new { id = "frmAddArchivo", enctype = "multipart/form-data" }))
     {
-        <div class="form-group form-group-sm row">
-            <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Empresa</label>
-            <div class="col-6">
-                @Html.DropDownList("IdEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-            </div>
-        </div>
+        <input type="hidden" name="IdPoliza" id="IdPolizaImport" value="@Model.IdPoliza" />
+
         <div class="form-group row">
-            <label for="precio" class="col-sm-3 col-form-label">Archivo [.xls,.xlsx]</label>
+            <label for="precio" class="col-sm-4 col-form-label">Archivo [.xls,.xlsx]</label>
             <div class="col-sm-8">
                 <input type="file" class="form-control required" name="archivo" id="archivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
             </div>
@@ -66,20 +55,17 @@
     $(document).ready(function () {
         $('#grillaEjemplo').DataTable({
             searching: false,
-            dom:"tB",
+            dom: "tB",
             buttons: [
                 {
                     text: 'Descargar Formato',
                     extend: 'excelHtml5',
-                    filename: "FormatoCargaActivos",
+                    filename: "FormatoCargaActivos_Seguro",
                     title: ''
                 }
             ]
 
         });
-    });
-
-    function GrabarArchivo() {
         $('#frmAddArchivo').validate({
             debug: false,
             errorElement: "em",
@@ -89,6 +75,9 @@
                 idAfectoIva: { required: true }
             }
         });
+    });
+
+    function GrabarArchivo() {
         if ($('#frmAddArchivo').valid()) {
             var input = document.getElementById('archivo');
             var filePath = input.value;
@@ -114,7 +103,6 @@
 
     function Cerrar() {
         $('#ModalArchivo').modal('hide');
-        RefreshLista();
     }
 
     function Success(data) {
@@ -124,7 +112,7 @@
             toastr.success(data.result.Mensaje);
             $('#ModalArchivo').modal('hide');
             //CargaTab('documentos-part', 4);
-            RefreshLista();
+            RefreshListaActivo();
         }
         else {
             toastr.error(data.result.Mensaje);

@@ -63,6 +63,16 @@ namespace modelo.ViewModel
         public string FechaBajaStr { get; set; }
         public string NumeroLeasing { get; set; }
         public string TieneSiniestro { get; set; }
+        public DateTime? FecIngBaja { get; set; }
+        public double? ValorPrima { get; set; }
+        public bool? EnContrato { get; set; }
+        public string Leasing { get; set; }
+        public string Banco { get; set; }
+        public string DescripcionLeasing { get; set; }
+        public string TipoPropiedad { get; set; }
+        public DateTime? TerminoLeasing { get; set; }
+        public int? PaginaInicial { get; set; }
+        public int? PaginaTermino { get; set; }
     }
 
 }

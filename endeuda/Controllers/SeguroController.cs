@@ -7,6 +7,11 @@ using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
 using System.IO;
+using System.Text;
+using System.Data;
+using LinqToExcel;
+using System.Data.OleDb;
+using System.Data.Entity.Validation;
 namespace tesoreria.Controllers
 {
     public class SeguroController : Controller
@@ -329,17 +334,8 @@ namespace tesoreria.Controllers
                         }
 
                         /*si viene de licitacion devuelvo el activo a la licitación, caso contrario lo dejo disponible*/
-                        var dbActivo = db.PolizaActivo.Where(c => c.IdPoliza == idPoliza);
-                        foreach (var act in dbActivo)
-                        {
-                            db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", Helper.Estado.ActDisponible, act.IdActivo);
-                            db.SaveChanges();
-                        }
-
-
-                        db.Database.ExecuteSqlCommand("DELETE FROM PolizaActivo WHERE IdPoliza = {0}", dbPoliza.IdPoliza);
-                        db.SaveChanges();
-
+                        var dbActivo = db.PolizaActivo.Where(c => c.IdPoliza == idPoliza).ToList();
+                        db.PolizaActivo.RemoveRange(dbActivo);
 
                         db.Poliza.Remove(dbPoliza);
                         db.SaveChanges();
@@ -388,13 +384,13 @@ namespace tesoreria.Controllers
         public ActionResult ListaActivoPoliza_Read(int idPoliza)
         {
 
-            var registro = (from ac in db.Activo.ToList()
-                            join rel in db.PolizaActivo.ToList() on ac.IdActivo equals rel.IdActivo
-                            join p in db.Poliza.ToList() on rel.IdPoliza equals p.IdPoliza
-                            join e in db.Estado.ToList() on ac.IdEstado equals e.IdEstado
-                            join em in db.Empresa.ToList() on ac.IdEmpresa equals em.IdEmpresa into emw
+            var registro = (from ac in db.Activo
+                            join rel in db.PolizaActivo on ac.IdActivo equals rel.IdActivo
+                            join p in db.Poliza on rel.IdPoliza equals p.IdPoliza
+                            join e in db.Estado on ac.IdEstado equals e.IdEstado
+                            join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
                             from emv in emw.DefaultIfEmpty()
-                            join f in db.Familia.ToList() on ac.IdFamilia equals f.IdFamilia into fw
+                            join f in db.Familia on ac.IdFamilia equals f.IdFamilia into fw
                             from fv in fw.DefaultIfEmpty()
                             //join pr in db.Proveedor.ToList() on ac.IdProveedor equals pr.IdProveedor into prw
                             //from prv in prw.DefaultIfEmpty()
@@ -414,8 +410,8 @@ namespace tesoreria.Controllers
                                 Motor = ac.Motor,
                                 Chasis = ac.Chasis,
                                 Anio = ac.Anio,
-                                Grupo = ac.Grupo,
-                                SubGrupo = ac.SubGrupo,
+                                Grupo = ac.DesGrupo,
+                                SubGrupo = ac.DesSGru,
                                 Valor = ac.Valor,
                                 NombreProveedor = "",//(prv != null) ? prv.NombreProveedor : string.Empty,
                                 NumeroFactura = ac.NumeroFactura,
@@ -426,10 +422,54 @@ namespace tesoreria.Controllers
                                 NombreEstado = e.NombreEstado,
                                 NumeroLeasing = "",
                                 rel.RutBeneficiario,
-                                rel.Beneficiario
+                                rel.Beneficiario,
+                                EnContrato = (db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).Count() > 0) ? true : false,
+                                ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).FirstOrDefault(),
+                                rel.ValorPrima,
+                                ac.FecIngBaja,
+                                ac.FechaBaja
                             }).AsEnumerable().ToList();
-
-            return Json(registro, JsonRequestBehavior.AllowGet);
+            var listaRetorno = (from reg in registro
+                                select new
+                                {
+                                    reg.IdPolizaActivo,
+                                    reg.IdActivo,
+                                    reg.RazonSocial,
+                                    reg.NumeroInterno,
+                                    reg.CodSoftland,
+                                    reg.Familia,
+                                    reg.NombreCuenta,
+                                    reg.Descripcion,
+                                    reg.Marca,
+                                    reg.Modelo,
+                                    reg.Motor,
+                                    reg.Chasis,
+                                    reg.Anio,
+                                    reg.Grupo,
+                                    reg.SubGrupo,
+                                    reg.Valor,
+                                    reg.NombreProveedor,
+                                    reg.NumeroFactura,
+                                    reg.Patente,
+                                    reg.Glosa,
+                                    reg.FechaRegistroStr,
+                                    reg.FechaBajaStr,
+                                    reg.NombreEstado,
+                                    reg.NumeroLeasing,
+                                    reg.RutBeneficiario,
+                                    reg.Beneficiario,
+                                    reg.FecIngBaja,
+                                    reg.FechaBaja,
+                                    reg.EnContrato,
+                                    Leasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.NumeroContrato : "") : "",
+                                    TerminoLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.FechaTermino : (DateTime?)null) : (DateTime?)null,
+                                    Banco = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Banco.NombreBanco : "") : "",
+                                    DescripcionLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Descripcion : "") : "",
+                                    TipoPropiedad = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdEstado == (int)Helper.Estado.ConActivo) ? "Leasing" : "Propio") : "Propio",
+                                    reg.ValorPrima
+                                    //(Propio (parte siendo propio) o leasing vigente (al finalizar leasing pasa a ser propio))
+                                }).ToList();
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ModalAsociarActivo(int idPoliza)
@@ -646,6 +686,7 @@ namespace tesoreria.Controllers
                                 p.CodAux=dato.Beneficiario;
                                 p.PaginaInicial = dato.PaginaInicial;
                                 p.PaginaTermino = dato.PaginaTermino;
+                                p.ValorPrima = dato.ValorPrima;
                                 db.SaveChanges();
                                 dbContextTransaction.Commit();
                             }
@@ -857,9 +898,42 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
-
-        public ActionResult ListaSeguroBuscar_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza, string numeroActivo)
+        public ActionResult ExportarTxtBanco(string RutBeneficiario)
         {
+            FuncionesGeneralesController funcion = new FuncionesGeneralesController();
+
+            var activos = PolizasActivas(null, null, null, "", RutBeneficiario,"");            
+            var delimeter = ";";
+            var lineEndDelimeter = "\n";
+            StringBuilder sb = new StringBuilder();
+            string Columns = string.Empty;
+            
+            foreach (var act in activos)
+            {
+                //OPER.LEASING,	ITEM,	RUT BENEFICIARIO, N° DE EQUIPO, FAMILIA DESCRIPCIÓN MARCA, MODELO, N° MOTOR,	N° CHASIS,	AÑO FABRICACIÓN, No PAG.INC.,	No PAG. TERM.,VALOR(CLP) //
+                string row = string.Empty;
+                row = act.Leasing + delimeter + act.NumeroInterno + delimeter + act.RutBeneficiario + delimeter + "nro equipo" + delimeter + act.Familia + delimeter + act.Descripcion + delimeter;
+                row += act.Marca + delimeter + act.Modelo + delimeter + act.Motor + delimeter + act.Chasis + delimeter + act.Anio + delimeter + act.PaginaInicial + delimeter;
+                row += act.PaginaTermino + delimeter + act.Valor + delimeter;
+
+                // row += tmp.prog.NombreCuenta.ToString() + delimeter;               
+                sb.Append(row.Remove(row.Length - 1, 1) + lineEndDelimeter);
+            }
+            RutBeneficiario = RutBeneficiario.Replace(".", "").Replace("-", "");
+            var nombreArchivo = "TXT " + RutBeneficiario.Trim();
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Buffer = true;
+            Response.ContentType = "application/Text";
+            Response.AddHeader("Content-Disposition", "attachment; filename=" + nombreArchivo + ".txt;");
+            Response.Output.Write(sb.ToString());
+            Response.Flush();
+            Response.End();
+            return View();
+        }
+        public List<PolizaActivoViewModel> PolizasActivas(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza,string RutBeneficiario,string numeroActivo)
+        {
+            RutBeneficiario = (RutBeneficiario!=null)?RutBeneficiario.Replace(".", "").Replace("-", ""):"";
             var registro = (from p in db.Poliza.ToList()
                             join e in db.Estado.ToList() on p.IdEstado equals e.IdEstado
                             join rel in db.PolizaActivo.ToList() on p.IdPoliza equals rel.IdPoliza
@@ -870,7 +944,9 @@ namespace tesoreria.Controllers
                             && p.IdEmpresaAseguradora == ((idEmpresaAseguradora != null) ? idEmpresaAseguradora : p.IdEmpresaAseguradora)
                             && p.IdTipoSeguro == ((idTipoSeguro != null) ? idTipoSeguro : p.IdTipoSeguro)
                             && p.NumeroPoliza == ((numeroPoliza != "") ? numeroPoliza : p.NumeroPoliza)
-                            select new PolizaActivoViewModel
+                            && a.NumeroInterno == ((numeroActivo != "" && numeroActivo != null) ? numeroActivo : a.NumeroInterno)
+                            && ((RutBeneficiario != "" && RutBeneficiario != null)? ((rel.RutBeneficiario != null) ? rel.RutBeneficiario : "").Replace(".", "").Replace("-", "")== RutBeneficiario : true)
+                            select new
                             {
                                 IdPoliza = p.IdPoliza,
                                 IdSiniestro = (sv != null) ? sv.IdSiniestro : 0,
@@ -888,7 +964,6 @@ namespace tesoreria.Controllers
                                 FechaEnvioBanco = p.FechaEnvioBanco,
                                 FechaEnvioBancoStr = p.FechaEnvioBanco.ToString("dd-MM-yyyy"),
                                 RazonSocial = p.Empresa.RazonSocial,
-
                                 IdPolizaActivo = rel.IdPolizaActivo,
                                 NumeroInterno = a.NumeroInterno,
                                 Familia = (a.Familia.NombreFamilia != null) ? a.Familia.NombreFamilia : string.Empty,
@@ -900,19 +975,77 @@ namespace tesoreria.Controllers
                                 Motor = a.Motor,
                                 Chasis = a.Chasis,
                                 Anio = a.Anio,
-                                Grupo = a.Grupo,
-                                SubGrupo = a.SubGrupo,
+                                Grupo = a.DesGrupo,
+                                SubGrupo = a.DesSGru,
                                 Valor = a.Valor,
                                 FechaRegistroActivo = a.FechaRegistro,
                                 FechaRegistroActivoStr = "",
                                 Glosa = a.Glosa,
                                 FechaBaja = a.FechaBaja,
-                                FechaBajaStr = "",
-                                TieneSiniestro = (db.Siniestro.Where(x => x.IdPolizaActivo == rel.IdPolizaActivo).Count() > 0) ? "SI" : "NO"
-
+                                a.FecIngBaja,
+                                TieneSiniestro = (db.Siniestro.Where(x => x.IdPolizaActivo == rel.IdPolizaActivo).Count() > 0) ? "SI" : "NO",
+                                EnContrato = (db.ContratoActivo.Where(x => x.IdActivo == a.IdActivo).Count() > 0) ? true : false,
+                                ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == a.IdActivo).FirstOrDefault(),
+                                rel.ValorPrima,
+                                rel.PaginaInicial,
+                                rel.PaginaTermino
                             }).AsEnumerable().ToList();
-
-            return Json(registro, JsonRequestBehavior.AllowGet);
+            var listaRetorno = (from reg in registro
+                                select new PolizaActivoViewModel
+                                {
+                                    IdPoliza=reg.IdPoliza,
+                                    IdSiniestro=reg.IdSiniestro,
+                                    NumeroPoliza=reg.NumeroPoliza,
+                                    NombreTipoSeguro=reg.NombreTipoSeguro,
+                                    NombreEmpresaAseguradora=reg.NombreEmpresaAseguradora,
+                                    MontoAsegurado=reg.MontoAsegurado,
+                                    PrimaMensual=reg.PrimaMensual,
+                                    NumeroPagos=reg.NumeroPagos,
+                                    NombreTipoMoneda=reg.NombreTipoMoneda,
+                                    FechaVencimiento=reg.FechaVencimiento,
+                                    FechaVencimientoStr=reg.FechaVencimientoStr,
+                                    Beneficiario=reg.Beneficiario,
+                                    RutBeneficiario=reg.RutBeneficiario,
+                                    FechaEnvioBanco=reg.FechaEnvioBanco,
+                                    FechaEnvioBancoStr=reg.FechaEnvioBancoStr,
+                                    RazonSocial=reg.RazonSocial,
+                                    IdPolizaActivo=reg.IdPolizaActivo,
+                                    NumeroInterno=reg.NumeroInterno,
+                                    Familia=reg.Familia,
+                                    NombreEstadoActivo=reg.NombreEstadoActivo,
+                                    Descripcion=reg.Descripcion,
+                                    Patente=reg.Patente,
+                                    Marca=reg.Marca,
+                                    Modelo=reg.Modelo,
+                                    Motor=reg.Motor,
+                                    Chasis=reg.Chasis,
+                                    Anio=reg.Anio,
+                                    Grupo=reg.Grupo,
+                                    SubGrupo=reg.SubGrupo,
+                                    Valor=reg.Valor,
+                                    FechaRegistroActivo=reg.FechaRegistroActivo,
+                                    FechaRegistroActivoStr=reg.FechaRegistroActivoStr,
+                                    Glosa=reg.Glosa,
+                                    FechaBaja=reg.FechaBaja,
+                                    FecIngBaja=reg.FecIngBaja,
+                                    TieneSiniestro=reg.TieneSiniestro,
+                                    ValorPrima=reg.ValorPrima,
+                                    PaginaInicial=reg.PaginaInicial,
+                                    PaginaTermino=reg.PaginaTermino,
+                                    EnContrato =reg.EnContrato,
+                                    Leasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.NumeroContrato : "") : "",
+                                    Banco = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Banco.NombreBanco : "") : "",
+                                    DescripcionLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Descripcion : "") : "",
+                                    TipoPropiedad = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdEstado == (int)Helper.Estado.ConActivo) ? "Leasing" : "Propio") : "Propio",
+                                    TerminoLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.FechaTermino : (DateTime?)null) : (DateTime?)null,
+                                    //(Propio (parte siendo propio) o leasing vigente (al finalizar leasing pasa a ser propio))
+                                }).ToList();
+            return listaRetorno;
+        }
+        public ActionResult ListaSeguroBuscar_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza, string numeroActivo)
+        {
+            var listaRetorno = PolizasActivas(idEmpresa, idEmpresaAseguradora, idTipoSeguro, numeroPoliza,"", numeroActivo);
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ModalVistaSeguro(int idPoliza)
@@ -1542,6 +1675,165 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public ActionResult ImportActivos(int? IdPoliza)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                var contrato = db.Poliza.Find(IdPoliza);
+                return View(contrato);
+            }
+        }
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ImportaPlanillaActivos(int IdPoliza, HttpPostedFileBase archivo)
+        {
+            dynamic showMessageString = string.Empty;
+            List<string> data = new List<string>();
+            if (archivo != null)
+            {
+                var poliza = db.Poliza.Find(IdPoliza);
+                var activosEmpresa = db.Activo.Where(c => c.IdEmpresa == poliza.IdEmpresa).ToList();
+                // tdata.ExecuteCommand("truncate table OtherCompanyAssets");
+                if (archivo.ContentType == "application/vnd.ms-excel" || archivo.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                {
+                    string filename = archivo.FileName;
+                    string targetpath = Server.MapPath("~/App_Data/");
+                    archivo.SaveAs(targetpath + filename);
+                    string pathToExcelFile = targetpath + filename;
+                    var connectionString = "";
+                    if (filename.EndsWith(".xls"))
+                    {
+                        connectionString = string.Format("Provider=Microsoft.Jet.OLEDB.4.0; data source={0}; Extended Properties=Excel 8.0;", pathToExcelFile);
+                    }
+                    else if (filename.EndsWith(".xlsx"))
+                    {
+                        connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\";", pathToExcelFile);
+                    }
 
+                    var adapter = new OleDbDataAdapter("SELECT * FROM [Sheet1$]", connectionString);
+                    var ds = new DataSet();
+                    adapter.Fill(ds, "ExcelTable");
+                    DataTable dtable = ds.Tables["ExcelTable"];
+                    string sheetName = "Sheet1";
+                    var excelFile = new ExcelQueryFactory(pathToExcelFile);
+                    var artistAlbums = from a in excelFile.Worksheet<ActivoViewModel>(sheetName) select a;
+                    foreach (var a in artistAlbums)
+                    {
+                        try
+                        {
+                            if (a.NumeroInterno !=null && a.NumeroInterno!="")
+                            {
+
+                                var activo = activosEmpresa.Where(c => c.NumeroInterno.TrimStart('0') == a.NumeroInterno.TrimStart('0') && c.IdEmpresa==poliza.IdEmpresa).FirstOrDefault();
+                                if (activo != null)
+                                {
+                                    var empresa = db.Empresa.Find(poliza.IdEmpresa);
+                                    SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+                                    var auxiliar = dbSoft.cwtauxi.Where(c=>c.RutAux.Replace(".", "").Replace("-", "").ToUpper() == a.RutBeneficiario.Replace(".","").Replace("-","").ToUpper()).FirstOrDefault();
+                                    if (auxiliar != null)
+                                    {
+                                        var activoP = db.PolizaActivo.Where(c => c.IdPoliza == IdPoliza && c.Activo.NumeroInterno == activo.NumeroInterno).FirstOrDefault();
+                                        if (activoP != null)
+                                        {
+                                            activoP.RutBeneficiario = a.RutBeneficiario;
+                                            activoP.PaginaInicial = a.PaginaInicial;
+                                            activoP.PaginaTermino = a.PaginaTermino;
+                                            activoP.ValorPrima = a.ValorPrima;
+                                            activoP.RutBeneficiario = auxiliar.RutAux;
+                                            activoP.Beneficiario = auxiliar.NomAux;
+                                            activoP.CodAux = auxiliar.CodAux;
+                                            db.SaveChanges();
+                                        }
+                                        else
+                                        {
+                                            PolizaActivo newActivoP = new PolizaActivo();
+                                            newActivoP.IdPoliza = IdPoliza;
+                                            newActivoP.RutBeneficiario = a.RutBeneficiario;
+                                            newActivoP.PaginaInicial = a.PaginaInicial;
+                                            newActivoP.PaginaTermino = a.PaginaTermino;
+                                            newActivoP.ValorPrima = a.ValorPrima;
+                                            newActivoP.RutBeneficiario = auxiliar.RutAux;
+                                            newActivoP.Beneficiario = auxiliar.NomAux;
+                                            newActivoP.CodAux = auxiliar.CodAux;
+                                            newActivoP.IdActivo = activo.IdActivo;
+                                            db.PolizaActivo.Add(newActivoP);
+                                            db.SaveChanges();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        data.Add("<ul>");
+                                        data.Add("<li>Auxiliar no exitse</li>");
+                                        data.Add("</ul>");
+                                        data.ToArray();
+
+                                    }
+                                }
+                                else
+                                {
+                                    data.Add("<ul>");
+                                    data.Add("<li>Activo no existe</li>");
+                                    data.Add("</ul>");
+                                    data.ToArray();
+
+                                }
+
+                            }
+                            else
+                            {
+                                data.Add("<ul>");
+                                data.Add("<li> Nro es obligatorio</li>");
+                                data.Add("</ul>");
+                                data.ToArray();
+                                showMessageString = new { Estado = 100, Mensaje = "Error en los registros" };
+                            }
+                            
+                            var tabla = data;
+                            showMessageString = new { Estado = 0, Mensaje = "Registros Importados Exitosamente" };
+                        }
+                        catch (DbEntityValidationException ex)
+                        {
+                            foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                            {
+                                foreach (var validationError in entityValidationErrors.ValidationErrors)
+                                {
+                                    Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                                }
+                            }
+                            showMessageString = new { Estado = 100, Mensaje = "Error en los registros" };
+                        }
+                    }
+                    //deleting excel file from folder
+                    if ((System.IO.File.Exists(pathToExcelFile)))
+                    {
+                        System.IO.File.Delete(pathToExcelFile);
+                    }
+
+                }
+                else
+                {
+                    //alert message for invalid file format
+                    data.Add("<ul>");
+                    data.Add("<li>Only Excel file format is allowed</li>");
+                    data.Add("</ul>");
+                    data.ToArray();
+
+                    showMessageString = new { Estado = 100, Mensaje = "Formato no permitido" };
+                }
+            }
+            else
+            {
+                data.Add("<ul>");
+                if (archivo == null) data.Add("<li>Please choose Excel file</li>");
+                data.Add("</ul>");
+                data.ToArray();
+                showMessageString = new { Estado = 100, Mensaje = "Please choose Excel file" };
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -70,7 +70,10 @@ namespace tesoreria.Controllers
                                 ac.DescCC_MqsSur,
                                 ac.ValorFactura,
                                 EnContrato = (db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).Count() > 0) ? true : false,
-                                ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).FirstOrDefault()
+                                ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).FirstOrDefault(),
+                                ac.FechaBaja,
+                                ac.FecIngBaja,
+                                ac.Glosa
                             }).AsEnumerable().ToList();
             var listaRetorno = (from reg in registro
                                 select new { 
@@ -98,6 +101,9 @@ namespace tesoreria.Controllers
                                 Cc_Mqs=reg.DescCC_Mqs,
                                 Cc_MqsSur=reg.DescCC_MqsSur,
                                 reg.ValorFactura,
+                                reg.FechaBaja,
+                                reg.FecIngBaja,
+                                reg.Glosa,
                                 reg.EnContrato,
                                 Leasing=(reg.ContratoActivo!=null)?((reg.ContratoActivo.Contrato.IdTipoContrato==1)?reg.ContratoActivo.Contrato.NumeroContrato:""):"",
                                 Banco = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Banco.NombreBanco : "") : "",
@@ -323,6 +329,11 @@ namespace tesoreria.Controllers
                 SoftLandContext dbSoft = new SoftLandContext(empresaSel.BaseSoftland);
                 var grupo=dbSoft.awtgrup.Find(datos.Grupo);
                 var descGrupo = (grupo != null) ? grupo.DesGru : "";
+                //SubGrupo Activo                
+                var subgrupo = dbSoft.awtsubgr.Find(datos.SubGrupo);
+                var descSubGrupo = (subgrupo != null) ? subgrupo.DesSGru : "";
+                //Activo en softland
+                var activoSoftland = dbSoft.awfichaac.Find(datos.CodSoftland);
                 using (var dbContextTransaction = db.Database.BeginTransaction())
                 {
                     try
@@ -333,12 +344,10 @@ namespace tesoreria.Controllers
                         var estado = (int)Helper.Estado.ActCreado;
                         if (activo != null)
                         {
-
                             if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "" && activo.IdEstado == (int)Helper.Estado.ActCreado)
                             {
                                 estado = (int)Helper.Estado.ActDisponible;
                             }
-
                             idActivo = activo.IdActivo;
                             mensaje = "Registro Actualizado con exito";
                             activo.IdEmpresa = datos.IdEmpresa;
@@ -375,6 +384,14 @@ namespace tesoreria.Controllers
                             activo.DescCC_MqsSur=datos.DescCC_MqsSur;
                             activo.ValorFactura=datos.ValorFactura;
                             activo.DesGrupo = descGrupo;
+                            activo.DesSGru = descSubGrupo;
+                            //bajada
+                            if (activoSoftland != null)
+                            {
+                                activo.FechaBaja = activoSoftland.FecBaja;
+                                activo.Glosa = activoSoftland.GloBaja;
+                                activo.FecIngBaja = activoSoftland.FecIng;
+                            }                            
                             db.SaveChanges();
                             showMessageString = new { Estado = 0, Mensaje = mensaje };
                         }
@@ -400,7 +417,7 @@ namespace tesoreria.Controllers
                             activoAdd.Serie = datos.Serie;
                             activoAdd.Anio = datos.Anio;
                             activoAdd.Grupo = datos.Grupo;
-                            activoAdd.SubGrupo = datos.SubGrupo;
+                            activoAdd.SubGrupo = datos.SubGrupo;                            
                             activoAdd.Valor = datos.Valor;
                             activoAdd.IdProveedor = datos.IdProveedor;
                                                         
@@ -422,6 +439,14 @@ namespace tesoreria.Controllers
                             activoAdd.DescCC_MqsSur=datos.DescCC_MqsSur;
                             activoAdd.ValorFactura = datos.ValorFactura;
                             activoAdd.DesGrupo = descGrupo;
+                            activoAdd.DesSGru = descSubGrupo;
+                            //bajada
+                            if (activoSoftland != null)
+                            {
+                                activoAdd.FechaBaja = activoSoftland.FecBaja;
+                                activoAdd.Glosa = activoSoftland.GloBaja;
+                                activoAdd.FecIngBaja = activoSoftland.FecIng;
+                            }
                             db.Activo.Add(activoAdd);
                             db.SaveChanges();
 
@@ -607,17 +632,19 @@ namespace tesoreria.Controllers
                     activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
                     activoAdd.IdCuenta = activoSoftland.CtaCom;
                     activoAdd.NumeroFactura = "";
-                    activoAdd.Patente = "";
-                    activoAdd.Glosa = "";
+                    activoAdd.Patente = "";                    
                     activoAdd.IdEstado = (int)Helper.Estado.ActCreado;
                     activoAdd.FechaRegistro = DateTime.Now;
                     activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
                     activoAdd.SincronizadoSoftland = true;
                     activoAdd.NumeroFactura = activoSoftland.NumFac;
+                    //Bajada
+                    activoAdd.FechaBaja = activoSoftland.FecBaja;
+                    activoAdd.Glosa = activoSoftland.GloBaja;
+                    activoAdd.FecIngBaja = activoSoftland.FecIng;
                     db.Activo.Add(activoAdd);
                     db.SaveChanges();
-                }
-                
+                }                
             }
             return activoAdd;
         }

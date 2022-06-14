@@ -4,7 +4,46 @@
 @{
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
 }
+<div class="modal fade" id="export-txt" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            @using (Ajax.BeginForm("ExportarTxtBanco", "Seguro", null, new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "get",
+                OnBegin = "mostrarCargando()",
+                OnSuccess = "Success_fin",
+                OnFailure = "Failure_dl"
 
+            }, new { id = "frmTxtBanco", @class = "form-horizontal" }))
+            {               
+                <div id="datosBuscar">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Finalizar Entrega</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">                       
+
+                        <div class="form-group row">
+                            <label for="Descripcion" class="col-sm-2 col-form-label">Beneficiario</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="RutBeneficiario" class="form-control form-control-sm required" id="RutBeneficiario" value="" />
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+                    <button type="button" name="btnCrear" id="btnCrear" onclick="GenerarTxt();" class="btn btn-primary btn-sm">Generar TXT</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 <div class="d-sm-flex align-items-center justify-content-between">
     <h5 class="h5 mb-0 text-gray-800">Buscar Pólizas de Seguro</h5>
     <ol class="breadcrumb">
@@ -59,14 +98,10 @@
     </div>
     <div class="card-body">
         <div class="form-group row">
-            <div class="col-sm-1">
-                <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                    <div class="form-inline my-1 my-lg-0">
-                        <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#crearactivo"><i class="fa fa-plus"></i>Generar Envío Banco</button>
-                        @*OPER. LEASING,	ITEM,	RUT BENEFICIARIO,	N° DE EQUIPO,	FAMILIA	DESCRIPCIÓN	MARCA,	MODELO,	N° MOTOR,	N° CHASIS,	AÑO FABRICACIÓN,	No PAG. INC.,	No PAG. TERM.,VALOR (CLP)*@
+            <div class="col-sm-auto">
+                <button class="btn btn-primary btn-sm justify-content-end" type="button" data-toggle="modal" data-target="#export-txt"><i class="fa fa-file-export"></i> Generar Envío Banco</button>
+                @*OPER. LEASING,	ITEM,	RUT BENEFICIARIO,	N° DE EQUIPO,	FAMILIA	DESCRIPCIÓN	MARCA,	MODELO,	N° MOTOR,	N° CHASIS,	AÑO FABRICACIÓN,	No PAG. INC.,	No PAG. TERM.,VALOR (CLP)*@
 
-                    </div>
-                </nav>
             </div>
             <div class="col-sm-10">
             </div>
@@ -82,7 +117,7 @@
                         <th>Tipo Seguro</th>
                         <th>Aseguradora</th>
                         <th>Monto Aseg.</th>
-                        <th>Prima Men.</th>
+                        <th>Prima Act.</th>
                         <th>Num. Pagos</th>
                         <th>Moneda</th>
                         <th width="20%">Venc. Seguro</th>
@@ -141,9 +176,24 @@
     </div>
 </div>
 <script>
+    function GenerarTxt() {
+        location.href = "/Seguro/ExportarTxtBanco?RutBeneficiario=" + $("#RutBeneficiario").val();
+        $('#export-txt').modal('hide');
+    }
+    function Success_fin(data) {
+        esconderCargando();
+    }
+    function Failure_dl() {
+        esconderCargando();
+    }
     $(document).ready(function () {
         AbrirMenu("SeguroBuscar");
         initTable();
+        $('#frmTxtBanco').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
     });
 
     function RefreshLista() {
@@ -192,6 +242,13 @@
                         }
                         return numFormt;
                     }
+                },
+                {
+                    targets: [28,30,32],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
                 }
             ],
 
@@ -222,7 +279,7 @@
                 { "data": "NombreTipoSeguro" },
                 { "data": "NombreEmpresaAseguradora" },
                 { "data": "MontoAsegurado" },
-                { "data": "PrimaMensual" },
+                { "data": "ValorPrima" },
                 { "data": "NumeroPagos" },
                 { "data": "NombreTipoMoneda" },
                 {
@@ -254,21 +311,11 @@
                 { "data": "Grupo" },
                 { "data": "SubGrupo" },
                 { "data": "Valor" },
-                {
-                    data: {
-                        _: "FechaRegistroActivoStr",
-                        sort: "FechaRegistroActivo"
-                    }
-                },
+                { "data": "FecIngBaja" },
                 { "data": "Glosa" },
-                {
-                    data: {
-                        _: "FechaBajaStr",
-                        sort: "FechaBaja"
-                    }
-                },
-                { "data": "NumeroLeasing" },
-                { "data": "FechaBajaStr" }
+                { "data": "FechaBaja" },
+                { "data": "Leasing" },
+                { "data": "TerminoLeasing" }
             ]
         });
         return table;

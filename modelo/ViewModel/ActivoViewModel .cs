@@ -50,6 +50,10 @@ namespace modelo.ViewModel
         public bool Editable { get; set; }
         public Activo Activo { get; set; }
         public string NumeroContrato { get; set; }
+        public string RutBeneficiario { get; set; }
+        public int? PaginaInicial { get; set; }
+        public int? PaginaTermino { get; set; }
+        public double? ValorPrima { get; set; }
     }
 
 }
