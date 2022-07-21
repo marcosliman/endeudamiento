@@ -14,6 +14,7 @@ namespace modelo.ViewModel
         public int? IdContratoActivo { get; set; }
         public int? IdPolizaActivo { get; set; }
         public int? IdEmpresa { get; set; }
+        public string BaseSoftland { get; set; }
         public string RazonSocial { get; set; }
         public string NumeroInterno { get; set; }
         public string CodSoftland { get; set; }
@@ -30,8 +31,10 @@ namespace modelo.ViewModel
         public string SubGrupo { get; set; }
         public string IdCuenta { get; set; }
         public string NombreCuenta { get; set; }
+        public string ClasificacionCuenta { get; set; }
         public double? Valor { get; set; }
         public string IdProveedor { get; set; }
+        public string RutProveedor { get; set; }
         public string NombreProveedor { get; set; }
         public string NumeroFactura { get; set; }
         public string Motor { get; set; }
@@ -54,6 +57,10 @@ namespace modelo.ViewModel
         public int? PaginaInicial { get; set; }
         public int? PaginaTermino { get; set; }
         public double? ValorPrima { get; set; }
+        public string CampoGD { get; set; }
+        public string MesAnio { get; set; }
+        public string CodiCC_Mqs { get; set; }
+        public string CodiCC_MqsSur { get; set; }
     }
 
 }

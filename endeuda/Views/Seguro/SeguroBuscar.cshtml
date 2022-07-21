@@ -29,7 +29,10 @@
                         <div class="form-group row">
                             <label for="Descripcion" class="col-sm-2 col-form-label">Beneficiario</label>
                             <div class="col-sm-10">
-                                <input type="text" name="RutBeneficiario" class="form-control form-control-sm required" id="RutBeneficiario" value="" />
+                                <select class="form-control select2 js-data-example-ajax" name="RutBeneficiario" id="RutBeneficiario">
+                                    <option value=""></option>                                    
+                                </select>
+                                
                             </div>
                         </div>
                         
@@ -124,11 +127,12 @@
                         <th>Siniestro</th>
                         <th>Beneficiario</th>
                         <th>RUT Ben.</th>
+                        <th>Num. Endose</th>
+                        <th>Fec. Endose</th>
                         <th>Fecha Env. Banco</th>
                         <th>Empresa</th>
                         <th>Cod. Interno</th>
                         <th>Tipo Activo</th>
-                        <th>Estado</th>
                         <th>Descripcion</th>
                         <th>Patente</th>
                         <th>Marca</th>
@@ -139,9 +143,10 @@
                         <th>Grupo</th>
                         <th>Sub-grupo</th>
                         <th>Val. Compra</th>
-                        <th>Fec. Ing.</th>
-                        <th>Glosa</th>
+                        <th>Estado</th>
                         <th>Fec. Baja</th>
+                        <th>Glosa</th>
+                        <th>Fec. Ing.</th>
                         <th>Leasing</th>
                         <th>Término Leas.</th>
 
@@ -194,6 +199,29 @@
             errorElement: "em",
             errorContainer: $("#warning")
         });
+        $('#RutBeneficiario').select2({
+                placeholder: 'Busque Cliente',
+                language: "es",
+                minimumInputLength: 3,
+                allowClear: true,
+                ajax: {
+                    url: '/Seguro/Auxiliares_Read',
+                    data: function (params) {
+                        var query = {
+                            q: params.term
+                        }
+                        return query;
+                    },
+                    delay: 250,
+                    dataType: 'json',
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+
+            });
     });
 
     function RefreshLista() {
@@ -244,7 +272,7 @@
                     }
                 },
                 {
-                    targets: [28,30,32],
+                    targets: [30,32,34],
                     render: function (data) {
                         var fecha = DateDatatable(data);
                         return fecha;
@@ -292,6 +320,20 @@
                 { "data": "Beneficiario" },
                 { "data": "RutBeneficiario" },
                 {
+                    "mData": null,
+                    "bSortable": true,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
+                    "mData": null,
+                    "bSortable": true,
+                    "mRender": function (o, type, row) {
+                        return '';
+                    }
+                },
+                {
                     data: {
                         _: "FechaEnvioBancoStr",
                         sort: "FechaEnvioBanco"
@@ -300,7 +342,6 @@
                 { "data": "RazonSocial" },
                 { "data": "NumeroInterno" },
                 { "data": "Familia" },
-                { "data": "NombreEstadoActivo" },
                 { "data": "Descripcion" },
                 { "data": "Patente" },
                 { "data": "Marca" },
@@ -311,9 +352,10 @@
                 { "data": "Grupo" },
                 { "data": "SubGrupo" },
                 { "data": "Valor" },
-                { "data": "FecIngBaja" },
-                { "data": "Glosa" },
+                { "data": "NombreEstadoActivo" },
                 { "data": "FechaBaja" },
+                { "data": "Glosa" },
+                { "data": "FecIngBaja" },
                 { "data": "Leasing" },
                 { "data": "TerminoLeasing" }
             ]

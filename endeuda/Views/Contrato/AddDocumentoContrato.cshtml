@@ -109,11 +109,12 @@
 
                 }, new { id = "frmActivar", @class = "form-horizontal" }))
                 {
+                    var descRequired = (Model.IdTipoFinanciamiento == (int)tesoreria.Helper.TipoFinanciamiento.EstructuradoConGarantia) ? "required" : "";
                     <input type="hidden" name="idContrato" id="idContratoModal" />
                     <div class="form-group row">
                         <label for="descripcion" class="col-sm-2 col-form-label">Descripción</label>
                         <div class="col-sm-10">
-                            <textarea class="form-control" name="descripcion" id="descripcionActivar" rows="1">@Model.Descripcion</textarea>
+                            <textarea class="form-control @descRequired" name="descripcion" id="descripcionActivar" rows="1">@Model.Descripcion</textarea>
                         </div>
                     </div>
                     <div>
@@ -193,7 +194,7 @@
 
 <script>
     $(document).ready(function () {
-        $('.classForm').validate({
+        $('#frmActivar').validate({
             debug: false,
             errorElement: "em",
             errorContainer: $("#warning"),
@@ -260,7 +261,8 @@
 
     function archivosTable() {
         var table = $('#grillaDocumento').DataTable({
-            "dom": '',
+            //"dom": '',
+            buttons: [],
             "retrieve": true,
             'ajax': {
                 "type": "POST",
@@ -274,7 +276,7 @@
                 { "data": "NombreTipoDocumento" },
                 {
                     "mData": null,
-                    "bSortable": false,
+                    "bSortable": true,
                     "mRender": function (o, type, row) {
                         var acciones = '';
                         acciones += '<a href="JavaScript:Descargar(' + "'" + o.UrlDocumento + "'" + ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> ' + o.NombreOriginal + '</a>';
@@ -328,18 +330,26 @@
     }
 
     $('#btnAceptaActivar').click(function () {
-        $.ajax({
-            type: 'POST',
-            url: '/Contrato/ActivarContrato/',
-            data: $("#frmActivar").serialize(),
-            //data: { idContrato: $("#idContratoModal").val() },
-            success: function (data) {
-                RefreshActivar();
-            },
-            failure: function (data) {
-                Failure(data);
-            }
-        })
+        if ($("#frmActivar").valid()) {
+            $.ajax({
+                type: 'POST',
+                url: '/Contrato/ActivarContrato/',
+                data: $("#frmActivar").serialize(),
+                //data: { idContrato: $("#idContratoModal").val() },
+                success: function (data) {
+                    if (data.Estado == 0) {
+                        RefreshActivar();
+                    }
+                    else {
+                        toastr.error(data.Mensaje);
+                    }
+                },
+                failure: function (data) {
+                    Failure(data);
+                }
+            })
+        }
+        
     });
 
     function RefreshListaArchivo() {

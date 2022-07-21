@@ -72,12 +72,12 @@
             </div>
             <div class="card-body">
                 <div class="row form-group">
-                    <div class="col-md-10">                       
+                    <div class="col-sm-6">                       
                          <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="ImportarActivosSoftland()"><i class="fa fa-file-import"></i> Importar Activos Softland</button> 
                          <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="ImportarActivosSoftland()"><i class="fa fa-sync"></i> Sincronizar Activos</button>
                     </div>
                    
-                    <div class="col-md-2 justify-content-end text-right">
+                    <div class="col-sm-6 justify-content-end text-right">
                         <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="ImportActivos()" id="btnNuevo"><i class="fa fa-file-import"></i> Cargar Activos XLS</button>
                         <button class="btn btn-primary btn-sm justify-content-end" type="button" onclick="EditActivo(0)" id="btnNuevo"><i class="fa fa-plus"></i>Nuevo Activo</button>
                         <!--<button class="btn btn-primary btn-sm justify-content-end" type="button" id="btnMasivo" data-toggle="modal" data-target="#ModalCargaMasivaA"><i class="fa fa-plus"></i>Carga Masiva Activo</button> -->
@@ -112,8 +112,6 @@
                                 <th>Banco</th>
                                 <th>Descripción</th>
                                 <th>Poliza</th>
-                                <th>Num. Endose</th>
-                                <th>Fec. Solicitud</th>
                                 <th>Tipo Propiedad</th>
                             </tr>
                         </thead>
@@ -128,7 +126,7 @@
 </div>
 
 <div class="modal fade" id="ModalArchivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div id="datosArchivo"></div>
 
@@ -137,7 +135,7 @@
 </div>
 
 <div class="modal fade" id="ModalAddActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modal-crearLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div id="datosActivo"></div>
         </div>
@@ -281,21 +279,7 @@
                     "mRender": function (o, type, row) {
                         return '';
                     }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },
-                {
-                    "mData": null,
-                    "bSortable": false,
-                    "mRender": function (o, type, row) {
-                        return '';
-                    }
-                },                
+                },            
                 { "data": "TipoPropiedad" }
             ]
         });

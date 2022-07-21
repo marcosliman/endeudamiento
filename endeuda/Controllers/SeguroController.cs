@@ -898,6 +898,20 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        public JsonResult Auxiliares_Read(string q)
+        {
+            var activos = PolizasActivas(null, null, null, "", "", "");
+            var auxiliares = activos.Where(c=>c.RutBeneficiario!=null).GroupBy(c => new { c.RutBeneficiario, c.Beneficiario }).Select(c => new { c.Key.RutBeneficiario, c.Key.Beneficiario }).ToList();
+            var listaProd = (from aux in auxiliares
+                             where (aux.RutBeneficiario.Replace(".", "").Replace("-", "").Contains(q.Replace(".", "").Replace("-", "")) || aux.Beneficiario.Contains(q))
+                             select new
+                             {
+                                 id = aux.RutBeneficiario,
+                                 text = aux.RutBeneficiario + " : " + aux.Beneficiario
+                             }).ToList();
+
+            return Json(listaProd, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult ExportarTxtBanco(string RutBeneficiario)
         {
             FuncionesGeneralesController funcion = new FuncionesGeneralesController();

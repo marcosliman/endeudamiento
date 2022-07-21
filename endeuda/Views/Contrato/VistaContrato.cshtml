@@ -2,6 +2,9 @@
 @{
     ViewBag.Title = "Contrato";
     Layout = "~/Views/Shared/_Popup.cshtml";
+    var NombreMenu = "ContratoBuscar";
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+    var TieneEditar = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Editar);
 }
 <div class="alert alert-success">
     <h5><i class="icon fas fa-handshake"></i>@ViewBag.Title</h5>
@@ -38,90 +41,112 @@
                 }
 
             }
-            <div class="card-body">
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Licitación</label>
-                    <div class="col-sm-2">
-                        @Html.DropDownList("idLicitacion", (SelectList)ViewData["listaLicitacion"], "--Seleccione Licitacion--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Oferta Licitación</label>
-                    <div class="col-sm-2">
-                        @Html.DropDownList("idLicitacionOferta", (SelectList)ViewData["listaOferta"], "--Seleccione Oferta Licitacion--", htmlAttributes: new { @class = "form-control form-control-sm" })
+        <div class="card-body">
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Licitación</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idLicitacion", (SelectList)ViewData["listaLicitacion"], "--Seleccione Licitacion--", htmlAttributes: new { @class = "form-control form-control-sm", @disabled = "disabled" })
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Oferta Licitación</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idLicitacionOferta", (SelectList)ViewData["listaOferta"], "--Seleccione Oferta Licitacion--", htmlAttributes: new { @class = "form-control form-control-sm", @disabled = "disabled" })
 
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Motivo Elección Licitación</label>
-                    <div class="col-sm-2">
-                        <textarea name="motivoEleccion" id="motivoEleccion" class="form-control form-control-sm">@Model.MotivoEleccion</textarea>
-                    </div>
                 </div>
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Monto Contrato</label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm numberMiles" name="monto" id="monto" value="@Model.Monto" />
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
-                    <div class="col-sm-2">
-                        @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Nro. Contrato</label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm" name="numeroContrato" id="numeroContrato" value="@Model.NumeroContrato" />
-                    </div>
-                    @if (Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing)
-                    {
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de impuesto</label>
-                        <div class="col-sm-2">
-                            @Html.DropDownList("idTipoImpuesto", (SelectList)ViewData["listaTipoImpuesto"], "--Seleccione Tipo Impuesto--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-                        </div>
-                    }
-                    </div>
-                @if(Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Contrato) { 
-                    <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Crédito</label>
-                        <div class="col-sm-2">
-                            @Html.DropDownList("idTipoFinanciamiento", (SelectList)ViewData["listaTipoCredito"], "--Seleccione Tipo Credito--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-                        </div>
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Garantía</label>
-                        <div class="col-sm-4">
-                            <textarea class="form-control" name="tipoGarantia" id="tipoGarantia" rows="1">@Model.TipoGarantia</textarea>
-                        </div>
-                    </div>
-                }
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
-                    <div class="col-sm-2">
-                        @Html.DropDownList("idBanco", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm tasa" name="tasaMensual" id="tasaMensual" value="@Model.TasaMensual.ToString().Replace(",",".")" />
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm tasa" name="tasaAnual" id="tasaAnual" value="@Model.TasaAnual.ToString().Replace(",",".")" />
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm" name="plazo" id="plazo" value="@Model.Plazo" />
-                    </div>
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
-                    <div class="col-sm-2">
-                        <input type="text" class="form-control form-control-sm classFecha" name="fechaInicio" id="fechaInicio" value="@Model.FechaInicioStr" />
-                    </div>
-                    @if (Model.ExisteContrato == "S")
-                    {
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control form-control-sm classFecha" name="fechaTermino" id="fechaTermino" value="@Model.FechaTerminoStr" />
-                        </div>
-                    }
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Motivo Elección Licitación</label>
+                <div class="col-sm-2">
+                    <textarea name="motivoEleccion" id="motivoEleccion" class="form-control form-control-sm">@Model.MotivoEleccion</textarea>
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Monto Contrato</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm numberMiles" name="monto" id="monto" value="@Model.Monto" />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Moneda</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("IdTipoMoneda", (SelectList)ViewData["listaMonedas"], "--Seleccione Tipo Moneda--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Empresa</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Nro. Contrato</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm" name="numeroContrato" id="numeroContrato" value="@Model.NumeroContrato" />
+                </div>
+                @if (Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing)
+                {
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de impuesto</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("idTipoImpuesto", (SelectList)ViewData["listaTipoImpuesto"], "--Seleccione Tipo Impuesto--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                }
+            </div>
+            @if (Model.IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Contrato)
+            {
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Crédito</label>
+                    <div class="col-sm-2">
+                        @Html.DropDownList("idTipoFinanciamiento", (SelectList)ViewData["listaTipoCredito"], "--Seleccione Tipo Credito--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                    </div>
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo de Garantía</label>
+                    <div class="col-sm-4">
+                        <textarea class="form-control" name="tipoGarantia" id="tipoGarantia" rows="1">@Model.TipoGarantia</textarea>
+                    </div>
+                </div>
+            }
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Banco</label>
+                <div class="col-sm-2">
+                    @Html.DropDownList("idBanco", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+                </div>
+
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Anual</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm tasa numberMiles" name="tasaAnual" id="tasaAnual" onblur="CalculoTasa()" value="@Model.TasaAnual.ToString()" @disabled />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm tasa" name="tasaMensual" id="tasaMensual" readonly value="@Model.TasaMensual.ToString()" @disabled />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm" name="plazo" id="plazo" value="@Model.Plazo" />
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control form-control-sm classFecha" name="fechaInicio" id="fechaInicio" value="@Model.FechaInicioStr" />
+                </div>
+                @if (Model.ExisteContrato == "S")
+                {
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control form-control-sm" disabled name="fechaTermino" id="fechaTermino" value="@Model.FechaTerminoStr" />
+                    </div>
+                }
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Suma Valor Activos</label>
+                <div class="col-sm-2" id="divSumaActivos">
+
+                </div>
+                <label for="inputEmail3" class="col-sm-2 col-form-label">Descripción</label>
+                <div class="col-sm-6">
+                    <textarea name="Descripcion" id="Descripcion" class="form-control form-control-sm">@Model.Descripcion</textarea>
+                </div>
+            </div>
+        </div>
+            @if (TieneEditar == true && Model.IdEstado!=(int)tesoreria.Helper.Estado.ConCreado) { 
+                <div class="card-footer">
+                    <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarContrato()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> Actualizar</button>
+                </div>
+            }
+            
         </div>
     }
     @if (Model.ExisteContrato == "S")
@@ -170,6 +195,49 @@
 </form>
 
 <script>
+    function GrabarContrato() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''))
+        });
+        if ($('#frmContrato').valid()) {
+            $(".tasa").each(function () {
+                $(this).val($(this).val().toString().replace(/[$.]/g, ','))
+            });
+            mostrarCargando();
+            $.ajax({
+                type: 'POST',
+                url: '/Contrato/ActualizarContratoVista/',
+                data: $("#frmContrato").serialize(),
+                success: function (data) {
+                    Success(data);
+                },
+                failure: function (data) {
+                    Failure(data);
+                }
+            })
+        }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
+    }
+
+    function Success(data) {
+        if (data.result.Estado == "0") {
+            CargaTab('tab1', '1');
+            toastr.success(data.result.Mensaje);
+            RefreshLista();            
+            esconderCargando();
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+            esconderCargando();
+        }
+    }
+
+    function Failure(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
+    }
     $(document).ready(function () {
         initTableActivo();
         $('.classFecha').datepicker({
@@ -186,18 +254,26 @@
                 idEmpresa: { required: true },
                 idTipoImpuesto: { required: true },
                 idBanco: { required: true },
-                monto: { required: true, digits: true },
-                tasaMensual: { required: true, number: true },
-                tasaAnual: { required: true, number: true },
-                plazo: { required: true, digits: true }
+                monto: { required: true },
+                tasaMensual: { required: true },
+                tasaAnual: { required: true },
+                plazo: { required: true, digits: true },
+                fechaInicio: { required: true }
             }
         });
     });
-
+    function RefreshSumaActivos() {
+        var total = 0;
+        $('#grillaContratoActivo').DataTable().rows().data().each(function (el, index) {
+            //Asumiendo que es la columna 5 de cada fila la que quieres agregar a la sumatoria
+            total += el.Valor;
+        });
+        $("#divSumaActivos").html("$ " + SeparadorMiles(total.toString()));
+    }
 
     function RefreshListaActivo() {
         var table = initTableActivo();
-        table.ajax.reload(function (json) { });
+        table.ajax.reload(function (json) { RefreshSumaActivos(); });
     }
 
     function initTableActivo() {
@@ -216,6 +292,9 @@
                     sheetName: "Activos"
                 })
             ],
+            "initComplete": function (settings, json) {
+                RefreshSumaActivos();
+            },
             "retrieve": true,
             'ajax': {
                 "type": "POST",
@@ -249,5 +328,15 @@
     function Volver() {
         $('#ModalContrato').modal('hide');
     }
-
+    function CalculoTasa() {
+        if ($("#tasaAnual").val().length > 0) {
+            var tasaMensual = $("#tasaAnual").val().replace(/[$.]/g, '').replace(/[$,]/g, '.');
+            var tasaDiaria = tasaMensual / 12;
+            var tasaInput = tasaDiaria.toFixed(2)
+            $("#tasaMensual").val(SeparadorMiles(tasaInput.toString()));
+        }
+        else {
+            $("#tasaMensual").val(0);
+        }
+    }
 </script>

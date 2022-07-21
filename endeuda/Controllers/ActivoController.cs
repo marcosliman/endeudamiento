@@ -190,7 +190,8 @@ namespace tesoreria.Controllers
                                     IdEstado=ac.IdEstado,
                                     Activo=ac,
                                     IdMarcaProducto=ac.IdMarcaProducto,
-                                    IdModeloProducto=ac.IdModeloProducto
+                                    IdModeloProducto=ac.IdModeloProducto,
+                                    Glosa=ac.Glosa
                                 }).FirstOrDefault();
                 var codiCCLtda = "";
                 var codiCCMaquinariasa = "";
@@ -273,18 +274,225 @@ namespace tesoreria.Controllers
                                   select new RetornoGenerico { Id = 0, Nombre = t.CodiCC + ": " + t.DescCC, ValorString = t.CodiCC }).OrderBy(c => c.Nombre).ToList();
                 SelectList listaCCostoMaquinariasa = new SelectList(cCostoMaquinariasa.OrderBy(c => c.Nombre), "ValorString", "Nombre", codiCCMaquinariasa);
                 ViewData["listaCCostoMaquinariasa"] = listaCCostoMaquinariasa;
+
+                //estados
+                var estados = (from t in db.Estado where t.IdEstado==(int)Helper.Estado.ActDisponible || t.IdEstado == (int)Helper.Estado.ActBaja
+                              select new RetornoGenerico { Id = t.IdEstado, Nombre = t.NombreEstado }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaEstados = new SelectList(estados.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEstado);
+                ViewData["listaEstados"] = listaEstados;
                 return View(registro);
             }
+        }
+        public ActivoViewModel SaveActivoBD(Activo datos)
+        {
+            ActivoViewModel retorno = new ActivoViewModel();
+            var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
+            
+            var marca = db.MarcaProducto.Find(datos.IdMarcaProducto);
+            var modelo = db.ModeloProducto.Find(datos.IdModeloProducto);
+            datos.CodSoftland = validarDatos.ValidaStr(datos.CodSoftland);
+            datos.Descripcion = validarDatos.ValidaStr(datos.Descripcion);
+            datos.Capacidad = validarDatos.ValidaStr(datos.Capacidad);
+            datos.Marca = validarDatos.ValidaStr((marca != null) ? marca.DescMarcaProducto : "");
+            datos.Modelo = validarDatos.ValidaStr((modelo != null) ? modelo.DescModeloProducto : "");
+            datos.Grupo = validarDatos.ValidaStr(datos.Grupo);
+            datos.SubGrupo = validarDatos.ValidaStr(datos.SubGrupo);
+            datos.Motor = validarDatos.ValidaStr(datos.Motor);
+            datos.Chasis = validarDatos.ValidaStr(datos.Chasis);
+            datos.Serie = validarDatos.ValidaStr(datos.Serie);
+            datos.NumeroFactura = validarDatos.ValidaStr(datos.NumeroFactura);
+            datos.Patente = validarDatos.ValidaStr(datos.Patente);
+            datos.Glosa = validarDatos.ValidaStr(datos.Glosa);
+            datos.CampoGD = validarDatos.ValidaStr(datos.CampoGD);
+            datos.MesAnio = validarDatos.ValidaStr(datos.MesAnio);
+            datos.CodiCC_Mqs = validarDatos.ValidaStr(datos.CodiCC_Mqs);
+            datos.CodiCC_MqsSur = validarDatos.ValidaStr(datos.CodiCC_MqsSur);
+
+            //centro de costo
+            var empresaLtda = db.Empresa.Find((int)Helper.Constantes.IdEmpresaPrincipal);
+            SoftLandContext dbSoftLtda = new SoftLandContext(empresaLtda.BaseSoftland);
+            var cCostoLtda = dbSoftLtda.cwtccos.Find(datos.CodiCC_MqsSur);
+            datos.DescCC_MqsSur = (cCostoLtda != null) ? cCostoLtda.DescCC : "";
+
+            //Centro de costo Maquinariasa
+            var empresaMaquinariasa = db.Empresa.Find((int)Helper.Constantes.IdEmpresaMaquinariasa);
+            SoftLandContext dbSoftMaquinariasa = new SoftLandContext(empresaMaquinariasa.BaseSoftland);
+            var cCostoMaquinariasa = dbSoftMaquinariasa.cwtccos.Find(datos.CodiCC_Mqs);
+            datos.DescCC_Mqs = (cCostoMaquinariasa != null) ? cCostoMaquinariasa.DescCC : "";
+            //Grupo Activo
+            var empresaSel = db.Empresa.Find(datos.IdEmpresa);
+            SoftLandContext dbSoft = new SoftLandContext(empresaSel.BaseSoftland);
+            var grupos = dbSoft.awtgrup.ToList();
+            datos.Grupo = (datos.Grupo!=null)?datos.Grupo.TrimStart('0'): datos.Grupo;
+            var grupo = grupos.Where(c => c.CodGru.TrimStart('0') == datos.Grupo).FirstOrDefault();
+            var descGrupo = (grupo != null) ? grupo.DesGru : "";
+            //SubGrupo Activo                
+            var subgrupos = dbSoft.awtsubgr.ToList();
+            datos.SubGrupo = (datos.SubGrupo!=null) ? datos.SubGrupo.TrimStart('0') : datos.SubGrupo;
+            var subgrupo = subgrupos.Where(c => c.CodSGru.TrimStart('0') == datos.SubGrupo && c.CodGru.TrimStart('0') == datos.Grupo).FirstOrDefault();
+            var descSubGrupo = (subgrupo != null) ? subgrupo.DesSGru : "";
+            //Activo en softland
+            var activoSoftland = dbSoft.awfichaac.Find(datos.CodSoftland);
+            using (var dbContextTransaction = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var mensaje = "";
+                    var idActivo = 0;
+                    var activo = db.Activo.Where(c => c.IdActivo == datos.IdActivo).FirstOrDefault();
+                    var estado = (int)Helper.Estado.ActCreado;
+                    if (activo != null)
+                    {
+                        if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "" && activo.IdEstado == (int)Helper.Estado.ActCreado)
+                        {
+                            estado = (int)Helper.Estado.ActDisponible;
+                        }
+                        idActivo = activo.IdActivo;
+                        mensaje = "Registro Actualizado con exito";
+                        activo.IdEmpresa = datos.IdEmpresa;
+                        activo.NumeroInterno = datos.NumeroInterno;
+                        activo.CodSoftland = datos.CodSoftland;
+                        activo.IdFamilia = datos.IdFamilia;
+                        activo.Descripcion = datos.Descripcion;
+                        activo.Capacidad = datos.Capacidad;
+                        activo.Marca = datos.Marca;
+                        activo.Modelo = datos.Modelo;
+                        activo.Motor = datos.Motor;
+                        activo.Chasis = datos.Chasis;
+                        activo.Serie = datos.Serie;
+                        activo.Grupo = (grupo!=null)? grupo.CodGru:datos.Grupo;
+                        activo.SubGrupo = (subgrupo!=null)? subgrupo.CodSGru:datos.SubGrupo;
+                        activo.Anio = datos.Anio;
+                        activo.Valor = datos.Valor;
+                        activo.IdProveedor = datos.IdProveedor;
+                        var auxiliar = dbSoft.cwtauxi.Find(datos.IdProveedor);
+                        activo.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
+                        activo.IdCuenta = datos.IdCuenta;
+                        activo.NumeroFactura = datos.NumeroFactura;
+                        activo.Patente = datos.Patente;
+                        activo.Glosa = datos.Glosa;
+                        activo.IdMarcaProducto = datos.IdMarcaProducto;
+                        activo.IdModeloProducto = datos.IdModeloProducto;
+                        if (activo.IdEstado == 3)
+                        {
+                            activo.IdEstado = estado;
+                        }
+                        activo.CampoGD = datos.CampoGD;
+                        activo.MesAnio = datos.MesAnio;
+                        activo.CodiCC_Mqs = datos.CodiCC_Mqs;
+                        activo.DescCC_Mqs = datos.DescCC_Mqs;
+                        activo.CodiCC_MqsSur = datos.CodiCC_MqsSur;
+                        activo.DescCC_MqsSur = datos.DescCC_MqsSur;
+                        activo.ValorFactura = datos.ValorFactura;
+                        activo.DesGrupo = descGrupo;
+                        activo.DesSGru = descSubGrupo;
+                        if (datos.IdEstado == (int)Helper.Estado.ActDisponible)
+                        {
+                            activo.FechaBaja = null;
+                            activo.Glosa ="";
+                            activo.FecIngBaja = null;
+                            activo.IdEstado = datos.IdEstado;
+                        }
+                        //bajada
+                        if (activoSoftland != null)
+                        {
+                            activo.FechaBaja = activoSoftland.FecBaja;
+                            activo.Glosa = activoSoftland.GloBaja;
+                            activo.FecIngBaja = activoSoftland.FecIng;
+                        }
+                        if (datos.IdEstado == (int)Helper.Estado.ActBaja)
+                        {
+                            activo.FechaBaja = datos.FechaBaja;
+                            activo.Glosa = datos.Glosa;
+                            activo.FecIngBaja = DateTime.Now;
+                            activo.IdEstado = datos.IdEstado;
+                        }
+                        
+                        db.SaveChanges();
+                        retorno.IdEstado = 0;
+                        retorno.NombreEstado = mensaje;
+                    }
+                    else
+                    {
+                        var activoAdd = new Activo();
+                        if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "")
+                        {
+                            estado = (int)Helper.Estado.ActDisponible;
+                        }
+                        mensaje = "Registro Ingresado con exito";
+                        
+                        activoAdd.IdEmpresa = datos.IdEmpresa;
+
+                        activoAdd.NumeroInterno = datos.NumeroInterno;
+                        activoAdd.CodSoftland = datos.CodSoftland;
+                        activoAdd.IdFamilia = datos.IdFamilia;
+                        activoAdd.Descripcion = datos.Descripcion;
+                        activoAdd.Capacidad = datos.Capacidad;
+                        activoAdd.IdMarcaProducto = datos.IdMarcaProducto;
+                        activoAdd.IdModeloProducto = datos.IdModeloProducto;
+                        activoAdd.Marca = datos.Marca;
+                        activoAdd.Modelo = datos.Modelo;
+                        activoAdd.Motor = datos.Motor;
+                        activoAdd.Chasis = datos.Chasis;
+                        activoAdd.Serie = datos.Serie;
+                        activoAdd.Anio = datos.Anio;
+                        activoAdd.Grupo = (grupo != null) ? grupo.CodGru : datos.Grupo;
+                        activoAdd.SubGrupo = (subgrupo != null) ? subgrupo.CodSGru : datos.SubGrupo;
+                        activoAdd.Valor = datos.Valor;
+                        activoAdd.IdProveedor = datos.IdProveedor;
+
+                        var auxiliar = dbSoft.cwtauxi.Find(datos.IdProveedor);
+                        activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
+                        activoAdd.IdCuenta = datos.IdCuenta;
+                        activoAdd.NumeroFactura = datos.NumeroFactura;
+                        activoAdd.Patente = datos.Patente;
+                        activoAdd.Glosa = datos.Glosa;
+                        activoAdd.IdEstado = estado;
+                        activoAdd.FechaRegistro = DateTime.Now;
+                        activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                        activoAdd.SincronizadoSoftland = false;
+                        activoAdd.CampoGD = datos.CampoGD;
+                        activoAdd.MesAnio = datos.MesAnio;
+                        activoAdd.CodiCC_Mqs = datos.CodiCC_Mqs;
+                        activoAdd.DescCC_Mqs = datos.DescCC_Mqs;
+                        activoAdd.CodiCC_MqsSur = datos.CodiCC_MqsSur;
+                        activoAdd.DescCC_MqsSur = datos.DescCC_MqsSur;
+                        activoAdd.ValorFactura = datos.ValorFactura;
+                        activoAdd.DesGrupo = descGrupo;
+                        activoAdd.DesSGru = descSubGrupo;
+                        //bajada
+                        if (activoSoftland != null)
+                        {
+                            activoAdd.FechaBaja = activoSoftland.FecBaja;
+                            activoAdd.Glosa = activoSoftland.GloBaja;
+                            activoAdd.FecIngBaja = activoSoftland.FecIng;
+                        }
+                        db.Activo.Add(activoAdd);
+                        db.SaveChanges();
+
+                        idActivo = activoAdd.IdActivo;
+                        retorno.IdEstado = 0;
+                        retorno.NombreEstado = mensaje;
+                    }
+
+                    dbContextTransaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    dbContextTransaction.Rollback();
+                    retorno.IdEstado = 500;
+                    retorno.NombreEstado = "Error: " + ex.Message;
+                }
+            }
+
+            return retorno;
         }
 
         [HttpPost]
         [AcceptVerbs(HttpVerbs.Post)]
-
         public ActionResult GrabarActivo(Activo datos)
         {
-            dynamic showMessageString = string.Empty;
-            //validar que los datos ingresados sean correctos
-            var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
+            dynamic showMessageString = string.Empty;            
 
             tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
             if (seguridad == null || !seguridad.TienePermiso("ControlInterno", Helper.TipoAcceso.Acceder))
@@ -293,176 +501,30 @@ namespace tesoreria.Controllers
             }
             else
             {
-                var marca = db.MarcaProducto.Find(datos.IdMarcaProducto);
-                var modelo = db.ModeloProducto.Find(datos.IdModeloProducto);
-                datos.CodSoftland = validarDatos.ValidaStr(datos.CodSoftland);
-                datos.Descripcion = validarDatos.ValidaStr(datos.Descripcion);
-                datos.Capacidad = validarDatos.ValidaStr(datos.Capacidad);
-                datos.Marca = validarDatos.ValidaStr((marca!=null)?marca.DescMarcaProducto:"");
-                datos.Modelo = validarDatos.ValidaStr((modelo!=null)?modelo.DescModeloProducto:"");
-                datos.Grupo = validarDatos.ValidaStr(datos.Grupo);
-                datos.SubGrupo = validarDatos.ValidaStr(datos.SubGrupo);
-                datos.Motor = validarDatos.ValidaStr(datos.Motor);
-                datos.Chasis = validarDatos.ValidaStr(datos.Chasis);
-                datos.Serie = validarDatos.ValidaStr(datos.Serie);
-                datos.NumeroFactura = validarDatos.ValidaStr(datos.NumeroFactura);
-                datos.Patente = validarDatos.ValidaStr(datos.Patente);
-                datos.Glosa = validarDatos.ValidaStr(datos.Glosa);
-                datos.CampoGD = validarDatos.ValidaStr(datos.CampoGD);
-                datos.MesAnio=validarDatos.ValidaStr(datos.MesAnio);
-                datos.CodiCC_Mqs=validarDatos.ValidaStr(datos.CodiCC_Mqs);
-                datos.CodiCC_MqsSur=validarDatos.ValidaStr(datos.CodiCC_MqsSur);
-
-                //centro de costo
-                var empresaLtda = db.Empresa.Find((int)Helper.Constantes.IdEmpresaPrincipal);
-                SoftLandContext dbSoftLtda = new SoftLandContext(empresaLtda.BaseSoftland);
-                var cCostoLtda = dbSoftLtda.cwtccos.Find(datos.CodiCC_MqsSur);
-                datos.DescCC_MqsSur = (cCostoLtda != null) ? cCostoLtda.DescCC : "";
-
-                //Centro de costo Maquinariasa
-                var empresaMaquinariasa = db.Empresa.Find((int)Helper.Constantes.IdEmpresaMaquinariasa);
-                SoftLandContext dbSoftMaquinariasa = new SoftLandContext(empresaMaquinariasa.BaseSoftland);
-                var cCostoMaquinariasa = dbSoftMaquinariasa.cwtccos.Find(datos.CodiCC_Mqs);
-                datos.DescCC_Mqs = (cCostoMaquinariasa != null) ? cCostoMaquinariasa.DescCC : "";
-                //Grupo Activo
-                var empresaSel = db.Empresa.Find(datos.IdEmpresa);
-                SoftLandContext dbSoft = new SoftLandContext(empresaSel.BaseSoftland);
-                var grupo=dbSoft.awtgrup.Find(datos.Grupo);
-                var descGrupo = (grupo != null) ? grupo.DesGru : "";
-                //SubGrupo Activo                
-                var subgrupo = dbSoft.awtsubgr.Find(datos.SubGrupo);
-                var descSubGrupo = (subgrupo != null) ? subgrupo.DesSGru : "";
-                //Activo en softland
-                var activoSoftland = dbSoft.awfichaac.Find(datos.CodSoftland);
-                using (var dbContextTransaction = db.Database.BeginTransaction())
+                var valido = true;
+                var estado = 0;
+                var mensaje="";
+                if (datos.IdActivo>0)
                 {
-                    try
-                    {
-                        var mensaje = "";
-                        var idActivo = 0;
-                        var activo = db.Activo.Where(c => c.IdActivo == datos.IdActivo).FirstOrDefault();
-                        var estado = (int)Helper.Estado.ActCreado;
-                        if (activo != null)
-                        {
-                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "" && activo.IdEstado == (int)Helper.Estado.ActCreado)
-                            {
-                                estado = (int)Helper.Estado.ActDisponible;
-                            }
-                            idActivo = activo.IdActivo;
-                            mensaje = "Registro Actualizado con exito";
-                            activo.IdEmpresa = datos.IdEmpresa;
-                            activo.NumeroInterno = datos.NumeroInterno;
-                            activo.CodSoftland = datos.CodSoftland;
-                            activo.IdFamilia = datos.IdFamilia;
-                            activo.Descripcion = datos.Descripcion;
-                            activo.Capacidad = datos.Capacidad;
-                            activo.Marca = datos.Marca;
-                            activo.Modelo = datos.Modelo;
-                            activo.Motor = datos.Motor;
-                            activo.Chasis = datos.Chasis;
-                            activo.Serie = datos.Serie;
-                            activo.Grupo = datos.Grupo;
-                            activo.SubGrupo = datos.SubGrupo;
-                            activo.Anio = datos.Anio;
-                            activo.Valor = datos.Valor;
-                            activo.IdProveedor = datos.IdProveedor;
-                            activo.IdCuenta = datos.IdCuenta;
-                            activo.NumeroFactura = datos.NumeroFactura;
-                            activo.Patente = datos.Patente;
-                            activo.Glosa = datos.Glosa;
-                            activo.IdMarcaProducto = datos.IdMarcaProducto;
-                            activo.IdModeloProducto = datos.IdModeloProducto;
-                            if (activo.IdEstado == 3)
-                            {
-                                activo.IdEstado = estado;
-                            }
-                            activo.CampoGD=datos.CampoGD;
-                            activo.MesAnio = datos.MesAnio;
-                            activo.CodiCC_Mqs = datos.CodiCC_Mqs;
-                            activo.DescCC_Mqs= datos.DescCC_Mqs;
-                            activo.CodiCC_MqsSur= datos.CodiCC_MqsSur;
-                            activo.DescCC_MqsSur=datos.DescCC_MqsSur;
-                            activo.ValorFactura=datos.ValorFactura;
-                            activo.DesGrupo = descGrupo;
-                            activo.DesSGru = descSubGrupo;
-                            //bajada
-                            if (activoSoftland != null)
-                            {
-                                activo.FechaBaja = activoSoftland.FecBaja;
-                                activo.Glosa = activoSoftland.GloBaja;
-                                activo.FecIngBaja = activoSoftland.FecIng;
-                            }                            
-                            db.SaveChanges();
-                            showMessageString = new { Estado = 0, Mensaje = mensaje };
-                        }
-                        else
-                        {
-                            if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "")
-                            {
-                                estado = (int)Helper.Estado.ActDisponible;
-                            }
-                            mensaje = "Registro Ingresado con exito";
-                            var activoAdd = new Activo();
-                            activoAdd.IdEmpresa = datos.IdEmpresa;
-                            
-                            activoAdd.NumeroInterno = datos.NumeroInterno;
-                            activoAdd.CodSoftland = datos.CodSoftland;
-                            activoAdd.IdFamilia = datos.IdFamilia;
-                            activoAdd.Descripcion = datos.Descripcion;
-                            activoAdd.Capacidad = datos.Capacidad;
-                            activoAdd.Marca = datos.Marca;
-                            activoAdd.Modelo = datos.Modelo;
-                            activoAdd.Motor = datos.Motor;
-                            activoAdd.Chasis = datos.Chasis;
-                            activoAdd.Serie = datos.Serie;
-                            activoAdd.Anio = datos.Anio;
-                            activoAdd.Grupo = datos.Grupo;
-                            activoAdd.SubGrupo = datos.SubGrupo;                            
-                            activoAdd.Valor = datos.Valor;
-                            activoAdd.IdProveedor = datos.IdProveedor;
-                                                        
-                            var auxiliar = dbSoft.cwtauxi.Find(datos.IdProveedor);
-                            activoAdd.NombreProveedor = (auxiliar != null) ? auxiliar.NomAux : "";
-                            activoAdd.IdCuenta = datos.IdCuenta;
-                            activoAdd.NumeroFactura = datos.NumeroFactura;
-                            activoAdd.Patente = datos.Patente;
-                            activoAdd.Glosa = datos.Glosa;
-                            activoAdd.IdEstado = estado;
-                            activoAdd.FechaRegistro = DateTime.Now;
-                            activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
-                            activoAdd.SincronizadoSoftland = false;
-                            activoAdd.CampoGD = datos.CampoGD;
-                            activoAdd.MesAnio = datos.MesAnio;
-                            activoAdd.CodiCC_Mqs = datos.CodiCC_Mqs;
-                            activoAdd.DescCC_Mqs=datos.DescCC_Mqs;
-                            activoAdd.CodiCC_MqsSur = datos.CodiCC_MqsSur;
-                            activoAdd.DescCC_MqsSur=datos.DescCC_MqsSur;
-                            activoAdd.ValorFactura = datos.ValorFactura;
-                            activoAdd.DesGrupo = descGrupo;
-                            activoAdd.DesSGru = descSubGrupo;
-                            //bajada
-                            if (activoSoftland != null)
-                            {
-                                activoAdd.FechaBaja = activoSoftland.FecBaja;
-                                activoAdd.Glosa = activoSoftland.GloBaja;
-                                activoAdd.FecIngBaja = activoSoftland.FecIng;
-                            }
-                            db.Activo.Add(activoAdd);
-                            db.SaveChanges();
-
-                            idActivo = activoAdd.IdActivo;
-                            showMessageString = new { Estado = 0, Mensaje = mensaje };
-                        }
-
-                        dbContextTransaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        dbContextTransaction.Rollback();
-                        showMessageString = new { Estado = 500, Mensaje = "Error: " + ex.Message };
-                    }
+                    var existNumInterno = db.Activo.Where(c => c.NumeroInterno == datos.NumeroInterno && c.IdEmpresa == datos.IdEmpresa && c.IdActivo!=datos.IdActivo).FirstOrDefault();
+                    valido = (existNumInterno != null) ? false : true;
                 }
-
+                else
+                {
+                    var existNumInterno = db.Activo.Where(c => c.NumeroInterno == datos.NumeroInterno && c.IdEmpresa == datos.IdEmpresa).FirstOrDefault();
+                    valido = (existNumInterno != null) ? false : true;
+                }
+                if (valido == true)
+                {
+                    var retornoSave = SaveActivoBD(datos);
+                    showMessageString = new { Estado = retornoSave.IdEstado, Mensaje = retornoSave.NombreEstado };
+                }
+                else
+                {
+                    mensaje = "¡Número Interno " + datos.NumeroInterno.ToString() + " ya existe!";
+                    estado = 100;
+                    showMessageString = new { Estado = estado, Mensaje = mensaje };
+                }
             }
             return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
         }
@@ -756,42 +818,62 @@ namespace tesoreria.Controllers
                     string sheetName = "Sheet1";
                     var excelFile = new ExcelQueryFactory(pathToExcelFile);
                     var artistAlbums = from a in excelFile.Worksheet<ActivoViewModel>(sheetName) select a;
-
+                    var empresaSel = db.Empresa.Find(IdEmpresa);
+                    SoftLandContext dbSoft = new SoftLandContext(empresaSel.BaseSoftland);
                     foreach (var a in artistAlbums)
                     {
                         try
                         {
                             if (a.NumeroInterno !="")
                             {
+                                Activo activoAdd = new Activo();
                                 var existeActivo = db.Activo.Where(c => c.IdEmpresa == IdEmpresa && c.NumeroInterno == a.NumeroInterno).FirstOrDefault();
-                                if (existeActivo == null)
-                                {
-                                    Activo activoAdd = new Activo();
-                                    activoAdd.IdEmpresa = IdEmpresa;
-                                    activoAdd.NumeroInterno = a.NumeroInterno;
-                                    activoAdd.CodSoftland = a.CodSoftland;
-                                    activoAdd.IdFamilia = null;
-                                    activoAdd.Descripcion = a.Descripcion;
-                                    activoAdd.Capacidad = a.Capacidad;
-                                    activoAdd.Marca = a.Marca;
-                                    activoAdd.Modelo =a.Modelo;
-                                    activoAdd.Motor = a.Motor;
-                                    activoAdd.Chasis = a.Chasis;
-                                    activoAdd.Serie = a.Serie;
-                                    activoAdd.Anio =a.Anio;
-                                    activoAdd.Valor = a.Valor;
-                                    activoAdd.NumeroFactura = a.NumeroFactura;
-                                    activoAdd.NumeroContrato = a.NumeroContrato;
-                                    activoAdd.Patente = a.Patente;
-                                    activoAdd.Glosa = "";
-                                    activoAdd.IdEstado = (int)Helper.Estado.ActCreado;
-                                    activoAdd.FechaRegistro = DateTime.Now;
-                                    activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
-                                    activoAdd.SincronizadoSoftland = false;
-                                    db.Activo.Add(activoAdd);
-                                    db.SaveChanges();
+                                //familia
+                                var familia = db.Familia.Where(c => c.NombreFamilia == a.Familia).FirstOrDefault();
+                                if (existeActivo != null)
+                                {                                 
+                                    activoAdd = existeActivo;
                                 }
-
+                                activoAdd.IdEmpresa = IdEmpresa;
+                                activoAdd.NumeroInterno = a.NumeroInterno;
+                                activoAdd.CodSoftland = a.CodSoftland;
+                                activoAdd.IdFamilia = (familia != null) ? (int?)familia.IdFamilia : null;
+                                activoAdd.Descripcion = a.Descripcion;
+                                activoAdd.IdCuenta = a.ClasificacionCuenta;
+                                activoAdd.Valor = a.Valor;
+                                var marca = db.MarcaProducto.Where(c=>c.DescMarcaProducto.ToUpper()==a.Marca.ToUpper()).FirstOrDefault();
+                                var modelo = db.ModeloProducto.Where(c=>c.DescModeloProducto.ToUpper() == a.Modelo.ToUpper()).FirstOrDefault();
+                                activoAdd.IdMarcaProducto = (marca!=null)? marca.IdMarcaProducto:0;
+                                activoAdd.IdModeloProducto = (modelo != null)? modelo.IdModeloProducto:0;
+                                activoAdd.Anio = a.Anio;
+                                activoAdd.Grupo = a.Grupo;
+                                activoAdd.SubGrupo = a.SubGrupo;
+                                var auxiliar = dbSoft.cwtauxi.Where(c=>c.RutAux.Replace(".","").Replace("-","").ToUpper()==a.RutProveedor.Replace(".", "").Replace("-", "").ToUpper()).FirstOrDefault();
+                                activoAdd.IdProveedor =(auxiliar!=null)? auxiliar.CodAux:"";
+                                activoAdd.NumeroFactura = a.NumeroFactura;
+                                activoAdd.Motor = a.Motor;
+                                activoAdd.Chasis = a.Chasis;
+                                activoAdd.Patente = a.Patente;
+                                activoAdd.Glosa = a.Glosa;
+                                activoAdd.CampoGD = a.CampoGD;
+                                //convertir mes anio a string
+                                try
+                                {
+                                    var dateMesAnio = Convert.ToDateTime(a.MesAnio);
+                                    activoAdd.MesAnio = dateMesAnio.Month.ToString() + "/" + dateMesAnio.Year.ToString();
+                                }
+                                catch
+                                {
+                                    activoAdd.MesAnio = "";
+                                }                                
+                                activoAdd.CodiCC_Mqs = a.CodiCC_Mqs;
+                                activoAdd.CodiCC_MqsSur = a.CodiCC_MqsSur;
+                                activoAdd.IdEstado = (int)Helper.Estado.ActCreado;
+                                activoAdd.FechaRegistro = DateTime.Now;
+                                activoAdd.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                                activoAdd.SincronizadoSoftland = false;
+                                var retornoSave = SaveActivoBD(activoAdd);
+                                showMessageString = new { Estado = retornoSave.IdEstado, Mensaje = retornoSave.NombreEstado };
                             }
                             else
                             {

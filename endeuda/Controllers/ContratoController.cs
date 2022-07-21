@@ -308,6 +308,114 @@ namespace tesoreria.Controllers
             return Json(oferta, JsonRequestBehavior.AllowGet);
         }
 
+        public string TextoLogContrato(Contrato contratoEdit, Contrato dato)
+        {
+            var textoLog = "";
+            /*log de cambios*/
+            if (contratoEdit.Monto != dato.Monto)
+            {
+                textoLog += "Monto Contrato: " + contratoEdit.Monto + " por " + dato.Monto;
+            }
+            if (contratoEdit.NumeroContrato != dato.NumeroContrato)
+            {
+                textoLog += ", Número Contrato: " + contratoEdit.NumeroContrato + " por " + dato.NumeroContrato;
+            }
+            if (contratoEdit.MotivoEleccion != dato.MotivoEleccion)
+            {
+                textoLog += ", Motivo Elección: " + contratoEdit.MotivoEleccion + " por " + dato.MotivoEleccion;
+            }
+            if (contratoEdit.IdBanco != dato.IdBanco)
+            {
+                var banco = db.Banco.Find(dato.IdBanco);
+                textoLog += ", Banco: " + contratoEdit.Banco.NombreBanco + " por " + banco.NombreBanco;
+            }
+            if (contratoEdit.IdTipoFinanciamiento != dato.IdTipoFinanciamiento)
+            {
+                var tipoF = db.TipoFinanciamiento.Find(dato.IdTipoFinanciamiento);
+                textoLog += ", Tipo Financiamiento: " + contratoEdit.TipoFinanciamiento.NombreTipoFinanciamiento + " por " + tipoF.NombreTipoFinanciamiento;
+            }
+            if (contratoEdit.IdTipoImpuesto != dato.IdTipoImpuesto)
+            {
+                var tipoI = db.TipoImpuesto.Find(dato.IdTipoImpuesto);
+                textoLog += ", Tipo Impuesto: " + contratoEdit.TipoImpuesto.NombreTipoImpuesto + " por " + tipoI.NombreTipoImpuesto;
+            }
+            if (contratoEdit.TipoGarantia != dato.TipoGarantia)
+            {
+                textoLog += ", Tipo Garantía: " + contratoEdit.TipoGarantia + " por " + dato.TipoGarantia;
+            }
+            if (contratoEdit.TasaMensual != dato.TasaMensual)
+            {
+                textoLog += ", Tasa Mensual: " + contratoEdit.TasaMensual + " por " + dato.TasaMensual;
+            }
+            if (contratoEdit.TasaAnual != dato.TasaAnual)
+            {
+                textoLog += ", Tasa Anual: " + contratoEdit.TasaAnual + " por " + dato.TasaAnual;
+            }
+            if (contratoEdit.Plazo != dato.Plazo)
+            {
+                textoLog += ", Plazo Contrato: " + contratoEdit.Plazo + " por " + dato.Plazo;
+            }
+            if (contratoEdit.FechaInicio != dato.FechaInicio)
+            {
+                textoLog += ", Fecha Inicio Contrato: " + contratoEdit.FechaInicio + " por " + dato.FechaInicio;
+            }
+            
+            return textoLog;
+        }
+
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult ActualizarContratoVista(Contrato dato)
+        {
+            dynamic showMessageString = string.Empty;
+            var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
+            if(seguridad == null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Editar))
+            {
+                showMessageString = new { Estado = 1000, Mensaje = "Se finalizó la sesión o no cuenta con permisos" };
+            }
+            else
+            {
+                var contrato = db.Contrato.Find(dato.IdContrato);
+                var contratoEdit = db.Contrato.Find(dato.IdContrato);
+                var mensaje = "";
+                var idContrato = 0;
+                //validar datos
+                dato.Descripcion = validarDatos.ValidaStr(dato.Descripcion);
+                dato.TipoGarantia = validarDatos.ValidaStr(dato.TipoGarantia);
+                if (contrato != null)
+                {
+                    dato.IdTipoFinanciamiento = (contrato.IdTipoContrato == (int)Helper.TipoContrato.Leasing) ? contrato.IdTipoFinanciamiento : dato.IdTipoFinanciamiento;
+                    var textoLog = TextoLogContrato(contratoEdit, dato);
+                    if (contratoEdit.Descripcion != dato.Descripcion)
+                    {
+                        textoLog += ", Descripción: " + contratoEdit.Descripcion + " por " + dato.Descripcion;
+                    }
+                    mensaje = "Contrato actualizado con éxito";
+                    dato.FechaTermino = dato.FechaInicio.AddMonths(dato.Plazo - 1);
+                    idContrato = dato.IdContrato;
+                    contrato.Monto = dato.Monto;
+                    contrato.MotivoEleccion = dato.MotivoEleccion;
+                    contrato.IdEmpresa = dato.IdEmpresa;
+                    contrato.IdBanco = dato.IdBanco;
+                    contrato.IdTipoFinanciamiento = dato.IdTipoFinanciamiento;
+                    contrato.IdTipoImpuesto = dato.IdTipoImpuesto;
+                    contrato.TipoGarantia = dato.TipoGarantia;
+                    contrato.TasaMensual = dato.TasaMensual;
+                    contrato.TasaAnual = dato.TasaAnual;
+                    contrato.Plazo = dato.Plazo;
+                    contrato.FechaInicio = dato.FechaInicio;
+                    contrato.FechaTermino = dato.FechaTermino;
+                    contrato.IdTipoMoneda = dato.IdTipoMoneda;
+                    contrato.Descripcion = dato.Descripcion;
+                    db.SaveChanges();                   
+                    /*registro log contrato*/
+                    GrabaLogContrato(idContrato, 1, textoLog);
+
+                    showMessageString = new { Estado = 0, Mensaje = mensaje, idContrato = idContrato };
+                }
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         [AcceptVerbs(HttpVerbs.Post)]
@@ -391,54 +499,7 @@ namespace tesoreria.Controllers
                             if (contrato != null)
                             {
 
-                                /*log de cambios*/
-                                if (contratoEdit.Monto != dato.Monto)
-                                {
-                                    textoLog += "Monto Contrato: " + contratoEdit.Monto + " por " + dato.Monto;
-                                }
-                                if (contratoEdit.NumeroContrato != dato.NumeroContrato)
-                                {
-                                    textoLog += ", Número Contrato: " + contratoEdit.NumeroContrato + " por " + dato.NumeroContrato;
-                                }
-                                if (contratoEdit.MotivoEleccion != dato.MotivoEleccion)
-                                {
-                                    textoLog += ", Motivo Elección: " + contratoEdit.MotivoEleccion + " por " + dato.MotivoEleccion;
-                                }
-                                if (contratoEdit.IdBanco != dato.IdBanco)
-                                {
-                                    var banco = db.Banco.Find(dato.IdBanco);
-                                    textoLog += ", Banco: " + contratoEdit.Banco.NombreBanco + " por " + banco.NombreBanco;
-                                }
-                                if (contratoEdit.IdTipoFinanciamiento != dato.IdTipoFinanciamiento)
-                                {
-                                    var tipoF = db.TipoFinanciamiento.Find(dato.IdTipoFinanciamiento);
-                                    textoLog += ", Tipo Financiamiento: " + contratoEdit.TipoFinanciamiento.NombreTipoFinanciamiento + " por " + tipoF.NombreTipoFinanciamiento;
-                                }
-                                if (contratoEdit.IdTipoImpuesto != dato.IdTipoImpuesto)
-                                {
-                                    var tipoI = db.TipoImpuesto.Find(dato.IdTipoImpuesto);
-                                    textoLog += ", Tipo Impuesto: " + contratoEdit.TipoImpuesto.NombreTipoImpuesto + " por " + tipoI.NombreTipoImpuesto;
-                                }
-                                if (contratoEdit.TipoGarantia != dato.TipoGarantia)
-                                {
-                                    textoLog += ", Tipo Garantía: " + contratoEdit.TipoGarantia + " por " + dato.TipoGarantia;
-                                }
-                                if (contratoEdit.TasaMensual != dato.TasaMensual)
-                                {
-                                    textoLog += ", Tasa Mensual: " + contratoEdit.TasaMensual + " por " + dato.TasaMensual;
-                                }
-                                if (contratoEdit.TasaAnual != dato.TasaAnual)
-                                {
-                                    textoLog += ", Tasa Anual: " + contratoEdit.TasaAnual + " por " + dato.TasaAnual;
-                                }
-                                if (contratoEdit.Plazo != dato.Plazo)
-                                {
-                                    textoLog += ", Plazo Contrato: " + contratoEdit.Plazo + " por " + dato.Plazo;
-                                }
-                                if (contratoEdit.FechaInicio != dato.FechaInicio)
-                                {
-                                    textoLog += ", Fecha Inicio Contrato: " + contratoEdit.FechaInicio + " por " + dato.FechaInicio;
-                                }
+                                textoLog = TextoLogContrato(contratoEdit, dato);
 
                                 mensaje = "Contrato actualizado con éxito";
                                 var existeContrato = db.Contrato.Where(c => c.NumeroContrato == dato.NumeroContrato && c.IdContrato != contrato.IdContrato).FirstOrDefault();
@@ -460,8 +521,10 @@ namespace tesoreria.Controllers
                                     contrato.FechaInicio = dato.FechaInicio;
                                     contrato.FechaTermino = dato.FechaTermino;
                                     contrato.IdTipoMoneda=dato.IdTipoMoneda;
-                                    contrato.Descripcion = dato.Descripcion;
+                                    //contrato.Descripcion = dato.Descripcion;
                                     db.SaveChanges();
+                                    //Actualizar descripcion
+                                    //UpdateDescripcion(idContrato);
                                 }
                                 else
                                 {
@@ -663,12 +726,23 @@ namespace tesoreria.Controllers
         public JsonResult ActivarContrato(int idContrato,string descripcion)
         {
             dynamic showMessageString = string.Empty;
+            var mensajeError = "Existen Datos Incompletos";
             var contrato = db.Contrato.Find(idContrato);
             var activos = db.ContratoActivo.Where(c => c.IdContrato == idContrato).Count();
+            var valido = true;
             if (contrato.TipoFinanciamiento.IdTipoContrato == (int)Helper.TipoContrato.Contrato && contrato.IdTipoFinanciamiento != (int)Helper.TipoFinanciamiento.EstructuradoConGarantia) {
                 activos = 1;
+                valido = true;
             }
-            if (activos > 0)
+            else
+            {
+                if (contrato.TipoGarantia!= null && contrato.TipoGarantia!="")
+                {
+                    valido = false;
+                    mensajeError = "Debe Indicar el Tipo de Garantía";
+                }
+            }
+            if (valido ==true)
             {
                 contrato.IdEstado = (int)Helper.Estado.ConActivo;
                 contrato.Descripcion = descripcion;
@@ -677,7 +751,7 @@ namespace tesoreria.Controllers
             }
             else
             {
-                showMessageString = new { Estado = 100, Mensaje = "Existen Datos Incompletos" };
+                showMessageString = new { Estado = 100, Mensaje = mensajeError };
             }
 
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
@@ -690,7 +764,7 @@ namespace tesoreria.Controllers
             var dbTipoLog = db.TipoLog.Find(idTipoLog);
             var dbContrato = db.Contrato.Find(idContrato);
 
-            if (dbContrato != null)
+            if (dbContrato != null && textoLog!=null && textoLog!="")
             {
                 if(dbContrato.IdEstado > (int)Helper.Estado.ConCreado) { 
                     var nombreLog = "Cambios realizados en: " + dbTipoLog.NombreTipoLog+" ("+ textoLog+" )";
@@ -1664,13 +1738,14 @@ namespace tesoreria.Controllers
             var registro = (from c in db.ContratoDocumento
                             join td in db.TipoDocumento on c.IdTipoDocumento equals td.IdTipoDocumento
                             where c.IdContrato == idContrato
-                            select new ContratoDocumentoViewModel
+                            select new 
                             {
                                 IdContratoDocumento = c.IdContratoDocumento,
                                 IdContrato = idContrato,
                                 NombreTipoDocumento = td.NombreTipoDocumento,
                                 NombreOriginal = c.NombreOriginal,
-                                UrlDocumento = c.UrlDocumento
+                                UrlDocumento = c.UrlDocumento,
+                                TieneEliminar=((int)seguridad.IdUsuario==c.IdUsuarioRegistro)?true:false
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -2090,7 +2165,9 @@ namespace tesoreria.Controllers
                                     FechaTerminoStr = c.FechaTermino.ToString("dd-MM-yyyy"),
                                     IdEstado = c.IdEstado,
                                     ExisteContrato = "S",
-                                    TituloBoton = "Actualizar Contrato"
+                                    TituloBoton = "Actualizar Contrato",
+                                    IdTipoMoneda=c.IdTipoMoneda,
+                                    Descripcion=c.Descripcion
                                 }
                                   ).FirstOrDefault();
 
@@ -2135,6 +2212,11 @@ namespace tesoreria.Controllers
                     ViewData["listaOferta"] = listaOferta;
                 }
 
+                var tiposMoneda = (from e in db.TipoMoneda
+                                   where e.Activo == true
+                                   select new RetornoGenerico { Id = e.IdTipoMoneda, Nombre = e.NombreTipoMoneda }).OrderBy(c => c.Id).ToList();
+                SelectList listaMonedas = new SelectList(tiposMoneda.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdTipoMoneda);
+                ViewData["listaMonedas"] = listaMonedas;
 
                 var banco = (from e in db.Banco
                              where e.Activo == true
