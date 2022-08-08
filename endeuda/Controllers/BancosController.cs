@@ -94,5 +94,44 @@ namespace tesoreria.Controllers
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult ConsolidadoDeudaBanco_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes)
+        {
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+            var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_DEUDA_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4}", fechaInicio, fechaFin, (int)Helper.TipoContrato.Leasing, IdEmpresa, IdBanco).ToList();
+            var sumDeudas = deudas.GroupBy(c => new { c.NombreBanco })
+                .Select(c => 
+                new { 
+                    c.Key.NombreBanco, 
+                    TotalCP = c.Sum(x => x.TotalCP), 
+                    TotalLP = c.Sum(x => x.TotalLP), 
+                    TotalGeneral=c.Sum(x=>x.TotalGeneral),
+                    SaldoInsoluto = c.Sum(x => x.SaldoInsoluto),
+                    TotalFinal=c.Sum(x => x.TotalFinal)
+                }).ToList();
+            var totalDeuda = sumDeudas.Sum(c => c.TotalFinal);
+            var listaRetorno = sumDeudas.Select(c => new
+            {
+                c.NombreBanco,
+                c.TotalCP,
+                c.TotalLP,
+                c.TotalGeneral,
+                c.SaldoInsoluto,
+                c.TotalFinal,
+                porcEntidad=(totalDeuda!=null && c.TotalFinal>0)?Math.Round(
+                    ((double)c.TotalFinal/ (double)totalDeuda)*100
+                    ,2):0
+            }).ToList();
+
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
     }
 }

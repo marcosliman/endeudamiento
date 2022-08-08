@@ -1,0 +1,92 @@
+﻿@model modelo.Models.Local.ContratoActivo
+@{
+    ViewBag.Title = "Registrar Contrato Leasing";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+    var valoresAnio = ViewData["listValoresAnio"] as List<modelo.ViewModel.ReporteContratoViewModel>;
+}
+<div class="row">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaResumenTipoDeuda" data-order='[[ 0, "asc" ]]'>
+            <thead class="thead-light">
+                <tr>
+                    <th>Tipo Deuda</th>
+                    @if (ViewData["listAnios"] != null)
+                    {
+                        foreach (var item in ViewData["listAnios"] as List<modelo.ViewModel.RetornoGenerico>)
+                        {
+                            <th>@item.Nombre</th>
+                        }
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @if (ViewData["listTipoFinancia"] != null)
+                {
+                    foreach (var item in ViewData["listTipoFinancia"] as List<modelo.ViewModel.RetornoGenerico>)
+                    {
+                        <tr>
+                            <td>@item.Nombre (Capital)</td>
+                            @if (ViewData["listAnios"] != null)
+                            {
+                                foreach (var anio in ViewData["listAnios"] as List<modelo.ViewModel.RetornoGenerico>)
+                                {
+                                    var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.IdTipoFinanciamiento == item.Id).FirstOrDefault();
+                                    var deudaCapital = (valAnio != null) ? valAnio.DeudaCapital : 0;
+                                    <td>@deudaCapital</td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+                @if (ViewData["listTipoFinancia"] != null)
+                {
+                    foreach (var item in ViewData["listTipoFinancia"] as List<modelo.ViewModel.RetornoGenerico>)
+                    {
+                        <tr>
+                            <td>@item.Nombre (Cuota)</td>
+                            @if (ViewData["listAnios"] != null)
+                            {
+                                foreach (var anio in ViewData["listAnios"] as List<modelo.ViewModel.RetornoGenerico>)
+                                {
+                                    var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.IdTipoFinanciamiento == item.Id).FirstOrDefault();
+                                    var deudaCuota = (valAnio != null) ? valAnio.DeudaCuota : 0;
+                                    <td>@deudaCuota</td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var buttonTipoDeuda = {
+            text: 'Exportar a Excel',
+            title: 'Consolidado de Endeudamiento Leasing por Empresa',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >= 2) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
+
+        var tableTD = $("#grillaResumenTipoDeuda").DataTable({
+            buttons: [
+                $.extend(true, {}, buttonTipoDeuda, {
+                    filename: "TipoDeudaConsolidado_anio"
+                })
+            ]
+        });   
+        tableTD.on('draw', function () { });
+});    
+</script>

@@ -3256,6 +3256,7 @@
     <Content Include="Views\Contrato\AddDocumentoContrato.cshtml" />
     <Content Include="Views\Activo\VistaActivo.cshtml" />
     <Content Include="Views\Seguro\ImportActivos.cshtml" />
+    <Content Include="Views\Empresa\TipoDeudaResumen.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

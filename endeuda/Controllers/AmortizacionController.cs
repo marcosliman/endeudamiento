@@ -73,25 +73,7 @@ namespace tesoreria.Controllers
             IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
             var contratos = db.Database.SqlQuery<ReporteContratoViewModel>(
                    "SP_AMORTIZACION_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3}", fechaInicio, fechaFin, idTipoContrato, IdEmpresa).ToList();
-
-            //var contratos = (from c in db.Contrato.ToList()
-            //                where c.IdTipoContrato == ((idTipoContrato != null) ? idTipoContrato : c.IdTipoContrato)
-            //                 && c.IdEmpresa == ((IdEmpresa != null) ? IdEmpresa : c.IdEmpresa)
-            //                select new ReporteContratoViewModel
-            //                {
-            //                    IdContrato = c.IdContrato,
-            //                    Empresa = c.Empresa.RazonSocial,
-            //                    Acreedor = c.Banco.NombreBanco,
-            //                    NumeroContrato = c.NumeroContrato,
-            //                    Moneda = c.TipoMoneda.NombreTipoMoneda,
-            //                    TasaMensual = c.TasaMensual,
-            //                    TasaAnual = c.TasaAnual,
-            //                    Total = 0,
-            //                    Total1 = 0,
-            //                    Total2 = 0,
-            //                    Total3 = 0,
-            //                    TotalGeneral = 0
-            //                }).AsEnumerable().ToList();
+                        
             return Json(contratos, JsonRequestBehavior.AllowGet);
         }
 

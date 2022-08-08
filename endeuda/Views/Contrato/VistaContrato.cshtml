@@ -114,17 +114,17 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Plazo meses</label>
+                <label for="plazo" class="col-sm-2 col-form-label">Plazo meses</label>
                 <div class="col-sm-2">
                     <input type="text" class="form-control form-control-sm" name="plazo" id="plazo" value="@Model.Plazo" />
                 </div>
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Inicio</label>
+                <label for="fechaInicio" class="col-sm-2 col-form-label">Inicio</label>
                 <div class="col-sm-2">
                     <input type="text" class="form-control form-control-sm classFecha" name="fechaInicio" id="fechaInicio" value="@Model.FechaInicioStr" />
                 </div>
                 @if (Model.ExisteContrato == "S")
                 {
-                    <label for="inputEmail3" class="col-sm-2 col-form-label">Término</label>
+                    <label for="fechaTermino" class="col-sm-2 col-form-label">Término</label>
                     <div class="col-sm-2">
                         <input type="text" class="form-control form-control-sm" disabled name="fechaTermino" id="fechaTermino" value="@Model.FechaTerminoStr" />
                     </div>
@@ -135,13 +135,19 @@
                 <div class="col-sm-2" id="divSumaActivos">
 
                 </div>
-                <label for="inputEmail3" class="col-sm-2 col-form-label">Descripción</label>
+                <label for="Descripcion" class="col-sm-2 col-form-label">Descripción</label>
                 <div class="col-sm-6">
                     <textarea name="Descripcion" id="Descripcion" class="form-control form-control-sm">@Model.Descripcion</textarea>
                 </div>
             </div>
+            <div class="form-group row">
+                <label for="IdFamilia" class="col-sm-2 col-form-label">Familia Contrato</label>
+                <div class="col-sm-4">
+                    @Html.DropDownList("IdFamilia", (SelectList)ViewData["listaFamilia"], "-- Seleccione Familia Contrato--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                </div>
+            </div>
         </div>
-            @if (TieneEditar == true && Model.IdEstado!=(int)tesoreria.Helper.Estado.ConCreado) { 
+            @if (TieneEditar == true && Model.IdEstado!=(int)tesoreria.Helper.Estado.ConCreado && Model.IdEstado != (int)tesoreria.Helper.Estado.ConFinalizado) {
                 <div class="card-footer">
                     <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarContrato()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> Actualizar</button>
                 </div>

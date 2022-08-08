@@ -15,28 +15,34 @@
     </thead>
     <tbody></tbody>
 </table>
-<div class="card card-outline card-info collapsed-card">
+<div class="card card-outline card-info">
     <div class="card-header">
         <h3 class="card-title">Filtros</h3>
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-plus"></i>
+                <i class="fas fa-minus"></i>
             </button>
         </div>
     </div>
     <div class="card-body">
         <div class="row">
-            <div class="col-sm-2">
+            <div class="col-sm-2 mt-1">
                 @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-2 mt-1">
                 @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
             </div>
-            <div class="col-sm-2">
-                <input type="text" name="anioBus" id="anioBus" value="@DateTime.Now.Year" class="form-control form-control-sm filtroRepote" />                
+            <div class="col-sm-2 mt-1">
+                <input type="text" name="anioBus" id="anioBus" value="@DateTime.Now.Year" class="form-control form-control-sm filtroRepote" />
             </div>
-            <div class="col-sm-2">
-                @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMeses"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })                
+            <div class="col-sm-2 mt-1">
+                @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMeses"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
+            </div>
+            <div class="col-sm-2 mt-1">
+                <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
+            </div>
+            <div class="col-sm-auto mt-1">
+                <button class="btn btn-sm btn-primary" type="button" name="btnFiltrar" id="btnFiltrar" onclick="RefreshLista()"><i class="fa fa-sync-alt"></i> Refrescar</button>
             </div>
         </div>
     </div>
@@ -46,7 +52,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header text-white" style="background-color:midnightblue">
-                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Empresa - Al @ViewBag.FechaActual</h3>
+                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Empresa - <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -78,7 +84,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header text-white" style="background-color:midnightblue">
-                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Moneda - Al @ViewBag.FechaActual</h3>
+                <h3 class="card-title">Consolidado de Endeudamiento Leasing por Moneda - <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -114,7 +120,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header text-white" style="background-color:midnightblue">
-                <h3 class="card-title">Consolidado de Tipo de Activo en Leasing - Al @ViewBag.FechaActual</h3>
+                <h3 class="card-title">Consolidado de Tipo de Activo en Leasing - Al <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -146,13 +152,12 @@
     </div>
 </div>
 
-
 <div class="row">
 
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Deuda Vigente por Entidad Financiera</h3>
+                <h3 class="card-title">Deuda Vigente por Entidad Financiera <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -160,122 +165,11 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
-                            <div id="chart-cobranza" style="height:300px;background-color: transparent;" data-highcharts-chart="15">
+                <div class="row m-0" style="display: block; position: relative; width: 100%;">
+                    <div id="chart-cobranza" style="height:420px;background-color: transparent;" data-highcharts-chart="15">
 
-                            </div>
-                        </div>
-                        <script>
-                            // Make monochrome colors
-                            /* var pieColors = (function () {
-                                    var colors = [],
-                                        base = Highcharts.getOptions().colors[0],
-                                        i;
-
-                                    for (i = 0; i < 10; i += 1) {
-                                        // Start out with a darkened base color (negative brighten), and end
-                                        // up with a much brighter color
-                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
-                                    }
-                                    return colors;
-                                }());
-                                */
-                            // Build the chart
-                            Highcharts.chart('chart-cobranza', {
-                                chart: {
-                                    plotBackgroundColor: null,
-                                    plotBorderWidth: null,
-                                    plotShadow: false,
-                                    type: 'pie'
-                                },
-                                exporting: {
-                                    enabled: false
-                                },
-                                title: {
-                                    text: ''
-                                },
-                                credits: {
-                                    enabled: false
-                                },
-                                tooltip: {
-                                    pointFormat: '<b>{point.percentage:.1f}%</b>'
-                                },
-                                accessibility: {
-                                    point: {
-                                        valueSuffix: '%'
-                                    }
-                                },
-                                plotOptions: {
-                                    pie: {
-                                        allowPointSelect: true,
-                                        cursor: 'pointer',
-                                        // colors: pieColors,
-                                        dataLabels: {
-                                            enabled: true,
-                                            format: '{point.percentage:.1f} %',
-                                            distance: 20,
-                                            filter: {
-                                                property: 'percentage',
-                                                operator: '>',
-                                                value: 1
-                                            }
-                                        }
-                                    }
-                                },
-                                series: [{
-                                    name: 'Monto',
-                                    data: [
-                                        { name: 'BCI', y: 46 },
-                                        { name: 'SANTANDER', y: 19 },
-                                        { name: 'CHILE', y: 8 },
-                                        { name: 'ESTADO', y: 7 },
-                                        { name: 'SECURITY', y: 2 },
-                                        { name: 'SCOTIABANK', y: 11 },
-                                        { name: 'ITAÚ', y: 5 },
-                                        { name: 'BICE', y: 2 },
-
-
-                                    ]
-                                }]
-                            });
-                        </script>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm">
-                                <thead>
-                                    <tr>
-                                        <th><p style="color:black;font-size:10px;">Entidad Financiera</p></th>
-                                        <th><p style="color:black;font-size:10px;">BCI</p></th>
-                                        <th><p style="color:black;font-size:10px;">SANTANDER</p></th>
-                                        <th><p style="color:black;font-size:10px;">SCOTIABANK</p></th>
-                                        <th><p style="color:black;font-size:10px;">BBVA</p></th>
-                                        <th><p style="color:black;font-size:10px;">ESTADO</p></th>
-                                        <th><p style="color:black;font-size:10px;">SECURITY</p></th>
-                                        <th><p style="color:black;font-size:10px;">BICE</p></th>
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th><p style="color:black;font-size:10px;">Monto Ch$</p></th>
-                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
-                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
-                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
-                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
-                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
-                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
-                                        <td><p style="color:black;font-size:10px;">$2.000.000</p></td>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
-
 
             </div>
         </div>
@@ -283,7 +177,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgray">
-                <h3 class="card-title">Resumen Estructura de Deuda según Categoria y Empresa (MM$)</h3>
+                <h3 class="card-title">Resumen Estructura de Deuda según Categoria y Empresa (MM$) <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -291,78 +185,78 @@
                 </div>
             </div>
             <div class="card-body">
-                <figure class="highcharts-figure" ">
-                    <div id="chartEstadistico"></div>
+                <div class="row m-0" style="display: block; position: relative; width: 100%;">
+                    <div id="chartEstadistico" style="height:420px;background-color: transparent;" data-highcharts-chart="15">
 
-                </figure>
+                    </div>
+                </div>
                 <script>
-                    Highcharts.chart('chartEstadistico', {
-                        chart: {
-                            type: 'column'
-                        },
-                        title: {
-                            text: ''
-                        },
-                        xAxis: {
-                            categories: ['MAQSUR S.A.', 'BIOMASA', 'TECSUR', 'MQS', 'NOK']
-                        },
-                        yAxis: {
-                            allowDecimals: true,
-                            min: 0,
-                            title: {
-                                text: 'MM$'
-                            },
-                            stackLabels: {
-                                enabled: true,
-                                style: {
-                                    fontWeight: 'bold',
-                                    color: ( // theme
-                                        Highcharts.defaultOptions.title.style &&
-                                        Highcharts.defaultOptions.title.style.color
-                                    ) || 'gray'
-                                }
-                            }
-                        },
-                        credits: {
-                            enabled: false
-                        },
-                        /*legend: {
-                            align: 'top',
-                            x: -0,
-                            verticalAlign: 'bottom',
-                            y: 0,
-                            floating: true,
-                            backgroundColor:
-                                Highcharts.defaultOptions.legend.backgroundColor || 'white',
-                            borderColor: '#CCC',
-                            borderWidth: 0,
-                            shadow: false
-                        },*/
-                        tooltip: {
-                            headerFormat: '<b>{point.x}</b><br/>',
-                            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-                        },
-                        plotOptions: {
-                            column: {
-                                stacking: 'normal',
-                                dataLabels: {
-                                    enabled: true
-                                }
-                            }
-                        },
-                        series: [{
-                            name: 'Deuda Estructurada con Garantía',
-                            data: [3764, 473, 124, 2507, 0]
-                        },
-                        {
-                            name: 'Deuda Estructurada sin Garantía',
-                            data: [470, 0, 0, 0, 101]
-                        },
-                        {
-                            name: 'Deuda Fogape',
-                            data: [2958, 125, 0, 0, 0]
-                        }]
+                    $(document).ready(function () {
+
+                        CargarChartResumenStructura();
                     });
+
+                    function CargarChartResumenStructura() {
+                        $.ajax({
+                            url: "/Empresa/ResumenDeudaTipoFinanciamiento_Read",
+                            type: "Get",
+                            data: {
+                                IdEmpresa: $("#IdEmpresaBus").val(),
+                                IdBanco: $("#IdBancoBus").val(),
+                                anio: $("#anioBus").val(),
+                                IdMes: $("#IdMesBus").val(),
+                                valorUf : $("#valorUfBus").val()
+                            },
+                            beforeSend: function () {
+
+                            },
+                            success: function (data) {
+
+                                Highcharts.chart('chartEstadistico', {
+                                    chart: {
+                                        type: 'column'
+                                    },
+                                    title: {
+                                        text: ''
+                                    },
+                                    xAxis: {
+                                        type: 'category'
+                                    },                                    
+                                    yAxis: {
+                                        allowDecimals: true,
+                                        min: 0,
+                                        title: {
+                                            text: 'MM$'
+                                        },
+                                        stackLabels: {
+                                            enabled: true,
+                                            style: {
+                                                fontWeight: 'bold',
+                                                color: ( // theme
+                                                    Highcharts.defaultOptions.title.style &&
+                                                    Highcharts.defaultOptions.title.style.color
+                                                ) || 'gray'
+                                            }
+                                        }
+                                    },
+                                    credits: {
+                                        enabled: false
+                                    },
+                                    
+                                    plotOptions: {
+                                        column: {
+                                            stacking: 'normal',
+                                            dataLabels: {
+                                                enabled: true
+                                            }
+                                        }
+                                    },
+                                    series: data.serie
+                                });
+                            }
+                        });
+                    }
+
                 </script>
             </div>
         </div>
@@ -373,7 +267,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Deuda Leasing por Institución Financiera</h3>
+                <h3 class="card-title">Deuda Leasing por Institución Financiera <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -382,84 +276,21 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEntidad" data-order='[[ 0, "asc" ]]'>
                             <thead class="thead-light">
                                 <tr>
-                                    <th>Bancos</th>
+                                    <th>Banco</th>
                                     <th>Obligación CP</th>
                                     <th>Obligación LP</th>
-                                    <th>Totales</th>
+                                    <th>Total Deuda</th>
+                                    <th>Deuda Estructurada</th>
+                                    <th>Total Final</th>
+                                    <th>% Deuda</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <th>BCI</th>
-                                    <td>898,830,908.00</td>
-                                    <td>1,658,429,374.00</td>
-                                    <td>2,557,260,281.00</td>
-                                </tr>
-                                <tr>
-                                    <th>BBVA</th>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <th>CORPBANCA</th>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <th>CHILE</th>
-                                    <td>351,695,868.00</td>
-                                    <td>341,041,234.00</td>
-                                    <td>692,737,102.00</td>
-                                </tr>
-                                <tr>
-                                    <th>ESTADO</th>
-                                    <td>265,070,141.00</td>
-                                    <td>543,150,043.00</td>
-                                    <td>808,220,183.00</td>
-                                </tr>
-                                <tr>
-                                    <th>ITAÚ</th>
-                                    <td>49,019,314.00</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                </tr>
-                                <tr>
-                                    <th>SANTANDER</th>
-                                    <td>308,880,861.00</td>
-                                    <td>785,370,783.00</td>
-                                    <td>1,094,251,644.00</td>
-                                </tr>
-                                <tr>
-                                    <th>SCOTIABANK</th>
-                                    <td>197,963,087.00</td>
-                                    <td>219,052,208.00</td>
-                                    <td>417,015,295.00</td>
-                                </tr>
-                                <tr>
-                                    <th>SECURITY</th>
-                                    <td>171,889,690.00</td>
-                                    <td>144,538,790.00</td>
-                                    <td>316,428,481.00</td>
-                                </tr>
-                                <tr>
-                                    <th>BICE</th>
-                                    <td>116,253,525.00</td>
-                                    <td>238,363,231.00</td>
-                                    <td>354,616,757.00</td>
-                                </tr>
-                                <tr>
-                                    <th>BICE</th>
-                                    <th>2,359,603,394.00</th>
-                                    <th>3,929,945,663.00</th>
-                                    <th>6,289,549,057.00</th>
-                                </tr>
+                                
                             </tbody>
                         </table>
                     </div>
@@ -473,7 +304,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Endeudamiento Grupo MAQSUR</h3>
+                <h3 class="card-title">Endeudamiento Grupo MAQSUR <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -481,115 +312,130 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
-                            <div id="chart-deudacompleta" style="height: 300px;background-color: transparent;" data-highcharts-chart="15">
+                <div class="row m-0" style="display: block; position: relative; width: 100%;">
+                    <div id="chart-deudaEmrpesa" style="height:420px;background-color: transparent;" data-highcharts-chart="15">
 
-                            </div>
-                        </div>
-                        <script>
-                            // Make monochrome colors
-                            /* var pieColors = (function () {
-                                    var colors = [],
-                                        base = Highcharts.getOptions().colors[0],
-                                        i;
-
-                                    for (i = 0; i < 10; i += 1) {
-                                        // Start out with a darkened base color (negative brighten), and end
-                                        // up with a much brighter color
-                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
-                                    }
-                                    return colors;
-                                }());
-                                */
-                            // Build the chart
-                            Highcharts.chart('chart-deudacompleta', {
-                                chart: {
-                                    plotBackgroundColor: null,
-                                    plotBorderWidth: null,
-                                    plotShadow: false,
-                                    type: 'pie'
-                                },
-                                exporting: {
-                                    enabled: false
-                                },
-                                title: {
-                                    text: ''
-                                },
-                                credits: {
-                                    enabled: false
-                                },
-                                tooltip: {
-                                    pointFormat: '<b>{point.percentage:.1f}%</b>'
-                                },
-                                accessibility: {
-                                    point: {
-                                        valueSuffix: '%'
-                                    }
-                                },
-                                plotOptions: {
-                                    pie: {
-                                        allowPointSelect: true,
-                                        cursor: 'pointer',
-                                        // colors: pieColors,
-                                        dataLabels: {
-                                            enabled: true,
-                                            format: '{point.percentage:.1f} %',
-                                            distance: 20,
-                                            filter: {
-                                                property: 'percentage',
-                                                operator: '>',
-                                                value: 1
-                                            }
-                                        }
-                                    }
-                                },
-                                series: [{
-                                    name: 'Monto',
-                                    data: [
-                                        { name: 'MAQSUR S.A.', y: 15 },
-                                        { name: 'BIOMASA', y: 20 },
-                                        { name: 'TECSUR', y: 20 },
-                                        { name: 'MQS', y: 18 },
-                                        { name: 'NOK', y: 27 },
-
-                                    ]
-                                }]
-                            });
-                        </script>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th><p style="color:black;font-size:10px;">Empresa</p></th>
-                                        <th><p style="color:black;font-size:10px;">MAQSUR S.A.</p></th>
-                                        <th><p style="color:black;font-size:10px;">BIOMASA</p></th>
-                                        <th><p style="color:black;font-size:10px;">TECSUR</p></th>
-                                        <th><p style="color:black;font-size:10px;">MQS</p></th>
-                                        <th><p style="color:black;font-size:10px;">NOK</p></th>
-                                        <th><p style="color:black;font-size:10px;">TOTAL</p></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <th><p style="color:black;font-size:10px;">Monto</p></th>
-                                        <th><p style="color:black;font-size:10px;">$15,000,000.00</p></th>
-                                        <th><p style="color:black;font-size:10px;">$20,000,000.00</p></th>
-                                        <th><p style="color:black;font-size:10px;">$20,000,000.00</p></th>
-                                        <th><p style="color:black;font-size:10px;">$18,000,000.00</p></th>
-                                        <th><p style="color:black;font-size:10px;">$27,000,000.00</p></th>
-                                        <th><p style="color:black;font-size:10px;">$100,000,000.00</p></th>
-                                    </tr>
-
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaDeudaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>Deuda</th>                                    
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                </div>
+                <script>
+                    function initTableDeudaEmpresa() {
+                        var buttonCommon = {
+                            text: 'Exportar a Excel',
+                            title: 'Endeudamiento Empresa',
+                            extend: 'excelHtml5',
+                            exportOptions: {
+                                columns: "thead th:not(.noExport)",
+                                format: {
+                                    body: function (data, row, column, node) {
+                                        var texto = node.innerText;
+                                        return (column >= 1) ?
+                                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                                            texto;
+                                    }
+                                }
+                            }
+                        };
+                        var table = $('#grillaDeudaEmpresa').DataTable({
+                            "initComplete": function (settings, json) {
+                                // Create the chart with initial data
+                                //var container = $('<div/>').insertBefore(table.table().container());
+                                //console.log(chartData(table))
+                                var chart = Highcharts.chart('chart-deudaEmrpesa', {
+                                    chart: {
+                                        type: 'pie',
+                                    },
+                                    title: {
+                                        text: '',
+                                    },
+                                    tooltip: {
+                                        pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b> <br> {point.y}'
+                                    },
+                                    plotOptions: {
+                                        pie: {
+                                            allowPointSelect: true,
+                                            cursor: 'pointer',
+                                            dataLabels: {
+                                                enabled: true,
+                                                format: '<b>{point.name}</b>: {point.percentage:.2f} %',
+                                                distance: 20,
+                                                filter: {
+                                                    property: 'percentage',
+                                                    operator: '>',
+                                                    value: 1
+                                                }
+                                            }
+                                        }
+                                    },
+                                    series: [
+                                        {
+                                            name: "Deuda",
+                                            data: chartData(table,1),
+                                        },
+                                    ],
+                                });
 
+                                //// On each draw, update the data in the chart
+                                table.on('draw', function () {
+                                    chart.series[0].setData(chartData(table,1));
+                                });
+                            },
+                            "retrieve": true,
+                            'ajax': {
+                                "type": "POST",
+                                "url": '/Empresa/ConsolidadoDeudaEmpresa_Read/0',
+                                "data": function (d) {
+                                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                                    d.IdBanco = $("#IdBancoBus").val();
+                                    d.anio = $("#anioBus").val();
+                                    d.IdMes = $("#IdMesBus").val();
+                                    d.valorUf = $("#valorUfBus").val();
+                                },
+                                "dataSrc": ""
+                            },
+                            buttons: [
+                                $.extend(true, {}, buttonCommon, {
+                                    filename: "Consolidado_DeudaEmpresa"
+                                })
+                            ],
+                            columnDefs: [
+                                { targets: '_all', className: 'align-middle' },
+                                {
+                                    targets: [1],
+                                    render: function (data, type, row) {
+                                        var numFormt = "";
+                                        if (data != null) {
+                                            var num = data.toString();
+                                            numFormt = SeparadorMiles(num);
+                                        }
+                                        return numFormt;
+                                    }
+                                }
+                            ],
+                            columns: [
+                                { "data": "Empresa" },
+                                { "data": "TotalFinal" }
+                            ]
+                        });
+
+                        return table;
+                    }
+
+                </script>
 
             </div>
         </div>
@@ -597,7 +443,7 @@
     <div class="col-md-6">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Resumen Estructura de Deuda del Grupo MAQSUR</h3>
+                <h3 class="card-title">Resumen Estructura de Deuda del Grupo MAQSUR <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -607,80 +453,78 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
-                            <div id="chart-consolidado" style="height: 100%;background-color: transparent;" data-highcharts-chart="15">
+                        <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; max-width: 650px;">
+                            <div id="chart-consolidadoAnio" style="height: 420px;background-color: transparent;" data-highcharts-chart="15">
 
                             </div>
                         </div>
                         <script>
-                            // Make monochrome colors
-                            /* var pieColors = (function () {
-                                    var colors = [],
-                                        base = Highcharts.getOptions().colors[0],
-                                        i;
+                            $(document).ready(function () {
 
-                                    for (i = 0; i < 10; i += 1) {
-                                        // Start out with a darkened base color (negative brighten), and end
-                                        // up with a much brighter color
-                                        colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
-                                    }
-                                    return colors;
-                                }());
-                                */
-                            // Build the chart
-                            Highcharts.chart('chart-consolidado', {
-                                chart: {
-                                    type: 'column'
-                                },
-                                title: {
-                                    text: ''
-                                },
-                                credits: {
-                                    enabled: false
-                                },
-                                tooltip: {
-                                    headerFormat: '<b>{point.x}</b><br/>',
-                                    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-                                },
-                                xAxis: {
-                                    categories: ['2021', '2022', '2023', '2024', '2025']
-                                },
-                                yAxis: {
-                                    allowDecimals: true,
-                                    min: 0,
-                                    title: {
-                                        text: 'MM$'
-                                    },
-                                    stackLabels: {
-                                        enabled: true,
-                                        style: {
-                                            fontWeight: 'bold',
-                                            color: ( // theme
-                                                Highcharts.defaultOptions.title.style &&
-                                                Highcharts.defaultOptions.title.style.color
-                                            ) || 'gray'
-                                        }
-                                    }
-                                },
-                                //legend: {
-                                //    reversed: true
-                                //},
-                                plotOptions: {
-                                    column: {
-                                        stacking: 'normal',
-                                        dataLabels: {
-                                            enabled: true
-                                        }
-                                    }
-                                },
-                                series: [{
-                                    name: 'Deuda leasing (Capital)',
-                                    data: [1000000, 1600000, 1250000, 700000, 600000]
-                                }, {
-                                    name: 'Deuda Estructurada (Capital)',
-                                    data: [1000000, 900000, 1250000, 600000, 200000]
-                                }]
+                                CargarChartResumenStructuraAnio();
                             });
+
+                            function CargarChartResumenStructuraAnio() {
+                                $.ajax({
+                                    url: "/Empresa/ConsolidadoDeudaEmpresaAnios_Read",
+                                    type: "Get",
+                                    data: {
+                                        IdEmpresa: $("#IdEmpresaBus").val(),
+                                        IdBanco: $("#IdBancoBus").val(),
+                                        anio: $("#anioBus").val(),
+                                        IdMes: $("#IdMesBus").val(),
+                                        valorUf : $("#valorUfBus").val()
+                                    },
+                                    beforeSend: function () {
+
+                                    },
+                                    success: function (data) {
+
+                                        Highcharts.chart('chart-consolidadoAnio', {
+                                            chart: {
+                                                type: 'column'
+                                            },
+                                            title: {
+                                                text: ''
+                                            },
+                                            xAxis: {
+                                                type: 'category'
+                                            },
+                                            yAxis: {
+                                                allowDecimals: true,
+                                                min: 0,
+                                                title: {
+                                                    text: 'MM$'
+                                                },
+                                                stackLabels: {
+                                                    enabled: true,
+                                                    style: {
+                                                        fontWeight: 'bold',
+                                                        color: ( // theme
+                                                            Highcharts.defaultOptions.title.style &&
+                                                            Highcharts.defaultOptions.title.style.color
+                                                        ) || 'gray'
+                                                    }
+                                                }
+                                            },
+                                            credits: {
+                                                enabled: false
+                                            },
+
+                                            plotOptions: {
+                                                column: {
+                                                    stacking: 'normal',
+                                                    dataLabels: {
+                                                        enabled: true
+                                                    }
+                                                }
+                                            },
+                                            series: data.serie
+                                        });
+                                    }
+                                });
+                            }
+
                         </script>
                     </div>
 
@@ -696,7 +540,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header" style="background-color:lightgrey">
-                <h3 class="card-title">Consolidado por Tipo de Deuda MM$</h3>
+                <h3 class="card-title">Consolidado por Tipo de Deuda MM$ <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -704,80 +548,53 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                            <thead class="thead-light">
-                                <tr>
-                                    <th>Tipo Deuda</th>
-                                    <th>2020</th>
-                                    <th>2021</th>
-                                    <th>2022</th>
-                                    <th>2023</th>
-                                    <th>2024</th>
-                                    <th>2025</th>
-                                    <th>2026</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>Deuda Estructurada (capital)</th>
-                                    <td>0</td>
-                                    <td>885.00</td>
-                                    <td>2,206.00</td>
-                                    <td>2,122.00</td>
-                                    <td>1,842.00</td>
-                                    <td>1,535.00</td>
-                                    <td>1,073.00</td>
-                                </tr>
-                                <tr>
-                                    <th>Deuda Estructurada (cuota)</th>
-                                    <td>0</td>
-                                    <td>1,155.00</td>
-                                    <td>2,677.00</td>
-                                    <td>2,472.00</td>
-                                    <td>2,094.00</td>
-                                    <td>1,705.00</td>
-                                    <td>1,172.00</td>
-                                </tr>
-                                <tr>
-                                    <th>Deuda Leasing (cuota)</th>
-                                    <td>0</td>
-                                    <td>1,410.00</td>
-                                    <td>2,290.00</td>
-                                    <td>1,690.00</td>
-                                    <td>890.00</td>
-                                    <td>314.00</td>
-                                    <td>266.00</td>
-                                </tr>
-                                <tr>
-                                    <th>Deuda Leasing (capital)</th>
-                                    <td>0</td>
-                                    <td>1,284.00</td>
-                                    <td>2,119.00</td>
-                                    <td>1,600.00</td>
-                                    <td>848.00</td>
-                                    <td>292.00</td>
-                                    <td>254.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div id="divCargaTipoDeuda">                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 <script>
-
+    function CargaConsolidadoTipoDeuda() {
+        $.ajax({
+            url: '/Empresa/TipoDeudaResumen',
+            data: {
+                IdEmpresa: $("#IdEmpresaBus").val(),
+                IdBanco: $("#IdBancoBus").val(),
+                anio: $("#anioBus").val(),
+                IdMes: $("#IdMesBus").val(),
+                valorUf : $("#valorUfBus").val()
+            },
+            async: true,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            global: true,
+            ifModified: false,
+            processData: true,
+            //data: { idDocumento: op },
+            //data: ReemplazoCadena(aux_busqueda),
+            beforeSend: function () {
+                $("#divCargaTipoDeuda").empty();
+                $("#divCargaTipoDeuda").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (html) {
+                //html=decodeURIComponent(html);
+                $("#divCargaTipoDeuda").empty(),
+                $("#divCargaTipoDeuda").append(html);
+            },
+            type: "post"
+        });
+    }
     $(document).ready(function () {
         AbrirMenu("Solicitante");
+        $('.lblPeriodo').html($("#IdMesBus option:selected").text() + "-" + $("#anioBus").val())
         initTable();
         initTable2();
         initTable3();
+        initTableDeudaBanco();
+        initTableDeudaEmpresa();
+        CargaConsolidadoTipoDeuda();
         $.getJSON('https://mindicador.cl/api', function (data) {
             var dailyIndicators = data;
             $("#valorUF").text(SeparadorMiles(dailyIndicators.uf.valor.toString()));
@@ -788,15 +605,35 @@
         }).fail(function () {
             console.log('Error!');
         });
-        $(".filtroRepote").change(RefreshLista)
+        //$(".filtroRepote").change(RefreshLista)
     });
     function RefreshLista() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''))
+        });
+        $('.lblPeriodo').html($("#IdMesBus option:selected").text() + "-" + $("#anioBus").val())
         var table = initTable();
         table.ajax.reload(function (json) { });
         var table = initTable2();
         table.ajax.reload(function (json) { });
         var table = initTable3();
         table.ajax.reload(function (json) { });
+
+        var table = initTableDeudaBanco();
+        table.ajax.reload(function (json) {
+            CargaChartDeudaBanco(table);
+        });
+
+        var table = initTableDeudaEmpresa();
+        table.ajax.reload(function (json) { });
+        
+        CargarChartResumenStructuraAnio();
+        CargarChartResumenStructura();
+        CargaConsolidadoTipoDeuda();
+
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        });
     }
     function initTable() {
         var buttonCommon = {
@@ -825,6 +662,7 @@
                     d.IdBanco = $("#IdBancoBus").val();
                     d.anio = $("#anioBus").val();
                     d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
                 },
                 "dataSrc": ""
             },
@@ -886,6 +724,7 @@
                     d.IdBanco = $("#IdBancoBus").val();
                     d.anio = $("#anioBus").val();
                     d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
                 },
                 "dataSrc": ""
             },
@@ -948,6 +787,7 @@
                     d.IdBanco = $("#IdBancoBus").val();
                     d.anio = $("#anioBus").val();
                     d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
                 },
                 "dataSrc": ""
             },
@@ -976,6 +816,140 @@
                 { "data": "TotalCLP" },
                 { "data": "TotalUF" },
                 { "data": "DeudaVigente" }
+            ]
+        });
+
+        return table;
+    }
+
+    function chartData(table,columna) {
+        var series = {};
+        var valores = {};
+        // Count the number of entries for each position
+        table.column(0, { search: 'applied' })
+            .data()
+            .each(function (val, row) {
+                series[row] = val;
+            });
+        table.column(columna, { search: 'applied' })
+            .data()
+            .each(function (val, row) {
+                valores[row] = val;
+            });
+        //console.log(series)
+        // And map it to the format highcharts uses
+        return $.map(series, function (val, key) {
+            return {
+                name: val,
+                y: valores[key],
+            };
+        });
+    }
+    function CargaChartDeudaBanco(table) {
+        table = $('#grillaEntidad').DataTable();
+        // Create the chart with initial data
+        //var container = $('<div/>').insertBefore(table.table().container());
+        //console.log(chartData(table))
+        var chart = Highcharts.chart('chart-cobranza', {
+            chart: {
+                type: 'pie',
+            },
+            title: {
+                text: '',
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b> <br> {point.y}'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.2f} %',
+                        distance: 20,
+                        filter: {
+                            property: 'percentage',
+                            operator: '>',
+                            value: 1
+                        }
+                    }
+                }
+            },
+            series: [
+                {
+                    name: "Deuda",
+                    data: chartData(table, 5),
+                },
+            ],
+        });
+
+        //// On each draw, update the data in the chart
+        //table.on('draw', function () {
+        //    chart.series[0].setData(chartData(table));
+        //});
+    }
+    function initTableDeudaBanco() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Deuda Leasing por Institución Financiera',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >= 1) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
+        var table = $('#grillaEntidad').DataTable({
+            "initComplete": function (settings, json) {
+                CargaChartDeudaBanco(table);   
+            },
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Bancos/ConsolidadoDeudaBanco_Read/0',
+                "data": function (d) {
+                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                    d.IdBanco = $("#IdBancoBus").val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
+                },
+                "dataSrc": ""
+            },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Consolidado_DeudaBanco"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [1, 2, 3,4,5,6],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "NombreBanco" },
+                { "data": "TotalCP" },
+                { "data": "TotalLP" },
+                { "data": "TotalGeneral" },
+                { "data": "SaldoInsoluto" },
+                { "data": "TotalFinal" },
+                { "data": "porcEntidad" }
             ]
         });
 

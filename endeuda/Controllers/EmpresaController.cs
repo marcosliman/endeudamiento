@@ -117,6 +117,152 @@ namespace tesoreria.Controllers
             db.SaveChanges();
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
-        
+        public ActionResult ResumenDeudaTipoFinanciamiento_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes,double? valorUf)
+        {
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+            var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_DEUDA_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4}", fechaInicio, fechaFin, (int)Helper.TipoContrato.Contrato, IdEmpresa, IdBanco).ToList();
+            var empresas = deudas.GroupBy(c => new { c.IdEmpresa, c.Empresa }).Select(c => new { c.Key.IdEmpresa, c.Key.Empresa }).ToList();
+            var tiposFinancia= deudas.Where(c=>c.SaldoInsoluto>0).GroupBy(c => new { c.IdTipoFinanciamiento, c.NombreTipoFinanciamiento})
+                .Select(c => new { c.Key.IdTipoFinanciamiento, c.Key.NombreTipoFinanciamiento }).ToList();
+            var sumDeudas = deudas.GroupBy(c => new { c.Empresa,c.IdTipoFinanciamiento })
+                .Select(c =>
+                new {
+                    c.Key.IdTipoFinanciamiento,
+                    c.Key.Empresa,
+                    SaldoInsoluto = Math.Round(((double)c.Sum(x => x.SaldoInsoluto)/ 1000000),0)
+                })
+                .ToList();
+            var serie = (from tf in tiposFinancia
+                         select new
+                         {
+                             name = tf.NombreTipoFinanciamiento,
+                             data = sumDeudas.Where(x => x.IdTipoFinanciamiento == tf.IdTipoFinanciamiento)
+                             .Select(x => new { name = x.Empresa, y = x.SaldoInsoluto }).ToList()
+                         }
+                       ).ToList();
+            return Json(new { categoria= empresas, serie }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ConsolidadoDeudaEmpresa_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, double? valorUf)
+        {
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+            var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_DEUDA_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4}", fechaInicio, fechaFin, (int)Helper.TipoContrato.Contrato, IdEmpresa,IdBanco).ToList();
+            var sumDeudas = deudas.GroupBy(c => new { c.Empresa })
+                .Select(c =>
+                new {
+                    c.Key.Empresa,
+                    
+                    TotalFinal = c.Sum(x => x.TotalFinal)
+                }).ToList();
+            var totalDeuda = sumDeudas.Sum(c => c.TotalFinal);
+            var listaRetorno = sumDeudas.Select(c => new
+            {
+                c.Empresa,                
+                c.TotalFinal
+            }).ToList();
+
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult ConsolidadoDeudaEmpresaAnios_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, double? valorUf)
+        {
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+            var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_DEUDA_CONTRATO_CONSOLIDADA @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4}", fechaInicio, fechaFin, (int)Helper.TipoContrato.Contrato, IdEmpresa,IdBanco).ToList();
+            var listAnios = deudas.GroupBy(c => new { c.anio}).Select(c => new { c.Key.anio}).ToList();
+            var tiposFinancia = deudas.GroupBy(c => new { c.IdTipoFinanciamiento, c.NombreTipoFinanciamiento })
+                .Select(c => new { c.Key.IdTipoFinanciamiento, c.Key.NombreTipoFinanciamiento }).ToList();
+            var sumDeudas = deudas.GroupBy(c => new { c.NombreTipoFinanciamiento, c.IdTipoFinanciamiento,c.anio })
+                .Select(c =>
+                new {
+                    c.Key.IdTipoFinanciamiento,
+                    c.Key.NombreTipoFinanciamiento,
+                    c.Key.anio,
+                    DeudaCapital = Math.Round(((double)c.Sum(x => x.DeudaCapital) / 1000000), 0),
+                    DeudaCuota = Math.Round(((double)c.Sum(x => x.DeudaCuota) / 1000000), 0)
+                })
+                .ToList();
+            var serie = (from tf in tiposFinancia
+                         select new
+                         {
+                             name = tf.NombreTipoFinanciamiento,
+                             data = sumDeudas.Where(x => x.IdTipoFinanciamiento == tf.IdTipoFinanciamiento)
+                             .Select(x => new { name = x.anio, y = x.DeudaCapital }).OrderBy(x=>x.name).ToList()
+                         }
+                       ).ToList();
+            return Json(new { categoria = listAnios, serie }, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult TipoDeudaResumen(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, double? valorUf)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+                var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+                DateTime fechaInicio = DateTime.Now.Date;
+                if (inicioMes != "")
+                {
+                    fechaInicio = Convert.ToDateTime(inicioMes);
+                }
+                var fechaMesSgte = fechaInicio.AddMonths(1);
+                var fechaFin = fechaMesSgte.AddDays(-1);
+                IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+                var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
+                       "SP_DEUDA_CONTRATO_CONSOLIDADA @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4}", fechaInicio, fechaFin, (int)Helper.TipoContrato.Contrato, IdEmpresa,IdBanco).ToList();
+                var listAnios = deudas.GroupBy(c => new { c.anio }).Select(c => new { c.Key.anio }).ToList();
+                var tiposFinancia = deudas.GroupBy(c => new { c.IdTipoFinanciamiento, c.NombreTipoFinanciamiento })
+                    .Select(c => new { c.Key.IdTipoFinanciamiento, c.Key.NombreTipoFinanciamiento }).ToList();
+                var sumDeudas = deudas.GroupBy(c => new { c.NombreTipoFinanciamiento, c.IdTipoFinanciamiento, c.anio })
+                    .Select(c =>
+                    new {
+                        c.Key.IdTipoFinanciamiento,
+                        c.Key.NombreTipoFinanciamiento,
+                        c.Key.anio,
+                        DeudaCapital = Math.Round(((double)c.Sum(x => x.DeudaCapital) / 1000000), 0),
+                        DeudaCuota = Math.Round(((double)c.Sum(x => x.DeudaCuota) / 1000000), 0)
+                    })
+                    .ToList();
+                var valoresAnio = (from d in sumDeudas
+                                   select new ReporteContratoViewModel
+                                     {
+                                        IdTipoFinanciamiento=d.IdTipoFinanciamiento,
+                                        anio=d.anio,
+                                        DeudaCapital=d.DeudaCapital,
+                                        DeudaCuota=d.DeudaCuota
+                                     }
+                                    ).ToList();
+
+                ViewData["listAnios"] = listAnios.Select(c => new RetornoGenerico { Id = (int)c.anio, Nombre = c.anio.ToString() }).OrderBy(c => c.Id).ToList();
+                ViewData["listTipoFinancia"] = tiposFinancia.Select(c => new RetornoGenerico { Id = (int)c.IdTipoFinanciamiento, Nombre = c.NombreTipoFinanciamiento }).OrderBy(c => c.Id).ToList();
+                ViewData["listValoresAnio"] = valoresAnio;
+                return View();
+            }
+        }
     }
 }

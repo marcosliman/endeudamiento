@@ -20,7 +20,7 @@ namespace modelo.ViewModel
         public DateTime FechaPago { get; set; }
         public string FechaPagoStr { get; set; }
         public int Periodo { get; set; }
-        public int Cuota { get; set; }
+        public double Cuota { get; set; }
         public double IvaDiferido { get; set; }
         public double Intereses { get; set; }
         public double Amortizacion { get; set; }

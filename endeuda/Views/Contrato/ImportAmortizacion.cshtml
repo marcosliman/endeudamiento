@@ -12,7 +12,7 @@
 <div class="card-body">
     @using (Ajax.BeginForm("ImportaPlanillaAmortizacion", "Contrato", new AjaxOptions
     {
-        OnBegin = "mostrarCargando",
+        OnBegin = "mostrarCargando()",
         InsertionMode = InsertionMode.Replace,
         HttpMethod = "post",
         OnSuccess = "Success",
