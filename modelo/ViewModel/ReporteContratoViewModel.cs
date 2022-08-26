@@ -33,6 +33,12 @@ namespace modelo.ViewModel
         public double? DeudaCapital { get; set; }
         public double? DeudaCuota { get; set; }
         public int? anio { get; set; }
+        public int? IdTipoContrato { get; set; }
+        public string NombreTipoContrato { get; set; }
+        public int? IdFamilia { get; set; }
+        public double? MontoContrato { get; set; }
+        public int? IdTipoMoneda { get; set; }
+        public int? IdEstado { get; set; }
     }
 
 }

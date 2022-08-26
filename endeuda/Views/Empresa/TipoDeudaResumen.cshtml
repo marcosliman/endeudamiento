@@ -17,6 +17,7 @@
                             <th>@item.Nombre</th>
                         }
                     }
+                    <th>Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,17 +25,20 @@
                 {
                     foreach (var item in ViewData["listTipoFinancia"] as List<modelo.ViewModel.RetornoGenerico>)
                     {
+                        double total = 0;
                         <tr>
                             <td>@item.Nombre (Capital)</td>
                             @if (ViewData["listAnios"] != null)
                             {
                                 foreach (var anio in ViewData["listAnios"] as List<modelo.ViewModel.RetornoGenerico>)
                                 {
-                                    var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.IdTipoFinanciamiento == item.Id).FirstOrDefault();
-                                    var deudaCapital = (valAnio != null) ? valAnio.DeudaCapital : 0;
-                                    <td>@deudaCapital</td>
+                                    var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.IdTipoContrato == item.Id).ToList();
+                                    var deudaCapital = (valAnio.Count()>0) ? valAnio.Sum(c=>c.DeudaCapital) : 0;
+                                    total = total + (double)deudaCapital;
+                                    <td>@(String.Format("{0:N0}", deudaCapital))</td>
                                 }
                             }
+                            <td>@(String.Format("{0:N0}", total))</td>
                         </tr>
                     }
                 }
@@ -42,17 +46,20 @@
                 {
                     foreach (var item in ViewData["listTipoFinancia"] as List<modelo.ViewModel.RetornoGenerico>)
                     {
+                        double total = 0;
                         <tr>
                             <td>@item.Nombre (Cuota)</td>
                             @if (ViewData["listAnios"] != null)
                             {
                                 foreach (var anio in ViewData["listAnios"] as List<modelo.ViewModel.RetornoGenerico>)
                                 {
-                                    var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.IdTipoFinanciamiento == item.Id).FirstOrDefault();
-                                    var deudaCuota = (valAnio != null) ? valAnio.DeudaCuota : 0;
-                                    <td>@deudaCuota</td>
+                                    var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.IdTipoContrato == item.Id).ToList();
+                                    var deudaCuota = (valAnio.Count() > 0) ? valAnio.Sum(c => c.DeudaCuota) : 0;
+                                    total = total + (double)deudaCuota;
+                                    <td>@(String.Format("{0:N0}", deudaCuota))</td>
                                 }
                             }
+                            <td>@(String.Format("{0:N0}", total))</td>
                         </tr>
                     }
                 }

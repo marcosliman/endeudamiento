@@ -25,35 +25,38 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="row">
-            <div class="col-sm-2 mt-1">
-                @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
+        <form name="frmDescargarBD" id="frmDescargarBD" method="post" action="/Empresa/DescargarBaseContratos">
+            <div class="row">
+                <div class="col-sm-2 mt-1">
+                    @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
+                </div>
+                <div class="col-sm-2 mt-1">
+                    @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
+                </div>
+                <div class="col-sm-2 mt-1">
+                    <input type="text" name="anioBus" id="anioBus" value="@DateTime.Now.Year" class="form-control form-control-sm filtroRepote" />
+                </div>
+                <div class="col-sm-2 mt-1">
+                    @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMeses"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
+                </div>
+                <div class="col-sm-2 mt-1">
+                    <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
+                </div>
+                <div class="col-sm-auto mt-1">
+                    <button class="btn btn-sm btn-primary" type="button" name="btnFiltrar" id="btnFiltrar" onclick="RefreshLista()"><i class="fa fa-sync-alt"></i> Refrescar</button>
+                    <button class="btn btn-sm btn-secondary" type="submit" name="btnDownload" id="btnDownload" onclick="DescargarBase()"><i class="fa fa-file-download"></i> Descargar Base</button>
+                </div>
             </div>
-            <div class="col-sm-2 mt-1">
-                @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
-            </div>
-            <div class="col-sm-2 mt-1">
-                <input type="text" name="anioBus" id="anioBus" value="@DateTime.Now.Year" class="form-control form-control-sm filtroRepote" />
-            </div>
-            <div class="col-sm-2 mt-1">
-                @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMeses"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
-            </div>
-            <div class="col-sm-2 mt-1">
-                <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
-            </div>
-            <div class="col-sm-auto mt-1">
-                <button class="btn btn-sm btn-primary" type="button" name="btnFiltrar" id="btnFiltrar" onclick="RefreshLista()"><i class="fa fa-sync-alt"></i> Refrescar</button>
-            </div>
-        </div>
+        </form>        
     </div>
 </div>
 <div class="row">
-
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header text-white" style="background-color:midnightblue">
+            <div class="card-header bg-azulmarca text-white">
                 <h3 class="card-title">Consolidado de Endeudamiento Leasing por Empresa - <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
+                    
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
                     </button>
@@ -83,7 +86,7 @@
     </div>
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header text-white" style="background-color:midnightblue">
+            <div class="card-header  bg-azulmarca text-white">
                 <h3 class="card-title">Consolidado de Endeudamiento Leasing por Moneda - <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -115,11 +118,10 @@
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header text-white" style="background-color:midnightblue">
+            <div class="card-header  bg-azulmarca text-white">
                 <h3 class="card-title">Consolidado de Tipo de Activo en Leasing - Al <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -132,6 +134,11 @@
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grilla3" data-order='[[ 0, "asc" ]]'>
                             <thead class="thead-light">
+                                <tr>
+                                    <th colspan="2"></th>
+                                    <th colspan="2">Monto Deuda Inicial</th>
+                                    <th></th>
+                                </tr>
                                 <tr>
                                     <th>Tipo Activo en Leasing</th>
                                     <th>Contratos</th>
@@ -151,12 +158,10 @@
         </div>
     </div>
 </div>
-
 <div class="row">
-
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header" style="background-color:lightgrey">
+            <div class="card-header bg-azulmarca text-white">
                 <h3 class="card-title">Deuda Vigente por Entidad Financiera <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -176,7 +181,7 @@
     </div>
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header" style="background-color:lightgray">
+            <div class="card-header  bg-azulmarca text-white">
                 <h3 class="card-title">Resumen Estructura de Deuda según Categoria y Empresa (MM$) <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -262,11 +267,10 @@
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header" style="background-color:lightgrey">
+            <div class="card-header bg-azulmarca text-white">
                 <h3 class="card-title">Deuda Leasing por Institución Financiera <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -299,11 +303,10 @@
         </div>
     </div>
 </div>
-
 <div class="row">
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header" style="background-color:lightgrey">
+            <div class="card-header bg-azulmarca text-white">
                 <h3 class="card-title">Endeudamiento Grupo MAQSUR <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -323,7 +326,9 @@
                             <thead class="thead-light">
                                 <tr>
                                     <th>Empresa</th>
-                                    <th>Deuda</th>                                    
+                                    <th>Credito</th>
+                                    <th>Leasing</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -391,7 +396,7 @@
 
                                 //// On each draw, update the data in the chart
                                 table.on('draw', function () {
-                                    chart.series[0].setData(chartData(table,1));
+                                    chart.series[0].setData(chartData(table,3));
                                 });
                             },
                             "retrieve": true,
@@ -415,7 +420,7 @@
                             columnDefs: [
                                 { targets: '_all', className: 'align-middle' },
                                 {
-                                    targets: [1],
+                                    targets: [1,2,3],
                                     render: function (data, type, row) {
                                         var numFormt = "";
                                         if (data != null) {
@@ -428,6 +433,8 @@
                             ],
                             columns: [
                                 { "data": "Empresa" },
+                                { "data": "DeudaCredito" },
+                                { "data": "DeudaLeasing" },
                                 { "data": "TotalFinal" }
                             ]
                         });
@@ -442,7 +449,7 @@
     </div>
     <div class="col-md-6">
         <div class="card">
-            <div class="card-header" style="background-color:lightgrey">
+            <div class="card-header bg-azulmarca text-white">
                 <h3 class="card-title">Resumen Estructura de Deuda del Grupo MAQSUR <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -539,7 +546,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card">
-            <div class="card-header" style="background-color:lightgrey">
+            <div class="card-header bg-azulmarca text-white">
                 <h3 class="card-title">Consolidado por Tipo de Deuda MM$ <strong class="lblPeriodo"></strong></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -586,15 +593,18 @@
             type: "post"
         });
     }
-    $(document).ready(function () {
-        AbrirMenu("Solicitante");
-        $('.lblPeriodo').html($("#IdMesBus option:selected").text() + "-" + $("#anioBus").val())
+    function inittarjetas() {
         initTable();
         initTable2();
         initTable3();
         initTableDeudaBanco();
         initTableDeudaEmpresa();
         CargaConsolidadoTipoDeuda();
+    }
+    $(document).ready(function () {
+        AbrirMenu("Solicitante");
+        $('.lblPeriodo').html($("#IdMesBus option:selected").text() + "-" + $("#anioBus").val())
+        
         $.getJSON('https://mindicador.cl/api', function (data) {
             var dailyIndicators = data;
             $("#valorUF").text(SeparadorMiles(dailyIndicators.uf.valor.toString()));
@@ -602,9 +612,13 @@
             $("#valorIPC").text(SeparadorMiles(dailyIndicators.ipc.valor.toString()));
             $("#valorUSD").text(SeparadorMiles(dailyIndicators.dolar.valor.toString()));
             $("#valorEUR").text(SeparadorMiles(dailyIndicators.euro.valor.toString()));
+            $("#valorUfBus").val($("#valorUF").text());
+            inittarjetas();
         }).fail(function () {
             console.log('Error!');
+            inittarjetas();
         });
+        
         //$(".filtroRepote").change(RefreshLista)
     });
     function RefreshLista() {

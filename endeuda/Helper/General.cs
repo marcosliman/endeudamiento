@@ -95,4 +95,10 @@ namespace tesoreria.Helper
         JefeBodega = 5,
         CreadorProd=6
     }
+    public enum TipoMoneda : int
+    {
+        CLP = 1,
+        UF = 2,
+        USD=3
+    }
 }

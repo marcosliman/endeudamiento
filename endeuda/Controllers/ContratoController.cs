@@ -17,6 +17,7 @@ namespace tesoreria.Controllers
     public class ContratoController : Controller
     {
         private ErpContext db = new ErpContext();
+        private InmobContext dbInmob = new InmobContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         // GET: Contrato
 
@@ -2344,7 +2345,7 @@ namespace tesoreria.Controllers
         }
         #endregion       
         public ActionResult Consolidado_Read(int? IdEmpresa,int? IdBanco,int? anio,int? IdMes, double? valorUf)
-        {
+        {            
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
@@ -2360,7 +2361,7 @@ namespace tesoreria.Controllers
                                 IdContrato = c.IdContrato,
                                 IdTipoContrato = c.IdTipoContrato,
                                 RazonSocial = em.RazonSocial,
-                                Monto = c.Monto,
+                                Monto = (c.IdTipoMoneda==(int)Helper.TipoMoneda.UF)?(c.Monto*valorUf):c.Monto,
                                 TasaMensual = c.TasaMensual,
                                 c.TasaAnual,
                                 Plazo = c.Plazo,
@@ -2392,9 +2393,9 @@ namespace tesoreria.Controllers
                                     select new
                                     {
                                         total.RazonSocial,
-                                        TasaPromedio = Math.Round(total.TasaPromedio, 2),
+                                        TasaPromedio = Math.Round((double)total.TasaPromedio, 2),
                                         total.CantidadReg,
-                                        TasaPromedioUF = Math.Round(total.TasaPromedioUF, 2)
+                                        TasaPromedioUF = Math.Round((double)total.TasaPromedioUF, 2)
                                     }
                           ).ToList();
             return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
@@ -2437,77 +2438,40 @@ namespace tesoreria.Controllers
             
             return Json(totales, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult Consolidado3_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, double? valorUf)
+        public ActionResult Consolidado3_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, string valorUf)
         {
-            //var fechaActual = DateTime.Now;
-            //IdMes = fechaActual.Month;
-            var saldosInsolutos=(from c in db.Contrato.ToList()
-                                 join ca in db.Contrato_Amortizacion.ToList() on c.IdContrato equals ca.IdContrato
-                                 join dca in db.Contrato_DetAmortizacion.ToList() on ca.IdContratoAmortizacion equals dca.IdContratoAmortizacion
-                                 where c.IdTipoContrato== (int)Helper.TipoContrato.Leasing
-                                 && c.IdEstado == (int)Helper.Estado.ConActivo && dca.FechaPago.Month== IdMes && dca.FechaPago.Year==anio
-                                 select new { c.IdContrato,dca.Saldo_Insoluto}
-                                 ).ToList();
+            var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+            var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_DEUDA_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4},@valorUf={5}",
+                   fechaInicio, fechaFin, (int)Helper.TipoContrato.Leasing, IdEmpresa, IdBanco, valorUfDouble).ToList();
 
-            var registro = (from c in db.Contrato.ToList()
-                            join e in db.Estado on c.IdEstado equals e.IdEstado
-                            join m in db.TipoMoneda on c.IdTipoMoneda equals m.IdTipoMoneda
-                            join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
-                            join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
-                            join ca in db.ContratoActivo on c.IdContrato equals ca.IdContrato into t_ca
-                            from l_ca in t_ca.DefaultIfEmpty()
-
-                            join ac in db.Activo on ((l_ca != null) ? l_ca.IdActivo : 0) equals ac.IdActivo into t_ac
-                            from l_ac in t_ac.DefaultIfEmpty()
-
-                            join fam in db.Familia on ((l_ca != null) ? l_ac.IdFamilia : 0) equals fam.IdFamilia into t_fam
-                            from l_fam in t_fam.DefaultIfEmpty()
-
-                            join cam in db.Contrato_Amortizacion on c.IdContrato equals cam.IdContrato into t_cam
-                            from l_cam in t_cam.DefaultIfEmpty()
-
-                            where c.IdTipoContrato == (int)Helper.TipoContrato.Leasing && c.IdEstado == (int)Helper.Estado.ConActivo
-                            && ((IdEmpresa != null) ? em.IdEmpresa == IdEmpresa : true)
-                            && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
-                            select new
-                            {
-                                em.IdEmpresa,
-                                IdContrato = c.IdContrato,
-                                IdTipoContrato = c.IdTipoContrato,
-                                RazonSocial = em.RazonSocial,
-                                Monto = c.Monto,
-                                c.IdTipoMoneda,
-                                Moneda = m.NombreTipoMoneda,
-                                IdFamilia = (c.IdFamilia!=null)?c.IdFamilia:((l_ac != null) ? l_ac.IdFamilia : 0),
-                                Familia = (c.IdFamilia != null) ? c.Familia.NombreFamilia : ((l_fam != null) ? l_fam.NombreFamilia : ""),
-                                TasaMensual = c.TasaMensual,
-                                Plazo = c.Plazo,
-                                MontoTasaMensual = c.Monto * c.TasaMensual,
-                                NombreTipoFinanciamiento = (c.TipoFinanciamiento != null) ? c.TipoFinanciamiento.NombreTipoFinanciamiento : string.Empty,
-                                saldo_insoluto=saldosInsolutos.Where(x=>x.IdContrato==c.IdContrato).Sum(x=>x.Saldo_Insoluto)
-                            }).AsEnumerable().ToList();
-
-
-            var totales = registro.GroupBy(c => new { c.IdFamilia,c.Familia,c.Moneda })
+            var totales = deudas.Where(c=>c.IdEstado==(int)Helper.Estado.ConActivo).GroupBy(c => new { c.IdFamilia})
                 .Select(c => new { 
                     c.Key.IdFamilia,
-                    c.Key.Familia, 
-                    c.Key.Moneda,
-                    TotalCLP = c.Where(x => x.IdTipoMoneda == 1).Distinct().Sum(x => x.Monto),
-                    TotalUF = c.Where(x => x.IdTipoMoneda == 2).Distinct().Sum(x => x.Monto),
-                    CantidadReg = c.Select(a=>a.IdContrato).Distinct().Count() ,
-                    SaldoInsoluto=c.Sum(x=>x.saldo_insoluto)
+                    TotalCLP = c.Where(x => x.IdTipoMoneda == 1).Distinct().Sum(x => x.MontoContrato),
+                    TotalUF = c.Where(x => x.IdTipoMoneda == 2).Distinct().Sum(x => x.MontoContrato),
+                    CantidadReg = c.Count() ,
+                    SaldoInsoluto=c.Sum(x=>x.SaldoInsoluto)
                 });
 
             var listTasaPromedio = (from total in totales
-
+                                    join fam in db.Familia on total.IdFamilia equals fam.IdFamilia
                                     select new
                                     {                                        
                                         total.IdFamilia,
-                                        total.Familia,
+                                        Familia=fam.NombreFamilia,
                                         total.CantidadReg,
                                         total.TotalCLP,
-                                        total.TotalUF,
+                                        TotalUF=Math.Round((double)total.TotalUF,0),
                                         DeudaVigente = total.SaldoInsoluto
 
                                     }
