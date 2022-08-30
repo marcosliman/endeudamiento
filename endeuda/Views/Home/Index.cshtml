@@ -1,5 +1,6 @@
 ﻿@using Microsoft.Owin.Security
 @{
+    string UrlSistemaAccesos = System.Configuration.ConfigurationManager.AppSettings["UrlSistemaAccesos"];
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
     ViewBag.Title = "Crear Cliente";
     var UrlSistema = System.Configuration.ConfigurationManager.AppSettings["UrlSistema"].ToString();
@@ -38,7 +39,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="/img/logo/logo1.png" rel="icon">
-    <title>Endeudamiento - Acceso</title>
+    <title>Financiamientos y seguros - Acceso</title>
     <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
     @Styles.Render("~/Content/css")
     <!-- Toastr -->
@@ -114,7 +115,7 @@
                     <div class="col-sm-12 text-center"><img src="~/img/logo/logo1.png" class="text-center" width="150" /></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12"><h3>ENDEUDAMIENTO</h3></div>
+                    <div class="col-sm-12"><h3>Financiamientos y seguros</h3></div>
                 </div>
             </p>
             @using (Ajax.BeginForm("Autherize", "Home", new AjaxOptions
@@ -154,54 +155,69 @@
                 <div class="mt-2">
                     <a class="" href="/Usuario/SolicitaClave">¿Olvidaste tu Contraseña?</a>
                 </div>
+
             }
+            <nav class="navbar navbar-light mb-1">
+                <div class="form-inline my-2 my-lg-0">
 
-            @*<div class="social-auth-links text-center mb-3">
-                <p>- O -</p>
-                <div class="form-group">
-
-                    @if (ViewBag.Estado != 0 && ViewBag.Estado != null)
-                    {
-                        <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>@ViewBag.Mensaje</div>
-                    }
-                    @if (ViewBag.usuarioCuenta != "" && ViewBag.usuarioCuenta != null)
-                    {
-                        <a href="@Url.Action("SignInMicrosoft", "Home")" style="text-decoration: none;">
-                            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="50%" viewBox="0 0 3278 522" class="SignInButton">                               
-                            <rect class="fil0" x="2" y="2" width="3174" height="517" fill="black" />
-                            <rect x="150" y="129" width="122" height="122" fill="#F35325" />
-                            <rect x="284" y="129" width="122" height="122" fill="#81BC06" />
-                            <rect x="150" y="263" width="122" height="122" fill="#05A6F0" />
-                            <rect x="284" y="263" width="122" height="122" fill="#FFBA08" />
-                            <text x="470" y="357" fill="white" class="fnt0">Acceder con @ViewBag.usuarioCuenta</text>
-                                    </svg>
-                        </a>
-
-                        <div class="row mt-1">
-                            <div class="col-sm-12">
-                                <a class="btn btn-secondary" href="/Home/SignOut"><i class="fa fa-sign-out-alt"></i> Cerrar Sesión Microsoft</a>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        //If the user is not authenticated, display the sign-in button
-                        <a href="@Url.Action("SignIn", "Home")" style="text-decoration: none;">
-
-
-                            <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="50%" viewBox="0 0 3278 522" class="SignInButton">                                 
-                            <rect class="fil0" x="2" y="2" width="3174" height="517" fill="black" />
-                            <rect x="150" y="129" width="122" height="122" fill="#F35325" />
-                            <rect x="284" y="129" width="122" height="122" fill="#81BC06" />
-                            <rect x="150" y="263" width="122" height="122" fill="#05A6F0" />
-                            <rect x="284" y="263" width="122" height="122" fill="#FFBA08" />
-                            <text x="470" y="357" fill="white" class="fnt0">Acceder con Microsoft</text>
-                                    </svg>
-                        </a>
-
-                    }
                 </div>
-            </div>*@
+                <div class="form-inline my-2 my-lg-0">
+
+                </div>
+                <div class="form-inline my-2 my-lg-0">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-outline-primary" onclick="$('#frmAccesos').submit()"><i class="fas fa-boxes"></i> Ir a otros sistemas Maqsur</button>
+                    </div>
+                    <form method="post" accept-charset="utf-8" target="_blank" id="frmAccesos" name="frmAccesos" action="@UrlSistemaAccesos/Home/Index">
+                    </form>
+                </div>
+            </nav>
+            @*<div class="social-auth-links text-center mb-3">
+            <p>- O -</p>
+            <div class="form-group">
+
+                @if (ViewBag.Estado != 0 && ViewBag.Estado != null)
+                {
+                    <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>@ViewBag.Mensaje</div>
+                }
+                @if (ViewBag.usuarioCuenta != "" && ViewBag.usuarioCuenta != null)
+                {
+                    <a href="@Url.Action("SignInMicrosoft", "Home")" style="text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="50%" viewBox="0 0 3278 522" class="SignInButton">
+                        <rect class="fil0" x="2" y="2" width="3174" height="517" fill="black" />
+                        <rect x="150" y="129" width="122" height="122" fill="#F35325" />
+                        <rect x="284" y="129" width="122" height="122" fill="#81BC06" />
+                        <rect x="150" y="263" width="122" height="122" fill="#05A6F0" />
+                        <rect x="284" y="263" width="122" height="122" fill="#FFBA08" />
+                        <text x="470" y="357" fill="white" class="fnt0">Acceder con @ViewBag.usuarioCuenta</text>
+                                </svg>
+                    </a>
+
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <a class="btn btn-secondary" href="/Home/SignOut"><i class="fa fa-sign-out-alt"></i> Cerrar Sesión Microsoft</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    //If the user is not authenticated, display the sign-in button
+                    <a href="@Url.Action("SignIn", "Home")" style="text-decoration: none;">
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="50%" viewBox="0 0 3278 522" class="SignInButton">
+                        <rect class="fil0" x="2" y="2" width="3174" height="517" fill="black" />
+                        <rect x="150" y="129" width="122" height="122" fill="#F35325" />
+                        <rect x="284" y="129" width="122" height="122" fill="#81BC06" />
+                        <rect x="150" y="263" width="122" height="122" fill="#05A6F0" />
+                        <rect x="284" y="263" width="122" height="122" fill="#FFBA08" />
+                        <text x="470" y="357" fill="white" class="fnt0">Acceder con Microsoft</text>
+                                </svg>
+                    </a>
+
+                }
+            </div>
+        </div>*@
 
         </div>
         <!-- /.login-card-body -->
