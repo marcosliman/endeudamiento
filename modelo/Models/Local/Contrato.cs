@@ -44,5 +44,8 @@ namespace modelo.Models.Local
         [ForeignKey("IdTipoMoneda")]
         public virtual TipoMoneda TipoMoneda { get; set; }
         public string Descripcion { get; set; }
+        public int? IdFamilia { get; set; }
+        [ForeignKey("IdFamilia")]
+        public virtual Familia Familia { get; set; }
     }
 }

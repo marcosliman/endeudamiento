@@ -40,6 +40,7 @@ namespace modelo.ViewModel
         public bool PuedeEliminar { get; set; }
         public string Descripcion { get; set; }
         public int? IdTipoMoneda { get; set; }
+        public int? IdFamilia { get; set; }
     }
 
 }

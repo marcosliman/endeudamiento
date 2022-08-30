@@ -94,5 +94,47 @@ namespace tesoreria.Controllers
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult ConsolidadoDeudaBanco_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, string valorUf)
+        {
+            var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+            var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_DEUDA_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4},@valorUf={5}", 
+                   fechaInicio, fechaFin, 0, IdEmpresa, IdBanco, valorUfDouble).ToList();
+            var sumDeudas = deudas.GroupBy(c => new { c.IdBanco,c.NombreBanco })
+                .Select(c => 
+                new { 
+                    c.Key.IdBanco,
+                    c.Key.NombreBanco, 
+                    TotalCP = c.Where(x=> x.IdTipoContrato == (int)Helper.TipoContrato.Leasing).Sum(x => x.TotalCP), 
+                    TotalLP = c.Where(x => x.IdTipoContrato == (int)Helper.TipoContrato.Leasing).Sum(x => x.TotalLP), 
+                    TotalGeneral=c.Where(x => x.IdTipoContrato == (int)Helper.TipoContrato.Leasing).Sum(x=>x.TotalGeneral),
+                    SaldoInsoluto = c.Where(x => x.IdTipoContrato == (int)Helper.TipoContrato.Contrato).Sum(x => x.SaldoInsoluto),
+                    TotalFinal=c.Sum(x => x.TotalFinal)
+                }).ToList();
+            var totalDeuda = sumDeudas.Sum(c => c.TotalGeneral + c.SaldoInsoluto);
+            var listaRetorno = sumDeudas.Select(c => new
+            {   c.IdBanco,
+                c.NombreBanco,
+                c.TotalCP,
+                c.TotalLP,
+                c.TotalGeneral,
+                c.SaldoInsoluto,
+                TotalFinal=c.TotalGeneral+c.SaldoInsoluto,
+                porcEntidad=(totalDeuda!=null && (c.TotalGeneral + c.SaldoInsoluto) >0)?Math.Round(
+                    ((double)(c.TotalGeneral + c.SaldoInsoluto) / (double)totalDeuda)*100
+                    ,2):0
+            }).ToList();
+
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
     }
 }

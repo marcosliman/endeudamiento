@@ -21,6 +21,24 @@ namespace modelo.ViewModel
         public double? Total2 { get; set; }
         public double? Total3 { get; set; }
         public double? TotalGeneral { get; set; }
+        public double? TotalCP { get; set; }
+        public double? TotalLP { get; set; }
+        public int? IdBanco { get; set; }
+        public string NombreBanco { get; set; }
+        public int? IdEmpresa { get; set; }
+        public double? SaldoInsoluto { get; set; }
+        public double? TotalFinal { get; set; }
+        public int? IdTipoFinanciamiento { get; set; }
+        public string NombreTipoFinanciamiento { get; set; }
+        public double? DeudaCapital { get; set; }
+        public double? DeudaCuota { get; set; }
+        public int? anio { get; set; }
+        public int? IdTipoContrato { get; set; }
+        public string NombreTipoContrato { get; set; }
+        public int? IdFamilia { get; set; }
+        public double? MontoContrato { get; set; }
+        public int? IdTipoMoneda { get; set; }
+        public int? IdEstado { get; set; }
     }
 
 }

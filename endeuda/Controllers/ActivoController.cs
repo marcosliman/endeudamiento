@@ -69,8 +69,8 @@ namespace tesoreria.Controllers
                                 ac.DescCC_Mqs,
                                 ac.DescCC_MqsSur,
                                 ac.ValorFactura,
-                                EnContrato = (db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).Count() > 0) ? true : false,
-                                ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo).FirstOrDefault(),
+                                EnContrato = (db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo && x.Contrato.IdEstado!=(int)Helper.Estado.ConFinalizado).Count() > 0) ? true : false,
+                                ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo && x.Contrato.IdEstado != (int)Helper.Estado.ConFinalizado).FirstOrDefault(),
                                 ac.FechaBaja,
                                 ac.FecIngBaja,
                                 ac.Glosa
@@ -542,12 +542,19 @@ namespace tesoreria.Controllers
                     //solo elimina cuando no hay registros asociados
                     if (activo != null)
                     {
-                        db.Activo.Remove(activo);
-                        db.SaveChanges();
-
-                        dbContextTransaction.Commit();
-
-                        showMessageString = new { Estado = 0, Mensaje = "Registro eliminado con exito" };
+                        var contratoAsociado = db.ContratoActivo.Where(c => c.IdActivo == idActivo).Count();
+                        if (contratoAsociado > 0)
+                        {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 100, Mensaje = "Activo no puede ser Eliminado" };
+                        }
+                        else
+                        {
+                            db.Activo.Remove(activo);
+                            db.SaveChanges();
+                            dbContextTransaction.Commit();
+                            showMessageString = new { Estado = 0, Mensaje = "Registro eliminado con exito" };
+                        }                        
                         return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
                     }
                     else

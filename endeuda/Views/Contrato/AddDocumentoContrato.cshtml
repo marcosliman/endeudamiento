@@ -107,30 +107,33 @@
                     OnSuccess = "Success_dl",
                     OnFailure = "Failure_dl"
 
-                }, new { id = "frmActivar", @class = "form-horizontal" }))
+                }, new { id = "frmActivar", @class = "" }))
                 {
                     var descRequired = (Model.IdTipoFinanciamiento == (int)tesoreria.Helper.TipoFinanciamiento.EstructuradoConGarantia) ? "required" : "";
                     <input type="hidden" name="idContrato" id="idContratoModal" />
+                    
                     <div class="form-group row">
-                        <label for="descripcion" class="col-sm-2 col-form-label">Descripción</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control @descRequired" name="descripcion" id="descripcionActivar" rows="1">@Model.Descripcion</textarea>
-                        </div>
+                        <label for="IdFamilia" class="col-form-label">Familia Contrato</label>
+                        @Html.DropDownList("IdFamilia", (SelectList)ViewData["listaFamilia"], null, htmlAttributes: new { @class = "form-control form-control-sm" })
+                    </div>
+                    <div class="form-group row">
+                        <label for="descripcion" class="col-form-label">Descripción</label>
+                        <textarea class="form-control @descRequired" name="descripcion" id="descripcionActivar" rows="1">@Model.Descripcion</textarea>
                     </div>
                     <div>
-                    @{
-                        var montoValido = "S";
-                        if (sumaActivo != montoContrato)
-                        {
-                            montoValido = "N";
-                            <div class="alert alert-warning">
-                                <h5><i class="icon fas fa-exclamation-triangle"></i></h5>
-                                La suma de los valores de los activos <b>@(String.Format("{0:N0}", @sumaActivo))</b> <br />
-                                es distinto del monto del contrato <b>@(String.Format("{0:N0}", @montoContrato))</b><br />
-                                debe corregir esta situación para poder activar el contrato
-                            </div>
-                        }
-                        @*else
+                        @{
+                            var montoValido = "S";
+                            if (sumaActivo != montoContrato)
+                            {
+                                montoValido = "N";
+                                <div class="alert alert-warning">
+                                    <h5><i class="icon fas fa-exclamation-triangle"></i></h5>
+                                    La suma de los valores de los activos <b>@(String.Format("{0:N0}", @sumaActivo))</b> <br />
+                                    es distinto del monto del contrato <b>@(String.Format("{0:N0}", @montoContrato))</b><br />
+                                    debe corregir esta situación para poder activar el contrato
+                                </div>
+                            }
+                            @*else
                     {
                         <div class="alert alert-success">
                             <h5><i class="icon fas fa-check-circle"></i></h5>
@@ -138,17 +141,17 @@
                             es igual al monto del contrato <b>@(String.Format("{0:N0}", @montoContrato))</b>
                         </div>
                     }*@
-                        if (sumaAmortizacion != montoContrato)
-                        {
-                            montoValido = "N";
-                            <div class="alert alert-warning">
-                                <h5><i class="icon fas fa-exclamation-triangle"></i></h5>
-                                La suma de las cuotas de la amortización <b>@(String.Format("{0:N0}", sumaAmortizacion))</b><br />
-                                es distinto del monto del contrato <b>@(String.Format("{0:N0}", montoContrato))</b><br />
-                                debe corregir esta situación para poder activar el contrato
-                            </div>
-                        }
-                        @*else
+                            if (sumaAmortizacion != montoContrato)
+                            {
+                                montoValido = "N";
+                                <div class="alert alert-warning">
+                                    <h5><i class="icon fas fa-exclamation-triangle"></i></h5>
+                                    La suma de las cuotas de la amortización <b>@(String.Format("{0:N0}", sumaAmortizacion))</b><br />
+                                    es distinto del monto del contrato <b>@(String.Format("{0:N0}", montoContrato))</b><br />
+                                    debe corregir esta situación para poder activar el contrato
+                                </div>
+                            }
+                            @*else
                     {
                     <div class="alert alert-success">
                         <h5><i class="icon fas fa-check-circle"></i></h5>
@@ -156,18 +159,18 @@
                         es igual al monto del contrato <b>@(String.Format("{0:N0}", montoContrato))</b>
                     </div>
                     }*@
-                        if (montoValido == "S")
-                        {
-                            <label>¿Está seguro de activar el CONTRATO seleccionado?</label>
+                            if (montoValido == "S")
+                            {
+                                <label>¿Está seguro de activar el CONTRATO seleccionado?</label>
+                            }
                         }
-                    }
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
-                    <a class="btn btn-danger" data-dismiss="modal">
-                        No Acepto
-                    </a>
-                    @*@if (montoValido == "S")
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
+                        <a class="btn btn-danger" data-dismiss="modal">
+                            No Acepto
+                        </a>
+                        @*@if (montoValido == "S")
                 {
                     <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
                     <a class="btn btn-danger" data-dismiss="modal">
@@ -179,8 +182,8 @@
                     <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
                 }*@
 
-                </div>
-            }
+                    </div>
+                }
 
 
             </div>
