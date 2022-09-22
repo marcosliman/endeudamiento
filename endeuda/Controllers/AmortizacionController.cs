@@ -130,9 +130,19 @@ namespace tesoreria.Controllers
             ViewBag.FechaPago = fecha;
             var comprobantes = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).ToList();
             ViewData["listaComprobantes"] = comprobantes;
+            var inicioMes = "01-" + detalleCuota.FechaPago.Month.ToString() + "-" + detalleCuota.FechaPago.Year.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            ViewBag.fechaInicio = fechaInicio.ToString("dd/MM/yyyy");
+            ViewBag.fechaFin = fechaFin.ToString("dd/MM/yyyy");
             return View(detalleCuota);
         }
-        public JsonResult ComprobantesEgrBusqueda_Read(int IdContratoDetAmortizacion, string AnoCpbte, string CpbNum, string rangoFecha, string busGlosa)
+        public JsonResult ComprobantesEgrBusqueda_Read(int IdContratoDetAmortizacion, string AnoCpbte, string CpbNum, string rangoFecha, string busGlosa,string CpbTip,string MontoCpbte)
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("es-ES");
             DateTime? fechaInicio = null;
@@ -143,22 +153,29 @@ namespace tesoreria.Controllers
                 fechaInicio = Convert.ToDateTime(fechas[0]);
                 fechaFin = Convert.ToDateTime(fechas[1]);
             }
+            if(CpbNum!=null && CpbNum != "")
+            {
+                CpbNum = CpbNum.PadLeft(8, '0');
+            }
+            var MontoCpbteDouble = (MontoCpbte != "" && MontoCpbte!=null) ? Double.Parse(MontoCpbte) : (double?)null;
             var detalleCuota = db.Contrato_DetAmortizacion.Find(IdContratoDetAmortizacion);
             var contrato = detalleCuota.Contrato_Amortizacion.Contrato;
             var empresa = db.Empresa.Find(contrato.IdEmpresa);
             SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
             var comprobantes = (from mov in dbSoft.cwmovim
                                 join cpb in dbSoft.cwcpbte on new { mov.CpbAno, mov.CpbNum } equals new { cpb.CpbAno, cpb.CpbNum }
-                                where cpb.CpbTip == "T" && cpb.CpbNum != "00000000" && cpb.CpbAno == AnoCpbte && cpb.CpbEst == "V"
+                                where cpb.CpbNum != "00000000" && cpb.CpbAno == AnoCpbte && cpb.CpbEst == "V"
                                 && ((CpbNum == "") ? true : cpb.CpbNum.Contains(CpbNum))
                                 && ((busGlosa == "") ? true : cpb.CpbGlo.Contains(busGlosa))
+                                && ((CpbTip != "" && CpbTip!=null) ? cpb.CpbTip== CpbTip:true)
                                 && ((fechaInicio != null) ? cpb.CpbFec >= fechaInicio : true) &&
                                    ((fechaFin != null) ? cpb.CpbFec <= fechaFin : true)
-                                select new { cpb.CpbNum, cpb.CpbFec, cpb.CpbGlo, mov.MovHaber, cpb.CpbAno } into x
-                                group x by new { x.CpbNum, x.CpbFec, x.CpbGlo, x.CpbAno } into g
+                                select new { cpb.CpbNum,cpb.CpbTip, cpb.CpbFec, cpb.CpbGlo, mov.MovHaber, cpb.CpbAno } into x
+                                group x by new { x.CpbNum,x.CpbTip, x.CpbFec, x.CpbGlo, x.CpbAno } into g
                                 select new
                                 {
                                     g.Key.CpbNum,
+                                    g.Key.CpbTip,
                                     g.Key.CpbFec,
                                     g.Key.CpbGlo,
                                     Monto = g.Sum(c => c.MovHaber),
@@ -175,6 +192,7 @@ namespace tesoreria.Controllers
                                 where
                                 (c.Monto - cpbteOtras.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Sum(y => y.Monto)) > 0
                                 && cpbteCuota.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() == 0
+                                && ((MontoCpbteDouble != null)?c.Monto== MontoCpbteDouble:true)
                                 select new
                                 {
                                     c.CpbAno,
@@ -182,11 +200,14 @@ namespace tesoreria.Controllers
                                     c.CpbFec,
                                     c.CpbGlo,
                                     c.Monto,
+                                    Tipo=((c.CpbTip=="E")?"Egreso":((c.CpbTip=="I")?"Ingreso":"Traspaso")),
                                     seleccionado = (cpbteCuota.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() > 0) ? true : false,
                                     ocupado = (cpbteOtras.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() > 0) ? true : false,
                                     BaseSoftland = empresa.BaseSoftland,
                                 }).ToList();
-            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+            var json = Json(listaRetorno, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = 500000000;
+            return json;
         }
         public JsonResult ComprobantesDetAmortizacion_Read(int IdContratoDetAmortizacion)
         {
@@ -204,7 +225,8 @@ namespace tesoreria.Controllers
                 var empresa = db.Empresa.Find(contrato.IdEmpresa);
                 SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
                 var comprobante = dbSoft.cwcpbte.Where(c => c.CpbNum == CpbNum && c.CpbAno == CpbAno).FirstOrDefault();
-                var existeCpbteDetalle = db.ComprobanteDetAmortizacion.Where(c => c.CpbNum == CpbNum && c.CpbAno == CpbAno && c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).FirstOrDefault();
+                var existeCpbteDetalle = db.ComprobanteDetAmortizacion.Where(c => c.CpbNum == CpbNum && c.CpbAno == CpbAno 
+                && c.IdContratoDetAmortizacion == IdContratoDetAmortizacion && c.CpbTip== comprobante.CpbTip).FirstOrDefault();
                 showMessageString = new
                 {
                     Estado = 0,
@@ -223,7 +245,7 @@ namespace tesoreria.Controllers
                     var montoCpbte = dbSoft.cwmovim.Where(c => c.CpbAno == CpbAno && c.CpbNum == CpbNum).Sum(c => c.MovHaber);
                     /*if(movDetalle.Monto== montoCpbte)
                     {*/
-                    var cpbteMOv = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).ToList();
+                    var cpbteMOv = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion && c.CpbTip== comprobante.CpbTip).ToList();
                     db.ComprobanteDetAmortizacion.RemoveRange(cpbteMOv);
                     db.SaveChanges();
                     ComprobanteDetAmortizacion regitro = new ComprobanteDetAmortizacion();
@@ -239,6 +261,7 @@ namespace tesoreria.Controllers
                     regitro.BaseSoftland=empresa.BaseSoftland;
                     regitro.EsCreado = false;
                     regitro.AsociadoManual = true;
+                    regitro.CpbTip = comprobante.CpbTip;
                     db.ComprobanteDetAmortizacion.Add(regitro);
                     
                 }

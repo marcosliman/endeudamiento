@@ -15,37 +15,37 @@
         <li class="breadcrumb-item active" aria-current="page">Inicio</li>
     </ol>
 </div>
-<h5 class="h5 mb-0 text-gray-800">Acá puedes revisar el reporte Consolidado de tus deudas Leasing al Fecha</h5>
+<h5 class="h5 mb-0 text-gray-800">Acá puedes revisar el reporte Consolidado de tus deudas Leasing a la Fecha</h5>
 <br>
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-outline card-info collapsed-card">
+        <div class="card card-outline card-info">
 
                 <div class="card-header">
                     <h3 class="card-title">Filtros</h3>
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-plus"></i>
+                            <i class="fas fa-minus"></i>
                         </button>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-2">
-                            @Html.DropDownList("idEmpresa", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                            @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
                         </div>
                         <div class="col-sm-2">
-                            @Html.DropDownList("IdBanco", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                            @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
                         </div>
                         <div class="col-sm-2">
-                            <input type="text" class="form-control form-control-sm" placeholder="Año" id="AnioContrato" name="AnioContrato" value="@DateTime.Now.Year">
+                            <input type="number" class="form-control form-control-sm" placeholder="Año" id="anioBus" name="anioBus" value="@DateTime.Now.Year">
                         </div>
                         <div class="col-sm-2">
-                            @Html.DropDownList("IdMes", (SelectList)ViewData["listaMes"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm" })
+                            @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMes"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm" })
                             
                         </div>
                         <div class="col-sm-2">
-
+                            <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
                         </div>
                         <div class="col-sm-2">
                             <div class="row justify-content-end">
@@ -68,8 +68,6 @@
                 </div>
             </div>
             <div class="card-body">
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Consolidado Deuda Leasing</label>
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
@@ -83,7 +81,7 @@
                                 <th>Inicio</th>
                                 <th>Op. Compra</th>
                                 <th>Monto Inicial Deuda</th>
-                                <th>Tasa Anual</th>
+                                <th>Tasa Anual(%)</th>
                                 <th>Tipo Moneda</th>
                                 <th>Cuota Neta</th>
                                 <th>IVA</th>
@@ -101,195 +99,168 @@
 </div>
     <!-- DataTable with Hover -->
 <script>
-        $(document).ready(function () {
-            AbrirMenu("@NombreMenu");
-            initTable();
-            moment.locale('es');
-            $('#fecha').daterangepicker({
-                autoUpdateInput: false,
-                "locale": {
-                    format: "DD/MM/YYYY",
-                    "separator": " - ",
-                    "applyLabel": "Aplicar",
-                    "cancelLabel": "Limpiar",
-                    "fromLabel": "DE",
-                    "toLabel": "HASTA",
-                    "customRangeLabel": "Personalizar",
-                    "daysOfWeek": [
-                        "Dom",
-                        "Lun",
-                        "Mar",
-                        "Mie",
-                        "Jue",
-                        "Vie",
-                        "Sáb"
-                    ],
-                    "monthNames": [
-                        "Enero",
-                        "Febrero",
-                        "Marzo",
-                        "Abril",
-                        "Mayo",
-                        "Junio",
-                        "Julio",
-                        "Agosto",
-                        "Septiembre",
-                        "Octubre",
-                        "Noviembre",
-                        "Diciembre"
-                    ],
-                    "firstDay": 1
-                }
-            });
+    function CargaUfMes() {
+        $.ajax({
+            url: "/Bancos/UfUltimoDiaMes",
+            type: "Get",
+            data: {
+                IdEmpresa: $("#IdEmpresaBus").val(),
+                IdBanco: $("#IdBancoBus").val(),
+                anio: $("#anioBus").val(),
+                IdMes: $("#IdMesBus").val(),
+                valorUf: $("#valorUfBus").val()
+            },
+            beforeSend: function () {
 
-            $('#fecha').on('apply.daterangepicker', function (ev, picker) {
-                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-                //RefreshLista();
-            });
-
-
-            $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
-                $(this).val('');
-                //RefreshLista();
-            });
-            $('#selectEmpresa').select2({
-                placeholder: '---Seleccione Empresa---',
-                language: "es",
-                allowClear: true,
-            });
-
+            },
+            success: function (data) {
+                //console.log(data)
+                $("#valorUfBus").val(data.Valor.toString().replace(/[$.]/g, ','));
+                initTable();
+            }
         });
-        function RefreshLista() {
-            var table = initTable();
-            table.ajax.reload(function (json) { });
-        }
-        function initTable() {
-            var table = $('#grillaEmpresa').DataTable({
-                "scrollX": true,
-                "retrieve": true,
-                'ajax': {
-                    "type": "POST",
-                    "url": '/Reportes/ConsolidadoDeudaLeasing_Read/0',
-                    "data": function (d) {
-
-                    },
-                    "dataSrc": ""
-                },
-                columnDefs: [
-                    { targets: '_all', className: 'align-middle' },
-                    {
-                        targets: [6,7],
-                        render: function (data) {
-                            var fecha = DateDatatable(data);
-                            return fecha;
-                        }
-                    },
-                    {
-                        targets: [8, 11,12,13],
-                        render: function (data, type, row) {
-                            var numFormt = "";
-                            if (data != null) {
-                                var num = data.toString();
-                                numFormt = SeparadorMiles(num);
-                            }
-                            return numFormt;
-                        }
-                    }
+    }
+    $(document).ready(function () {
+        AbrirMenu("@NombreMenu");
+        CargaUfMes();
+        $("#IdMesBus").change(CargaUfMes);        
+        moment.locale('es');
+        $('#fecha').daterangepicker({
+            autoUpdateInput: false,
+            "locale": {
+                format: "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Aplicar",
+                "cancelLabel": "Limpiar",
+                "fromLabel": "DE",
+                "toLabel": "HASTA",
+                "customRangeLabel": "Personalizar",
+                "daysOfWeek": [
+                    "Dom",
+                    "Lun",
+                    "Mar",
+                    "Mie",
+                    "Jue",
+                    "Vie",
+                    "Sáb"
                 ],
-                columns: [
-                    { "data": "RazonSocial" },
-                    { "data": "NombreBanco" },
-                    { "data": "NumeroContrato" },
-                    { "data": "NombreFamilia" },
-                    { "data": "DescripcionActivo" },
-                    { "data": "Plazo" },
-                    { "data": "FechaInicio" },
-                    { "data": "FechaTermino" },
-                    { "data": "Total" },
-                    {
-                        "mData": null,
-                        "bSortable": true,
-                        "mRender": function (o, type, row) {
-                            var boton = '';
-                            boton = o.TasaAnual + ' %';
-                            return boton;
-                        }
-                    },
-                    { "data": "NombreTipoMoneda" },
-                    {
-                        "mData": null,
-                        "bSortable": true,
-                        "mRender": function (o, type, row) {
-                            var boton = '';
-                            boton = o.CuotaNeta + ' Falta';
-                            return boton;
-                        }
-                    },
-                    {
-                        "mData": null,
-                        "bSortable": true,
-                        "mRender": function (o, type, row) {
-                            var boton = '';
-                            boton = o.IVA + ' Falta';
-                            return boton;
-                        }
-                    },
-                    {
-                        "mData": null,
-                        "bSortable": true,
-                        "mRender": function (o, type, row) {
-                            var boton = '';
-                            boton = o.CuotaBruta + ' Falta';
-                            return boton;
-                        }
-                    },
-                    {
-                        "mData": null,
-                        "bSortable": true,
-                        "mRender": function (o, type, row) {
-                            var boton = '';
-                            boton = o.SaldoInsoluto + ' Falta';
-                            return boton;
-                        }
-                    },
-                   
-                ]
-            });
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
 
-            return table;
-        }
+        $('#fecha').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            //RefreshLista();
+        });
+
+
+        $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            //RefreshLista();
+        });
+        $('#selectEmpresa').select2({
+            placeholder: '---Seleccione Empresa---',
+            language: "es",
+            allowClear: true,
+        });
+
+    });
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+    function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Consolidado Leasing',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
+                    }
+                }
+            }
+        };
+        var table = $('#grillaEmpresa').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Consolidado_Leasing"
+                })
+            ],
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Reportes/ConsolidadoDeudaLeasing_Read/0',
+                "data": function (d) {
+                    d.IdEmpresaBus = $("#IdEmpresaBus").val();
+                    d.IdBancoBus = $("#IdBancoBus").val();
+                    d.anioBus = $("#anioBus").val();
+                    d.IdMesBus = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
+                },
+                "dataSrc": ""
+            },
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [6,7],
+                    render: function (data) {
+                        var fecha = DateDatatable(data);
+                        return fecha;
+                    }
+                },
+                {
+                    targets: [5,8,9, 11,12,13,14],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "RazonSocial" },
+                { "data": "NombreBanco" },
+                { "data": "NumeroContrato" },
+                { "data": "NombreFamilia" },
+                { "data": "DescripcionActivo" },
+                { "data": "Plazo" },
+                { "data": "FechaInicio" },
+                { "data": "FechaTermino" },
+                { "data": "Total" },
+                { "data": "TasaAnual" },                
+                { "data": "NombreTipoMoneda" },
+                { "data": "DeudaCuota" },
+                { "data": "IVAMes" }, 
+                { "data": "CuotaBruta" },
+                { "data": "SaldoInsoluto" }
+                   
+            ]
+        });
+
+        return table;
+    }
 
 </script>
-    <script>
-        $(document).ready(function () {
-
-            $('#frmEdit').validate({
-                debug: false,
-                errorElement: "em",
-                errorContainer: $("#warning")
-            });
-            $('#perfiles').select2({
-                theme: 'bootstrap4'
-            })
-            window.top.esconderCargando();
-        });
-
-        function Success_dl(data) {
-            esconderCargando();
-            if (data.Estado == "0") {
-                toastr.success(data.Mensaje);
-                $('#modal-registro').modal('hide');
-                RefreshLista();
-            }
-            else {
-                toastr.error(data.Mensaje);
-            }
-        }
-        function Failure_dl(data) {
-            esconderCargando();
-            toastr.error(data.Mensaje);
-            $('#modal-registro').modal('hide');
-        }
-
-    </script>
-

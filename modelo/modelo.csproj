@@ -142,11 +142,11 @@
     <Compile Include="ViewModel\ModeloProductoViewModel.cs" />
     <Compile Include="ViewModel\MarcaProductoViewModel.cs" />
     <Compile Include="ViewModel\ReporteActivoFinanciadoViewModel.cs" />
-    <Compile Include="ViewModel\ReporteContratoViewModel.cs" />
     <Compile Include="ViewModel\MutuoViewModel.cs" />
     <Compile Include="ViewModel\MutuoDocumentoViewModel.cs" />
     <Compile Include="ViewModel\ProyeccionMutuoViewModel.cs" />
     <Compile Include="ViewModel\DetAmortizacionViewModel.cs" />
+    <Compile Include="ViewModel\ReporteContratoViewModel.cs" />
     <Compile Include="ViewModel\ReporteRelacionadViewModel.cs" />
     <Compile Include="ViewModel\SiniestroDocumentoViewModel.cs" />
     <Compile Include="ViewModel\SiniestroViewModel.cs" />

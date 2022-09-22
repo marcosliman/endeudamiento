@@ -7,6 +7,8 @@ using System.Web.Mvc;
 using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
+using tesoreria.Helper;
+
 namespace tesoreria.Controllers
 {
     public class MutuoController : Controller
@@ -33,7 +35,13 @@ namespace tesoreria.Controllers
                                 select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
                 SelectList listaEmpresaF = new SelectList(empresaF.OrderBy(c => c.Nombre), "Id", "Nombre");
                 ViewData["listaEmpresaF"] = listaEmpresaF;
+                var fechaActual = DateTime.Now;
+                var meses = (from e in db.Mes
+                             select new RetornoGenerico { Id = e.IdMes, Nombre = e.NombreMes }).OrderBy(c => c.Id).ToList();
+                SelectList listaMeses = new SelectList(meses.OrderBy(c => c.Id), "Id", "Nombre", fechaActual.Month);
+                ViewData["listaMeses"] = listaMeses;
 
+                ViewBag.FechaActual = fechaActual.ToString("dd-MM-yyyy");
                 return View();
             }
         }
@@ -80,9 +88,18 @@ namespace tesoreria.Controllers
             return Json(grafico, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ListaSaldoVigente_Read(int? idEmpresaFinancia)
+        public ActionResult ListaSaldoVigente_Read(int? idEmpresaFinancia, int? anio, int? IdMes, string valorUf)
         {
-            var registro = (from m in db.Mutuo.ToList()
+            var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            var mutuos = (from m in db.Mutuo.ToList()
                             join em in db.Empresa.ToList() on m.IdEmpresaFinancia equals em.IdEmpresa
                             join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
                             join es in db.Estado.ToList() on m.IdEstado equals es.IdEstado
@@ -97,20 +114,27 @@ namespace tesoreria.Controllers
                                 CapitalActual = m.CapitalActual,
                                 InteresTotal = m.InteresTotal
 
-                            } into x
-                            group x by new
-                            {
-                                x.EmpresaFinancia,
-                                x.EmpresaReceptora
-                            } into g
-                            select new MutuoViewModel{
-                                EmpresaFinancia = g.Key.EmpresaFinancia,
-                                EmpresaReceptora = g.Key.EmpresaReceptora,
-                                CapitalActual = g.Sum(c=> c.CapitalActual),
-                                InteresTotal = g.Sum(c=> c.InteresTotal)
-                            }).AsEnumerable().ToList();
-
-            return Json(registro, JsonRequestBehavior.AllowGet);
+                            }).ToList();
+            
+            List<MutuoViewModel> listaRetorno = new List<MutuoViewModel>();
+            foreach (var mut in mutuos)
+            {
+                var proyeccion = db.Database.SqlQuery<ProyeccionMutuoViewModel>(
+                   "SP_PROYECCION_MUTUO @retorno={0},@IdMutuo={1},@FechaProyeccion={2},@ValorCambio={3}",
+                   "lastProyeccion",mut.IdMutuo, fechaFin, valorUfDouble).FirstOrDefault();
+                MutuoViewModel mutuo = new MutuoViewModel();
+                mutuo.IdMutuo = mut.IdMutuo;
+                mutuo.EmpresaFinancia = mut.EmpresaFinancia;
+                mutuo.EmpresaReceptora = mut.EmpresaReceptora;
+                mutuo.MontoPrestamo = mut.MontoPrestamo;
+                if (proyeccion != null)
+                {
+                    mutuo.CapitalActual = Math.Round(proyeccion.MontoTotal,0);
+                    mutuo.InteresTotal = Math.Round(proyeccion.InteresTotal,0);
+                }               
+                listaRetorno.Add(mutuo);
+            }
+            return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GraficoAmortizacionDeuda_Read(int? idEmpresaFinancia)
@@ -125,7 +149,7 @@ namespace tesoreria.Controllers
                                         IdEmpresaFinancia = m.IdEmpresaFinancia,
                                         IdEmpresaReceptora = m.IdEmpresaReceptora,
                                         EmpresaReceptora = emr.RazonSocial,
-                                        MontoPrestamo = m.MontoPrestamo
+                                        MontoPrestamo = Math.Round(m.MontoPrestamo,0)
                                     } into x
                          group x by new
                          {
@@ -924,8 +948,18 @@ namespace tesoreria.Controllers
             }
             else
             {
-                var mutuo = new MutuoViewModel();
+                var mutuo = (from m in db.Mutuo.ToList()
+                                join em in db.Empresa.ToList() on m.IdEmpresaFinancia equals em.IdEmpresa
+                                join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
+                                where m.IdMutuo == idMutuo
+                                select new MutuoViewModel
+                                {
+                                    IdMutuo = m.IdMutuo,
+                                    EmpresaFinancia = em.RazonSocial,
+                                    EmpresaReceptora = emr.RazonSocial
+                                }).FirstOrDefault();
                 var tMutuo = db.Mutuo.Find(idMutuo);
+
                 mutuo.IdTipoMoneda=(tMutuo!=null)?tMutuo.IdTipoMoneda:0;
                 mutuo.IdMutuo = idMutuo;
                 mutuo.FechaPrestamo = DateTime.Now;
@@ -1030,7 +1064,8 @@ namespace tesoreria.Controllers
                     }
 
                     var auxAbono = 0;
-                    var amortizacion = db.MutuoAbono.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaAbono >= oPrimerDiaDelMes && c.FechaAbono <= oUltimoDiaDelMes)).ToList();
+                    var amortizacion = db.MutuoAbono.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaAbono >= oPrimerDiaDelMes && c.FechaAbono <= oUltimoDiaDelMes))
+                        .OrderBy(c=>c.FechaAbono).ToList();
                     if (amortizacion.Count() > 0) {
                         foreach(var abono in amortizacion) {
                             montoInicial = montoTotal;
@@ -1083,7 +1118,8 @@ namespace tesoreria.Controllers
                     }
 
                     var auxCredito = 0;
-                    var nuevoCredito = db.MutuoPrestamo.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaPrestamo >= oPrimerDiaDelMes && c.FechaPrestamo <= oUltimoDiaDelMes)).ToList();
+                    var nuevoCredito = db.MutuoPrestamo.Where(c => c.IdMutuo == registro.IdMutuo && (c.FechaPrestamo >= oPrimerDiaDelMes && c.FechaPrestamo <= oUltimoDiaDelMes))
+                        .OrderBy(c=>c.FechaPrestamo).ToList();
                     if (nuevoCredito.Count() > 0)
                     {
                         montoInicial = montoTotal;

@@ -115,7 +115,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalComprobante" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div id="datosComprobante"></div>
@@ -199,7 +199,7 @@
                         var boton = '';
                         var TieneCrear = "@TieneCrear";
                         var tieneCpbtes = row.Cpbtes.length;
-                        console.log(tieneCpbtes)
+                        //console.log(tieneCpbtes)
                         if (TieneCrear == "True") {
                             
                             if (tieneCpbtes > 0) {
@@ -237,6 +237,7 @@
     function ModalComprobante(CpbNum, CpbAno, baseSoftland) {
         var tmpUrl = "/CpteSoftland/ComprobanteSoftland";
         $("#datosComprobante").empty();
+        $("#datosAsociar").empty();
         $('#modal-comprobante').modal('show');
         $.ajax({
             url: tmpUrl,
@@ -254,6 +255,8 @@
         });
     }
     function AsociarCpbteManual(IdContratoDetAmortizacion) {
+        $("#datosAsociar").empty();
+        $("#datosComprobante").empty();
         $('#modal-AsocCpbte').modal('show');
         $.ajax({
             url: "/Amortizacion/AsociarCpbteEgreso",

@@ -19,6 +19,16 @@
         <div class="card">
             <div class="card-body">
                 <div class="form-group row">
+                    <label class="col-sm-auto col-form-label">Entidad que Financia </label>
+                    <div class="col-sm-auto col-form-label">
+                        @Model.EmpresaFinancia
+                    </div>
+                    <label class="col-sm-auto col-form-label">Entidad Receptora</label>
+                    <div class="col-sm-auto col-form-label">
+                        @Model.EmpresaReceptora
+                    </div>
+                </div>
+                <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Detalle al: @ViewBag.oUltimoDiaDelMesStr</label>
                 </div>
                 @if (Model.IdTipoMoneda != 1)
@@ -36,7 +46,7 @@
                                     <input type="text" class="form-control classFecha" name="FechaCambio" id="FechaCambio" onchange="ValorUfByFecha(this.value)" placeholder="Fecha Cambio" value="@ViewBag.oUltimoDiaDelMesStr">
                                 </div>
                             </div>
-                        }                        
+                        }
                         <div class="col-sm-2">
                             <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
@@ -116,6 +126,22 @@
     }
 
     function initTableP() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Detalle deuda Mutuo',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >= 1) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
         var table = $('#grillaDeuda').DataTable({
             "retrieve": true,
             'ajax': {
@@ -141,6 +167,11 @@
                         return numFormt;
                     }
                 }
+            ],
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Detalle_Mutuo"
+                })
             ],
             columns: [
                 { "data": "item" },

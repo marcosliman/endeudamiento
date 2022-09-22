@@ -2345,16 +2345,25 @@ namespace tesoreria.Controllers
         }
         #endregion       
         public ActionResult Consolidado_Read(int? IdEmpresa,int? IdBanco,int? anio,int? IdMes, double? valorUf)
-        {            
+        {
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            var fecha = fechaFin.ToString();
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
-                            where c.IdTipoContrato == 1 && c.IdEstado==31
+                            where c.IdTipoContrato == 1 && c.FechaTermino>= fechaInicio
                             && ((IdEmpresa!=null)?em.IdEmpresa== IdEmpresa : true)
                             && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
-                            //&& ((anio != null) ? c.FechaInicio.Year == anio : true)
-                            //&& ((IdMes != null) ? c.FechaInicio.Month == IdMes : true)
+                            //&& ((anio != null) ? c.FechaTermino.Year == anio : true)
+                            //&& ((IdMes != null) ? c.FechaTermino.Month == IdMes : true)
                             select new
                             {
                                 em.IdEmpresa,
@@ -2402,15 +2411,24 @@ namespace tesoreria.Controllers
         }
         public ActionResult Consolidado2_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, double? valorUf)
         {
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            var fecha = fechaFin.ToString();
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
-                            where c.IdTipoContrato == 1 && c.IdEstado == 31
+                            where c.IdTipoContrato == 1 && c.FechaTermino >= fechaInicio
                             && ((IdEmpresa != null) ? em.IdEmpresa == IdEmpresa : true)
                             && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
-                            //&& ((anio != null) ? c.FechaInicio.Year == anio : true)
-                            //&& ((IdMes != null) ? c.FechaInicio.Month == IdMes : true)
+                            //&& ((anio != null) ? c.FechaTermino.Year == anio : true)
+                            //&& ((IdMes != null) ? c.FechaTermino.Month == IdMes : true)
                             select new
                             {
                                 em.IdEmpresa,

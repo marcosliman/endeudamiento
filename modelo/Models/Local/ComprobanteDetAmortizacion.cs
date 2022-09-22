@@ -29,5 +29,6 @@ namespace modelo.Models.Local
         public bool? EsCreado { get; set; }
         [DefaultValue(false)]
         public bool? AsociadoManual { get; set; }
+        public string CpbTip { get; set; }
     }
 }

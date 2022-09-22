@@ -13,6 +13,19 @@
             <div class="col-sm-2">
                 @Html.DropDownList("idEmpresaFinanciaB", (SelectList)ViewData["listaEmpresaF"], "--Seleccione Empresa Financiera--", htmlAttributes: new { @class = "form-control form-control-sm" }) <p class="text-red">Seleccione una empresa financiera</p>
             </div>
+
+            <div class="col-sm-2 mt-1">
+                <input type="text" name="anioBus" id="anioBus" value="@DateTime.Now.Year" class="form-control form-control-sm filtroRepote" />
+            </div>
+            <div class="col-sm-2 mt-1">
+                @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMeses"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm filtroRepote" })
+            </div>
+            <div class="col-sm-2 mt-1">
+                <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
+            </div>
+            <div class="col-sm-auto mt-1">
+                <button class="btn btn-sm btn-primary" type="button" name="btnFiltrar" id="btnFiltrar" onclick="RefreshLista()"><i class="fa fa-sync-alt"></i> Refrescar</button>
+            </div>
         </div>
     </div>
 </div>
@@ -34,59 +47,74 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div id="cont-venta-bruta" class="row m-0" style="display: block; position: relative; width: 100%;">
-                            <div id="chart-cobranza" style="height:300px;background-color: transparent;" data-highcharts-chart="15">
+                            <div id="chart-cobranza" style="height:400px;background-color: transparent;" data-highcharts-chart="15">
 
                             </div>
                         </div>
                         <script>
-                            function CreateChartDeuda(categorias) {
-                                Highcharts.chart('chart-cobranza', {
+                            function chartData(table, columna) {
+                                var series = {};
+                                var valores = {};
+                                // Count the number of entries for each position
+                                table.column(1, { search: 'applied' })
+                                    .data()
+                                    .each(function (val, row) {
+                                        series[row] = val;
+                                    });
+                                table.column(columna, { search: 'applied' })
+                                    .data()
+                                    .each(function (val, row) {
+                                        valores[row] = val;
+                                    });
+                                // And map it to the format highcharts uses
+                                return $.map(series, function (val, key) {
+                                    return {
+                                        name: val,
+                                        y: valores[key],
+                                    };
+                                });
+                                
+                            }
+                            function CreateChartDeuda(table) {
+                                //console.log("entra")
+                                table = $('#grillaSaldoVigente').DataTable();
+                                //console.log(chartData(table,2))
+                                var chart = Highcharts.chart('chart-cobranza', {
                                     chart: {
-                                        plotBackgroundColor: null,
-                                        plotBorderWidth: null,
-                                        plotShadow: false,
-                                        type: 'pie'
-                                    },
-                                    exporting: {
-                                        enabled: false
+                                        type: 'pie',
                                     },
                                     title: {
-                                        text: ''
-                                    },
-                                    credits: {
-                                        enabled: false
+                                        text: '',
                                     },
                                     tooltip: {
-                                        pointFormat: '<b>{point.x} CLP, </b> {point.percentage:.1f}%</b>'
-                                    },
-                                    accessibility: {
-                                        point: {
-                                            valueSuffix: '%'
-                                        }
+                                        pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b> <br> {point.y}'
                                     },
                                     plotOptions: {
                                         pie: {
                                             allowPointSelect: true,
                                             cursor: 'pointer',
-                                            // colors: pieColors,
                                             dataLabels: {
                                                 enabled: true,
-                                                format: '{point.x:.1f} CLP',
+                                                format: '<b>{point.name}</b>: {point.percentage:.2f} %',
                                                 distance: 20,
                                                 filter: {
                                                     property: 'percentage',
                                                     operator: '>',
                                                     value: 1
                                                 }
-                                            }
+                                            },
+                                            showInLegend: true
                                         }
                                     },
-                                    series: [{
-                                        name: 'Monto',
-                                        data: categorias
-                                    }]
+                                    series: [
+                                        {
+                                            name: "Deuda",
+                                            data: chartData(table, 3),
+                                        },
+                                    ],
                                 });
                             }
+                            
                         </script>
                     </div>
                 </div>
@@ -112,8 +140,8 @@
                             <tr>
                                 <th><p style="color:black;font-size:10px;">Entidad Financiera</p></th>
                                 <th><p style="color:black;font-size:10px;">Entidad Receptora</p></th>
-                                <th><p style="color:black;font-size:10px;">Capital($)</p></th>
-                                <th><p style="color:black;font-size:10px;">Interés ($)</p></th>
+                                <th><p style="color:black;font-size:10px;">Deuda Inicial($)</p></th>
+                                <th><p style="color:black;font-size:10px;">Deuda Capital($)</p></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -174,11 +202,11 @@
                             },
                             tooltip: {
                                 headerFormat: '<b>{point.x}</b><br/>',
-                                pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+                                pointFormat: '{series.name}: {point.y}'
                             },
                             plotOptions: {
                                 column: {
-                                    stacking: 'normal',
+                                    //stacking: 'normal',
                                     dataLabels: {
                                         enabled: true
                                     }
@@ -186,10 +214,12 @@
                             },
                             series: [{
                                 name: 'Total de Deuda',
-                                data: serie1
+                                data: serie1,
+                                color:'red'
                             }, {
                                 name: 'Total de Abonos',
-                                data: serie2
+                                data: serie2,
+                                color:'green'
                             }]
                             });
                     }
@@ -201,27 +231,58 @@
 <script>
     $(document).ready(function () {
         AbrirMenu("MutuoInicio");
+        CargaUfMes();
+        $("#IdMesBus").change(CargaUfMes);
     });
+    function CargaUfMes() {
+        $.ajax({
+            url: "/Bancos/UfUltimoDiaMes",
+            type: "Get",
+            data: {
+                IdEmpresa: $("#IdEmpresaBus").val(),
+                IdBanco: $("#IdBancoBus").val(),
+                anio: $("#anioBus").val(),
+                IdMes: $("#IdMesBus").val(),
+                valorUf: $("#valorUfBus").val()
+            },
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                //console.log(data)
+                $("#valorUfBus").val(data.Valor.toString().replace(/[$.]/g, ','));
+                inittarjetas();
+            }
+        });
+    }
     $("#idEmpresaFinanciaB").change(function () {
         if ($("#idEmpresaFinanciaB").val() != "") {
-            RefreshListaSaldoVigente();
-            GraficoAmortizacion();
-            GraficoDeudaVigente();
+            RefreshLista();
         }
     })
+    function RefreshLista() {
+        RefreshListaSaldoVigente();
+        GraficoAmortizacion();
+    }
     function RefreshListaSaldoVigente() {
         var table = initTableSaldoVigente();
-        table.ajax.reload(function (json) { });
+        table.ajax.reload(function (json) { CreateChartDeuda(table); });
     }
 
-    function initTableSaldoVigente() {
+    function initTableSaldoVigente() {        
         var table = $('#grillaSaldoVigente').DataTable({
             "retrieve": true,
+            "initComplete": function (settings, json) {
+                CreateChartDeuda(table);
+            },
             'ajax': {
                 "type": "POST",
                 "url": '/Mutuo/ListaSaldoVigente_Read/',
                 "data": function (d) {
                     d.idEmpresaFinancia = $('#idEmpresaFinanciaB').val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
                 },
                 "dataSrc": ""
             },
@@ -242,8 +303,8 @@
             columns: [
                 { "data": "EmpresaFinancia" },
                 { "data": "EmpresaReceptora" },
-                { "data": "CapitalActual" },
-                { "data": "InteresTotal" }
+                { "data": "MontoPrestamo" },
+                { "data": "CapitalActual" }
             ]
         });
 
@@ -292,11 +353,12 @@
                     categories.push(item.EmpresaReceptora);
                     serie1.push(item.MontoPrestamo);
                 });
-
+                
                 $.each(data.DataAbono, function (i, item) {
                     categories.push(item.EmpresaReceptora);
                     serie2.push(item.TotalPrecio);
                 });
+                //console.log(categories)
                 CreateChartAmortizacion(categories, serie1, serie2); // Create Chart using the defined arrays
             },
             failure: function (data) {

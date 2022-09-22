@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,7 +13,8 @@ namespace tesoreria.Controllers
     public class BancosController : Controller
     {
         private ErpContext db = new ErpContext();
-       tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        private InmobContext dbInm = new InmobContext();
+        tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         // GET: Usuario
         public ActionResult Index()
         {
@@ -135,6 +137,31 @@ namespace tesoreria.Controllers
             }).ToList();
 
             return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult UfUltimoDiaMes(int? anio, int? IdMes)
+        {
+            var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "" && IdMes!=null)
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+                var fechaMesSgte = fechaInicio.AddMonths(1);
+                var fechaFin = fechaMesSgte.AddDays(-1);
+                var fecha = fechaFin.ToString();
+                var FechaUF = (fecha != "") ? Convert.ToDateTime(fecha) : DateTime.Now.Date;
+                var indicadorLocal = dbInm.SII_ValoresUF.Where(c => DbFunctions.TruncateTime(c.Fecha) == FechaUF).FirstOrDefault();
+                if (indicadorLocal == null)
+                {
+                    var ultFecha = dbInm.SII_ValoresUF.Max(c => c.Fecha);
+                    indicadorLocal = dbInm.SII_ValoresUF.Where(c => c.Fecha == ultFecha).FirstOrDefault();
+                }
+                return Json(indicadorLocal, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+           
         }
     }
 }

@@ -149,6 +149,15 @@
                             </thead>
                             <tbody>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Total</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -196,11 +205,7 @@
                     </div>
                 </div>
                 <script>
-                    $(document).ready(function () {
-
-                        CargarChartResumenStructura();
-                    });
-
+                    
                     function CargarChartResumenStructura() {
                         $.ajax({
                             url: "/Empresa/ResumenDeudaTipoFinanciamiento_Read",
@@ -293,9 +298,19 @@
                                     <th>% Deuda</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                
+                            <tbody>                                
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Total</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -333,6 +348,14 @@
                             </thead>
                             <tbody>
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Total</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                     
@@ -348,9 +371,9 @@
                                 format: {
                                     body: function (data, row, column, node) {
                                         var texto = node.innerText;
-                                        return (column >= 1) ?
-                                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
-                                            texto;
+                                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                                        return texto;
                                     }
                                 }
                             }
@@ -436,7 +459,31 @@
                                 { "data": "DeudaCredito" },
                                 { "data": "DeudaLeasing" },
                                 { "data": "TotalFinal" }
-                            ]
+                            ],
+                            "footerCallback": function (row, data, start, end, display) {
+                                var api = this.api(), data;
+                                // Remove the formatting to get integer data for summation
+                                var intVal = function (i) {
+                                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                                };
+                                for (var it = 1; it <= 3; it++) {
+                                    // Total over all pages
+                                    var total = api.column(it).data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+
+                                    // Total over this page
+                                    pageTotal = api.column(it, { page: 'current' }).data()
+                                        .reduce(function (a, b) {
+                                            return intVal(a) + intVal(b);
+                                        }, 0);
+                                    var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                                    // Update footer
+                                    $(api.column(it).footer()).html(totalFormat);
+                                }
+                            }
                         });
 
                         return table;
@@ -466,11 +513,7 @@
                             </div>
                         </div>
                         <script>
-                            $(document).ready(function () {
-
-                                CargarChartResumenStructuraAnio();
-                            });
-
+                            
                             function CargarChartResumenStructuraAnio() {
                                 $.ajax({
                                     url: "/Empresa/ConsolidadoDeudaEmpresaAnios_Read",
@@ -600,11 +643,35 @@
         initTableDeudaBanco();
         initTableDeudaEmpresa();
         CargaConsolidadoTipoDeuda();
+        CargarChartResumenStructura();
+        CargarChartResumenStructuraAnio();
+    }
+    function CargaUfMes() {
+        $.ajax({
+            url: "/Bancos/UfUltimoDiaMes",
+            type: "Get",
+            data: {
+                IdEmpresa: $("#IdEmpresaBus").val(),
+                IdBanco: $("#IdBancoBus").val(),
+                anio: $("#anioBus").val(),
+                IdMes: $("#IdMesBus").val(),
+                valorUf: $("#valorUfBus").val()
+            },
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                //console.log(data)
+                $("#valorUfBus").val(data.Valor.toString().replace(/[$.]/g, ','));
+                inittarjetas();
+            }
+        });
     }
     $(document).ready(function () {
         AbrirMenu("Solicitante");
         $('.lblPeriodo').html($("#IdMesBus option:selected").text() + "-" + $("#anioBus").val())
-        
+        CargaUfMes();
+        $("#IdMesBus").change(CargaUfMes);
         $.getJSON('https://mindicador.cl/api', function (data) {
             var dailyIndicators = data;
             $("#valorUF").text(SeparadorMiles(dailyIndicators.uf.valor.toString()));
@@ -612,11 +679,10 @@
             $("#valorIPC").text(SeparadorMiles(dailyIndicators.ipc.valor.toString()));
             $("#valorUSD").text(SeparadorMiles(dailyIndicators.dolar.valor.toString()));
             $("#valorEUR").text(SeparadorMiles(dailyIndicators.euro.valor.toString()));
-            $("#valorUfBus").val($("#valorUF").text());
-            inittarjetas();
+            
         }).fail(function () {
             console.log('Error!');
-            inittarjetas();
+            //inittarjetas();
         });
         
         //$(".filtroRepote").change(RefreshLista)
@@ -659,9 +725,9 @@
                 format: {
                     body: function (data, row, column, node) {
                         var texto = node.innerText;
-                        return (column >= 2) ?
-                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
-                            texto;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
                     }
                 }
             }
@@ -721,9 +787,9 @@
                 format: {
                     body: function (data, row, column, node) {
                         var texto = node.innerText;
-                        return (column >= 1) ?
-                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
-                            texto;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
                     }
                 }
             }
@@ -783,9 +849,9 @@
                 format: {
                     body: function (data, row, column, node) {
                         var texto = node.innerText;
-                        return (column >= 1) ?
-                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
-                            texto;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
                     }
                 }
             }
@@ -830,7 +896,31 @@
                 { "data": "TotalCLP" },
                 { "data": "TotalUF" },
                 { "data": "DeudaVigente" }
-            ]
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?i.replace(/[\$,]/g, '') * 1 :typeof i === 'number' ? i : 0;
+                };
+                for (var it = 1; it<=4; it++) {
+                    // Total over all pages
+                    var total = api.column(it).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api.column(it, { page: 'current' }).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    // Update footer
+                    $(api.column(it).footer()).html(totalFormat);
+                }                
+            }
         });
 
         return table;
@@ -913,9 +1003,9 @@
                 format: {
                     body: function (data, row, column, node) {
                         var texto = node.innerText;
-                        return (column >= 1) ?
-                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
-                            texto;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
                     }
                 }
             }
@@ -964,7 +1054,31 @@
                 { "data": "SaldoInsoluto" },
                 { "data": "TotalFinal" },
                 { "data": "porcEntidad" }
-            ]
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+                for (var it = 1; it <= 6; it++) {
+                    // Total over all pages
+                    var total = api.column(it).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api.column(it, { page: 'current' }).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    // Update footer
+                    $(api.column(it).footer()).html(totalFormat);
+                }
+            }
         });
 
         return table;

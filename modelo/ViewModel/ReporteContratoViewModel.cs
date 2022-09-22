@@ -39,6 +39,8 @@ namespace modelo.ViewModel
         public double? MontoContrato { get; set; }
         public int? IdTipoMoneda { get; set; }
         public int? IdEstado { get; set; }
+        public double? IVAMes { get; set; }
+        public double? CapitalPagado { get; set; }
     }
 
 }

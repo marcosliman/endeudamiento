@@ -17,8 +17,18 @@
         <form name="frmProyeccion" id="frmProyeccion" method="post">
             <div class="card">
                 <div class="card-body">
-                                       
-                    <div class="form-group row">                        
+                    <div class="form-group row">
+                        <label class="col-sm-auto col-form-label">Entidad que Financia </label>
+                        <div class="col-sm-auto col-form-label">
+                            @Model.EmpresaFinancia.RazonSocial
+                        </div>
+                        <label class="col-sm-auto col-form-label">Entidad Receptora</label>
+                        <div class="col-sm-auto col-form-label">
+                            @Model.EmpresaReceptora.RazonSocial
+                        </div>
+                    </div>                   
+                    <div class="form-group row">
+                        
                         <div class="col-sm-2">
                             <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
@@ -119,6 +129,22 @@
     }
 
     function initTableP() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Proyección Mutuo',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        return (column >= 1) ?
+                            texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
+                            texto;
+                    }
+                }
+            }
+        };
         var table = $('#grillaProyeccion').DataTable({
             "retrieve": true,
             'ajax': {
@@ -131,6 +157,11 @@
                 },
                 "dataSrc": ""
             },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Proyeccion_Mutuo"
+                })
+            ],
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {

@@ -32,9 +32,17 @@
                     <div class="col-auto col-form-label-sm">
                         @(String.Format("{0:N0}", Model.Cuota))
                     </div>
+                    <label for="IvaDiferido" class="col-sm-auto col-form-label col-form-label-sm">I.V.A.</label>
+                    <div class="col-auto col-form-label-sm">
+                        @(String.Format("{0:N0}", Model.IvaDiferido))
+                    </div>
                     <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Amortización</label>
                     <div class="col-auto col-form-label-sm">
                         @(String.Format("{0:N0}", Model.Amortizacion))
+                    </div>
+                    <label for="Obligacion" class="col-sm-auto col-form-label col-form-label-sm">Obligación</label>
+                    <div class="col-auto col-form-label-sm">
+                        @(String.Format("{0:N0}", Model.Obligacion))
                     </div>
                     <label for="Alias" class="col-sm-auto col-form-label col-form-label-sm">Fecha</label>
                     <div class="col-auto col-form-label-sm">
@@ -47,7 +55,7 @@
         </div>
         <div class="card card-success">
             <div class="card-header ">
-                <h3 class="card-title">Comprobante Asociado</h3>
+                <h3 class="card-title">Comprobante(s) Asociado(s)</h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
@@ -60,6 +68,7 @@
                         <tr>
                             <th>N° Comprobante</th>
                             <th>Fecha</th>
+                            <th>Tipo</th>
                             <th>Monto Cpbte.</th>
                             <th>Glosa</th>
                             <th></th>
@@ -81,45 +90,63 @@
             </div>
             <div class="card-body">
                 <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
-                    <div class="form-inline my-2 my-lg-0">
-                        <div class="col-auto">
-                            <div class="input-group input-group-sm">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        Año
-                                    </span>
-                                </div>
-                                <input type="text" class="form-control form-control-sm" placeholder="Año Cpbte." id="AnoCpbte" name="AnoCpbte" value="@Model.FechaPago.Year">
+                    <div class="row">
+                        <div class="col-sm-1">
+                            <div class="form-group">
+                                <label for="AnoCpbte">Año</label>
+                                <input type="number" class="form-control form-control-sm" placeholder="Año Cpbte." id="AnoCpbte" name="AnoCpbte" value="@Model.FechaPago.Year">
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <div class="input-group input-group-sm">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <i class="far fa-calendar-alt"></i>
-                                    </span>
-                                </div>
-                                <input type="text" class="form-control form-control-sm" placeholder="Fecha Cpbte." id="fechaCpbte" name="fechaCpbte" value="">
+                        <div class="col-sm-auto">
+                            <div class="form-group">
+                                <label for="CpbTip">Tipo</label>
+                                <select name="CpbTip" id="CpbTip" class="form-control form-control-sm">
+                                    <option value="">--Todos--</option>
+                                    <option value="E">Egreso</option>
+                                    <option value="I">Ingreso</option>
+                                    <option value="T">Traspaso</option>
+                                </select>
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <div class="input-group">
-                                <input type="text" class="form-control form-control-sm" id="NroCpbte" placeholder="Nro. Cpbte." name="NroCpbte" value="">
-                            </div>
-                        </div>
-                        <div class="col-auto">
-                            <div class="input-group">
+                        <div class="col-sm-auto">
+                            <div class="form-group">
+                                <label for="busGlosa">Glosa</label>
                                 <input type="text" class="form-control form-control-sm" id="busGlosa" placeholder="Glosa" name="busGlosa" value="">
                             </div>
                         </div>
-                        <div class="col-auto">
-                            <div class="input-group">
-                                <button name="btnFiltrar" id="btnFiltrar" class="btn btn-info btn-xs" onclick="RefreshListaBusqueda();"><i class="fa fa-search"></i> Buscar</button>
+                        <div class="col-sm-auto">
+                            <div class="form-group">
+                                <label for="fechaCpbte">Fecha Cpbte.</label>
+                                <div class="input-group input-group-sm">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="far fa-calendar-alt"></i>
+                                        </span>
+                                    </div>
+                                    <input type="text" class="form-control form-control-sm" placeholder="Fecha Cpbte." id="fechaCpbte" name="fechaCpbte" value="@ViewBag.fechaInicio - @ViewBag.fechaFin">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div class="form-group">
+                                <label for="NroCpbte">Nro. Cpbte.</label>
+                                <input type="text" class="form-control form-control-sm" id="NroCpbte" placeholder="Nro. Cpbte." name="NroCpbte" value="">
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div class="form-group">
+                                <label for="MontoCpbte">Monto</label>
+                                <input type="text" class="form-control form-control-sm" id="MontoCpbte" placeholder="Monto Cpbte." name="MontoCpbte" value="@(String.Format("{0:N0}", Model.Obligacion))">
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div class="form-group">
+                                <label for="btnFiltrar">&nbsp;</label>
+                                <button type="button" name="btnFiltrar" id="btnFiltrar" class="btn btn-info btn-xs form-control form-control-sm" onclick="RefreshListaBusqueda();"><i class="fa fa-search"></i> Buscar</button>
                             </div>
 
                         </div>
-
-                    </div>
+                    </div>                    
 
                 </nav>
                 <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaCpbteBus" data-order='[[ 0, "asc" ]]'>
@@ -128,6 +155,7 @@
                             <th>N° Comprobante</th>
                             <th>Fecha</th>
                             <th>Monto</th>
+                            <th>Tipo</th>
                             <th>Glosa</th>
                             <th></th>
                         </tr>
@@ -143,7 +171,7 @@
     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
 </div>
 
-<div class="modal fade" id="modal-comprobanteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modal-comprobanteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalAsociar" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div id="datosComprobanteModal"></div>
@@ -190,6 +218,8 @@
                     d.busGlosa = $("#busGlosa").val();
                     d.rangoFecha = $("#fechaCpbte").val();
                     d.IdCuotaPago = $("#IdCuotaPago").val();
+                    d.CpbTip = $("#CpbTip").val();
+                    d.MontoCpbte = $("#MontoCpbte").val();
                 },
                 "dataSrc": ""
             },
@@ -225,6 +255,7 @@
                 },
                 { "data": "CpbFec" },
                 { "data": "Monto" },
+                { "data": "Tipo" },
                 { "data": "CpbGlo" },
                 {
                     "mData": "CpbNum",
@@ -274,7 +305,7 @@
                     }
                 },
                 {
-                    targets: 2,
+                    targets: 3,
                     render: function (data) {
                         if (data != null & data != "") {
                             var numFormt = SeparadorMiles(data.toString());
@@ -291,11 +322,12 @@
                     "mData": "CpbNum",
                     "mRender": function (data, type, row) {
                         var boton = '';
-                        boton = '<a href="JavaScript:ModalComprobanteModal(\'' + row.CpbNum + '\',\'' + row.CpbAno+'\')">' + row.CpbNum+'</a> ';
+                        boton = '<a href="JavaScript:ModalComprobanteModal(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland +'\')">' + row.CpbNum+'</a> ';
                         return boton;
                     }
                 },
                 { "data": "CpbFec" },
+                { "data": "CpbTip" },
                 { "data": "Monto" },
                 { "data": "CpbGlo" },
                 {
@@ -371,9 +403,11 @@
 
             success: function (data) {
                 if (data.Estado == 0) {
+                    RefreshListaBusqueda();
                     RefreshLista();
+                    RefreshListCpbMov();
                     toastr.success(data.Mensaje);
-                    Cerrar();
+                    //Cerrar();
                 }
                 else {
                     toastr.error(data.Mensaje);

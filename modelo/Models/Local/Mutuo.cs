@@ -13,7 +13,11 @@ namespace modelo.Models.Local
         [Display(Name = "Código Mutuo")]
         public int IdMutuo { get; set; }
         public int IdEmpresaFinancia { get; set; }
+        [ForeignKey("IdEmpresaFinancia")]
+        public virtual Empresa EmpresaFinancia { get; set; }
         public int IdEmpresaReceptora { get; set; }
+        [ForeignKey("IdEmpresaReceptora")]
+        public virtual Empresa EmpresaReceptora { get; set; }
         public double TasaMensual { get; set; }
         public double TasaDiaria { get; set; }
         public double MontoPrestamo { get; set; }
