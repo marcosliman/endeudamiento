@@ -3258,6 +3258,7 @@
     <Content Include="Views\Seguro\ImportActivos.cshtml" />
     <Content Include="Views\Empresa\TipoDeudaResumen.cshtml" />
     <Content Include="Views\Empresa\DescargarBaseContratos.cshtml" />
+    <Content Include="Views\Familia\TipoDeudaFamilia.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

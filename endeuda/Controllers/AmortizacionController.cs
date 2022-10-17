@@ -142,7 +142,7 @@ namespace tesoreria.Controllers
             ViewBag.fechaFin = fechaFin.ToString("dd/MM/yyyy");
             return View(detalleCuota);
         }
-        public JsonResult ComprobantesEgrBusqueda_Read(int IdContratoDetAmortizacion, string AnoCpbte, string CpbNum, string rangoFecha, string busGlosa,string CpbTip,string MontoCpbte)
+        public JsonResult ComprobantesEgrBusqueda_Read(int IdContratoDetAmortizacion, string AnoCpbte, string CpbNum, string rangoFecha, string busGlosa,string CpbTip,string MontoCpbte,double? MovNumDocRef)
         {
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("es-ES");
             DateTime? fechaInicio = null;
@@ -162,6 +162,24 @@ namespace tesoreria.Controllers
             var contrato = detalleCuota.Contrato_Amortizacion.Contrato;
             var empresa = db.Empresa.Find(contrato.IdEmpresa);
             SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
+
+            var movFiltro= (from mov in dbSoft.cwmovim
+                              join cpb in dbSoft.cwcpbte on new { mov.CpbAno, mov.CpbNum } equals new { cpb.CpbAno, cpb.CpbNum }
+                              where cpb.CpbNum != "00000000" && cpb.CpbAno == AnoCpbte && cpb.CpbEst == "V"
+                              && ((MovNumDocRef != null) ? mov.MovNumDocRef == MovNumDocRef : true)
+                              && ((CpbNum == "") ? true : cpb.CpbNum.Contains(CpbNum))
+                              && ((busGlosa == "") ? true : cpb.CpbGlo.Contains(busGlosa))
+                              && ((CpbTip != "" && CpbTip != null) ? cpb.CpbTip == CpbTip : true)
+                              && ((fechaInicio != null) ? cpb.CpbFec >= fechaInicio : true) &&
+                                 ((fechaFin != null) ? cpb.CpbFec <= fechaFin : true)
+                              select new { cpb.CpbNum, cpb.CpbAno } into x
+                              group x by new { x.CpbNum, x.CpbAno } into g
+                              select new
+                              {
+                                  g.Key.CpbNum,
+                                  g.Key.CpbAno
+                              }).ToList();
+
             var comprobantes = (from mov in dbSoft.cwmovim
                                 join cpb in dbSoft.cwcpbte on new { mov.CpbAno, mov.CpbNum } equals new { cpb.CpbAno, cpb.CpbNum }
                                 where cpb.CpbNum != "00000000" && cpb.CpbAno == AnoCpbte && cpb.CpbEst == "V"
@@ -189,9 +207,10 @@ namespace tesoreria.Controllers
                               where cd.IdContratoDetAmortizacion != IdContratoDetAmortizacion
                               select new { cd.CpbNum, cd.CpbAno, cd.Monto }).ToList();
             var listaRetorno = (from c in comprobantes
+                                join m in movFiltro on new { c.CpbNum,c.CpbAno} equals new { m.CpbNum,m.CpbAno}
                                 where
-                                (c.Monto - cpbteOtras.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Sum(y => y.Monto)) > 0
-                                && cpbteCuota.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() == 0
+                                //(c.Monto - cpbteOtras.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Sum(y => y.Monto)) > 0 &&
+                                cpbteCuota.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() == 0
                                 && ((MontoCpbteDouble != null)?c.Monto== MontoCpbteDouble:true)
                                 select new
                                 {

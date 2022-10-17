@@ -129,7 +129,7 @@
     });
     function RefreshLista() {
         var table = initTable();
-        table.ajax.reload(function (json) { });
+        table.ajax.reload(function (json) { },false);
     }
     function initTable() {
         var buttonCommon = {

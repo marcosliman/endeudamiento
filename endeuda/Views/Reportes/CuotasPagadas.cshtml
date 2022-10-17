@@ -29,73 +29,21 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-sm-2">
-                        <select name="anio" class="form-control form-control-sm">
-                            <option>--Seleccione Año Inicial--</option>
-                            <option value="1">2015</option>
-                            <option value="2">2016</option>
-                            <option value="3">2017</option>
-                            <option value="4">2018</option>
-                            <option value="5">2019</option>
-                            <option value="1">2021</option>
-                            <option value="2">2022</option>
-                            <option value="3">2023</option>
-                            <option value="4">2024</option>
-                            <option value="5">2025</option>
-                        </select>
+                        <input type="number" class="form-control form-control-sm" placeholder="Año" id="anioInicial" name="anioInicial" value="@DateTime.Now.Year">
                     </div>
                     <div class="col-sm-2">
-                        <select name="empresa" class="form-control form-control-sm">
-                            <option>--Seleccione Mes Inicial--</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                        </select>
+                        @Html.DropDownList("IdMesInicial", (SelectList)ViewData["listaMesInicial"], "--Seleccione Mes Inicial--", htmlAttributes: new { @class = "form-control form-control-sm" })                        
                     </div>
                     <div class="col-sm-2">
-                        <select name="anio" class="form-control form-control-sm">
-                            <option>--Seleccione Año Final--</option>
-                            <option value="1">2015</option>
-                            <option value="2">2016</option>
-                            <option value="3">2017</option>
-                            <option value="4">2018</option>
-                            <option value="5">2019</option>
-                            <option value="1">2021</option>
-                            <option value="2">2022</option>
-                            <option value="3">2023</option>
-                            <option value="4">2024</option>
-                            <option value="5">2025</option>
-                        </select>
+                        <input type="number" class="form-control form-control-sm" placeholder="Año" id="anioFinal" name="anioFinal" value="@DateTime.Now.Year">
                     </div>
                     <div class="col-sm-2">
-                        <select name="empresa" class="form-control form-control-sm">
-                            <option>--Seleccione Mes Final--</option>
-                            <option value="1">Enero</option>
-                            <option value="2">Febrero</option>
-                            <option value="3">Marzo</option>
-                            <option value="4">Abril</option>
-                            <option value="5">Mayo</option>
-                            <option value="6">Junio</option>
-                            <option value="7">Julio</option>
-                            <option value="8">Agosto</option>
-                            <option value="9">Septiembre</option>
-                            <option value="10">Octubre</option>
-                            <option value="11">Noviembre</option>
-                            <option value="12">Diciembre</option>
-                        </select>
+                        @Html.DropDownList("IdMesFinal", (SelectList)ViewData["listaMes"], "--Seleccione Mes Final--", htmlAttributes: new { @class = "form-control form-control-sm" })                        
                     </div>
                     <div class="col-sm-2">
-                        <select name="empresa" class="form-control form-control-sm">
-                            <option>--Seleccione Estado del Pago--</option>
-                            <option value="1">Tiene Comprobante</option>
+                        <select name="estadoPago" id="estadoPago" class="form-control form-control-sm">
+                            <option value="">--Seleccione Estado del Pago--</option>
+                            <option value="1" selected>Tiene Comprobante</option>
                             <option value="2">No Tiene Comprobante</option>
                         </select>
                     </div>
@@ -116,16 +64,22 @@
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                         <thead class="thead-light">
                             <tr>
-                                <th class="no-sort" width="3%">Item</th>
+                                <th class="text-center" colspan="4">Contrato</th>
+                                <th class="text-center" colspan="8">Cuota</th>
+                            </tr>
+                            <tr>
                                 <th>Número Contrato</th>
                                 <th>Banco</th>
                                 <th>Empresa</th>
-                                <th>Monto</th>
-                                <th>Saldo Insoluto</th>
+                                <th>Monto Contrato</th>
+                                <th>Periodo</th>
                                 <th>Cuota</th>
-                                <th>Mes</th>
-                                <th>Tipo Pago</th>
-                                <th>Comp. Egreso</th>
+                                <th>IVA</th>
+                                <th>Obligación</th>
+                                <th>Saldo Insoluto</th>
+                                <th>Fecha</th>
+                                <th>Cpbte. Traspaso</th>
+                                <th>Cpbte. Egreso</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -137,7 +91,13 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalComprobante" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
 <!-- DataTable with Hover -->
 <script>
 $(document).ready(function () {
@@ -161,14 +121,18 @@ function initTable() {
             "type": "POST",
             "url": '/Reportes/CuotasPagadas_Read/0',
             "data": function (d) {
-
+                d.anioInicial = $("#anioInicial").val();
+                d.IdMesInicial = $("#IdMesInicial").val();
+                d.anioFinal = $("#anioFinal").val();
+                d.IdMesFinal = $("#IdMesFinal").val();
+                d.estadoPago = $("#estadoPago").val();
             },
             "dataSrc": ""
         },
         columnDefs: [
         { targets: '_all', className: 'align-middle' },
         {
-            targets: [4, 5],
+            targets: [3,5,6,7,8],
             render: function (data, type, row) {
                 var numFormt = "";
                 if (data != null) {
@@ -180,7 +144,7 @@ function initTable() {
             }
         },
         {
-            targets: [7],
+            targets: [9],
             render: function (data) {
                 var fecha = DateDatatable(data);
                 return fecha;
@@ -189,20 +153,58 @@ function initTable() {
     ],
 
         columns: [
-            { "data": "Item" },
             { "data": "NroContrato" },
             { "data": "Banco" },
             { "data": "Empresa" },
-            { "data": "MontoContrato" },
-            { "data": "SaldoInsoluto" },
+            { "data": "Monto" },
             { "data": "Periodo" },
+            { "data": "Cuota" },
+            { "data": "IvaDiferido" },
+            { "data": "Obligacion" },
+            { "data": "SaldoInsoluto" },
             { "data": "FechaPago" },
-            { "data": "TipoPago" },
-            { "data": "ComprobanteEgreso" }
+            {
+                mData: "CpbteT",
+                mRender: function (data, type, row) {
+                    var boton = '';
+                    if (data != null) {
+                        boton = '<a href="JavaScript:ModalComprobante(\'' + data.CpbNum + '\',\'' + data.CpbAno + '\',\'' + data.BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + data.CpbNum + '</a>';
+                    }                    
+                    return boton;
+                }
+            },
+            {
+                mData: "CpbteE",
+                mRender: function (data, type, row) {
+                    var boton = '';
+                    if (data != null) {
+                        boton = '<a href="JavaScript:ModalComprobante(\'' + data.CpbNum + '\',\'' + data.CpbAno + '\',\'' + data.BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + data.CpbNum + '</a>';
+                    }
+                    return boton;
+                }
+            }
         ]
     });
 
     return table;
 }
-
+function ModalComprobante(CpbNum, CpbAno, baseSoftland) {
+    var tmpUrl = "/CpteSoftland/ComprobanteSoftland";
+    $("#datosComprobante").empty();
+    $('#modal-comprobante').modal('show');
+    $.ajax({
+        url: tmpUrl,
+        type: "Get",
+        data: { CpbNum: CpbNum, CpbAno: CpbAno, baseSoftland: baseSoftland, deModal: false },
+        beforeSend: function () {
+            $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            mostrarCargando();
+        },
+        success: function (data) {
+            $("#datosComprobante").empty();
+            $("#datosComprobante").html(data);
+            esconderCargando();
+        }
+    });
+}
 </script>

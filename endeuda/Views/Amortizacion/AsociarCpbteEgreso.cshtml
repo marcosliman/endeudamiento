@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "Asociar Comprobante";
     Layout = "~/Views/Shared/_Popup.cshtml";
-   
+    var IdTipoContrato = Model.Contrato_Amortizacion.Contrato.IdTipoContrato;
+    var monto= (IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Leasing)?String.Format("{0:N0}", Model.Obligacion):String.Format("{0:N0}", Model.Cuota);
+    var nroContrato = (IdTipoContrato == (int)tesoreria.Helper.TipoContrato.Contrato) ? Model.Contrato_Amortizacion.Contrato.NumeroContrato : "";
 }
 <input type="hidden" name="IdContratoDetAmortizacion" id="IdContratoDetAmortizacion" value="@Model.IdContratoDetAmortizacion" />
 <div class="modal-header">
@@ -25,30 +27,33 @@
             <div class="card-body pb-0">
                 <div class="form-group form-group-sm row">
                     <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Periodo</label>
-                    <div class="col-auto col-form-label-sm">
+                    <div class="col-sm-auto col-form-label-sm">
                         @Model.Periodo
                     </div>
                     <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Cuota</label>
-                    <div class="col-auto col-form-label-sm">
+                    <div class="col-sm-auto col-form-label-sm">
                         @(String.Format("{0:N0}", Model.Cuota))
                     </div>
                     <label for="IvaDiferido" class="col-sm-auto col-form-label col-form-label-sm">I.V.A.</label>
-                    <div class="col-auto col-form-label-sm">
+                    <div class="col-sm-auto col-form-label-sm">
                         @(String.Format("{0:N0}", Model.IvaDiferido))
                     </div>
                     <label for="NombreTipoDocumento" class="col-sm-auto col-form-label col-form-label-sm">Amortización</label>
-                    <div class="col-auto col-form-label-sm">
+                    <div class="col-sm-auto col-form-label-sm">
                         @(String.Format("{0:N0}", Model.Amortizacion))
                     </div>
                     <label for="Obligacion" class="col-sm-auto col-form-label col-form-label-sm">Obligación</label>
-                    <div class="col-auto col-form-label-sm">
+                    <div class="col-sm-auto col-form-label-sm">
                         @(String.Format("{0:N0}", Model.Obligacion))
                     </div>
                     <label for="Alias" class="col-sm-auto col-form-label col-form-label-sm">Fecha</label>
-                    <div class="col-auto col-form-label-sm">
+                    <div class="col-sm-auto col-form-label-sm">
                         @Model.FechaPago.ToString("dd-MM-yyyy")
                     </div>
-
+                    <label for="NumeroContrato" class="col-sm-auto col-form-label col-form-label-sm">Contrato</label>
+                    <div class="col-sm-auto col-form-label-sm">
+                        @Model.Contrato_Amortizacion.Contrato.NumeroContrato
+                    </div>
                 </div>
 
             </div>
@@ -91,7 +96,7 @@
             <div class="card-body">
                 <nav class="navbar navbar-light mb-1" style="background-color: #e3f2fd;">
                     <div class="row">
-                        <div class="col-sm-1">
+                        <div class="col-sm-auto">
                             <div class="form-group">
                                 <label for="AnoCpbte">Año</label>
                                 <input type="number" class="form-control form-control-sm" placeholder="Año Cpbte." id="AnoCpbte" name="AnoCpbte" value="@Model.FechaPago.Year">
@@ -136,7 +141,13 @@
                         <div class="col-sm-auto">
                             <div class="form-group">
                                 <label for="MontoCpbte">Monto</label>
-                                <input type="text" class="form-control form-control-sm" id="MontoCpbte" placeholder="Monto Cpbte." name="MontoCpbte" value="@(String.Format("{0:N0}", Model.Obligacion))">
+                                <input type="text" class="form-control form-control-sm" id="MontoCpbte" placeholder="Monto Cpbte." name="MontoCpbte" value="@monto">
+                            </div>
+                        </div>
+                        <div class="col-sm-auto">
+                            <div class="form-group">
+                                <label for="MontoCpbte">Nro. Referencia</label>
+                                <input type="text" class="form-control form-control-sm" id="MovNumDocRef" placeholder="Nro. Referencia" name="MovNumDocRef" value="@nroContrato">
                             </div>
                         </div>
                         <div class="col-sm-auto">
@@ -220,6 +231,7 @@
                     d.IdCuotaPago = $("#IdCuotaPago").val();
                     d.CpbTip = $("#CpbTip").val();
                     d.MontoCpbte = $("#MontoCpbte").val();
+                    d.MovNumDocRef = $("#MovNumDocRef").val();
                 },
                 "dataSrc": ""
             },
@@ -346,6 +358,7 @@
     }
     $(document).ready(function () {
         initTableCpbMov();
+        initTableBusqueda();
         moment.locale('es');
         $.fn.dataTable.moment('DD/MM/YYYY');
         $('#fechaCpbte').daterangepicker({

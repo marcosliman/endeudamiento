@@ -88,7 +88,7 @@
 <!-- DataTable with Hover -->
 <script>
 $(document).ready(function () {
-    AbrirMenu("CuotasPagadas");
+    AbrirMenu("PrestamosRelacionadas");
     $('#selectEmpresa').select2({
         placeholder: '---Seleccione Empresa---',
         language: "es",
@@ -117,7 +117,7 @@ function initTable() {
         columnDefs: [
         { targets: '_all', className: 'align-middle' },
         {
-            targets: [3, 4],
+            targets: [3, 4,5,6],
             render: function (data, type, row) {
                 var numFormt = "";
                 if (data != null) {

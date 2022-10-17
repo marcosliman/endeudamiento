@@ -110,7 +110,7 @@ namespace tesoreria.Controllers
                                 IdMutuo = m.IdMutuo,
                                 EmpresaFinancia = em.RazonSocial,
                                 EmpresaReceptora = emr.RazonSocial,
-                                MontoPrestamo = m.MontoPrestamo,
+                                MontoPrestamo = ((m.IdTipoMoneda==(int)Helper.TipoMoneda.UF)?m.MontoPrestamo *valorUfDouble:m.MontoPrestamo),
                                 CapitalActual = m.CapitalActual,
                                 InteresTotal = m.InteresTotal
 
@@ -126,7 +126,7 @@ namespace tesoreria.Controllers
                 mutuo.IdMutuo = mut.IdMutuo;
                 mutuo.EmpresaFinancia = mut.EmpresaFinancia;
                 mutuo.EmpresaReceptora = mut.EmpresaReceptora;
-                mutuo.MontoPrestamo = mut.MontoPrestamo;
+                mutuo.MontoPrestamo = Math.Round(mut.MontoPrestamo,0);
                 if (proyeccion != null)
                 {
                     mutuo.CapitalActual = Math.Round(proyeccion.MontoTotal,0);
@@ -137,8 +137,9 @@ namespace tesoreria.Controllers
             return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult GraficoAmortizacionDeuda_Read(int? idEmpresaFinancia)
+        public ActionResult GraficoAmortizacionDeuda_Read(int? idEmpresaFinancia, string valorUf)
         {
+            var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var mutuo = (from m in db.Mutuo.ToList()
                                     join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
                                     where m.IdEmpresaFinancia == ((idEmpresaFinancia != null) ? idEmpresaFinancia : m.IdEmpresaFinancia)
@@ -149,7 +150,7 @@ namespace tesoreria.Controllers
                                         IdEmpresaFinancia = m.IdEmpresaFinancia,
                                         IdEmpresaReceptora = m.IdEmpresaReceptora,
                                         EmpresaReceptora = emr.RazonSocial,
-                                        MontoPrestamo = Math.Round(m.MontoPrestamo,0)
+                                        MontoPrestamo = ((m.IdTipoMoneda == (int)Helper.TipoMoneda.UF) ? m.MontoPrestamo * valorUfDouble : m.MontoPrestamo)
                                     } into x
                          group x by new
                          {
@@ -162,7 +163,7 @@ namespace tesoreria.Controllers
                              IdEmpresaFinancia = g.Key.IdEmpresaFinancia,
                              IdEmpresaReceptora = g.Key.IdEmpresaReceptora,
                              EmpresaReceptora = g.Key.EmpresaReceptora,
-                             MontoPrestamo = g.Sum(c => c.MontoPrestamo)
+                             MontoPrestamo = Math.Round(g.Sum(c => c.MontoPrestamo),0)
                          }).AsEnumerable().ToList();
 
             List<RetornoGrafico> arrayAbono = new List<RetornoGrafico>();
@@ -177,7 +178,7 @@ namespace tesoreria.Controllers
                                  && m.IdEstado == (int)Helper.Estado.MutuoVigente
                                  select new
                                  {
-                                     a.MontoAbono
+                                     MontoAbono=((m.IdTipoMoneda == (int)Helper.TipoMoneda.UF) ? a.MontoAbono * valorUfDouble : a.MontoAbono)
                                  }).ToList();
                     //var abono = db.MutuoAbono.Where(c => c.IdMutuo == p.IdMutuo).ToList();
                     double montoAbono = 0;

@@ -341,7 +341,8 @@
             type: 'POST',
             url: '/Mutuo/GraficoAmortizacionDeuda_Read/',
             data:  {
-                idEmpresaFinancia: $('#idEmpresaFinanciaB').val()
+                idEmpresaFinancia: $('#idEmpresaFinanciaB').val(),
+                valorUf : $("#valorUfBus").val()
             },
             success: function (data) {
                 //parsing json data

@@ -41,6 +41,10 @@ namespace modelo.ViewModel
         public int? IdEstado { get; set; }
         public double? IVAMes { get; set; }
         public double? CapitalPagado { get; set; }
+        public double? DeudaInteres { get; set; }
+        public double? DeudaInteresMes { get; set; }
+        public double? DeudaCuotaMes { get; set; }
+        public double? DeudaCapitalMes { get; set; }
     }
 
 }

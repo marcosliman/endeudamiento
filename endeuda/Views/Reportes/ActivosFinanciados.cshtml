@@ -6,97 +6,85 @@
 }
 
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h5 class="h5 mb-0 text-gray-800">Reporte</h5>
+    <h5 class="h5 mb-0 text-gray-800">Reporte de Activos Financiados</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Inicio</li>
     </ol>
 </div>
-<h6 class="h6 mb-0 text-gray-800">Reporte de Activos Financiados.</h6>
-<br />
-
-<div class="row">
-    <div class="col-md-12">
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Filtros</h3>
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-2">
-                            @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                        </div>
-                        <div class="col-sm-2">
-                            @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
-                        </div>
-
-                        <div class="col-sm-2">
-                            <input type="text" class="form-control" name="numeroActivo" id="numeroActivo" placeholder="Número de Activo">
-                        </div>
-                        <div class="col-sm-2">
-                        </div>
-                        <div class="col-sm-2">
-
-                        </div>
-                        <div class="col-sm-2">
-                            <div class="row justify-content-end">
-                                <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-cog"></i> Generar</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="card card-outline card-info collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
         </div>
     </div>
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Detalle</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.DropDownList("empresaB", (SelectList)ViewData["listaEmpresa"], "--Seleccione Empresa--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
-            <div class="card-body">
+            <div class="col-sm-2">
+                @Html.DropDownList("bancoB", (SelectList)ViewData["listaBanco"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
+            </div>
 
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaReporte" data-order='[[ 2, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
-                                <th class="no-sort" width="3%"><i class="fa fa-calculator"></i></th>
-                                <th>Número de Activo</th>
-                                <th>Descripción</th>
-                                <th>Tipo de Activos</th>
-                                <th>Empresa</th>
-                                <th>Institución</th>
-                                <th>Núm. Ope./Contrato</th>
-                                <th>Total Rentas</th>
-                                <th>Inicio</th>
-                                <th>Monto Inicial Deuda</th>
-                                <th>Tasa Anual</th>
-                                <th width="3%">Moneda</th>
-                                <th>Seguro</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" name="numeroActivo" id="numeroActivo" placeholder="Número de Activo">
+            </div>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+            <div class="col-sm-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-cog"></i> Generar</button>
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Detalle</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaReporte" data-order='[[ 2, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                        <th class="no-sort" width="3%"><i class="fa fa-calculator"></i></th>
+                        <th>Número de Activo</th>
+                        <th>Descripción</th>
+                        <th>Valor Adquisición</th>
+                        <th>Tipo de Activos</th>
+                        <th>Empresa</th>
+                        <th>Institución</th>
+                        <th>Núm. Ope./Contrato</th>
+                        <th>Fecha Termino Contrato</th>
+                        <th>Total Rentas</th>
+                        <th>Inicio</th>
+                        <th>Monto Inicial Deuda</th>
+                        <th>Tasa Anual</th>
+                        <th width="3%">Moneda</th>
+                        <th>Seguro</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="ModalVerActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="modal-crearLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -139,7 +127,7 @@
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
                 {
-                    targets: [10],
+                    targets: [4,12],
                     render: function (data, type, row) {
                         var numFormt = "";
                         if (data != null) {
@@ -171,10 +159,12 @@
                 },
                 { "data": "NumeroActivo" },
                 { "data": "Descripcion" },
+                { "data": "Valor" },
                 { "data": "Familia" },
                 { "data": "RazonSocial" },
                 { "data": "NombreBanco" },
                 { "data": "NumeroContrato" },
+                { "data": "FechaTerminoStr" },
                 { "data": "Numerocuotas" },
                 {
                     data: {

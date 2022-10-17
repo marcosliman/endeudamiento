@@ -26,658 +26,276 @@
     <div class="card-body">
         <div class="row">
             <div class="col-sm-2">
-                <select name="empresa" class="form-control form-control-sm">
-                    <option>--Seleccione Empresa--</option>
-                    <option value="1">Todas</option>
-                    <option value="2">MAQSUR S.A.</option>
-                    <option value="3">BIOMASA</option>
-                    <option value="3">TECSUR</option>
-                    <option value="3">MQS</option>
-                    <option value="3">NOK</option>
-                </select>
+                @Html.DropDownList("IdEmpresaBus", (SelectList)ViewData["listaEmpresa"], "--Todas las Empresas--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
             <div class="col-sm-2">
-                <select name="banco" class="form-control form-control-sm">
-                    <option>--Seleccione Banco--</option>
-                    <option value="1">Todas</option>
-                    <option value="2">BCI</option>
-                    <option value="3">SANTANDER</option>
-                    <option value="3">SCOTIABANK</option>
-                </select>
+                @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
             <div class="col-sm-2">
+                <input type="number" class="form-control form-control-sm" placeholder="Año" id="anioBus" name="anioBus" value="@DateTime.Now.Year">
             </div>
             <div class="col-sm-2">
+                @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMes"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm" })
+
             </div>
             <div class="col-sm-2">
+                <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
             </div>
             <div class="col-sm-2">
                 <div class="row justify-content-end">
-                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-cog"></i> Generar detalle</button>
+                    <button class="btn btn-info btn-sm " type="button" onclick="CargaTiposFamilia()"><i class="fa fa-cog"></i> Generar detalle</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="row">
-    
-    <div class="col-md-12">
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Detalle</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <label class="col-lg-12 col-form-label"><strong class="lblEmpresa"></strong></label>
+        <label class="col-lg-12">Consolidado Deuda Leasing por Tipo de Activo a <strong class="lblPeriodo"></strong></label>
+        <div id="divLoadFamilia">
 
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Detalle</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-            </div>
-            <div class="card-body">
-                <label for="inputEmail3" class="col-lg-12 col-form-label">MAQSUR S.A.</label>
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Consolidado Deuda Leasing por Tipo de Activo</label>
-                <label for="inputEmail3" class="col-lg-12 col-form-label">Detalle al 31 de agosto del 2021.</label>
-                <div class="row justify-content-end">
-                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="far fa-download"></i> Exportar .XLS</button>
-                </div>
-                <label for="inputEmail3" class="col-lg-12 col-form-label"><p style="color:blue;font-size:14px;">Consolidado</p></label>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Tipo Deuda</th>
-                                <th>2020</th>
-                                <th>2021</th>
-                                <th>2022</th>
-                                <th>2023</th>
-                                <th>2024</th>
-                                <th>2025</th>
-                                <th>2026</th>
-                                <th>2027</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Cuota Leasing</th>
-                                <td>0</td>
-                                <td>1,068.00</td>
-                                <td>1,722.00</td>
-                                <td>1,261.00</td>
-                                <td>717.00</td>
-                                <td>284.00</td>
-                                <td>266.00</td>
-                                <td>71.00</td>
-                            </tr>
-                            <tr>
-                                <th>Cuota Amortización</th>
-                                <td>0</td>
-                                <td>969.00</td>
-                                <td>1,585.00</td>
-                                <td>1,185.00</td>
-                                <td>677.00</td>
-                                <td>261.00</td>
-                                <td>254.00</td>
-                                <td>67.00</td>
-                            </tr>
-                            <tr>
-                                <th>Gasto Financiero</th>
-                                <td>0</td>
-                                <td>98.00</td>
-                                <td>136.00</td>
-                                <td>75.00</td>
-                                <td>39.00</td>
-                                <td>22.00</td>
-                                <td>12.00</td>
-                                <td>4.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total MM$</th>
-                                <th>0</th>
-                                <th>2,136.00</th>
-                                <th>3,444.00</th>
-                                <th>2,521.00</th>
-                                <th>1,433.00</th>
-                                <th>568.00</th>
-                                <th>531.00</th>
-                                <th>141.00</th>
-                            </tr>
-
-
-                        </tbody>
-                    </table>
-                </div>
-                <br />
-                <label for="inputEmail3" class="col-lg-12 col-form-label"><p style="color:blue;font-size:14px;">Maquinaria</p></label>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Tipo Deuda</th>
-                                <th>2020</th>
-                                <th>2021</th>
-                                <th>2022</th>
-                                <th>2023</th>
-                                <th>2024</th>
-                                <th>2025</th>
-                                <th>2026</th>
-                                <th>2027</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Cuota Leasing</th>
-                                <td>0</td>
-                                <td>856.00</td>
-                                <td>1,315.00</td>
-                                <td>867.00</td>
-                                <td>422.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Cuota Amortización</th>
-                                <td>0</td>
-                                <td>796.00</td>
-                                <td>1,243.00</td>
-                                <td>839.00</td>
-                                <td>416.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Gasto Financiero</th>
-                                <td>0</td>
-                                <td>60.00</td>
-                                <td>72.00</td>
-                                <td>28.00</td>
-                                <td>6.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total MM$</th>
-                                <th>0</th>
-                                <th>1,713.00</th>
-                                <th>2,630.00</th>
-                                <th>1,734.00</th>
-                                <th>845.00</th>
-                                <th>33.00</th>
-                                <th>0.00</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>Interés mes</th>
-                                <th>10,356,589.00</th>
-                                <th>155,088.488.00</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br />
-                <label for="inputEmail3" class="col-lg-12 col-form-label"><p style="color:blue;font-size:14px;">Terrenos y Construcciones</p></label>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Tipo Deuda</th>
-                                <th>2020</th>
-                                <th>2021</th>
-                                <th>2022</th>
-                                <th>2023</th>
-                                <th>2024</th>
-                                <th>2025</th>
-                                <th>2026</th>
-                                <th>2027</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Cuota Leasing</th>
-                                <td>0</td>
-                                <td>856.00</td>
-                                <td>1,315.00</td>
-                                <td>867.00</td>
-                                <td>422.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Cuota Amortización</th>
-                                <td>0</td>
-                                <td>796.00</td>
-                                <td>1,243.00</td>
-                                <td>839.00</td>
-                                <td>416.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Gasto Financiero</th>
-                                <td>0</td>
-                                <td>60.00</td>
-                                <td>72.00</td>
-                                <td>28.00</td>
-                                <td>6.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total MM$</th>
-                                <th>0</th>
-                                <th>1,713.00</th>
-                                <th>2,630.00</th>
-                                <th>1,734.00</th>
-                                <th>845.00</th>
-                                <th>33.00</th>
-                                <th>0.00</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>Interés mes</th>
-                                <th>10,356,589.00</th>
-                                <th>155,088.488.00</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br />
-                <label for="inputEmail3" class="col-lg-12 col-form-label"><p style="color:blue;font-size:14px;">Embarcaciones</p></label>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Tipo Deuda</th>
-                                <th>2020</th>
-                                <th>2021</th>
-                                <th>2022</th>
-                                <th>2023</th>
-                                <th>2024</th>
-                                <th>2025</th>
-                                <th>2026</th>
-                                <th>2027</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Cuota Leasing</th>
-                                <td>0</td>
-                                <td>856.00</td>
-                                <td>1,315.00</td>
-                                <td>867.00</td>
-                                <td>422.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Cuota Amortización</th>
-                                <td>0</td>
-                                <td>796.00</td>
-                                <td>1,243.00</td>
-                                <td>839.00</td>
-                                <td>416.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Gasto Financiero</th>
-                                <td>0</td>
-                                <td>60.00</td>
-                                <td>72.00</td>
-                                <td>28.00</td>
-                                <td>6.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total MM$</th>
-                                <th>0</th>
-                                <th>1,713.00</th>
-                                <th>2,630.00</th>
-                                <th>1,734.00</th>
-                                <th>845.00</th>
-                                <th>33.00</th>
-                                <th>0.00</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>Interés mes</th>
-                                <th>10,356,589.00</th>
-                                <th>155,088.488.00</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br />
-                <label for="inputEmail3" class="col-lg-12 col-form-label"><p style="color:blue;font-size:14px;">Equipos</p></label>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Tipo Deuda</th>
-                                <th>2020</th>
-                                <th>2021</th>
-                                <th>2022</th>
-                                <th>2023</th>
-                                <th>2024</th>
-                                <th>2025</th>
-                                <th>2026</th>
-                                <th>2027</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Cuota Leasing</th>
-                                <td>0</td>
-                                <td>856.00</td>
-                                <td>1,315.00</td>
-                                <td>867.00</td>
-                                <td>422.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Cuota Amortización</th>
-                                <td>0</td>
-                                <td>796.00</td>
-                                <td>1,243.00</td>
-                                <td>839.00</td>
-                                <td>416.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Gasto Financiero</th>
-                                <td>0</td>
-                                <td>60.00</td>
-                                <td>72.00</td>
-                                <td>28.00</td>
-                                <td>6.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total MM$</th>
-                                <th>0</th>
-                                <th>1,713.00</th>
-                                <th>2,630.00</th>
-                                <th>1,734.00</th>
-                                <th>845.00</th>
-                                <th>33.00</th>
-                                <th>0.00</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>Interés mes</th>
-                                <th>10,356,589.00</th>
-                                <th>155,088.488.00</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <br />
-                <label for="inputEmail3" class="col-lg-12 col-form-label"><p style="color:blue;font-size:14px;">Vehículos</p></label>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Tipo Deuda</th>
-                                <th>2020</th>
-                                <th>2021</th>
-                                <th>2022</th>
-                                <th>2023</th>
-                                <th>2024</th>
-                                <th>2025</th>
-                                <th>2026</th>
-                                <th>2027</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th>Cuota Leasing</th>
-                                <td>0</td>
-                                <td>856.00</td>
-                                <td>1,315.00</td>
-                                <td>867.00</td>
-                                <td>422.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Cuota Amortización</th>
-                                <td>0</td>
-                                <td>796.00</td>
-                                <td>1,243.00</td>
-                                <td>839.00</td>
-                                <td>416.00</td>
-                                <td>17.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Gasto Financiero</th>
-                                <td>0</td>
-                                <td>60.00</td>
-                                <td>72.00</td>
-                                <td>28.00</td>
-                                <td>6.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                                <td>0.00</td>
-                            </tr>
-                            <tr>
-                                <th>Total MM$</th>
-                                <th>0</th>
-                                <th>1,713.00</th>
-                                <th>2,630.00</th>
-                                <th>1,734.00</th>
-                                <th>845.00</th>
-                                <th>33.00</th>
-                                <th>0.00</th>
-                                <th>0.00</th>
-                            </tr>
-                            <tr>
-                                <th>Interés mes</th>
-                                <th>10,356,589.00</th>
-                                <th>155,088.488.00</th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
         </div>
     </div>
 </div>
 <script>
-            $(document).ready(function () {
-                AbrirMenu("ConsolidadoDeudaLeasingTipoActivo");
-            });
+    function CargaUfMes() {
+        $.ajax({
+            url: "/Bancos/UfUltimoDiaMes",
+            type: "Get",
+            data: {
+                IdEmpresa: $("#IdEmpresaBus").val(),
+                IdBanco: $("#IdBancoBus").val(),
+                anio: $("#anioBus").val(),
+                IdMes: $("#IdMesBus").val(),
+                valorUf: $("#valorUfBus").val()
+            },
+            beforeSend: function () {
+
+            },
+            success: function (data) {
+                //console.log(data)
+                $("#valorUfBus").val(data.Valor.toString().replace(/[$.]/g, ','));
+                //initTable();
+            }
+        });
+    }
+    $(document).ready(function () {
+        AbrirMenu("ConsolidadoDeudaLeasingTipoActivo");
+        CargaUfMes();
+        $("#IdMesBus").change(CargaUfMes);  
+        CargaTiposFamilia();
+        $('.lblEmpresa').html($("#IdEmpresaBus option:selected").text())
+        $('.lblPeriodo').html($("#IdMesBus option:selected").text() + "-" + $("#anioBus").val())
+    });
+    function CargaTiposFamilia() {
+        $('.lblEmpresa').html($("#IdEmpresaBus option:selected").text())
+        $('.lblPeriodo').html($("#IdMesBus option:selected").text() + "-" + $("#anioBus").val())
+        $("#divLoadFamilia").empty();
+        $.ajax({
+            url: "/Familia/Familia_Read",
+            type: "Get",
+            data: {
+                
+            },
+            beforeSend: function () {
+                $("#divLoadFamilia").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#divLoadFamilia").empty();
+                var length = Object.keys(data).length;
+                for (var i = 0; i < length; i++) {                    
+                    $("#divLoadFamilia").append('<div id="loadFamilia_' + data[i].IdFamilia + '"></div>');
+                    CargaConsolidadoTipoDeuda(data[i].IdFamilia);
+                };
+                
+            }
+        });
+    }
+    function CargaConsolidadoTipoDeuda(tmpIdFamilia) {
+        $.ajax({
+            url: '/Familia/TipoDeudaFamilia',
+            data: {
+                IdEmpresa: $("#IdEmpresaBus").val(),
+                IdBanco: $("#IdBancoBus").val(),
+                anio: $("#anioBus").val(),
+                IdMes: $("#IdMesBus").val(),
+                valorUf: $("#valorUfBus").val(),
+                IdFamilia: tmpIdFamilia
+            },
+            async: true,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            global: true,
+            ifModified: false,
+            processData: true,
+            //data: { idDocumento: op },
+            //data: ReemplazoCadena(aux_busqueda),
+            beforeSend: function () {
+                $("#loadFamilia_" + tmpIdFamilia).empty();
+                $("#loadFamilia_" + tmpIdFamilia).html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (html) {
+                //html=decodeURIComponent(html);
+                $("#loadFamilia_" + tmpIdFamilia).empty();
+                $("#loadFamilia_" + tmpIdFamilia).append(html);
+            },
+            type: "post"
+        });
+    }
 </script>
 
-        @*
-        <!-- DataTable with Hover -->
-        <script>
-            $(document).ready(function () {
-                AbrirMenu("LibroVentas");
-                $('#grillaEmpresa').DataTable();
-                moment.locale('es');
-                $('#fecha').daterangepicker({
-                    autoUpdateInput: false,
-                    "locale": {
-                        format: "DD/MM/YYYY",
-                        "separator": " - ",
-                        "applyLabel": "Aplicar",
-                        "cancelLabel": "Limpiar",
-                        "fromLabel": "DE",
-                        "toLabel": "HASTA",
-                        "customRangeLabel": "Personalizar",
-                        "daysOfWeek": [
-                            "Dom",
-                            "Lun",
-                            "Mar",
-                            "Mie",
-                            "Jue",
-                            "Vie",
-                            "Sáb"
-                        ],
-                        "monthNames": [
-                            "Enero",
-                            "Febrero",
-                            "Marzo",
-                            "Abril",
-                            "Mayo",
-                            "Junio",
-                            "Julio",
-                            "Agosto",
-                            "Septiembre",
-                            "Octubre",
-                            "Noviembre",
-                            "Diciembre"
-                        ],
-                        "firstDay": 1
+@*
+<!-- DataTable with Hover -->
+<script>
+    $(document).ready(function () {
+        AbrirMenu("LibroVentas");
+        $('#grillaEmpresa').DataTable();
+        moment.locale('es');
+        $('#fecha').daterangepicker({
+            autoUpdateInput: false,
+            "locale": {
+                format: "DD/MM/YYYY",
+                "separator": " - ",
+                "applyLabel": "Aplicar",
+                "cancelLabel": "Limpiar",
+                "fromLabel": "DE",
+                "toLabel": "HASTA",
+                "customRangeLabel": "Personalizar",
+                "daysOfWeek": [
+                    "Dom",
+                    "Lun",
+                    "Mar",
+                    "Mie",
+                    "Jue",
+                    "Vie",
+                    "Sáb"
+                ],
+                "monthNames": [
+                    "Enero",
+                    "Febrero",
+                    "Marzo",
+                    "Abril",
+                    "Mayo",
+                    "Junio",
+                    "Julio",
+                    "Agosto",
+                    "Septiembre",
+                    "Octubre",
+                    "Noviembre",
+                    "Diciembre"
+                ],
+                "firstDay": 1
+            }
+        });
+
+        $('#fecha').on('apply.daterangepicker', function (ev, picker) {
+            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            //RefreshLista();
+        });
+
+
+        $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
+            $(this).val('');
+            //RefreshLista();
+        });
+        $('#selectEmpresa').select2({
+            placeholder: '---Seleccione Empresa---',
+            language: "es",
+            allowClear: true,
+        });
+
+    });
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+    function initTable() {
+        var table = $('#grillaEmpresa').DataTable({
+            "scrollX": true,
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Vencidas/Vencidas_Read/0',
+                "data": function (d) {
+
+                },
+                "dataSrc": ""
+            },
+            columns: [
+
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var boton = '';
+                        boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
+                        return boton;
                     }
-                });
-
-                $('#fecha').on('apply.daterangepicker', function (ev, picker) {
-                    $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-                    //RefreshLista();
-                });
-
-
-                $('#fecha').on('cancel.daterangepicker', function (ev, picker) {
-                    $(this).val('');
-                    //RefreshLista();
-                });
-                $('#selectEmpresa').select2({
-                    placeholder: '---Seleccione Empresa---',
-                    language: "es",
-                    allowClear: true,
-                });
-
-            });
-            function RefreshLista() {
-                var table = initTable();
-                table.ajax.reload(function (json) { });
-            }
-            function initTable() {
-                var table = $('#grillaEmpresa').DataTable({
-                    "scrollX": true,
-                    "retrieve": true,
-                    'ajax': {
-                        "type": "POST",
-                        "url": '/Vencidas/Vencidas_Read/0',
-                        "data": function (d) {
-
-                        },
-                        "dataSrc": ""
-                    },
-                    columns: [
-
-                        {
-                            "mData": null,
-                            "bSortable": false,
-                            "mRender": function (o, type, row) {
-                                var boton = '';
-                                boton = '<button class="btn btn-primary btn-sm" onclick="CreateRegistro(' + o.IdVencidas + ')"><i class="fa fa-edit"></i></button> ';
-                                return boton;
-                            }
-                        },
-                        { "data": "Sociedad" },
-                        { "data": "RutCliente" },
-                        { "data": "Cliente" },
-                        { "data": "Emisión" },
-                        { "data": "Vencimiento" },
-                        { "data": "Factura" },
-                        { "data": "Monto" },
-                        {
-                            "mData": null,
-                            "bSortable": false,
-                            "mRender": function (o, type, row) {
-                                var estado = 'NO';
-                                if (o.Activo == true) {
-                                    estado = "SI";
-                                }
-                                return estado;
-                            }
+                },
+                { "data": "Sociedad" },
+                { "data": "RutCliente" },
+                { "data": "Cliente" },
+                { "data": "Emisión" },
+                { "data": "Vencimiento" },
+                { "data": "Factura" },
+                { "data": "Monto" },
+                {
+                    "mData": null,
+                    "bSortable": false,
+                    "mRender": function (o, type, row) {
+                        var estado = 'NO';
+                        if (o.Activo == true) {
+                            estado = "SI";
                         }
-                    ]
-                });
-
-                return table;
-            }
-
-        </script>
-        <script>
-            $(document).ready(function () {
-
-                $('#frmEdit').validate({
-                    debug: false,
-                    errorElement: "em",
-                    errorContainer: $("#warning")
-                });
-                $('#perfiles').select2({
-                    theme: 'bootstrap4'
-                })
-                window.top.esconderCargando();
-            });
-
-            function Success_dl(data) {
-                esconderCargando();
-                if (data.Estado == "0") {
-                    toastr.success(data.Mensaje);
-                    $('#modal-registro').modal('hide');
-                    RefreshLista();
+                        return estado;
+                    }
                 }
-                else {
-                    toastr.error(data.Mensaje);
-                }
-            }
-            function Failure_dl(data) {
-                esconderCargando();
-                toastr.error(data.Mensaje);
-                $('#modal-registro').modal('hide');
-            }
+            ]
+        });
 
-        </script>
-        *@
+        return table;
+    }
+
+</script>
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        $('#perfiles').select2({
+            theme: 'bootstrap4'
+        })
+        window.top.esconderCargando();
+    });
+
+    function Success_dl(data) {
+        esconderCargando();
+        if (data.Estado == "0") {
+            toastr.success(data.Mensaje);
+            $('#modal-registro').modal('hide');
+            RefreshLista();
+        }
+        else {
+            toastr.error(data.Mensaje);
+        }
+    }
+    function Failure_dl(data) {
+        esconderCargando();
+        toastr.error(data.Mensaje);
+        $('#modal-registro').modal('hide');
+    }
+
+</script>
+*@
