@@ -5,16 +5,21 @@
     var valoresAnio = ViewData["listValoresAnio"] as List<modelo.ViewModel.ReporteContratoViewModel>;
     var listaAnios = ViewData["listAnios"] as List<modelo.ViewModel.RetornoGenerico>;
     double totalLeasing = 0;
+    double totalAmortizacion = 0;
+    double totalGastoF = 0;
+    double totalFinal = 0;
     var colspanInt = listaAnios.Count() - 1;
     var colspanHead = listaAnios.Count() + 2;
+    var IdFamilia = (Model != null) ? Model.IdFamilia : 0;
+    var NombreFamilia = (Model != null) ? Model.NombreFamilia : "Consolidado";
 }
 @if (listaAnios.Count() > 0)
 {
     <div class="table-responsive">
-        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaFam_@Model.IdFamilia" data-order='[[ 0, "asc" ]]'>
+        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaFam_@IdFamilia" data-order='[[ 0, "asc" ]]'>
             <thead>
                 <tr>
-                    <th colspan="@colspanHead" class="text-center" style="color:blue;font-size:14px;">@Model.NombreFamilia</th>
+                    <th colspan="@colspanHead" class="text-center" style="color:blue;font-size:14px;">@NombreFamilia</th>
                 </tr>
                 <tr class="thead-light">
                     <th>Tipo Deuda</th>
@@ -59,7 +64,7 @@
                         {
                             var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.DeudaCapital > 0).ToList();
                             var deudaCapital = (valAnio.Count() > 0) ? valAnio.Sum(c => c.DeudaCapital) : 0;
-                            totalLeasing = totalLeasing + (double)deudaCapital;
+                            totalAmortizacion = totalAmortizacion + (double)deudaCapital;
                             <td>@(String.Format("{0:N0}", deudaCapital))</td>
                         }
                     }
@@ -67,7 +72,7 @@
                     {
                         <td colspan="2">&nbsp;</td>
                     }
-                    <td>@(String.Format("{0:N0}", totalLeasing))</td>
+                    <td>@(String.Format("{0:N0}", totalAmortizacion))</td>
                 </tr>
                 <tr>
                     <td>Gasto Financiero</td>
@@ -77,7 +82,7 @@
                         {
                             var valAnio = valoresAnio.Where(c => c.anio == anio.Id && c.DeudaInteres > 0).ToList();
                             var deudaCapital = (valAnio.Count() > 0) ? valAnio.Sum(c => c.DeudaInteres) : 0;
-                            totalLeasing = totalLeasing + (double)deudaCapital;
+                            totalGastoF = totalGastoF + (double)deudaCapital;
                             <td>@(String.Format("{0:N0}", deudaCapital))</td>
                         }
                     }
@@ -85,48 +90,49 @@
                     {
                         <td colspan="2">&nbsp;</td>
                     }
-                    <td>@(String.Format("{0:N0}", totalLeasing))</td>
+                    <td>@(String.Format("{0:N0}", totalGastoF))</td>
                 </tr>
-
-            </tbody>
-            <tfoot>
                 <tr>
-                    <th>Total MM$</th>
+                    <th>Intereses Mes</th>
+                    <th>@(String.Format("{0:N0}", ViewData["InteresMes"]))</th>
                     @if (listaAnios.Count() > 0)
                     {
                         foreach (var anio in listaAnios)
                         {
-                            var valAnio = valoresAnio.Where(c => c.anio == anio.Id).ToList();
-                            var deudaCapital = (valAnio.Count() > 0) ? valAnio.Sum(c => c.DeudaInteres + c.DeudaCuota + c.DeudaCapital) : 0;
-                            totalLeasing = totalLeasing + (double)deudaCapital;
-                            <th>@(String.Format("{0:N0}", deudaCapital))</th>
+                            <th></th>
                         }
                     }
                     else
                     {
                         <td colspan="2">&nbsp;</td>
                     }
-                    <th>@(String.Format("{0:N0}", totalLeasing))</th>
                 </tr>
                 <tr>
-                    <th>Int. Mes</th>
-                    <th>@(String.Format("{0:N0}", ViewData["InteresMes"]))</th>
+                    <th>Suma Cuotas Mes</th>
                     <th>@(String.Format("{0:N0}", ViewData["CuotaMes"]))</th>
-                    <th colspan="@colspanInt"></th>
+                    @if (listaAnios.Count() > 0)
+                    {
+                        foreach (var anio in listaAnios)
+                        {
+                            <th></th>
+                        }
+                    }
+                    else
+                    {
+                        <td colspan="2">&nbsp;</td>
+                    }
                 </tr>
-            </tfoot>
+            </tbody>
+           
         </table>
 
     </div>
 }
-
-
-
 <script>
     $(document).ready(function () {
         var buttonTipoDeuda = {
             text: 'Exportar a Excel',
-            title: 'Consolidado Leasing @Model.NombreFamilia',
+            title: 'Consolidado Leasing @NombreFamilia',
             extend: 'excelHtml5',
             //footer: true,
             exportOptions: {
@@ -134,7 +140,7 @@
                 format: {
                     body: function (data, row, column, node) {
                         var texto = node.innerText;
-                        return (column >= 2) ?
+                        return (column >= 1) ?
                             texto.replace(/[$.]/g, '').replace(/[$,]/g, '.') :
                             texto;
                     }
@@ -142,14 +148,14 @@
             }
         };
 
-        var tableTD = $("#grillaFam_@Model.IdFamilia").DataTable({
+        var tableTD = $("#grillaFam_@IdFamilia").DataTable({
             "retrieve": true,
             "searching": false,
             "paging": false,
             dom: '<"top"fB<"#id">>rt<"bottom"lp><"clear">',
             buttons: [
                 $.extend(true, {}, buttonTipoDeuda, {
-                    filename: "Deuda_@Model.IdFamilia"
+                    filename: "Deuda_@IdFamilia"
                 })
             ]
         });

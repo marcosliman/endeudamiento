@@ -31,15 +31,21 @@
             <div class="col-sm-2">
                 @Html.DropDownList("IdBancoBus", (SelectList)ViewData["listaBancos"], "--Seleccione Banco--", htmlAttributes: new { @class = "form-control form-control-sm" })
             </div>
-            <div class="col-sm-2">
+            <div class="col-sm-1">
                 <input type="number" class="form-control form-control-sm" placeholder="Año" id="anioBus" name="anioBus" value="@DateTime.Now.Year">
             </div>
             <div class="col-sm-2">
                 @Html.DropDownList("IdMesBus", (SelectList)ViewData["listaMes"], "--Seleccione Mes--", htmlAttributes: new { @class = "form-control form-control-sm" })
-
+            </div>
+            <div class="col-sm-1">
+                <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
             </div>
             <div class="col-sm-2">
-                <input type="text" name="valorUfBus" id="valorUfBus" value="" class="form-control form-control-sm filtroRepote numberMiles" />
+                <select name="ConSaldo" id="ConSaldo" class="form-control form-control-sm">
+                    <option value="">--Todos los Créditos--</option>
+                    <option value="S">Créditos con Saldo</option>
+                    <option value="N">Créditos sin Saldo</option>
+                </select>
             </div>
             <div class="col-sm-2">
                 <div class="row justify-content-end">
@@ -223,6 +229,7 @@
                         d.IdMesBus = $("#IdMesBus").val();
                         d.valorUf = $("#valorUfBus").val();
                         d.tipoFinanciamiento = "@IdTipoFinanciamiento";
+                        d.ConSaldo = $("#ConSaldo").val();
                     },
                     "dataSrc": ""
                 },

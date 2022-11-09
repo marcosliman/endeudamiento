@@ -120,7 +120,7 @@ namespace tesoreria.Controllers
                 IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
                 var deudas = db.Database.SqlQuery<ReporteContratoViewModel>(
                        "SP_DEUDA_CONTRATO_FAMILIA @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4},@valorUf={5},@IdFamilia={6}",
-                       fechaInicio, fechaFin, 0, IdEmpresa, IdBanco, valorUfDouble, IdFamilia).ToList();
+                       fechaInicio, fechaFin, (int)Helper.TipoContrato.Leasing, IdEmpresa, IdBanco, valorUfDouble, IdFamilia).ToList();
                 var listAnios = deudas.GroupBy(c => new { c.anio }).Select(c => new { c.Key.anio }).ToList();                
                 var sumDeudas = deudas.GroupBy(c => new { c.anio })
                     .Select(c =>

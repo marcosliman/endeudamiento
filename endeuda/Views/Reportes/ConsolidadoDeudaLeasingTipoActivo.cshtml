@@ -111,6 +111,8 @@
             },
             success: function (data) {
                 $("#divLoadFamilia").empty();
+                $("#divLoadFamilia").append('<div id="loadFamilia_0"></div>');
+                CargaConsolidadoTipoDeuda(0);
                 var length = Object.keys(data).length;
                 for (var i = 0; i < length; i++) {                    
                     $("#divLoadFamilia").append('<div id="loadFamilia_' + data[i].IdFamilia + '"></div>');

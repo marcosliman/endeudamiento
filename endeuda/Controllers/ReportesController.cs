@@ -114,7 +114,7 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
-        public ActionResult ConsolidadoDeudaCreditosCon_Read(int? IdEmpresaBus, int? IdBancoBus, int? anioBus, int? IdMesBus, string valorUf,int? tipoFinanciamiento)
+        public ActionResult ConsolidadoDeudaCreditosCon_Read(int? IdEmpresaBus, int? IdBancoBus, int? anioBus, int? IdMesBus, string valorUf,int? tipoFinanciamiento,string ConSaldo)
         {
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMesBus.ToString() + "-" + anioBus.ToString();
@@ -137,7 +137,9 @@ namespace tesoreria.Controllers
                             from l_fam in t_fam.DefaultIfEmpty()
                             join Est in db.Estado on Con.IdEstado equals Est.IdEstado
                             where Con.FechaTermino >= fechaInicio 
-                            && ((tipoFinanciamiento!=null)?Con.IdTipoFinanciamiento== tipoFinanciamiento:true)                            
+                            && ((tipoFinanciamiento!=null)?Con.IdTipoFinanciamiento== tipoFinanciamiento:true)
+                            && ((ConSaldo != null && ConSaldo!="") ? 
+                            ((ConSaldo=="S")?d.SaldoInsoluto >0: d.SaldoInsoluto ==0) : true)
                             select new
                             {
                                 IdContrato = d.IdContrato,

@@ -737,11 +737,15 @@ namespace tesoreria.Controllers
             }
             else
             {
-                if (contrato.TipoGarantia== null || contrato.TipoGarantia=="")
+                if(contrato.TipoFinanciamiento.IdTipoContrato == (int)Helper.TipoContrato.Contrato)
                 {
-                    valido = false;
-                    mensajeError = "Debe Indicar el Tipo de Garantía";
+                    if (contrato.TipoGarantia == null || contrato.TipoGarantia == "")
+                    {
+                        valido = false;
+                        mensajeError = "Debe Indicar el Tipo de Garantía";
+                    }
                 }
+               
             }
             if (valido ==true)
             {
