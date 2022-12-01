@@ -359,8 +359,10 @@ namespace tesoreria.Controllers
                                  CpbteE = db.ComprobanteDetAmortizacion.Where(y => y.IdContratoDetAmortizacion == cda.IdContratoDetAmortizacion && y.CpbTip == "E").FirstOrDefault()
 
                            }).ToList();
-            
-            return Json(listado, JsonRequestBehavior.AllowGet);
+
+            var json = Json(listado, JsonRequestBehavior.AllowGet);
+            json.MaxJsonLength = 500000000;
+            return json;
         }
         public ActionResult ModalEstadoActivo()
         {

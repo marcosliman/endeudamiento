@@ -73,6 +73,8 @@ namespace modelo.ViewModel
         public DateTime? TerminoLeasing { get; set; }
         public int? PaginaInicial { get; set; }
         public int? PaginaTermino { get; set; }
+        public string NumeroEndoso { get; set; }
+        public string FechaEndoso { get; set; }
     }
 
 }

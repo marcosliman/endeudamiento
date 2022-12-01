@@ -69,6 +69,18 @@
                         <input type="text" class="form-control form-control-sm required numberMiles" name="ValorPrima" id="ValorPrima" value="@Model.ValorPrima" />
                     </div>
                 </div>
+                <div class="form-group form-group-sm row">
+                    <label for="NumeroEndoso" class="col-sm-3 col-form-label col-form-label-sm">Número Endoso</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm" name="NumeroEndoso" id="NumeroEndoso" value="@Model.NumeroEndoso" />
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="FechaEndoso" class="col-sm-3 col-form-label col-form-label-sm">Fecha Endoso</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control form-control-sm classFecha" name="FechaEndoso" id="FechaEndoso" value="@Model.FechaEndoso" />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
@@ -79,7 +91,11 @@
 }
 <script>
         $(document).ready(function () {
-
+            $('.classFecha').datepicker({
+                format: 'dd/mm/yyyy',
+                autoclose: true,
+                language: "es"
+            });
             $('#frmEditBeneficiario').validate({
                 debug: false,
                 errorElement: "em",

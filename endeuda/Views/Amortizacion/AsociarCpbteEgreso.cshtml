@@ -71,10 +71,10 @@
                 <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaCpbteMov" data-order='[[ 0, "asc" ]]'>
                     <thead class="thead-light">
                         <tr>
-                            <th>N° Comprobante</th>
-                            <th>Fecha</th>
-                            <th>Tipo</th>
-                            <th>Monto Cpbte.</th>
+                            <th width="20%">N° Comprobante</th>
+                            <th width="10%">Fecha</th>
+                            <th width="10%">Tipo</th>
+                            <th width="10%">Monto Cpbte.</th>
                             <th>Glosa</th>
                             <th></th>
                         </tr>
@@ -163,10 +163,10 @@
                 <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaCpbteBus" data-order='[[ 0, "asc" ]]'>
                     <thead class="thead-light">
                         <tr>
-                            <th>N° Comprobante</th>
-                            <th>Fecha</th>
-                            <th>Monto</th>
-                            <th>Tipo</th>
+                            <th width="20%">N° Comprobante</th>
+                            <th width="10%">Fecha</th>
+                            <th width="10%">Monto</th>
+                            <th width="10%">Tipo</th>
                             <th>Glosa</th>
                             <th></th>
                         </tr>
@@ -274,14 +274,18 @@
                     "bSortable": false,
                     "mRender": function (data, type, row) {
                         var boton = '';
-                        if (row.seleccionado == true) {
-                            boton = '<a class="btn-danger btn-xs text-nowrap" href="JavaScript:QuitarCpbtePrograma(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland+'\')"><i class="fa fa-trash"></i> Quitar</a>';
-
+                        if (row.ocupadoC == true) {
+                            boton = '<span class="text-danger">ocupado</span>';                            
                         }
                         else {
-                            boton = '<a class="btn-primary btn-xs text-nowrap" href="JavaScript:AsociarComprobante(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland +'\')"><i class="fa fa-plus"></i> Asociar</a>';
-                        }
+                            if (row.seleccionado == true) {
+                                boton = '<a class="btn-danger btn-xs text-nowrap" href="JavaScript:QuitarCpbtePrograma(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland + '\')"><i class="fa fa-trash"></i> Quitar</a>';
 
+                            }
+                            else {
+                                boton = '<a class="btn-primary btn-xs text-nowrap" href="JavaScript:AsociarComprobante(\'' + row.CpbNum + '\',\'' + row.CpbAno + '\',\'' + row.BaseSoftland + '\')"><i class="fa fa-plus"></i> Asociar</a>';
+                            }
+                        }
                         return boton;
                     }
                 }
@@ -399,12 +403,12 @@
         });
         $('#fechaCpbte').on('apply.daterangepicker', function (ev, picker) {
             $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-            RefreshListaAbono();
+            //RefreshListaAbono();
         });
 
         $('#fechaCpbte').on('cancel.daterangepicker', function (ev, picker) {
             $(this).val('');
-            RefreshListaAbono();
+            //RefreshListaAbono();
         });
     });
 

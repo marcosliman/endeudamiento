@@ -61,6 +61,8 @@ namespace modelo.ViewModel
         public string MesAnio { get; set; }
         public string CodiCC_Mqs { get; set; }
         public string CodiCC_MqsSur { get; set; }
+        public string NumeroEndoso { get; set; }
+        public string FechaEndoso { get; set; }
     }
 
 }

@@ -73,7 +73,9 @@ namespace tesoreria.Controllers
                                 ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == ac.IdActivo && x.Contrato.IdEstado != (int)Helper.Estado.ConFinalizado).FirstOrDefault(),
                                 ac.FechaBaja,
                                 ac.FecIngBaja,
-                                ac.Glosa
+                                ac.Glosa,
+                                EnPoliza=(db.PolizaActivo.Where(x=>x.IdActivo==ac.IdActivo).Count()>0)?true:false,
+                                PolizaActivo= db.PolizaActivo.Where(x => x.IdActivo == ac.IdActivo).FirstOrDefault()
                             }).AsEnumerable().ToList();
             var listaRetorno = (from reg in registro
                                 select new { 
@@ -108,7 +110,8 @@ namespace tesoreria.Controllers
                                 Leasing=(reg.ContratoActivo!=null)?((reg.ContratoActivo.Contrato.IdTipoContrato==1)?reg.ContratoActivo.Contrato.NumeroContrato:""):"",
                                 Banco = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Banco.NombreBanco : "") : "",
                                 DescripcionLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Descripcion : "") : "",
-                                TipoPropiedad= (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdEstado == (int)Helper.Estado.ConActivo) ? "Leasing" : "Propio") : "Propio"
+                                TipoPropiedad= (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdEstado == (int)Helper.Estado.ConActivo) ? "Leasing" : "Propio") : "Propio",
+                                    NumeroPoliza = (reg.EnPoliza==true)?reg.PolizaActivo.Poliza.NumeroPoliza:""
                                     //(Propio (parte siendo propio) o leasing vigente (al finalizar leasing pasa a ser propio))
                                 }).ToList();
             return Json(listaRetorno, JsonRequestBehavior.AllowGet);

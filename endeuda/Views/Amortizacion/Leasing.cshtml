@@ -102,6 +102,16 @@
                             </tr>
                         </thead>
                         <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="7" class="text-center">Total</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
 
@@ -173,7 +183,28 @@
     }
 
     function initTable() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Amortizaciones de Leasing',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
+                    }
+                }
+            }
+        };
         var table = $('#grillaReporte').DataTable({
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Amortizaciones_Leasing"
+                })
+            ],
             "retrieve": true,
             'ajax': {
                 "type": "POST",
@@ -229,7 +260,31 @@
                 { "data": "Total2" },
                 { "data": "Total3" },
                 { "data": "TotalGeneral" },
-            ]
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+                for (var it = 7; it <= 11; it++) {
+                    // Total over all pages
+                    var total = api.column(it).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api.column(it, { page: 'current' }).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    // Update footer
+                    $(api.column(it).footer()).html(totalFormat);
+                }
+            }
         });
 
         return table;

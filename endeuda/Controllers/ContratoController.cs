@@ -12,6 +12,8 @@ using System.Data.SqlClient;
 using LinqToExcel;
 using System.Data.OleDb;
 using System.Data.Entity.Validation;
+using DocumentFormat.OpenXml.Packaging;
+
 namespace tesoreria.Controllers
 {
     public class ContratoController : Controller
@@ -1291,16 +1293,31 @@ namespace tesoreria.Controllers
         public ActionResult AddAmortizacion(int idContrato,string soloVer)
         {            
             ContratoActivo contratoActivo=new ContratoActivo();
+            var eliminar = "SI";
             var contrato = db.ContratoActivo.Where(c=>c.IdContrato==idContrato).FirstOrDefault();
             if (contrato != null)
             {
                 contratoActivo = contrato;
+                if (contrato.Contrato.IdEstado != (int)Helper.Estado.ConFinalizado)
+                {
+                    soloVer = "NO";
+                }
+                var cpbtes = (from ca in db.Contrato_Amortizacion
+                              join cad in db.Contrato_DetAmortizacion on ca.IdContratoAmortizacion equals cad.IdContratoAmortizacion
+                              join cpbt in db.ComprobanteDetAmortizacion on cad.IdContratoDetAmortizacion equals cpbt.IdContratoDetAmortizacion
+                              where ca.IdContrato == contrato.IdContrato
+                              select new { cpbt.IdContratoDetAmortizacion }).ToList();
+                if (cpbtes.Count() > 0)
+                {
+                    eliminar = "NO";
+                }
             }
             else
             {
                 contratoActivo.IdContrato = idContrato;
             }
             ViewBag.soloVer = soloVer;
+            ViewBag.Eliminar = eliminar;
             return View(contratoActivo);
             
         }
@@ -1317,6 +1334,10 @@ namespace tesoreria.Controllers
                 db.Contrato_Amortizacion.Remove(existeAmortizacion);
                 db.SaveChanges();
                 showMessageString = new { Estado = 0, Mensaje = "Detalle Eliminado" };
+                //registro log contrato
+                var textoLog = "";
+                textoLog += " Tabla de Amortización Eliminada";
+                GrabaLogContrato(contrato.IdContrato, 2, textoLog);
 
             }
             else
@@ -1463,6 +1484,7 @@ namespace tesoreria.Controllers
                                 break;
                             }
                             showMessageString = new { Estado = 0, Mensaje = "Registros Importados Exitosamente" };
+                            
                         }
                         catch (DbEntityValidationException ex)
                         {
@@ -1488,7 +1510,10 @@ namespace tesoreria.Controllers
                     {
                         System.IO.File.Delete(pathToExcelFile);
                     }
-
+                    //registro log contrato
+                    var textoLog = "";
+                    textoLog += " Modifica Tabla Amortización ";
+                    GrabaLogContrato(contratoAmortizacion.IdContrato, 2, textoLog);
                 }
                 else
                 {
@@ -2363,9 +2388,10 @@ namespace tesoreria.Controllers
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
-                            where c.IdTipoContrato == 1 && c.FechaTermino>= fechaInicio
+                            where c.IdTipoContrato == 1 && c.FechaTermino>= fechaFin
                             && ((IdEmpresa!=null)?em.IdEmpresa== IdEmpresa : true)
                             && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
+                            
                             //&& ((anio != null) ? c.FechaTermino.Year == anio : true)
                             //&& ((IdMes != null) ? c.FechaTermino.Month == IdMes : true)
                             select new
@@ -2428,7 +2454,7 @@ namespace tesoreria.Controllers
                             join e in db.Estado on c.IdEstado equals e.IdEstado
                             join em in db.Empresa on c.IdEmpresa equals em.IdEmpresa
                             join tc in db.TipoContrato on c.IdTipoContrato equals tc.IdTipoContrato
-                            where c.IdTipoContrato == 1 && c.FechaTermino >= fechaInicio
+                            where c.IdTipoContrato == 1 && c.FechaTermino >= fechaFin
                             && ((IdEmpresa != null) ? em.IdEmpresa == IdEmpresa : true)
                             && ((IdBanco != null) ? c.IdBanco == IdBanco : true)
                             //&& ((anio != null) ? c.FechaTermino.Year == anio : true)
@@ -2476,7 +2502,7 @@ namespace tesoreria.Controllers
                    "SP_DEUDA_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdBanco={4},@valorUf={5}",
                    fechaInicio, fechaFin, (int)Helper.TipoContrato.Leasing, IdEmpresa, IdBanco, valorUfDouble).ToList();
 
-            var totales = deudas.Where(c=>c.IdEstado==(int)Helper.Estado.ConActivo).GroupBy(c => new { c.IdFamilia})
+            var totales = deudas.Where(c=>c.IdEstado!=(int)Helper.Estado.ConCreado && c.SaldoInsoluto>0).GroupBy(c => new { c.IdFamilia})
                 .Select(c => new { 
                     c.Key.IdFamilia,
                     TotalCLP = c.Where(x => x.IdTipoMoneda == 1).Distinct().Sum(x => x.MontoContrato),

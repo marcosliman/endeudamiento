@@ -120,6 +120,8 @@ namespace tesoreria.Controllers
             else
             {
                 var contrato = db.Contrato.Find(IdContrato);
+                var syncCpbte = db.Database.SqlQuery<RetornoGenerico>(
+                   "JOB_ASOCIAR_CPBTE_AMORTIZACION @tmpAccion={0},@IdTipoContrato={1},@IdContratoFiltro={2}", 1, contrato.IdTipoContrato, contrato.IdContrato).FirstOrDefault();
                 return View(contrato);
             }
         }
@@ -202,6 +204,16 @@ namespace tesoreria.Controllers
             var cpbteCuota = (from cd in db.ComprobanteDetAmortizacion
                               where cd.IdContratoDetAmortizacion == IdContratoDetAmortizacion
                               select new { cd.CpbNum, cd.CpbAno, cd.Monto }).ToList();
+            var cpbteContrato = (from cd in db.ComprobanteDetAmortizacion
+                                 join ad in db.Contrato_DetAmortizacion on cd.IdContratoDetAmortizacion equals ad.IdContratoDetAmortizacion
+                                 where ad.Contrato_Amortizacion.IdContrato == contrato.IdContrato
+                                 && cd.IdContratoDetAmortizacion != IdContratoDetAmortizacion 
+                                 select new
+                                 {
+                                     cd.CpbNum,
+                                     cd.CpbAno,
+                                     cd.Monto
+                                 }).ToList();
 
             var cpbteOtras = (from cd in db.ComprobanteDetAmortizacion
                               where cd.IdContratoDetAmortizacion != IdContratoDetAmortizacion
@@ -222,6 +234,7 @@ namespace tesoreria.Controllers
                                     Tipo=((c.CpbTip=="E")?"Egreso":((c.CpbTip=="I")?"Ingreso":"Traspaso")),
                                     seleccionado = (cpbteCuota.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() > 0) ? true : false,
                                     ocupado = (cpbteOtras.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() > 0) ? true : false,
+                                    ocupadoC = (cpbteContrato.Where(y => y.CpbNum == c.CpbNum && y.CpbAno == c.CpbAno).Count() > 0) ? true : false,
                                     BaseSoftland = empresa.BaseSoftland,
                                 }).ToList();
             var json = Json(listaRetorno, JsonRequestBehavior.AllowGet);

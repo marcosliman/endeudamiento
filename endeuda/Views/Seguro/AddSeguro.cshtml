@@ -290,8 +290,13 @@
                     idPolizaActivo: idPolizaActivo
                 },
                 success: function (data) {
-                    toastr.success(data.Mensaje);
-                    RefreshListaActivo();
+                    if (data.Estado == 0) {
+                        toastr.success(data.Mensaje);
+                        RefreshListaActivo();
+                    }
+                    else {
+                        toastr.error(data.Mensaje);
+                    }
                 },
                 failure: function (data) {
                     toastr.error(data.Mensaje);

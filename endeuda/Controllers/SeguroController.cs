@@ -12,6 +12,7 @@ using System.Data;
 using LinqToExcel;
 using System.Data.OleDb;
 using System.Data.Entity.Validation;
+
 namespace tesoreria.Controllers
 {
     public class SeguroController : Controller
@@ -567,6 +568,7 @@ namespace tesoreria.Controllers
                                     var addActivo = new PolizaActivo();
                                     addActivo.IdPoliza = idPoliza;
                                     addActivo.IdActivo = ac;
+                                    addActivo.FechaRegistro=DateTime.Now;
                                     db.PolizaActivo.Add(addActivo);
                                     db.SaveChanges();
 
@@ -606,24 +608,34 @@ namespace tesoreria.Controllers
                 try
                 {
                     var dbPolizaActivo = db.PolizaActivo.Find(idPolizaActivo);
-
-                    if (dbPolizaActivo != null)
+                    var sinistros = db.Siniestro.Where(c => c.IdPolizaActivo == idPolizaActivo).ToList();
+                    if (sinistros.Count() > 0)
                     {
-
-                        db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActDisponible, dbPolizaActivo.IdActivo);
-                        db.SaveChanges();
-
-
-                        db.PolizaActivo.Remove(dbPolizaActivo);
-                        db.SaveChanges();
-                        dbContextTransaction.Commit();
-                        showMessageString = new { Estado = 0, Mensaje = "Asociación eliminada con exito" };
+                        dbContextTransaction.Rollback();
+                        showMessageString = new { Estado = 100, Mensaje = "Activo cuenta con Siniestro asociado" };                        
                     }
                     else
                     {
-                        dbContextTransaction.Rollback();
-                        showMessageString = new { Estado = 500, Mensaje = "Se ha producido un error, intentelo nuevamente" };
+                        if (dbPolizaActivo != null)
+                        {
+
+                            db.Database.ExecuteSqlCommand("UPDATE Activo SET IdEstado = {0} WHERE IdActivo = {1}", (int)Helper.Estado.ActDisponible, dbPolizaActivo.IdActivo);
+                            db.SaveChanges();
+
+
+                            db.PolizaActivo.Remove(dbPolizaActivo);
+                            db.SaveChanges();
+                            dbContextTransaction.Commit();
+                            showMessageString = new { Estado = 0, Mensaje = "Asociación eliminada con exito" };
+                        }
+                        else
+                        {
+                            dbContextTransaction.Rollback();
+                            showMessageString = new { Estado = 500, Mensaje = "Se ha producido un error, intentelo nuevamente" };
+                        }
+
                     }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -687,6 +699,8 @@ namespace tesoreria.Controllers
                                 p.PaginaInicial = dato.PaginaInicial;
                                 p.PaginaTermino = dato.PaginaTermino;
                                 p.ValorPrima = dato.ValorPrima;
+                                p.NumeroEndoso = dato.NumeroEndoso;
+                                p.FechaEndoso = dato.FechaEndoso;
                                 db.SaveChanges();
                                 dbContextTransaction.Commit();
                             }
@@ -962,47 +976,49 @@ namespace tesoreria.Controllers
                             && ((RutBeneficiario != "" && RutBeneficiario != null)? ((rel.RutBeneficiario != null) ? rel.RutBeneficiario : "").Replace(".", "").Replace("-", "")== RutBeneficiario : true)
                             select new
                             {
-                                IdPoliza = p.IdPoliza,
+                                p.IdPoliza,
                                 IdSiniestro = (sv != null) ? sv.IdSiniestro : 0,
-                                NumeroPoliza = p.NumeroPoliza,
+                                p.NumeroPoliza,
                                 NombreTipoSeguro = (p.TipoSeguro.NombreTipoSeguro != null) ? p.TipoSeguro.NombreTipoSeguro : string.Empty,
                                 NombreEmpresaAseguradora = (p.EmpresaAseguradora.NombreEmpresaAseguradora != null) ? p.EmpresaAseguradora.NombreEmpresaAseguradora : string.Empty,
-                                MontoAsegurado = p.MontoAsegurado,
-                                PrimaMensual = p.PrimaMensual,
-                                NumeroPagos = p.NumeroPagos,
+                                p.MontoAsegurado,
+                                p.PrimaMensual,
+                                p.NumeroPagos,
                                 NombreTipoMoneda = (p.TipoMoneda.NombreTipoMoneda != null) ? p.TipoMoneda.NombreTipoMoneda : string.Empty,
-                                FechaVencimiento = p.FechaVencimiento,
+                                p.FechaVencimiento,
                                 FechaVencimientoStr = p.FechaVencimiento.ToString("dd-MM-yyyy"),
-                                Beneficiario = rel.Beneficiario,
-                                RutBeneficiario = rel.RutBeneficiario,
-                                FechaEnvioBanco = p.FechaEnvioBanco,
+                                rel.Beneficiario,
+                                rel.RutBeneficiario,
+                                p.FechaEnvioBanco,
                                 FechaEnvioBancoStr = p.FechaEnvioBanco.ToString("dd-MM-yyyy"),
-                                RazonSocial = p.Empresa.RazonSocial,
-                                IdPolizaActivo = rel.IdPolizaActivo,
-                                NumeroInterno = a.NumeroInterno,
-                                Familia = (a.Familia.NombreFamilia != null) ? a.Familia.NombreFamilia : string.Empty,
+                                p.Empresa.RazonSocial,
+                                rel.IdPolizaActivo,
+                                a.NumeroInterno,
+                                Familia = (a.Familia != null) ? a.Familia.NombreFamilia : string.Empty,
                                 NombreEstadoActivo = (a.Estado.NombreEstado != null) ? a.Estado.NombreEstado : string.Empty,
-                                Descripcion = a.Descripcion,
-                                Patente = a.Patente,
-                                Marca = a.Marca,
-                                Modelo = a.Modelo,
-                                Motor = a.Motor,
-                                Chasis = a.Chasis,
-                                Anio = a.Anio,
+                                a.Descripcion,
+                                a.Patente,
+                                a.Marca,
+                                a.Modelo,
+                                a.Motor,
+                                a.Chasis,
+                                a.Anio,
                                 Grupo = a.DesGrupo,
                                 SubGrupo = a.DesSGru,
-                                Valor = a.Valor,
+                                a.Valor,
                                 FechaRegistroActivo = a.FechaRegistro,
                                 FechaRegistroActivoStr = "",
-                                Glosa = a.Glosa,
-                                FechaBaja = a.FechaBaja,
+                                a.Glosa,
+                                a.FechaBaja,
                                 a.FecIngBaja,
                                 TieneSiniestro = (db.Siniestro.Where(x => x.IdPolizaActivo == rel.IdPolizaActivo).Count() > 0) ? "SI" : "NO",
                                 EnContrato = (db.ContratoActivo.Where(x => x.IdActivo == a.IdActivo).Count() > 0) ? true : false,
                                 ContratoActivo = db.ContratoActivo.Where(x => x.IdActivo == a.IdActivo).FirstOrDefault(),
                                 rel.ValorPrima,
                                 rel.PaginaInicial,
-                                rel.PaginaTermino
+                                rel.PaginaTermino,
+                                rel.NumeroEndoso,
+                                rel.FechaEndoso
                             }).AsEnumerable().ToList();
             var listaRetorno = (from reg in registro
                                 select new PolizaActivoViewModel
@@ -1052,6 +1068,8 @@ namespace tesoreria.Controllers
                                     DescripcionLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.Descripcion : "") : "",
                                     TipoPropiedad = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdEstado == (int)Helper.Estado.ConActivo) ? "Leasing" : "Propio") : "Propio",
                                     TerminoLeasing = (reg.ContratoActivo != null) ? ((reg.ContratoActivo.Contrato.IdTipoContrato == 1) ? reg.ContratoActivo.Contrato.FechaTermino : (DateTime?)null) : (DateTime?)null,
+                                    NumeroEndoso=reg.NumeroEndoso,
+                                    FechaEndoso=reg.FechaEndoso
                                     //(Propio (parte siendo propio) o leasing vigente (al finalizar leasing pasa a ser propio))
                                 }).ToList();
             return listaRetorno;
@@ -1741,8 +1759,8 @@ namespace tesoreria.Controllers
                         {
                             if (a.NumeroInterno !=null && a.NumeroInterno!="")
                             {
-
-                                var activo = activosEmpresa.Where(c => c.NumeroInterno.TrimStart('0') == a.NumeroInterno.TrimStart('0') && c.IdEmpresa==poliza.IdEmpresa).FirstOrDefault();
+                                var nroInnn = a.NumeroInterno.TrimStart('0');
+                                var activo = activosEmpresa.Where(c => ((c.NumeroInterno!=null && c.NumeroInterno!="")?c.NumeroInterno.TrimStart('0'):"") == a.NumeroInterno.TrimStart('0') && c.IdEmpresa==poliza.IdEmpresa).FirstOrDefault();
                                 if (activo != null)
                                 {
                                     var empresa = db.Empresa.Find(poliza.IdEmpresa);
@@ -1760,6 +1778,8 @@ namespace tesoreria.Controllers
                                             activoP.RutBeneficiario = auxiliar.RutAux;
                                             activoP.Beneficiario = auxiliar.NomAux;
                                             activoP.CodAux = auxiliar.CodAux;
+                                            activoP.NumeroEndoso = a.NumeroEndoso;
+                                            activoP.FechaEndoso = a.FechaEndoso;
                                             db.SaveChanges();
                                         }
                                         else
@@ -1774,6 +1794,9 @@ namespace tesoreria.Controllers
                                             newActivoP.Beneficiario = auxiliar.NomAux;
                                             newActivoP.CodAux = auxiliar.CodAux;
                                             newActivoP.IdActivo = activo.IdActivo;
+                                            newActivoP.FechaRegistro = DateTime.Now;
+                                            newActivoP.NumeroEndoso = a.NumeroEndoso;
+                                            newActivoP.FechaEndoso = a.FechaEndoso;
                                             db.PolizaActivo.Add(newActivoP);
                                             db.SaveChanges();
                                         }

@@ -24,5 +24,8 @@ namespace modelo.Models.Local
         public int? PaginaTermino { get; set; }
         public string CodAux { get; set; }
         public double? ValorPrima { get; set; }
+        public string NumeroEndoso { get; set; }
+        public string FechaEndoso { get; set; }
+        public DateTime FechaRegistro { get; set; }
     }
 }

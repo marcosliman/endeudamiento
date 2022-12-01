@@ -317,6 +317,7 @@ namespace tesoreria.Controllers
             table.Columns.Add("TotalGeneral", typeof(System.String));
             table.Columns.Add("SaldoInsoluto", typeof(System.String));
             table.Columns.Add("TotalFinal", typeof(System.String));
+            table.Columns.Add("IdFamilia", typeof(System.String)); 
             Session.Add("Tabla", table);
             var fechaActual = DateTime.Now.Date;
             foreach (var d in deudas)
@@ -339,6 +340,7 @@ namespace tesoreria.Controllers
                 row["TotalGeneral"] = d.TotalGeneral;
                 row["SaldoInsoluto"] = d.SaldoInsoluto;
                 row["TotalFinal"] = d.TotalFinal;
+                row["IdFamilia"] = d.IdFamilia;
                 table.Rows.Add(row);
 
                 gridview.DataSource = table;
