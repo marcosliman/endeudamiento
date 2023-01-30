@@ -185,7 +185,7 @@ namespace tesoreria.Controllers
                 mensaje += "<br>";
                 mensaje += "<h3>" + contraseniaAleatoria + "</h3><br>";
                 mensaje += "<br><b>Este mail se genera en forma automática, por favor, no responder</b>";
-                var resApro = funciones.envioCorreo(mensaje, usuario.CorreoElectronico, "Recuperar Contraseña");
+                var resApro = funciones.envioCorreo(mensaje, usuario.CorreoElectronico, "Recuperar Contraseña",null);
             }
             else
             {

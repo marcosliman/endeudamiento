@@ -5,74 +5,107 @@
     var NombreMenu = "ContratoBuscar";
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
     var TieneEditar = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Editar);
+    var ArchivosLicitacion = ViewData["ArchivosLicitacion"] as List<modelo.Models.Local.LicitacionOfertaDocumento>;
 }
 
 <div class="alert alert-success">
     <h5><i class="icon fas fa-cloud"></i>@ViewBag.Title</h5>
     Aquí puede VER los documentos ingresados para al contrato.
 </div>
-<div class="card-body">
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered" id="grillaDocumento" width="100%">
-            <thead>
-                <tr>
-                    <th>Tipo Documento</th>
-                    <th>Nombre</th>
-                    <th>Acción</th>
-                </tr>
-            </thead>
-            <tbody id="tbody"></tbody>
-        </table>
-    </div>
-    <br /><br />
-    @if (TieneEditar == true)
-    {
-        <div class="card card-outline card-info collapsed-card">
-            <div class="card-header">
-                <h3 class="card-title">Cargar Documentos</h3>
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+@if (Model.IdLicitacionOferta > 0)
+{
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">Documentos Licitación</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
             </div>
-            <div class="card-body">
-                <form name="frmUpload" id="frmUpload" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="idContrato" id="idContrato" value="@Model.IdContrato" />
-                    <div class="card-body pb-0">
-                        <div class="form-group form-group-sm row">
-                            <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Tipo Documento</label>
-                            <div class="col-auto col-form-label">
-                                <select name="idTipoDocumento" id="idTipoDocumento" class="form-control form-control-sm required">
-                                    <option value="">--Seleccione Tipo Documento --</option>
-                                    @{
-                                        foreach (var t in ViewData["listaTipoDocumento"] as List<modelo.ViewModel.RetornoGenerico>)
-                                        {
-                                            <text>
-                                                <option value="@t.Id">
-                                                    @t.Nombre</text>
-                                        }
-                                    }
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group form-group-sm row">
-                        <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Documento [.xls,.xlsx,.pdf]</label>
-                        <div class="col-auto col-form-label">
-                            <input type="file" class="form-control form-control-sm" name="archivo" id="archivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
-                        </div>
-                    </div>
-
-                    <div class="col-sm-auto col-form-label">
-                        <button type="button" class="btn btn-primary btn-sm fileinput-button" id="btnUpload" onclick="Upload()"><i class="fa fa-upload"></i> Cargar Documento</button>
-                    </div>
-                </div>
-            </form>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaDocsLicitacion" data-order='[[ 0, "asc" ]]'>
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Adjunto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ArchivosLicitacion)
+                        {
+                            <tr>
+                                <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 }
-
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered" id="grillaDocumento" width="100%">
+                <thead>
+                    <tr>
+                        <th>Tipo Documento</th>
+                        <th>Nombre</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody"></tbody>
+            </table>
+        </div>
+    </div>
 </div>
+@if (TieneEditar == true)
+{
+    <div class="card card-outline card-info">
+        <div class="card-header">
+            <h3 class="card-title">Cargar Documentos</h3>
+            <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+            </div>
+        </div>
+        <div class="card-body">
+            <form name="frmUpload" id="frmUpload" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="idContrato" id="idContrato" value="@Model.IdContrato" />
+                <div class="card-body pb-0">
+                    <div class="form-group form-group-sm row">
+                        <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Tipo Documento</label>
+                        <div class="col-auto col-form-label">
+                            <select name="idTipoDocumento" id="idTipoDocumento" class="form-control form-control-sm required">
+                                <option value="">--Seleccione Tipo Documento --</option>
+                                @{
+                                    foreach (var t in ViewData["listaTipoDocumento"] as List<modelo.ViewModel.RetornoGenerico>)
+                                    {
+                                        <text>
+                                            <option value="@t.Id">
+                                                @t.Nombre</text>
+                                    }
+                                }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Documento [.xls,.xlsx,.pdf]</label>
+                    <div class="col-auto col-form-label">
+                        <input type="file" class="form-control form-control-sm" name="archivo" id="archivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
+                    </div>
+                </div>
+
+                <div class="col-sm-auto col-form-label">
+                    <button type="button" class="btn btn-primary btn-sm fileinput-button" id="btnUpload" onclick="Upload()"><i class="fa fa-upload"></i> Cargar Documento</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+}
 
 
 <form name="frmContratoAcc" id="frmContratoAcc" method="post">
@@ -151,7 +184,7 @@
     function archivosTable() {
         var table = $('#grillaDocumento').DataTable({
             //"dom": '',
-            buttons:[],
+            buttons: [],
             "retrieve": true,
             'ajax': {
                 "type": "POST",
@@ -180,7 +213,7 @@
                         var acciones = '';
                         if (row.TieneEliminar == true) {
                             acciones += '<button class="btn btn-danger btn-xs" type="button" onclick="EliminarArchivo(' + data + ');" title="Eliminar"><i class="far fa-trash-alt"></i></button>';
-                        }                        
+                        }
                         return acciones;
                     }
                 }

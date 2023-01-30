@@ -31,13 +31,13 @@
             <div class="form-group form-group-sm row">
                 <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Tasa Mensual</label>
                 <div class="col-6">
-                    <input type="text" class="form-control form-control-sm tasa" id="tasaMensual" name="tasaMensual" placeholder="Ingrese la tasa mensual ofrecida" value="@Model.TasaMensual.ToString().Replace(",",".")">
+                    <input type="text" class="form-control form-control-sm tasa numberMiles" id="tasaMensual" name="tasaMensual" placeholder="Ingrese la tasa mensual ofrecida" value="@Model.TasaMensual">
                 </div>
             </div>
             <div class="form-group form-group-sm row">
                 <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Tasa Anual</label>
                 <div class="col-6">
-                    <input type="text" class="form-control form-control-sm tasa" id="tasaAnual" name="tasaAnual" placeholder="Ingrese la tasa anual ofrecida" value="@Model.TasaAnual.ToString().Replace(",",".")">
+                    <input type="text" class="form-control form-control-sm tasa numberMiles" id="tasaAnual" name="tasaAnual" placeholder="Ingrese la tasa anual ofrecida" value="@Model.TasaAnual">
                 </div>
             </div>
             <div class="form-group form-group-sm row">
@@ -58,40 +58,41 @@
             <button type="button" id="btnGrabarOferta" onclick="GrabarOferta()" class="btn btn-primary btn-sm">@Model.TituloBoton</button>
         </div>
     }
-        <div class="form-group form-group-sm row">
-            <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaDocumento" data-order='[[ 0, "asc" ]]'>
-                <thead class="thead-light">
+    <div class="form-group form-group-sm row">
+        <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaDocumento" data-order='[[ 0, "asc" ]]'>
+            <thead class="thead-light">
+                <tr>
+                    <th class="no-sort" width="3%">Item</th>
+                    <th>Adjunto</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Archivos.ToList())
+                {
                     <tr>
-                        <th class="no-sort" width="3%">Item</th>
-                        <th>Adjunto</th>
+                        <td>
+                            <button data-dz-remove class="btn btn-primary delete btn-xs" onclick="EliminarArchivo('@item.IdLicitacionOfertaDocumento');">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                        <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Archivos.ToList())
-                    {
-                        <tr>
-                            <td>
-                                <button data-dz-remove class="btn btn-primary delete btn-xs" onclick="EliminarArchivo('@item.IdLicitacionOfertaDocumento');">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </td>
-                            <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     $(document).ready(function () {
+        
         $('#frmAddOferta').validate({
             debug: false,
             errorElement: "em",
             errorContainer: $("#warning"),
             rules: {
                 idBanco: { required: true },
-                tasaMensual: { required: true, number: true },
-                tasaAnual: { required: true, number: true },
+                tasaMensual: { required: true },
+                tasaAnual: { required: true},
                 plazo: { required: true, digits: true }
             }
         });
@@ -99,11 +100,10 @@
     });
 
     function GrabarOferta() {
+        $(".numberMiles").each(function () {
+            $(this).val($(this).val().toString().replace(/[$.]/g, ''))
+        });
         if ($('#frmAddOferta').valid()) {
-            $(".tasa").each(function () {
-                $(this).val($(this).val().toString().replace(/[$.]/g, ','))
-            });
-
             var input = document.getElementById('archivo');
             var filePath = input.value;
             var file = input.files[0];
@@ -139,6 +139,9 @@
                 })
             }
         }
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
     }
 
     function archivosTable() {

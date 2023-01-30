@@ -29,5 +29,6 @@ namespace modelo.Models.Local
         public double InteresTotal { get; set; }
         public int IdTipoMoneda { get; set; }
         public double? ValorCambio { get; set; }
+        public string CodigoContrato { get; set; }
     }
 }

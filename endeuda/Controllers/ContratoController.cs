@@ -755,6 +755,11 @@ namespace tesoreria.Controllers
                 contrato.Descripcion = descripcion;
                 contrato.IdFamilia = IdFamilia;
                 db.SaveChanges();
+                SendEmailController send = new SendEmailController();
+                if (contrato.IdTipoContrato == (int)Helper.TipoContrato.Leasing)
+                {
+                    var eniviado=send.NotificaActivacionContrato(contrato.IdContrato);
+                }                
                 showMessageString = new { Estado = 0, Mensaje = "Contrato Activado Exitosamente" };
             }
             else
@@ -784,6 +789,8 @@ namespace tesoreria.Controllers
                     addLog.FechaRegistro = DateTime.Now;
                     db.ContratoLog.Add(addLog);
                     db.SaveChanges();
+                    SendEmailController send= new SendEmailController();
+                    var ret = send.NotificaModificacionContrato(dbContrato.IdContrato, nombreLog);
                 }
             }
 
@@ -1052,7 +1059,7 @@ namespace tesoreria.Controllers
                                 NombreProveedor = ac.NombreProveedor,
                                 NumeroFactura = ac.NumeroFactura,
                                 Patente = ac.Patente,
-                                Editable = (con.IdLicitacionOferta != null) ? false : true
+                                Editable = (con.IdLicitacionOferta != null) ? ((rel.EsEditable!=null)?rel.EsEditable:false) : true
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -1144,7 +1151,6 @@ namespace tesoreria.Controllers
                     {
                         try
                         {
-
                             var textoLog = "";
                             foreach (int ac in activos)
                             {
@@ -1154,6 +1160,7 @@ namespace tesoreria.Controllers
                                     var addActivo = new ContratoActivo();
                                     addActivo.IdContrato = idContrato;
                                     addActivo.IdActivo = ac;
+                                    addActivo.EsEditable = true;
                                     db.ContratoActivo.Add(addActivo);
                                     db.SaveChanges();
 
@@ -1302,15 +1309,15 @@ namespace tesoreria.Controllers
                 {
                     soloVer = "NO";
                 }
-                var cpbtes = (from ca in db.Contrato_Amortizacion
-                              join cad in db.Contrato_DetAmortizacion on ca.IdContratoAmortizacion equals cad.IdContratoAmortizacion
-                              join cpbt in db.ComprobanteDetAmortizacion on cad.IdContratoDetAmortizacion equals cpbt.IdContratoDetAmortizacion
-                              where ca.IdContrato == contrato.IdContrato
-                              select new { cpbt.IdContratoDetAmortizacion }).ToList();
-                if (cpbtes.Count() > 0)
-                {
-                    eliminar = "NO";
-                }
+                //var cpbtes = (from ca in db.Contrato_Amortizacion
+                //              join cad in db.Contrato_DetAmortizacion on ca.IdContratoAmortizacion equals cad.IdContratoAmortizacion
+                //              join cpbt in db.ComprobanteDetAmortizacion on cad.IdContratoDetAmortizacion equals cpbt.IdContratoDetAmortizacion
+                //              where ca.IdContrato == contrato.IdContrato
+                //              select new { cpbt.IdContratoDetAmortizacion }).ToList();
+                //if (cpbtes.Count() > 0)
+                //{
+                //    eliminar = "NO";
+                //}
             }
             else
             {
@@ -1329,6 +1336,8 @@ namespace tesoreria.Controllers
             var existeAmortizacion = db.Contrato_Amortizacion.Where(c => c.IdContrato == IdContrato).FirstOrDefault();
             if (existeAmortizacion != null)
             {
+                var cpbtes = db.ComprobanteDetAmortizacion.Where(c => c.Contrato_DetAmortizacion.IdContratoAmortizacion == existeAmortizacion.IdContratoAmortizacion).ToList();
+                db.ComprobanteDetAmortizacion.RemoveRange(cpbtes);
                 var detAmortizacion = db.Contrato_DetAmortizacion.Where(c => c.IdContratoAmortizacion == existeAmortizacion.IdContratoAmortizacion).ToList();
                 db.Contrato_DetAmortizacion.RemoveRange(detAmortizacion);               
                 db.Contrato_Amortizacion.Remove(existeAmortizacion);
@@ -1686,7 +1695,12 @@ namespace tesoreria.Controllers
                                   .Select(c => new RetornoGenerico{ Id=c.Key.IdFamilia,Nombre=c.Key.NombreFamilia}).ToList();
                 SelectList listaFamilia = new SelectList(famContrato.OrderBy(c => c.Nombre), "Id", "Nombre");
                 ViewData["listaFamilia"] = listaFamilia;
-
+                ViewData["ArchivosLicitacion"] = "";
+                if (contrato.IdLicitacionOferta > 0)
+                {
+                    var doc = db.LicitacionOfertaDocumento.Where(c => c.IdLicitacionOferta == contrato.IdLicitacionOferta).ToList();
+                    ViewData["ArchivosLicitacion"] = doc;
+                }
                 return View(contrato);
             }
         }
@@ -2339,7 +2353,12 @@ namespace tesoreria.Controllers
                                                 }).ToList()
                                 }).AsEnumerable().ToList();*/
                 var registro = db.Contrato.Find(idContrato);
-
+                ViewData["ArchivosLicitacion"] = "";
+                if (registro.IdLicitacionOferta > 0)
+                {
+                    var doc = db.LicitacionOfertaDocumento.Where(c => c.IdLicitacionOferta == registro.IdLicitacionOferta).ToList();
+                    ViewData["ArchivosLicitacion"] = doc;
+                }
                 return View(registro);
             }
         }
@@ -2525,6 +2544,24 @@ namespace tesoreria.Controllers
                                     }
                           ).ToList();
             return Json(listTasaPromedio, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult DevolverContrato(int IdContrato)
+        {
+            dynamic showMessageString = string.Empty;
+            if (seguridad == null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Editar))
+            {
+                showMessageString = new { Estado = 1000, Mensaje = "Se finalizó la sesión o no cuenta con permisos" };
+            }
+            else
+            {
+                var contrato = db.Contrato.Find(IdContrato);
+                contrato.IdEstado = (int)Helper.Estado.ConCreado;
+                db.SaveChanges();
+                showMessageString = new { Estado = 0, Mensaje = "Contrato Devuelto Exitosamente", IdContrato = IdContrato };
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
         }
     }
 }

@@ -18,5 +18,6 @@ namespace modelo.Models.Local
         public int IdActivo { get; set; }
         [ForeignKey("IdActivo")]
         public virtual Activo Activo { get; set; }
+        public bool? EsEditable { get; set; }
     }
 }

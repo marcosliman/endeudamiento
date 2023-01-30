@@ -118,18 +118,13 @@ namespace tesoreria.Helper
 
     public enum PerfilAcceso : int
     {
-        AdministradorSag = 1,
-        Productor = 2,
-        EcaUva = 3,
-        EcaVino = 18,
-        Bodega = 4,
-        EncargadoEca = 5,
-        UsuarioEca = 6,
-        EncargadoBodega = 7,
-        AdministradorLaboratorio = 8,
-        Laboratorio = 9,
-        Arrendador = 10,
-        Intermediario = 6
+        Administrador = 1,
+        Licitaciones = 2,
+        AdmControlInterno = 3,
+        AdmContabilidad = 4,
+        AnalistaCreaEquipos = 5,
+        Seguros = 6,
+        Finanzas = 7
     }
 
     public enum TipoAcceso : int

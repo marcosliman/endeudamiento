@@ -82,7 +82,7 @@
         table.ajax.reload(function (json) { });
     }
     function LimpiarAmortizacion(IdContrato) {
-        a = confirm("Seguro de limpiar la amortizacion almacenada?")
+        a = confirm("Se eliminarán las asociaciones de comprobantes realizados.\n¿Seguro de limpiar la amortizacion almacenada?\n")
         if (a) {
             $.ajax({
                 url: "/Contrato/DeleteAmortizacion",
@@ -124,6 +124,7 @@
         };
         var soloVer = "@ViewBag.soloVer";
         var eliminar = "@ViewBag.Eliminar";
+        console.log(soloVer,eliminar)
         var btnImport = [
             {
             text: 'Importar Amortización <i class="fa fa-file-import"></i>',

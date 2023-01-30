@@ -7,6 +7,7 @@
     var montoContrato = ViewBag.MontoContrato;
     var sumaActivo = ViewBag.SumaActivo;
     var sumaAmortizacion = ViewBag.SumaAmortizacion;
+    var ArchivosLicitacion = ViewData["ArchivosLicitacion"] as List<modelo.Models.Local.LicitacionOfertaDocumento>;
 }
 
 <div class="alert alert-success">
@@ -24,18 +25,51 @@
         </div>
     </nav>
 }
-<div class="card card-outline card-info">
+@if (Model.IdLicitacionOferta >0)
+{
+    <div class="card card-outline card-info">
         <div class="card-header">
-            <h3 class="card-title">Cargar Documentos</h3>
+            <h3 class="card-title">Documentos Licitación</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
                     <i class="fas fa-minus"></i>
                 </button>
             </div>
         </div>
+        <div class="card-body">
+           <div class="table-responsive">
+               <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaDocsLicitacion" data-order='[[ 0, "asc" ]]'>
+                   <thead class="thead-light">
+                       <tr>                          
+                           <th>Adjunto</th>
+                       </tr>
+                   </thead>
+                   <tbody>
+                       @foreach (var item in ArchivosLicitacion)
+                       {
+                           <tr>                              
+                               <td><a href="JavaScript:Descargar('@item.UrlDocumento ')" class="btn-link linkArchivo text-sm"><i class="fa fa-file-download"></i> @item.NombreOriginal</a></td>
+                           </tr>
+                       }
+                   </tbody>
+               </table>
+           </div>
+        </div>
+    </div>
+}
+
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title">Cargar Documentos</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
     <div class="card-body">
         <form name="frmUpload" id="frmUpload" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="idContrato" id="idContrato" value="@Model.IdContrato" />
+            <input type="hidden" name="idContrato" id="idContrato" value="@Model.IdContrato" />
             <div class="card-body pb-0">
                 <div class="form-group form-group-sm row">
                     <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Tipo Documento</label>
@@ -52,17 +86,17 @@
                                     </text>
                                 }
                             }
-                    </select>
+                        </select>
+                    </div>
+                    <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Documento [.xls,.xlsx,.pdf]</label>
+                    <div class="col-auto col-form-label">
+                        <input type="file" class="form-control form-control-sm" name="archivo" id="archivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
+                    </div>
+                    <div class="col-sm-auto col-form-label">
+                        <button type="button" class="btn btn-primary btn-sm fileinput-button" id="btnUpload" onclick="Upload()"><i class="fa fa-upload"></i> Cargar Documento</button>
+                    </div>
                 </div>
-                <label for="Alias" class="col-sm-2 col-form-label col-form-label-sm">Documento [.xls,.xlsx,.pdf]</label>
-                <div class="col-auto col-form-label">
-                    <input type="file" class="form-control form-control-sm" name="archivo" id="archivo" placeholder="archivo" accept=".xls,.xlsx,.pdf" />
-                </div>
-                <div class="col-sm-auto col-form-label">
-                    <button type="button" class="btn btn-primary btn-sm fileinput-button" id="btnUpload" onclick="Upload()"><i class="fa fa-upload"></i> Cargar Documento</button>
-                </div>
-                </div>
-                
+
             </div>
         </form>
     </div>
@@ -102,6 +136,7 @@
             <div class="modal-body">
                 @using (Ajax.BeginForm("ActivarContrato", "Contrato", new AjaxOptions
                 {
+                    OnBegin = "mostrarCargando()",
                     InsertionMode = InsertionMode.Replace,
                     HttpMethod = "post",
                     OnSuccess = "Success_dl",
@@ -111,7 +146,7 @@
                 {
                     var descRequired = (Model.IdTipoFinanciamiento == (int)tesoreria.Helper.TipoFinanciamiento.EstructuradoConGarantia) ? "required" : "";
                     <input type="hidden" name="idContrato" id="idContratoModal" />
-                    
+
                     <div class="form-group row">
                         <label for="IdFamilia" class="col-form-label">Familia Contrato</label>
                         @Html.DropDownList("IdFamilia", (SelectList)ViewData["listaFamilia"], null, htmlAttributes: new { @class = "form-control form-control-sm" })
@@ -134,13 +169,13 @@
                                 </div>
                             }
                             @*else
-                    {
-                        <div class="alert alert-success">
-                            <h5><i class="icon fas fa-check-circle"></i></h5>
-                            La suma de los valores de los activos <b>@(String.Format("{0:N0}", @sumaActivo))</b> <br />
-                            es igual al monto del contrato <b>@(String.Format("{0:N0}", @montoContrato))</b>
-                        </div>
-                    }*@
+                                {
+                                    <div class="alert alert-success">
+                                        <h5><i class="icon fas fa-check-circle"></i></h5>
+                                        La suma de los valores de los activos <b>@(String.Format("{0:N0}", @sumaActivo))</b> <br />
+                                        es igual al monto del contrato <b>@(String.Format("{0:N0}", @montoContrato))</b>
+                                    </div>
+                                }*@
                             if (sumaAmortizacion != montoContrato)
                             {
                                 montoValido = "N";
@@ -152,13 +187,13 @@
                                 </div>
                             }
                             @*else
-                    {
-                    <div class="alert alert-success">
-                        <h5><i class="icon fas fa-check-circle"></i></h5>
-                        La suma de las cuotas de la amortización <b>@(String.Format("{0:N0}", sumaAmortizacion))</b><br />
-                        es igual al monto del contrato <b>@(String.Format("{0:N0}", montoContrato))</b>
-                    </div>
-                    }*@
+                                {
+                                <div class="alert alert-success">
+                                    <h5><i class="icon fas fa-check-circle"></i></h5>
+                                    La suma de las cuotas de la amortización <b>@(String.Format("{0:N0}", sumaAmortizacion))</b><br />
+                                    es igual al monto del contrato <b>@(String.Format("{0:N0}", montoContrato))</b>
+                                </div>
+                                }*@
                             if (montoValido == "S")
                             {
                                 <label>¿Está seguro de activar el CONTRATO seleccionado?</label>
@@ -171,28 +206,28 @@
                             No Acepto
                         </a>
                         @*@if (montoValido == "S")
-                {
-                    <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
-                    <a class="btn btn-danger" data-dismiss="modal">
-                        No Acepto
-                    </a>
-                }
-                else
-                {
-                    <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
-                }*@
+                            {
+                                <button type="button" class="btn btn-success btn-ok" id="btnAceptaActivar">Acepto</button>
+                                <a class="btn btn-danger" data-dismiss="modal">
+                                    No Acepto
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-default" data-dismiss="modal">Cerrar</a>
+                            }*@
 
                     </div>
                 }
 
 
             </div>
+        </div>
     </div>
-</div>
 </div>
 <form name="frmContratoAcc" id="frmContratoAcc" method="post">
     <input type="hidden" name="idContrato" id="idContratoAcc" />
-    
+
 </form>
 
 <script>
@@ -334,6 +369,7 @@
 
     $('#btnAceptaActivar').click(function () {
         if ($("#frmActivar").valid()) {
+            mostrarCargando();
             $.ajax({
                 type: 'POST',
                 url: '/Contrato/ActivarContrato/',
@@ -346,13 +382,15 @@
                     else {
                         toastr.error(data.Mensaje);
                     }
+                    esconderCargando();
                 },
                 failure: function (data) {
                     Failure(data);
+                    esconderCargando();
                 }
             })
         }
-        
+
     });
 
     function RefreshListaArchivo() {

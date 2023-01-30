@@ -45,6 +45,23 @@ namespace modelo.ViewModel
         public double? DeudaInteresMes { get; set; }
         public double? DeudaCuotaMes { get; set; }
         public double? DeudaCapitalMes { get; set; }
+        public string CpbAnoTraspaso { get; set; }
+        public string CpbNumTraspaso { get; set; }
+        public string BaseSoftland { get; set; }
+        public double? ObligacionCP { get; set; }
+        public double? InteresesCP { get; set; }
+        public double? IVACP { get; set; }
+        public double? ObligacionLP { get; set; }
+        public double? InteresesLP { get; set; }
+        public double? IVALP { get; set; }
+        public string RutBanco { get; set; }
+        public string PCCODI { get; set; }
+        public double? BalanceObligacionCP { get; set; }
+        public double? BalanceInteresCP { get; set; }
+        public double? BalanceIVACP { get; set; }
+        public double? BalanceObligacionLP { get; set; }
+        public double? BalanceInteresLP { get; set; }
+        public double? BalanceIVALP { get; set; }
     }
 
 }

@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = "Reporte Deuda Leasing";
-}
-@{
+
     var NombreMenu = "ConsolidadoDeudaLeasing";
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
     var TieneCrear = seguridad.TienePermiso(NombreMenu, tesoreria.Helper.TipoAcceso.Crear);

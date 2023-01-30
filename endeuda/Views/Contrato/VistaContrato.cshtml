@@ -149,6 +149,7 @@
         </div>
             @if (TieneEditar == true && Model.IdEstado!=(int)tesoreria.Helper.Estado.ConCreado && Model.IdEstado != (int)tesoreria.Helper.Estado.ConFinalizado) {
                 <div class="card-footer">
+                    <button type="button" name="btnCrear" id="btnCrear" onclick="DevolverContrato()" class="btn btn-warning btn-sm"><i class="fa fa-undo-alt"></i> Devovler</button>
                     <button type="button" name="btnCrear" id="btnCrear" onclick="GrabarContrato()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> Actualizar</button>
                 </div>
             }
@@ -226,7 +227,31 @@
             $(this).val(SeparadorMilesInput($(this).val().toString()))
         })
     }
-
+    function DevolverContrato() {
+        var a = confirm("¿seguro de devolver el contrato?");
+        if (a == true) {
+            mostrarCargando();
+            $.ajax({
+                type: 'POST',
+                url: '/Contrato/DevolverContrato/',
+                data: { IdContrato:"@Model.IdContrato"},
+                success: function (data) {
+                    if (data.result.Estado == "0") {
+                        RefreshLista();
+                        Volver();
+                        esconderCargando();
+                    }
+                    else {
+                        toastr.error(data.result.Mensaje);
+                        esconderCargando();
+                    }
+                },
+                failure: function (data) {
+                    toastr.error("Error al Devolver");
+                }
+            });
+        }        
+    }
     function Success(data) {
         if (data.result.Estado == "0") {
             CargaTab('tab1', '1');

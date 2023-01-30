@@ -17,5 +17,6 @@ namespace modelo.Models.Local
         public DateTime? FechaRegistro { get; set; }       
         public string UrlLogo { get; set; }
         public string CodBanco { get; set; }
+        public string RutBanco { get; set; }
     }
 }

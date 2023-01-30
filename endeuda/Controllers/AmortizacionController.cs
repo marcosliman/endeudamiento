@@ -7,6 +7,15 @@ using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
 using System.Globalization;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.IO;
+using System.Web.UI.WebControls;
+using System.Web.UI;
+using tesoreria.Helper;
+using System.Text;
 namespace tesoreria.Controllers
 {
     public class AmortizacionController : Controller
@@ -55,11 +64,9 @@ namespace tesoreria.Controllers
                 var contrato = new ContratoViewModel();
                 contrato.FechaRegistro = DateTime.Now;
                 contrato.FechaInicioStr = contrato.FechaRegistro.ToString("dd-MM-yyyy");
-
                 return View(contrato);
             }
         }
-
         public ActionResult ListaContrato_Read(int? idTipoContrato, int? IdEmpresa, int? Anio, int? IdMes)
         {
             var inicioMes="01-"+IdMes.ToString()+"-"+Anio.ToString();
@@ -72,11 +79,9 @@ namespace tesoreria.Controllers
             var fechaFin = fechaMesSgte.AddDays(-1);
             IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
             var contratos = db.Database.SqlQuery<ReporteContratoViewModel>(
-                   "SP_AMORTIZACION_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3}", fechaInicio, fechaFin, idTipoContrato, IdEmpresa).ToList();
-                        
+                   "SP_AMORTIZACION_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3}", fechaInicio, fechaFin, idTipoContrato, IdEmpresa).ToList();                        
             return Json(contratos, JsonRequestBehavior.AllowGet);
         }
-
         public ActionResult Leasing()
         {
             if (seguridad == null)
@@ -124,6 +129,278 @@ namespace tesoreria.Controllers
                    "JOB_ASOCIAR_CPBTE_AMORTIZACION @tmpAccion={0},@IdTipoContrato={1},@IdContratoFiltro={2}", 1, contrato.IdTipoContrato, contrato.IdContrato).FirstOrDefault();
                 return View(contrato);
             }
+        }
+        public JsonResult SynContratoCpbte(int? IdContrato)
+        {
+            dynamic showMessageString = string.Empty;
+            var contrato = db.Contrato.Find(IdContrato);
+            var syncCpbte = db.Database.SqlQuery<RetornoGenerico>(
+               "JOB_ASOCIAR_CPBTE_AMORTIZACION @tmpAccion={0},@IdTipoContrato={1},@IdContratoFiltro={2}", 1, contrato.IdTipoContrato, contrato.IdContrato).FirstOrDefault();
+
+            showMessageString = new { Estado = 0, Mensaje = "Comprobantes del Contrato "+contrato.NumeroContrato+" Sincronizados" };
+            return Json(showMessageString, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult DescargarCSVContable(int? IdEmpresa, int? IdTipoContrato, int? Anio, int? IdMes, string valorUf)
+        {
+            var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
+            var inicioMes = "01-" + IdMes.ToString() + "-" + Anio.ToString();
+            DateTime fechaInicio = DateTime.Now.Date;
+            if (inicioMes != "")
+            {
+                fechaInicio = Convert.ToDateTime(inicioMes);
+            }
+            var fechaMesSgte = fechaInicio.AddMonths(1);
+            var fechaFin = fechaMesSgte.AddDays(-1);
+            IdEmpresa = (IdEmpresa == null) ? 0 : IdEmpresa;
+            db.Database.CommandTimeout = 600;
+            var contratos = db.Database.SqlQuery<ReporteContratoViewModel>(
+                   "SP_AMORTIZACION_CONTRATO @fechaInicio={0},@fechaFin={1},@idTipoContrato={2},@IdEmpresa={3},@IdContratoFiltro={4},@retorno={5},@valorUf={6}", fechaInicio, fechaFin, IdTipoContrato, IdEmpresa, 0, "CSV_Contable", valorUfDouble).ToList();
+            var mesConsulta = db.Mes.Find(IdMes);
+            GridView gridviewResultado = new GridView();
+            System.Data.DataTable table;
+            System.Data.DataRow row;
+            table = new System.Data.DataTable();
+            //Agregar Encabezados
+            table.Columns.Add("Código Plan de Cuenta", typeof(System.String));
+            table.Columns.Add("Monto al Debe Moneda Base", typeof(System.String));
+            table.Columns.Add("Monto al Haber Moneda Base", typeof(System.String));
+            table.Columns.Add("Descripción Movimiento", typeof(System.String));
+            table.Columns.Add("Equivalencia Moneda", typeof(System.String));
+            table.Columns.Add("Monto al Debe Moneda Adicional", typeof(System.String));
+            table.Columns.Add("Monto al Haber Moneda Adicional", typeof(System.String));
+            table.Columns.Add("Código Condición de Venta", typeof(System.String));
+            table.Columns.Add("Código Vendedor", typeof(System.String));
+            table.Columns.Add("Código Ubicación", typeof(System.String));
+            table.Columns.Add("Código Concepto de Caja", typeof(System.String));
+            table.Columns.Add("Código Instrumento Financiero", typeof(System.String));
+            table.Columns.Add("Cantidad Instrumento Financiero", typeof(System.String));
+            table.Columns.Add("Código Detalle de Gasto", typeof(System.String));
+            table.Columns.Add("Cantidad Concepto de Gasto", typeof(System.String));
+            table.Columns.Add("Código Centro de Costo", typeof(System.String));
+            table.Columns.Add("Tipo Docto. Conciliación", typeof(System.String));
+            table.Columns.Add("Nro. Docto. Conciliación", typeof(System.String));
+            table.Columns.Add("Código Auxiliar", typeof(System.String));
+            table.Columns.Add("Tipo Documento", typeof(System.String));
+            table.Columns.Add("Nro. Documento", typeof(System.String));
+            table.Columns.Add("Fecha Emisión Docto.(DD/MM/AAAA)", typeof(System.String));
+            table.Columns.Add("Fecha Vencimiento Docto.(DD/MM/AAAA)", typeof(System.String));
+            table.Columns.Add("Tipo Docto. Referencia", typeof(System.String));
+            table.Columns.Add("Nro. Docto. Referencia", typeof(System.String));
+            table.Columns.Add("Nro. Correlativo Interno", typeof(System.String));
+            table.Columns.Add("Neto Afecto", typeof(System.String));
+            table.Columns.Add("Neto Exento", typeof(System.String));
+            table.Columns.Add("IVA C.Fiscal", typeof(System.String));
+            table.Columns.Add("IVA No Recuperable", typeof(System.String));
+            table.Columns.Add("IVA Activo Fijo", typeof(System.String));
+            table.Columns.Add("IVA Ret 3°", typeof(System.String));
+            table.Columns.Add("Impt Especifico", typeof(System.String));
+            table.Columns.Add("Otros impuestos", typeof(System.String));
+            table.Columns.Add("IVA Gastos Supermercado", typeof(System.String));
+            table.Columns.Add("Total", typeof(System.String));
+            table.Columns.Add("Graba el detalle de libro (S/N) (Opcional, por defecto 'S')", typeof(System.String));
+            table.Columns.Add("Documento Nulo (S/N) (Opcional, por defecto 'N')", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 1 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 1 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 2 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 2 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 3 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 3 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 4 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 4 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 5 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 5 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 6 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 6 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 7 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 7 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 8 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 8 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 9 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 9 (Opcional)", typeof(System.String));
+            table.Columns.Add("Código flujo efectivo 10 (Opcional)", typeof(System.String));
+            table.Columns.Add("Monto flujo 10 (Opcional)", typeof(System.String));
+
+            Session.Add("Tabla", table);
+            var fechaActual = DateTime.Now.Date;
+            GridView gridview = new GridView();
+            foreach (var c in contratos)
+            {                
+                table = (System.Data.DataTable)(Session["Tabla"]);
+
+                ////////////////////////////
+                /////////Coto Plazo/////////
+                /////////////////////////////
+
+                var obligacionCP = (c.ObligacionCP != null) ? c.ObligacionCP : 0;
+                var ABS_BalanceObligacionCP = Math.Abs((double)c.BalanceObligacionCP);
+                var ajusteObligacionCP = obligacionCP - ABS_BalanceObligacionCP;
+                //si el resultado es positivo va al haber, de lo contrario al debe
+                //LEASING POR PAGAR CP CLP
+                row = table.NewRow();
+                row["Código Plan de Cuenta"] = (IdTipoContrato==(int)Helper.TipoContrato.Leasing)?"2-1-04-01": "2-1-01-01";
+                row["Monto al Debe Moneda Base"] = (ajusteObligacionCP<0)?Math.Abs((double)ajusteObligacionCP):0;
+                row["Monto al Haber Moneda Base"] = (ajusteObligacionCP>=0)? ajusteObligacionCP:0;
+                row["Descripción Movimiento"] = "RECONOCE INTERESES OBLIGACIONES LEASING "+IdMes.ToString()+"-"+Anio.ToString();
+                row["Código Auxiliar"] = (c.RutBanco!=null)?c.RutBanco.Replace(".","").Replace("-",""):"";
+                row["Tipo Documento"] = "CT";
+                row["Nro. Documento"] = c.NumeroContrato;
+                row["Fecha Emisión Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Fecha Vencimiento Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Tipo Docto. Referencia"] = "CT";
+                row["Nro. Docto. Referencia"] = c.NumeroContrato;                
+                table.Rows.Add(row);
+
+                //INTERESES DIF CP LEASING CLP
+                ////si es positivo al debe, de lo contrario al haber
+                var InteresesCP = (c.InteresesCP != null) ? c.InteresesCP : 0;
+                var ABS_BalanceInteresCP = Math.Abs((double)c.BalanceInteresCP);
+                var ajusteInteresCP = InteresesCP - ABS_BalanceInteresCP;
+                row = table.NewRow();
+                row["Código Plan de Cuenta"] = (IdTipoContrato == (int)Helper.TipoContrato.Leasing) ? "2-1-08-03": "2-1-08-01";
+                row["Monto al Debe Moneda Base"] = (ajusteInteresCP>=0)? ajusteInteresCP:0;
+                row["Monto al Haber Moneda Base"] = (ajusteInteresCP<0)?Math.Abs((double)ajusteInteresCP):0;
+                row["Descripción Movimiento"] = "RECONOCE INTERESES OBLIGACIONES LEASING " + IdMes.ToString() + "-" + Anio.ToString();
+                row["Código Auxiliar"] = (c.RutBanco != null) ? c.RutBanco.Replace(".", "").Replace("-", "") : "";
+                row["Tipo Documento"] = "CT";
+                row["Nro. Documento"] = c.NumeroContrato;
+                row["Fecha Emisión Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Fecha Vencimiento Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Tipo Docto. Referencia"] = "CT";
+                row["Nro. Docto. Referencia"] = c.NumeroContrato;
+                table.Rows.Add(row);
+
+                if(IdTipoContrato == (int)Helper.TipoContrato.Leasing)
+                {
+                    ////IVA DEBITO DIF LEASING CP CLP
+                    ///////si es positivo al debe, de lo contrario al haber
+                    var IVACP = (c.IVACP != null) ? c.IVACP : 0;
+                    var ABS_BalanceIVACP = Math.Abs((double)c.BalanceIVACP);
+                    var ajusteIVACP = IVACP - ABS_BalanceIVACP;
+                    row = table.NewRow();
+                    row["Código Plan de Cuenta"] = "2-1-05-01";
+                    row["Monto al Debe Moneda Base"] = (ajusteIVACP >= 0) ? ajusteIVACP : 0;
+                    row["Monto al Haber Moneda Base"] = (ajusteIVACP < 0) ? Math.Abs((double)ajusteIVACP) : 0;
+                    row["Descripción Movimiento"] = "RECONOCE INTERESES OBLIGACIONES LEASING " + IdMes.ToString() + "-" + Anio.ToString();
+                    row["Equivalencia Moneda"] = "";
+                    row["Monto al Debe Moneda Adicional"] = "";
+                    row["Monto al Haber Moneda Adicional"] = "";
+                    row["Código Auxiliar"] = (c.RutBanco != null) ? c.RutBanco.Replace(".", "").Replace("-", "") : "";
+                    row["Tipo Documento"] = "CT";
+                    row["Nro. Documento"] = c.NumeroContrato;
+                    row["Fecha Emisión Docto.(DD/MM/AAAA)"] = fechaFin;
+                    row["Fecha Vencimiento Docto.(DD/MM/AAAA)"] = fechaFin;
+                    row["Tipo Docto. Referencia"] = "CT";
+                    row["Nro. Docto. Referencia"] = c.NumeroContrato;
+                    table.Rows.Add(row);
+                }                                             
+
+                ////////////////////////////
+                /////////Largo Plazo/////////
+                /////////////////////////////
+
+                var obligacionLP = (c.ObligacionLP != null) ? c.ObligacionLP : 0;
+                var ABS_BalanceObligacionLP = Math.Abs((double)c.BalanceObligacionLP);
+                var ajusteObligacionLP = obligacionLP - ABS_BalanceObligacionLP;
+                //LEASING POR PAGAR CP CLP
+                ///////si es positivo al haber, de lo contrario al deb
+                row = table.NewRow();
+                row["Código Plan de Cuenta"] = (IdTipoContrato == (int)Helper.TipoContrato.Leasing)?"2-2-02-01": "2-2-01-01";
+                row["Monto al Debe Moneda Base"] = (ajusteObligacionLP<0)?Math.Abs((double)ajusteObligacionLP):0;
+                row["Monto al Haber Moneda Base"] = (ajusteObligacionLP>=0)? ajusteObligacionLP:0;
+                row["Descripción Movimiento"] = "RECONOCE INTERESES OBLIGACIONES LEASING " + IdMes.ToString() + "-" + Anio.ToString();
+                row["Código Auxiliar"] = (c.RutBanco != null) ? c.RutBanco.Replace(".", "").Replace("-", "") : "";
+                row["Tipo Documento"] = "CT";
+                row["Nro. Documento"] = c.NumeroContrato;
+                row["Fecha Emisión Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Fecha Vencimiento Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Tipo Docto. Referencia"] = "CT";
+                row["Nro. Docto. Referencia"] = c.NumeroContrato;
+                table.Rows.Add(row);
+
+                //INTERESES DIF CP LEASING CLP
+                /////////si es positivo al debe, de lo contrario al haber
+                var InteresesLP = (c.InteresesLP != null) ? c.InteresesLP : 0;
+                var ABS_BalanceInteresLP = Math.Abs((double)c.BalanceInteresLP);
+                var ajusteInteresLP = InteresesLP - ABS_BalanceInteresLP;
+                row = table.NewRow();
+                row["Código Plan de Cuenta"] = (IdTipoContrato == (int)Helper.TipoContrato.Leasing) ? "2-2-04-03": "2-2-04-01";
+                row["Monto al Debe Moneda Base"] = (ajusteInteresLP>=0)? ajusteInteresLP:0;
+                row["Monto al Haber Moneda Base"] = (ajusteInteresLP<0)?Math.Abs((double)ajusteInteresLP):0;
+                row["Descripción Movimiento"] = "RECONOCE INTERESES OBLIGACIONES LEASING " + IdMes.ToString() + "-" + Anio.ToString();
+                row["Código Auxiliar"] = (c.RutBanco != null) ? c.RutBanco.Replace(".", "").Replace("-", "") : "";
+                row["Tipo Documento"] = "CT";
+                row["Nro. Documento"] = c.NumeroContrato;
+                row["Fecha Emisión Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Fecha Vencimiento Docto.(DD/MM/AAAA)"] = fechaFin;
+                row["Tipo Docto. Referencia"] = "CT";
+                row["Nro. Docto. Referencia"] = c.NumeroContrato;
+                table.Rows.Add(row);
+                if (IdTipoContrato == (int)Helper.TipoContrato.Leasing)
+                {
+                    ////IVA DEBITO DIF LEASING CP CLP
+                    ////////////si es positivo al debe, de lo contrario al haber
+                    var IVALP = (c.IVALP != null) ? c.IVALP : 0;
+                    var ABS_BalanceIVALP = Math.Abs((double)c.BalanceIVALP);
+                    var ajusteIVALP = IVALP - ABS_BalanceIVALP;
+                    row = table.NewRow();
+                    row["Código Plan de Cuenta"] = "2-2-03-01";
+                    row["Monto al Debe Moneda Base"] = (ajusteIVALP >= 0) ? ajusteIVALP : 0;
+                    row["Monto al Haber Moneda Base"] = (ajusteIVALP < 0) ? Math.Abs((double)ajusteIVALP) : 0;
+                    row["Descripción Movimiento"] = "RECONOCE INTERESES OBLIGACIONES LEASING " + IdMes.ToString() + "-" + Anio.ToString();
+                    row["Equivalencia Moneda"] = "";
+                    row["Monto al Debe Moneda Adicional"] = "";
+                    row["Monto al Haber Moneda Adicional"] = "";
+                    row["Código Auxiliar"] = (c.RutBanco != null) ? c.RutBanco.Replace(".", "").Replace("-", "") : "";
+                    row["Tipo Documento"] = "CT";
+                    row["Nro. Documento"] = c.NumeroContrato;
+                    row["Fecha Emisión Docto.(DD/MM/AAAA)"] = fechaFin;
+                    row["Fecha Vencimiento Docto.(DD/MM/AAAA)"] = fechaFin;
+                    row["Tipo Docto. Referencia"] = "CT";
+                    row["Nro. Docto. Referencia"] = c.NumeroContrato;
+                    table.Rows.Add(row);
+                }
+                gridview.DataSource = table;
+                gridview.DataBind();
+                Session.Add("Tabla", table);
+            }
+
+            var interesLeasing = contratos.Sum(c => (c.DeudaInteresMes != null)?c.DeudaInteresMes : 0);
+            //INTERESES LEASING                                           
+            row = table.NewRow();
+            row["Código Plan de Cuenta"] = (IdTipoContrato == (int)Helper.TipoContrato.Leasing)?"3-2-01-04": "3-2-01-03";
+            row["Monto al Debe Moneda Base"] = (interesLeasing != null) ? interesLeasing : 0;
+            row["Monto al Haber Moneda Base"] = 0;
+            row["Descripción Movimiento"] = "RECONOCE INTERESES OBLIGACIONES LEASING " + IdMes.ToString() + "-" + Anio.ToString();
+
+            table.Rows.Add(row);
+
+            gridview.DataSource = table;
+            gridview.DataBind();
+            Session.Add("Tabla", table);
+
+            //grilla resultado
+            gridviewResultado.DataSource = gridview.DataSource;
+            gridviewResultado.DataBind();
+
+            var nombreFile = "Obligaciones_"+((IdTipoContrato==(int)Helper.TipoContrato.Leasing)?"Leasing":"Otros_Creditos")+"_" + IdMes.ToString() + "_" + Anio.ToString();
+            Response.ClearContent();
+            Response.Buffer = true;
+            // set the header
+            Response.ContentType = "application/ms-excel";
+            Response.ContentType = "application/vnd.xls";
+            Response.AddHeader("content-disposition", "attachment; filename = " + nombreFile + ".xls");
+            Response.Charset = "UTF-8";
+            Response.ContentEncoding = Encoding.Default;
+            using (StringWriter sw = new StringWriter())
+            {
+                using (HtmlTextWriter htw = new HtmlTextWriter(sw))
+                {
+                    gridviewResultado.RenderControl(htw);
+                    Response.Output.Write(sw.ToString());
+                    Response.Flush();
+                }
+            }
+            return View();
         }
         public ActionResult AsociarCpbteEgreso(int IdContratoDetAmortizacion)
         {
@@ -277,9 +554,9 @@ namespace tesoreria.Controllers
                     var montoCpbte = dbSoft.cwmovim.Where(c => c.CpbAno == CpbAno && c.CpbNum == CpbNum).Sum(c => c.MovHaber);
                     /*if(movDetalle.Monto== montoCpbte)
                     {*/
-                    var cpbteMOv = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion && c.CpbTip== comprobante.CpbTip).ToList();
-                    db.ComprobanteDetAmortizacion.RemoveRange(cpbteMOv);
-                    db.SaveChanges();
+                    //var cpbteMOv = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion && c.CpbTip== comprobante.CpbTip).ToList();
+                    //db.ComprobanteDetAmortizacion.RemoveRange(cpbteMOv);
+                    //sdb.SaveChanges();
                     ComprobanteDetAmortizacion regitro = new ComprobanteDetAmortizacion();
                     regitro.IdContratoDetAmortizacion = IdContratoDetAmortizacion;
                     regitro.FechaRegistro = DateTime.Now;

@@ -120,6 +120,7 @@
                         <th>Tasa Mensual</th>
                         <th>Tasa Diaria</th>
                         <th>Fecha de Inicio</th>
+                        <th>Contrato</th>
                         <th>Estado</th>
                         <th class="no-sort" width="6%">Acción</th>
                     </tr>
@@ -300,16 +301,19 @@
                         sort: "FechaPrestamo"
                     }
                 },
+                { "data": "CodigoContrato" },
                 { "data": "NombreEstado" },
                 {
-                    "mData": null,
+                    "mData": "EsFinalizado",
                     "bSortable": false,
-                    "mRender": function (o, type, row) {
+                    "mRender": function (data, type, row) {
                         var boton = '';
-                        boton += '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalRegistrarMutuo" onclick="CreateRegistro(' + o.IdMutuo + ')"><i class="fa fa-edit"></i></button> ';
-                        if(o.PuedeEliminar){
-                            boton += '<button class="btn btn-danger btn-sm" data-toggle="tooltip" title="Eliminar Mutuo" type="button" onclick="DeleteRegistro(' + o.IdMutuo + ')"><i class="far fa-trash-alt"></i></button> ';
-                        }
+                        if (data != true) {
+                            boton += '<button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalRegistrarMutuo" onclick="CreateRegistro(' + row.IdMutuo + ')"><i class="fa fa-edit"></i></button> ';
+                            if (row.PuedeEliminar) {
+                                boton += '<button class="btn btn-danger btn-sm" data-toggle="tooltip" title="Eliminar Mutuo" type="button" onclick="DeleteRegistro(' + row.IdMutuo + ')"><i class="far fa-trash-alt"></i></button> ';
+                            }
+                        }                        
                         return boton;
                     }
                 }

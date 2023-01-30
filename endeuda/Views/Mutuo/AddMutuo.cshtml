@@ -17,51 +17,61 @@
     {
         @Html.AntiForgeryToken()
 
-    <input type="hidden" name="idMutuo" id="idMutuoA" value="@Model.IdMutuo" />
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad que Financia </label>
-        <div class="col-sm-2">
-            @Html.DropDownList("idEmpresaFinancia", (SelectList)ViewData["listaEmpresaF"], "--Seleccione Empresa Financiera--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-        </div>
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad Receptora del Financiamiento </label>
-        <div class="col-sm-2">
-            @Html.DropDownList("idEmpresaReceptora", (SelectList)ViewData["listaEmpresaR"], "--Seleccione Empresa Receptora--", htmlAttributes: new { @class = "form-control form-control-sm required" })
-        </div>
+        <input type="hidden" name="idMutuo" id="idMutuoA" value="@Model.IdMutuo" />
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad que Financia </label>
+            <div class="col-sm-2">
+                @Html.DropDownList("idEmpresaFinancia", (SelectList)ViewData["listaEmpresaF"], "--Seleccione Empresa Financiera--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Entidad Receptora del Financiamiento </label>
+            <div class="col-sm-2">
+                @Html.DropDownList("idEmpresaReceptora", (SelectList)ViewData["listaEmpresaR"], "--Seleccione Empresa Receptora--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+            </div>
 
-    </div>
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Monto a Financiar ($)</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm required numberMiles" name="montoPrestamo" id="montoPrestamo" value="@Model.MontoPrestamo" />
         </div>
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Moneda</label>
-        <div class="col-sm-2">
-            @Html.DropDownList("IdTipoMoneda", (SelectList)ViewData["listaMonedas"], "--Seleccione Tipo Moneda--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Monto a Financiar ($)</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm required numberMiles" name="montoPrestamo" id="montoPrestamo" value="@Model.MontoPrestamo" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Tipo Moneda</label>
+            <div class="col-sm-2">
+                @Html.DropDownList("IdTipoMoneda", (SelectList)ViewData["listaMonedas"], "--Seleccione Tipo Moneda--", htmlAttributes: new { @class = "form-control form-control-sm required" })
+            </div>
         </div>
-    </div>
-    <div class="form-group row">
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm tasa required" name="tasaMensual" onblur="CalculoTasa()" id="tasaMensual" value="@Model.TasaMensual" />
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Mensual</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm tasa required" name="tasaMensual" onblur="CalculoTasa()" id="tasaMensual" value="@Model.TasaMensual" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Diaria</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm tasa required" name="tasaDiaria" id="tasaDiaria" readonly value="@Model.TasaDiaria" />
+            </div>
+            
         </div>
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Tasa Diaria</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm tasa required" name="tasaDiaria" id="tasaDiaria" readonly value="@Model.TasaDiaria" />
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Código Contrato</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm" name="CodigoContrato" id="CodigoContrato" value="@Model.CodigoContrato" />
+            </div>
+            <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Prestamo</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control form-control-sm classFecha required" name="fechaPrestamo" id="fechaPrestamo" value="@Model.FechaPrestamoStr" />
+            </div>
         </div>
-        <label for="inputEmail3" class="col-sm-2 col-form-label">Fecha Prestamo</label>
-        <div class="col-sm-2">
-            <input type="text" class="form-control form-control-sm classFecha required" name="fechaPrestamo" id="fechaPrestamo" value="@Model.FechaPrestamoStr" />
-        </div>
-    </div>
-
     }
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-    @if (Model.PuedeEditar) { 
+    @if (Model.PuedeEditar)
+    {
         <button type="button" name="btnGrabar" id="btnGrabar" onclick="GrabarMutuo()" class="btn btn-primary btn-sm float-right"><i class="fa fa-save"></i> @Model.TituloBoton</button>
     }
-
+    else
+    {
+        <button type="button" name="btnGrabar" id="btnGrabar" onclick="FinalizarMutuo()" class="btn btn-warning btn-sm float-right"><i class="fa fa-save"></i> Finalizar Deuda</button>
+    }
 </div>
 <script>
     $(document).ready(function () {
@@ -101,6 +111,31 @@
         });
     });
 
+    function FinalizarMutuo() {
+        var a = confirm("¿Seguro de finalizar la Deuda?");
+        if (a == true) {
+            mostrarCargando();
+            $.ajax({
+                type: 'POST',
+                url: '/Mutuo/FinalizarDeuda/',
+                data: { IdMutuo: "@Model.IdMutuo", CodigoContrato: $("#CodigoContrato").val()},
+                success: function (data) {
+                    if (data.result.Estado == "0") {
+                        RefreshLista();
+                        Cerrar();
+                        esconderCargando();
+                    }
+                    else {
+                        toastr.error(data.result.Mensaje);
+                        esconderCargando();
+                    }
+                },
+                failure: function (data) {
+                    toastr.error("Error al Finalizar la deuda");
+                }
+            });
+        }
+    }
     function GrabarMutuo() {
         $(".numberMiles").each(function () {
             $(this).val($(this).val().toString().replace(/[$.]/g, ''))
@@ -126,12 +161,11 @@
             $(this).val(SeparadorMilesInput($(this).val().toString()))
         })
     }
-
     function CalculoTasa(){
         if ($("#tasaMensual").val().length > 0){
             var tasaMensual = $("#tasaMensual").val().replace(",",".");
             var tasaDiaria = tasaMensual / 30;
-            $("#tasaDiaria").val(tasaDiaria.toFixed(2));
+            $("#tasaDiaria").val(tasaDiaria.toFixed(4));
         }
     }
 
@@ -151,10 +185,8 @@
         toastr.error(data.Mensaje);
     }
 
-
     function Cerrar() {
         $('#ModalRegistrarMutuo').modal('hide');
-        RefreshLista();
     }
 
 </script>

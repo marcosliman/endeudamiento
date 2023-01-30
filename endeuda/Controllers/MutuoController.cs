@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -14,6 +15,7 @@ namespace tesoreria.Controllers
     public class MutuoController : Controller
     {
         private ErpContext db = new ErpContext();
+        private InmobContext dbInm = new InmobContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         FuncionesGeneralesController funcionesGral = new FuncionesGeneralesController();
         // GET: Contrato
@@ -249,7 +251,9 @@ namespace tesoreria.Controllers
                                 NombreEstado = es.NombreEstado,
                                 PuedeProcesar = (m.IdEstado != (int)Helper.Estado.MutuoVigente) ? false : true,
                                 PuedeEliminar = (m.IdEstado != (int)Helper.Estado.MutuoCreado) ? false : true,
-                                tm.NombreTipoMoneda
+                                EsFinalizado= (m.IdEstado == (int)Helper.Estado.MutuoFinalizado) ? true : false,
+                                tm.NombreTipoMoneda,
+                                m.CodigoContrato
                             }).AsEnumerable().ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -343,7 +347,8 @@ namespace tesoreria.Controllers
                                     ExisteMutuo = "S",
                                     TituloBoton = "Actualizar Mutuo",
                                     PuedeEditar = (c.IdEstado != (int)Helper.Estado.MutuoCreado) ? false : true,
-                                    IdTipoMoneda=c.IdTipoMoneda
+                                    IdTipoMoneda=c.IdTipoMoneda,
+                                    CodigoContrato=c.CodigoContrato
                                 }).FirstOrDefault();
 
                 if (registro == null) {
@@ -409,23 +414,24 @@ namespace tesoreria.Controllers
 
                                 //if (existeMutuo == null)
                                 //{
-                                    var addMutuo = new Mutuo();
-                                    addMutuo.IdEmpresaFinancia = dato.IdEmpresaFinancia;
-                                    addMutuo.IdEmpresaReceptora = dato.IdEmpresaReceptora;
-                                    addMutuo.MontoPrestamo = dato.MontoPrestamo;
-                                    addMutuo.FechaPrestamo = dato.FechaPrestamo;
-                                    addMutuo.TasaMensual = dato.TasaMensual;
-                                    addMutuo.TasaDiaria = dato.TasaDiaria;
-                                    addMutuo.IdEstado = (int)Helper.Estado.MutuoCreado;
-                                    addMutuo.IdUsuarioRegistro = (int)seguridad.IdUsuario;
-                                    addMutuo.FechaRegistro = DateTime.Now;
-                                    addMutuo.IdTipoMoneda = dato.IdTipoMoneda;                                    
-                                    addMutuo.ValorCambio = regValoruF.Valor;
-                                    db.Mutuo.Add(addMutuo);
-                                    db.SaveChanges();
+                                var addMutuo = new Mutuo();
+                                addMutuo.IdEmpresaFinancia = dato.IdEmpresaFinancia;
+                                addMutuo.IdEmpresaReceptora = dato.IdEmpresaReceptora;
+                                addMutuo.MontoPrestamo = dato.MontoPrestamo;
+                                addMutuo.FechaPrestamo = dato.FechaPrestamo;
+                                addMutuo.TasaMensual = dato.TasaMensual;
+                                addMutuo.TasaDiaria = dato.TasaDiaria;
+                                addMutuo.IdEstado = (int)Helper.Estado.MutuoCreado;
+                                addMutuo.IdUsuarioRegistro = (int)seguridad.IdUsuario;
+                                addMutuo.FechaRegistro = DateTime.Now;
+                                addMutuo.IdTipoMoneda = dato.IdTipoMoneda;                                    
+                                addMutuo.ValorCambio = regValoruF.Valor;
+                                addMutuo.CodigoContrato = dato.CodigoContrato;
+                                db.Mutuo.Add(addMutuo);
+                                db.SaveChanges();
 
-                                    dbContextTransaction.Commit();
-                                    showMessageString = new { Estado = 0, Mensaje = "Prestamo registrado exitosamente", idMutuo = addMutuo.IdMutuo };
+                                dbContextTransaction.Commit();
+                                showMessageString = new { Estado = 0, Mensaje = "Préstamo registrado exitosamente", idMutuo = addMutuo.IdMutuo };
                                 //}
                                 //else {
                                 //    showMessageString = new { Estado = 105, Mensaje = "Ya existe un prestamo vigente para la empresa que financia y la receptora"};
@@ -437,7 +443,7 @@ namespace tesoreria.Controllers
 
                                 if (existePrestamo.Count() > 0 || existeAbono.Count() > 0)
                                 {
-                                    showMessageString = new { Estado = 102, Mensaje = "no puede editar datos del prestamo, ya tiene procesos relacionados" };
+                                    showMessageString = new { Estado = 102, Mensaje = "no puede editar datos del préstamo, ya tiene procesos relacionados" };
                                 }
                                 else {
                                     dbMutuo.IdEmpresaFinancia = dato.IdEmpresaFinancia;
@@ -448,6 +454,7 @@ namespace tesoreria.Controllers
                                     dbMutuo.TasaDiaria = dato.TasaDiaria;
                                     dbMutuo.IdTipoMoneda = dato.IdTipoMoneda;
                                     dbMutuo.ValorCambio = regValoruF.Valor;
+                                    dbMutuo.CodigoContrato = dato.CodigoContrato;
                                     db.SaveChanges();
 
                                     dbContextTransaction.Commit();
@@ -996,15 +1003,15 @@ namespace tesoreria.Controllers
                             where m.IdMutuo == ((idMutuo != null) ? idMutuo : m.IdMutuo)
                             select new
                             {
-                                IdMutuo = m.IdMutuo,
+                                m.IdMutuo,
                                 Monto = m.MontoPrestamo,
-                                TasaMensual = m.TasaMensual,
-                                TasaDiaria = m.TasaDiaria,
-                                FechaPrestamo = m.FechaPrestamo,
+                                m.TasaMensual,
+                                m.TasaDiaria,
+                                m.FechaPrestamo,
                                 FechaPrestamoStr = m.FechaPrestamo.ToString("dd-MM-yyyy"),
                                 m.IdTipoMoneda
                             }).FirstOrDefault();
-
+            var valoresUF = dbInm.SII_ValoresUF.ToList();
             double valorCambio = 1;
             if (registro.IdTipoMoneda != 1 && ValorCambio!="")
             {
@@ -1080,13 +1087,13 @@ namespace tesoreria.Controllers
 
                             if (auxAbono == 1)
                             {
-                                interes = Math.Round(montoInicial * (tasaDiaria * days) / 100);
+                                interes = Math.Round((montoInicial * (tasaDiaria * days) / 100),2);
                             }
                             else {
                                 interes = 0;
                             }
 
-                            interesNuevo = -(Math.Round(montoAmortizacion * (tasaDiaria * daysN) / 100));
+                            interesNuevo = -(Math.Round((montoAmortizacion * (tasaDiaria * daysN) / 100),2));
 
                             montoPrestamo = 0;
 
@@ -1094,28 +1101,46 @@ namespace tesoreria.Controllers
 
                             montoTotal = montoInicial + montoPrestamo + interesTotal - montoAmortizacion;
 
+                            //calcular UF
+                            double valUfPeriodo = 1;
+                            if (registro.IdTipoMoneda ==(int)Helper.TipoMoneda.UF)
+                            {
+                                if((i+1)!= monthDiff)
+                                {
+                                    var ufSii = valoresUF.Where(c => c.Fecha.Date == oUltimoDiaDelMes).FirstOrDefault();
+                                    valUfPeriodo = (ufSii != null) ? ufSii.Valor : valUfPeriodo;
+                                }
+                                else
+                                {
+                                    valUfPeriodo = valorCambio;
+                                }
+
+                            }
+                            if (registro.IdTipoMoneda == (int)Helper.TipoMoneda.USD)
+                            {
+                                valUfPeriodo = valorCambio;
+                            }
+                            
                             proy.item = i;
                             proy.FechaInicio = oPrimerDiaDelMes;
                             proy.FechaInicioStr = oPrimerDiaDelMes.ToString("dd-MM-yyyy");
                             proy.FechaTermino = oUltimoDiaDelMes;
                             proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
                             proy.CantidadDias = days;
-                            proy.Monto = montoInicial;
-                            proy.Interes = interes;
-                            proy.MontoTotal = montoTotal;
-                            proy.InteresTotal = interesTotal;
-                            proy.MontoAmortizacion = montoAmortizacion;
-                            proy.MontoPrestamo = montoPrestamo;
+                            proy.Monto = Math.Round(montoInicial * valUfPeriodo, 0);
+                            proy.Interes = Math.Round(interes * valUfPeriodo, 0);
+                            proy.MontoTotal = Math.Round(interesTotal * valUfPeriodo, 0);
+                            proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, 0);
+                            proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, 0);
+                            proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, 0);
                             proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
                             proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                             proy.CantidadDiasNuevo = daysN;
-                            proy.InteresNuevo = interesNuevo;
+                            proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, 0);
                             arrayProyeccion.Add(proy);
 
                             montoInicial = montoTotal;
-
                         }
-
                     }
 
                     var auxCredito = 0;
@@ -1135,43 +1160,58 @@ namespace tesoreria.Controllers
 
                             if (auxCredito == 1 && auxAbono == 0)
                             {
-                                interes = montoInicial * (tasaDiaria * days) / 100;
+                                interes = Math.Round((montoInicial * (tasaDiaria * days) / 100), 2);
                             }
                             else
                             {
                                 interes = 0;
                             }
 
-                            interesNuevo = (montoPrestamo * (tasaDiaria * daysN) / 100);
+                            interesNuevo = Math.Round((montoPrestamo * (tasaDiaria * daysN) / 100), 2);
 
                             montoAmortizacion = 0;
 
                             interesTotal = interes + interesNuevo;
 
                             montoTotal = montoInicial + montoPrestamo + interesTotal - montoAmortizacion;
-
+                            //calcular UF
+                            double valUfPeriodo = 1;
+                            if (registro.IdTipoMoneda == (int)Helper.TipoMoneda.UF)
+                            {
+                                if ((i + 1) != monthDiff)
+                                {
+                                    var ufSii = valoresUF.Where(c => c.Fecha.Date == oUltimoDiaDelMes).FirstOrDefault();
+                                    valUfPeriodo = (ufSii != null) ? ufSii.Valor : valUfPeriodo;
+                                }
+                                else
+                                {
+                                    valUfPeriodo = valorCambio;
+                                }
+                            }
+                            if (registro.IdTipoMoneda == (int)Helper.TipoMoneda.USD)
+                            {
+                                valUfPeriodo = valorCambio;
+                            }
                             proy.item = i;
                             proy.FechaInicio = oPrimerDiaDelMes;
                             proy.FechaInicioStr = oPrimerDiaDelMes.ToString("dd-MM-yyyy");
                             proy.FechaTermino = oUltimoDiaDelMes;
                             proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
                             proy.CantidadDias = days;
-                            proy.Monto = montoInicial;
-                            proy.Interes = interes;
-                            proy.MontoTotal = montoTotal;
-                            proy.InteresTotal = interesTotal;
-                            proy.MontoAmortizacion = montoAmortizacion;
-                            proy.MontoPrestamo = montoPrestamo;
+                            proy.Monto = Math.Round(montoInicial * valUfPeriodo, 0);
+                            proy.Interes = Math.Round(interes * valUfPeriodo, 0);
+                            proy.MontoTotal = Math.Round(montoTotal * valUfPeriodo, 0);
+                            proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, 0);
+                            proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, 0);
+                            proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, 0);
                             proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
                             proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                             proy.CantidadDiasNuevo = daysN;
-                            proy.InteresNuevo = interesNuevo;
+                            proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, 0);
                             arrayProyeccion.Add(proy);
 
                             montoInicial = montoTotal;
-
                         }
-
                     }
 
                     if (auxAbono > 0 || auxCredito > 0)
@@ -1181,25 +1221,45 @@ namespace tesoreria.Controllers
 
                     var existeDato = arrayProyeccion.Where(c => c.FechaInicio == oPrimerDiaDelMes && c.FechaTermino == oUltimoDiaDelMes).Count();
                     if(existeDato == 0) {
-                        interes = Math.Round(montoInicial * (tasaDiaria * days) / 100);
+                       
+                        interes = Math.Round((montoInicial * (tasaDiaria * days) / 100), 2);
                         interesTotal = interes + interesNuevo;
                         montoTotal = montoInicial + montoPrestamo + interesTotal - montoAmortizacion;
+
+                        //calcular UF
+                        double valUfPeriodo = 1;
+                        if (registro.IdTipoMoneda == (int)Helper.TipoMoneda.UF)
+                        {
+                            if ((i + 1) != monthDiff)
+                            {
+                                var ufSii = valoresUF.Where(c => c.Fecha.Date == oUltimoDiaDelMes).FirstOrDefault();
+                                valUfPeriodo = (ufSii != null) ? ufSii.Valor : valUfPeriodo;
+                            }
+                            else
+                            {
+                                valUfPeriodo = valorCambio;
+                            }
+                        }
+                        if (registro.IdTipoMoneda == (int)Helper.TipoMoneda.USD)
+                        {
+                            valUfPeriodo = valorCambio;
+                        }
                         proy.item = i;
                         proy.FechaInicio = oPrimerDiaDelMes;
                         proy.FechaInicioStr = oPrimerDiaDelMes.ToString("dd-MM-yyyy");
                         proy.FechaTermino = oUltimoDiaDelMes;
                         proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
                         proy.CantidadDias = days;
-                        proy.Monto = montoInicial;
-                        proy.Interes = interes;
-                        proy.MontoTotal = montoTotal;
-                        proy.InteresTotal = interesTotal;
-                        proy.MontoAmortizacion = montoAmortizacion;
-                        proy.MontoPrestamo = montoPrestamo;
+                        proy.Monto = Math.Round(montoInicial * valUfPeriodo, 0);
+                        proy.Interes = Math.Round(interes * valUfPeriodo, 0);
+                        proy.MontoTotal = Math.Round(montoTotal * valUfPeriodo, 0);
+                        proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, 0);
+                        proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, 0);
+                        proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, 0);
                         proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
                         proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                         proy.CantidadDiasNuevo = daysN;
-                        proy.InteresNuevo = interesNuevo;
+                        proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, 0);
                         arrayProyeccion.Add(proy);
                         montoInicial = montoTotal;
                     }
@@ -1215,18 +1275,37 @@ namespace tesoreria.Controllers
                 c.FechaTermino,
                 c.FechaTerminoStr,
                 c.CantidadDias,
-                Monto=Math.Round(c.Monto*valorCambio, decRound),
-                Interes = Math.Round(c.Interes * valorCambio, decRound),
-                MontoTotal= Math.Round(c.MontoTotal * valorCambio, decRound),
-                InteresTotal= Math.Round(c.InteresTotal * valorCambio, decRound),
-                MontoAmortizacion= Math.Round(c.MontoAmortizacion * valorCambio, decRound),
-                MontoPrestamo= Math.Round(c.MontoPrestamo * valorCambio, decRound),
+                Monto=Math.Round(c.Monto, decRound),
+                Interes = Math.Round(c.Interes, decRound),
+                MontoTotal= Math.Round(c.MontoTotal, decRound),
+                InteresTotal= Math.Round(c.InteresTotal, decRound),
+                MontoAmortizacion= Math.Round(c.MontoAmortizacion, decRound),
+                MontoPrestamo= Math.Round(c.MontoPrestamo, decRound),
                 c.FechaNuevo,
                 c.FechaNuevoStr,
                 c.CantidadDiasNuevo,
-                InteresNuevo= Math.Round(c.InteresNuevo * valorCambio, decRound)
+                InteresNuevo= Math.Round(c.InteresNuevo, decRound)
             }).ToList();
             return Json(listaRetorno, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public ActionResult FinalizarDeuda(int IdMutuo,string CodigoContrato)
+        {
+            dynamic showMessageString = string.Empty;
+            if (seguridad == null)
+            {
+                showMessageString = new { Estado = 1000, Mensaje = "Se finalizó la sesión" };
+            }
+            else
+            {
+                var mutuo = db.Mutuo.Find(IdMutuo);
+                mutuo.CodigoContrato= CodigoContrato;
+                mutuo.IdEstado = (int)Helper.Estado.MutuoFinalizado;
+                db.SaveChanges();
+                showMessageString = new { Estado = 0, Mensaje = "Mutuo Finalizado Exitosamente", IdMutuo = IdMutuo };
+            }
+            return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
         }
     }
 }

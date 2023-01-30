@@ -50,7 +50,7 @@ namespace modelo.ViewModel
         public string NombreEstado { get; set; }
         public string NumeroLeasing { get; set; }
         public string TituloBoton { get; set; }
-        public bool Editable { get; set; }
+        public bool? Editable { get; set; }
         public Activo Activo { get; set; }
         public string NumeroContrato { get; set; }
         public string RutBeneficiario { get; set; }

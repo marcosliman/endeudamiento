@@ -42,7 +42,8 @@ namespace tesoreria.Controllers
                              bco.Activo,
                              bco.FechaRegistro,
                              bco.UrlLogo,
-                             bco.CodBanco
+                             bco.CodBanco,
+                             bco.RutBanco
                          }).ToList();
             return Json(lista, JsonRequestBehavior.AllowGet);
 
@@ -81,6 +82,7 @@ namespace tesoreria.Controllers
                     registroEdit.Activo = registro.Activo;
                     registroEdit.UrlLogo = registro.UrlLogo;
                     registroEdit.CodBanco = registro.CodBanco;
+                    registroEdit.RutBanco= registro.RutBanco;
                 }
             }
             else

@@ -9,10 +9,14 @@ namespace modelo.Models.Local
     [Table("UsuarioPerfil")]
     public class UsuarioPerfil
     {
-        [Key]        
+        [Key]
         public int IdUsuarioPerfil { get; set; }
-        public int IdUsuario { get; set; }   
-        public int IdPerfil { get; set; }        
-        public bool Activo { get; set; }        
+        public int IdUsuario { get; set; }
+        [ForeignKey("IdUsuario")]
+        public virtual Usuario Usuario { get; set; }
+        public int IdPerfil { get; set; }
+        [ForeignKey("IdPerfil")]
+        public virtual Perfil Perfil { get; set; }
+        public bool Activo { get; set; }
     }
 }

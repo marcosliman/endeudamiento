@@ -355,8 +355,8 @@ namespace tesoreria.Controllers
                                  cda.IvaDiferido,
                                  cda.Obligacion,
                                  Mes= cda.IdMes,
-                                 CpbteT= db.ComprobanteDetAmortizacion.Where(y => y.IdContratoDetAmortizacion == cda.IdContratoDetAmortizacion && y.CpbTip=="T").FirstOrDefault(),
-                                 CpbteE = db.ComprobanteDetAmortizacion.Where(y => y.IdContratoDetAmortizacion == cda.IdContratoDetAmortizacion && y.CpbTip == "E").FirstOrDefault()
+                                 CpbteT= db.ComprobanteDetAmortizacion.Where(y => y.IdContratoDetAmortizacion == cda.IdContratoDetAmortizacion && y.CpbTip=="T").ToList(),
+                                 CpbteE = db.ComprobanteDetAmortizacion.Where(y => y.IdContratoDetAmortizacion == cda.IdContratoDetAmortizacion && y.CpbTip == "E").ToList()
 
                            }).ToList();
 

@@ -541,6 +541,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContratoController.cs" />
     <Compile Include="Controllers\TipoDocumentoController.cs" />
+    <Compile Include="Controllers\SendEmailController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -3259,6 +3260,7 @@
     <Content Include="Views\Empresa\TipoDeudaResumen.cshtml" />
     <Content Include="Views\Empresa\DescargarBaseContratos.cshtml" />
     <Content Include="Views\Familia\TipoDeudaFamilia.cshtml" />
+    <Content Include="Views\Amortizacion\DescargarCSVContable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

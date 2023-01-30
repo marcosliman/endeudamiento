@@ -336,12 +336,15 @@ namespace tesoreria.Controllers
             var descSubGrupo = (subgrupo != null) ? subgrupo.DesSGru : "";
             //Activo en softland
             var activoSoftland = dbSoft.awfichaac.Find(datos.CodSoftland);
+            var esCreado = false;
+            var sinError = true;
+            var idActivo = 0;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
                 try
                 {
                     var mensaje = "";
-                    var idActivo = 0;
+                    
                     var activo = db.Activo.Where(c => c.IdActivo == datos.IdActivo).FirstOrDefault();
                     var estado = (int)Helper.Estado.ActCreado;
                     if (activo != null)
@@ -417,6 +420,7 @@ namespace tesoreria.Controllers
                     }
                     else
                     {
+                        esCreado = true;
                         var activoAdd = new Activo();
                         if (datos.CodSoftland != "" && datos.IdFamilia != null && datos.NumeroInterno != "")
                         {
@@ -477,7 +481,7 @@ namespace tesoreria.Controllers
                         retorno.IdEstado = 0;
                         retorno.NombreEstado = mensaje;
                     }
-
+                    sinError = true;
                     dbContextTransaction.Commit();
                 }
                 catch (Exception ex)
@@ -487,7 +491,11 @@ namespace tesoreria.Controllers
                     retorno.NombreEstado = "Error: " + ex.Message;
                 }
             }
-
+            if(sinError==true && esCreado == true)
+            {
+                SendEmailController send = new SendEmailController();
+                var ret = send.NotificaNuevoActivo(idActivo);
+            }
             return retorno;
         }
 

@@ -89,11 +89,12 @@ namespace tesoreria.Helper
     public enum Perfilles : int
     {        
         Administrador = 1,
-        Solicitante = 2,
-        Aprobador = 3,
-        Bodeguero = 4,
-        JefeBodega = 5,
-        CreadorProd=6
+        Licitaciones = 2,
+        AdmControlInterno = 3,
+        AdmContabilidad = 4,
+        AnalistaCreaEquipos = 5,
+        Seguros=6,
+        Finanzas=7
     }
     public enum TipoMoneda : int
     {

@@ -166,20 +166,26 @@ function initTable() {
             {
                 mData: "CpbteT",
                 mRender: function (data, type, row) {
-                    var boton = '';
+                    var boton = "<ul class='list-unstyled'>";
                     if (data != null) {
-                        boton = '<a href="JavaScript:ModalComprobante(\'' + data.CpbNum + '\',\'' + data.CpbAno + '\',\'' + data.BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + data.CpbNum + '</a>';
-                    }                    
+                        for (i = 0; i < data.length; i++) {
+                            boton += '<li><a href="JavaScript:ModalComprobante(\'' + data[i].CpbNum + '\',\'' + data[i].CpbAno + '\',\'' + data[i].BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + data[i].CpbNum + '</a></li>';
+                        }                        
+                    }       
+                    boton+='</ul>'
                     return boton;
                 }
             },
             {
                 mData: "CpbteE",
                 mRender: function (data, type, row) {
-                    var boton = '';
+                    var boton = "<ul class='list-unstyled'>";
                     if (data != null) {
-                        boton = '<a href="JavaScript:ModalComprobante(\'' + data.CpbNum + '\',\'' + data.CpbAno + '\',\'' + data.BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + data.CpbNum + '</a>';
+                        for (i = 0; i < data.length; i++) {
+                            boton += '<li><a href="JavaScript:ModalComprobante(\'' + data[i].CpbNum + '\',\'' + data[i].CpbAno + '\',\'' + data[i].BaseSoftland + '\');"> <i class="fa fa-file-alt"></i> ' + data[i].CpbNum + '</a></li>';
+                        }
                     }
+                    boton += '</ul>'
                     return boton;
                 }
             }
