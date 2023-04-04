@@ -62,6 +62,7 @@ namespace modelo.ViewModel
         public double? BalanceObligacionLP { get; set; }
         public double? BalanceInteresLP { get; set; }
         public double? BalanceIVALP { get; set; }
+        public double? MontoOriginal { get; set; }
     }
 
 }

@@ -1,8 +1,32 @@
-﻿@{
+﻿@using Microsoft.Owin.Security
+@{
+    string UrlSistemaAccesos = System.Configuration.ConfigurationManager.AppSettings["UrlSistemaAccesos"];
+    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
     ViewBag.Title = "Crear Cliente";
+    var UrlSistema = System.Configuration.ConfigurationManager.AppSettings["UrlSistema"].ToString();
+    var appPath = HttpContext.Current.Request.ServerVariables["SERVER_NAME"];
+    var puerto = HttpContext.Current.Request.ServerVariables["SERVER_PORT"];
+    //var coll = Request.ServerVariables;
+    //// Get names of all keys into a string array.
+    //String[] arr1 = coll.AllKeys;
+    //for (var loop1 = 0; loop1 < arr1.Length; loop1++)
+    //{
+    //    Response.Write("Key: " + arr1[loop1] + "<br>");
+    //    String[] arr2 = coll.GetValues(arr1[loop1]);
+    //    for (var loop2 = 0; loop2 < arr2.Length; loop2++)
+    //    {
+    //        Response.Write("Value " + loop2 + ": " + Server.HtmlEncode(arr2[loop2]) + "<br>");
+    //    }
+    //}
+    var nombreAmbiente = (puerto == "44321") ? "LOCAL" : appPath;
+    nombreAmbiente = (puerto == "9095") ? "DESARROLLO" : nombreAmbiente;
+    nombreAmbiente = (puerto == "7003") ? "QA" : nombreAmbiente;
+    Layout = "";
 }
 @{
-    Layout = "";
+    var alerts = TempData.ContainsKey(modelo.ViewModel.Alert.AlertKey)
+        ? (List<modelo.ViewModel.Alert>)TempData[modelo.ViewModel.Alert.AlertKey]
+        : new List<modelo.ViewModel.Alert>();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -15,11 +39,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link href="/img/logo/logo1.png" rel="icon">
-    <title>Endeudamiento - Acceso</title>
+    <title>Financiamientos y seguros - Acceso</title>
     <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
     @Styles.Render("~/Content/css")
     <!-- Toastr -->
     <link rel="stylesheet" href="~/Plantilla/AdminLTE/plugins/toastr/toastr.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/Plantilla/AdminLTE/dist/css/adminlte.min.css">
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
@@ -29,13 +55,11 @@
 
 
     <style>
-        .login-container {
-            margin-top: 5%;
-            margin-bottom: 5%;
-        }
-
+        /*.login-container {
+                    margin-top: 5%;
+                }
+        */
         .login-form-1 {
-            padding: 5%;
             box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 9px 26px 0 rgba(0, 0, 0, 0.19);
         }
 
@@ -43,77 +67,164 @@
                 text-align: center;
                 color: #CB333B;
             }
-
-        .login-container form {
-            padding: 10%;
-        }
-
+        /*
+                .btnSubmit {
+                    width: 50%;
+                    border-radius: 1rem;
+                    padding: 1.5%;
+                    border: none;
+                    cursor: pointer;
+                }*/
         .btnSubmit {
-            width: 50%;
-            border-radius: 1rem;
-            padding: 1.5%;
-            border: none;
-            cursor: pointer;
-        }
-
-        .login-form-1 .btnSubmit {
             font-weight: 600;
             color: #fff;
             background-color: #1F2A44;
         }
 
-        .login-form-1 .ForgetPwd {
-            color: #0062cc;
-            font-weight: 600;
+
+
+        /*Microsoft*/
+        .fil0:hover {
+            fill: #4B4B4B;
+        }
+
+        .fnt0 {
+            font-size: 150px;
+            font-family: 'Segoe UI Semibold', 'Segoe UI';
             text-decoration: none;
         }
     </style>
 </head>
 
-<body class="bg-gradient-login">
-    <!-- Login Content -->
-    <div class="container login-container">
-        <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-6 login-form-1 card">
+<body class="bg-gradient-login hold-transition login-page">
+    <div class="login-box">
+        @if (puerto != "9080")
+        {
+            <div class="login-logo">
+                <div class="row bg-danger">
+                    <div class="col-sm-12 text-center"><h4>AMBIENTE <b>@nombreAmbiente</b></h4></div>
+                </div>
+            </div>
+        }
+
+        <!-- /.login-logo -->
+    <div class="card">
+        <div class="card-body login-card-body login-form-1">
+            <p class="login-box-msg">
                 <div class="row">
                     <div class="col-sm-12 text-center"><img src="~/img/logo/logo1.png" class="text-center" width="150" /></div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12"><h3>Acceso Usuario</h3></div>
+                    <div class="col-sm-12"><h3>Financiamientos y seguros</h3></div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
-                        @using (Ajax.BeginForm("Autherize", "Home", new AjaxOptions
-                        {
-                            InsertionMode = InsertionMode.Replace,
-                            HttpMethod = "post",
-                            OnSuccess = "SuccessSol",
-                            OnFailure = "FailureSol"
+            </p>
+            @using (Ajax.BeginForm("Autherize", "Home", new AjaxOptions
+            {
+                InsertionMode = InsertionMode.Replace,
+                HttpMethod = "post",
+                OnSuccess = "SuccessSol",
+                OnFailure = "FailureSol"
 
-                        }, new { id = "frmAcceso" }))
-                        {
-                            <input type="hidden" name="tipoAcceso" id="tipoAcceso" value="1" />
-                            <div class="form-group">
-                                <input type="text" name="usuarioCuenta" id="usuarioCuenta" class="form-control" placeholder="Usuario *" value="" />
-                            </div>
-                            <div class="form-group">
-                                <input type="password" name="claveCuenta" id="claveCuenta" class="form-control" placeholder="Clave *" value="" />
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" class="btnSubmit" value="Ingresar" />
-                            </div>
-                            <div>
-                                <a class="" href="/Usuario/SolicitaClave">¿Olvidaste tu Contraseña?</a>
-                            </div>
-                        }
+            }, new { id = "frmAcceso" }))
+            {
+                <input type="hidden" name="tipoAcceso" id="tipoAcceso" value="1" />
+                <div class="input-group mb-3">
+                    <input type="email" name="usuarioCuenta" id="usuarioCuenta" class="form-control" placeholder="Usuario *">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-envelope"></span>
+                        </div>
                     </div>
                 </div>
+                <div class="input-group mb-3">
+                    <input type="password" name="claveCuenta" id="claveCuenta" class="form-control" placeholder="Clave *">
+                    <div class="input-group-append">
+                        <div class="input-group-text">
+                            <span class="fas fa-lock"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <!-- /.col -->
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-block btnSubmit">Ingresar</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
 
+                <div class="mt-2">
+                    <a class="" href="/Usuario/SolicitaClave">¿Olvidaste tu Contraseña?</a>
+                </div>
+
+            }
+            <nav class="navbar navbar-light mb-1">
+                <div class="form-inline my-2 my-lg-0">
+
+                </div>
+                <div class="form-inline my-2 my-lg-0">
+
+                </div>
+                <div class="form-inline my-2 my-lg-0">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-outline-primary" onclick="$('#frmAccesos').submit()"><i class="fas fa-boxes"></i> Ir a otros sistemas Maqsur</button>
+                    </div>
+                    <form method="post" accept-charset="utf-8" target="_blank" id="frmAccesos" name="frmAccesos" action="@UrlSistemaAccesos/Home/Index">
+                    </form>
+                </div>
+            </nav>
+            @*<div class="social-auth-links text-center mb-3">
+            <p>- O -</p>
+            <div class="form-group">
+
+                @if (ViewBag.Estado != 0 && ViewBag.Estado != null)
+                {
+                    <div class="alert alert-danger"><i class="fa fa-exclamation-triangle"></i>@ViewBag.Mensaje</div>
+                }
+                @if (ViewBag.usuarioCuenta != "" && ViewBag.usuarioCuenta != null)
+                {
+                    <a href="@Url.Action("SignInMicrosoft", "Home")" style="text-decoration: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="50%" viewBox="0 0 3278 522" class="SignInButton">
+                        <rect class="fil0" x="2" y="2" width="3174" height="517" fill="black" />
+                        <rect x="150" y="129" width="122" height="122" fill="#F35325" />
+                        <rect x="284" y="129" width="122" height="122" fill="#81BC06" />
+                        <rect x="150" y="263" width="122" height="122" fill="#05A6F0" />
+                        <rect x="284" y="263" width="122" height="122" fill="#FFBA08" />
+                        <text x="470" y="357" fill="white" class="fnt0">Acceder con @ViewBag.usuarioCuenta</text>
+                                </svg>
+                    </a>
+
+                    <div class="row mt-1">
+                        <div class="col-sm-12">
+                            <a class="btn btn-secondary" href="/Home/SignOut"><i class="fa fa-sign-out-alt"></i> Cerrar Sesión Microsoft</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    //If the user is not authenticated, display the sign-in button
+                    <a href="@Url.Action("SignIn", "Home")" style="text-decoration: none;">
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="100%" height="50%" viewBox="0 0 3278 522" class="SignInButton">
+                        <rect class="fil0" x="2" y="2" width="3174" height="517" fill="black" />
+                        <rect x="150" y="129" width="122" height="122" fill="#F35325" />
+                        <rect x="284" y="129" width="122" height="122" fill="#81BC06" />
+                        <rect x="150" y="263" width="122" height="122" fill="#05A6F0" />
+                        <rect x="284" y="263" width="122" height="122" fill="#FFBA08" />
+                        <text x="470" y="357" fill="white" class="fnt0">Acceder con Microsoft</text>
+                                </svg>
+                    </a>
+
+                }
             </div>
+        </div>*@
 
         </div>
+        <!-- /.login-card-body -->
     </div>
+    </div>
+    <!-- Login Content -->
+
     <div class="modal fade" id="ModalCargaPagina" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg " role="document">
             <div class="modal-content">
@@ -124,10 +235,14 @@
     <div class="" id="divCargando" data-keyboard="false" tabindex="-1">
 
     </div>
+
+
     <script>
         $(document).ready(function () {
             $("#frmAcceso").submit(function () { if ($('#frmAcceso').valid() == true) { mostrarCargando(); } })
+
         })
+
         function SuccessSol(data) {
             $("#divErrorAcceso").empty();
             if (data.result.Estado == "0") {
@@ -139,7 +254,8 @@
             }
         }
         function FailureSol(data) {
-            $.notify(data.Message, "error");
+            esconderCargando();
+            toastr.error("Error de Conexión");
         }
         function mostrarCargando(mensaje, imagen) {
             if (mensaje == null || mensaje == undefined) {

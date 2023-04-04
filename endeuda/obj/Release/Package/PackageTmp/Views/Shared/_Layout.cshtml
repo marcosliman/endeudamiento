@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string UrlSistemaAccesos = System.Configuration.ConfigurationManager.AppSettings["UrlSistemaAccesos"];
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -7,7 +10,7 @@
     <meta http-equiv="Last-Modified" content="0">
     <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
     <meta http-equiv="Pragma" content="no-cache">
-    <title>Endeudamiento</title>
+    <title>Financiamientos y seguros</title>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&amp;display=fallback">
     <link href="~/Content/fontawesome-all.min.css" rel="stylesheet">
@@ -65,8 +68,6 @@
     <script src="~/Librerias/highcharts/modules/export-data.js"></script>
     <script src="~/Librerias/highcharts/modules/solid-gauge.js"></script>
     <script src="~/Librerias/highcharts/modules/accessibility.js"></script>
-    <script src="~/Librerias/highcharts/modules/heatmap.js"></script>
-    <script src="~/Librerias/highcharts/modules/treemap.js"></script>
     <script src="~/Scripts/notify.js"></script>
     <style>
         html, body {
@@ -336,6 +337,17 @@
                 return Number(numero.toFixed(decimales)) === 0 ? 0 : numero;  // En valores muy bajos, se comprueba si el numero es 0 (con el redondeo deseado), si no lo es se devuelve el numero otra vez.
             }
         }
+        function SeparadorMilesInput(numero) {
+            var num = numero;
+            var splitStr = num.split(',');
+            var splitLeft = splitStr[0];
+            var splitRight = splitStr.length > 1 ? "," + splitStr[1] : '';
+            var regx = /(\d+)(\d{3})/;
+            while (regx.test(splitLeft)) {
+                splitLeft = splitLeft.replace(regx, '$1' + "." + '$2');
+            }
+            return splitLeft + splitRight;
+        }
     </script>
 </head>
 @{
@@ -350,8 +362,13 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
             </ul>
+            <div class="col-auto">
+                <button type="button" class="btn btn-primary" onclick="$('#frmAccesos').submit()"><i class="fas fa-boxes"></i> Ir a otros sistemas Maqsur</button>
+            </div>
+            <form method="post" accept-charset="utf-8" target="_blank" id="frmAccesos" name="frmAccesos" action="@UrlSistemaAccesos/Home/Index">
+            </form>
             <div class="row justify-content-end">
-                
+
             </div>
             <!-- Right navbar links -->
 
@@ -414,7 +431,7 @@
             <!-- Brand Logo -->
             <a href="/Home/Inicio" class="brand-link bg-azulmarca">
                 <img src="/img/logo/logo2.png" alt="MaqSur" class="brand-image elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light text-white">ENDEUDAMIENTO</span>
+                <span class="brand-text font-weight-light text-white">Financiamientos y seguros</span>
             </a>
 
             <!-- Sidebar -->
@@ -608,6 +625,27 @@
                 "orderable": false
             }]
         }); // ID From dataTable
+
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        })
+        $(".numberMiles").on({
+            "focus": function (event) {
+                $(event.target).select();
+            },
+            "keyup": function (event) {
+                $(event.target).val(function (index, value) {
+                    var valor = value.replace(/[^0-9,]/g, '');
+                    return SeparadorMilesInput(valor);
+                });
+            },
+            "change": function (event) {
+                $(event.target).val(function (index, value) {
+                    var valor = value.replace(/[^0-9,]/g, '');
+                    return SeparadorMilesInput(valor);
+                });
+            }
+        });
     });
     function mostrarCargando(mensaje, imagen) {
         if (mensaje == null || mensaje == undefined) {

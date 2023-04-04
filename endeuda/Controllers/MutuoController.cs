@@ -1013,11 +1013,15 @@ namespace tesoreria.Controllers
                             }).FirstOrDefault();
             var valoresUF = dbInm.SII_ValoresUF.ToList();
             double valorCambio = 1;
-            if (registro.IdTipoMoneda != 1 && ValorCambio!="")
+            if (registro.IdTipoMoneda != (int)Helper.TipoMoneda.CLP && ValorCambio!="")
             {
                 valorCambio=Convert.ToDouble(ValorCambio);
             }
-            
+            var decRound = 0;
+            if (registro.IdTipoMoneda != (int)Helper.TipoMoneda.CLP)
+            {
+                decRound = 2;
+            }
             List<ProyeccionMutuoViewModel> arrayProyeccion = new List<ProyeccionMutuoViewModel>();
             if (registro != null)
             {
@@ -1127,16 +1131,16 @@ namespace tesoreria.Controllers
                             proy.FechaTermino = oUltimoDiaDelMes;
                             proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
                             proy.CantidadDias = days;
-                            proy.Monto = Math.Round(montoInicial * valUfPeriodo, 0);
-                            proy.Interes = Math.Round(interes * valUfPeriodo, 0);
-                            proy.MontoTotal = Math.Round(interesTotal * valUfPeriodo, 0);
-                            proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, 0);
-                            proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, 0);
-                            proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, 0);
+                            proy.Monto = Math.Round(montoInicial * valUfPeriodo, decRound);
+                            proy.Interes = Math.Round(interes * valUfPeriodo, decRound);
+                            proy.MontoTotal = Math.Round(interesTotal * valUfPeriodo, decRound);
+                            proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, decRound);
+                            proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, decRound);
+                            proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, decRound);
                             proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
                             proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                             proy.CantidadDiasNuevo = daysN;
-                            proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, 0);
+                            proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, decRound);
                             arrayProyeccion.Add(proy);
 
                             montoInicial = montoTotal;
@@ -1198,16 +1202,16 @@ namespace tesoreria.Controllers
                             proy.FechaTermino = oUltimoDiaDelMes;
                             proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
                             proy.CantidadDias = days;
-                            proy.Monto = Math.Round(montoInicial * valUfPeriodo, 0);
-                            proy.Interes = Math.Round(interes * valUfPeriodo, 0);
-                            proy.MontoTotal = Math.Round(montoTotal * valUfPeriodo, 0);
-                            proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, 0);
-                            proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, 0);
-                            proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, 0);
+                            proy.Monto = Math.Round(montoInicial * valUfPeriodo, decRound);
+                            proy.Interes = Math.Round(interes * valUfPeriodo, decRound);
+                            proy.MontoTotal = Math.Round(montoTotal * valUfPeriodo, decRound);
+                            proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, decRound);
+                            proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, decRound);
+                            proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, decRound);
                             proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
                             proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                             proy.CantidadDiasNuevo = daysN;
-                            proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, 0);
+                            proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, decRound);
                             arrayProyeccion.Add(proy);
 
                             montoInicial = montoTotal;
@@ -1250,23 +1254,23 @@ namespace tesoreria.Controllers
                         proy.FechaTermino = oUltimoDiaDelMes;
                         proy.FechaTerminoStr = oUltimoDiaDelMes.ToString("dd-MM-yyyy");
                         proy.CantidadDias = days;
-                        proy.Monto = Math.Round(montoInicial * valUfPeriodo, 0);
-                        proy.Interes = Math.Round(interes * valUfPeriodo, 0);
-                        proy.MontoTotal = Math.Round(montoTotal * valUfPeriodo, 0);
-                        proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, 0);
-                        proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, 0);
-                        proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, 0);
+                        proy.Monto = Math.Round(montoInicial * valUfPeriodo, decRound);
+                        proy.Interes = Math.Round(interes * valUfPeriodo, decRound);
+                        proy.MontoTotal = Math.Round(montoTotal * valUfPeriodo, decRound);
+                        proy.InteresTotal = Math.Round(interesTotal * valUfPeriodo, decRound);
+                        proy.MontoAmortizacion = Math.Round(montoAmortizacion * valUfPeriodo, decRound);
+                        proy.MontoPrestamo = Math.Round(montoPrestamo * valUfPeriodo, decRound);
                         proy.FechaNuevo = (fechaAmortizacion != null) ? (DateTime)fechaAmortizacion : new DateTime();
                         proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                         proy.CantidadDiasNuevo = daysN;
-                        proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, 0);
+                        proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, decRound);
                         arrayProyeccion.Add(proy);
                         montoInicial = montoTotal;
                     }
 
                 }
             }
-            var decRound = 0;
+           
             var listaRetorno = arrayProyeccion.Select(c => 
             new {
                 c.item,
