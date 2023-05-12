@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "Reporte";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+<style>
+    .form-group.row {
+        margin-bottom: 2px;
+    }
+</style>
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">Reporte Arriendos</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title">Generador reporte Arriendo Máquinas</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label for="Mes">Mes</label>
+                    @Html.DropDownList("IdMes", ViewData["listaMes"] as SelectList, new { @class = "form-control form-control-sm", @onchange = "ActualizarTotalDias()" })
+
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <div class="form-group">
+                    <label for="DiasMes">Dias del Mes</label>
+                    @Html.TextBox("TotalDiasMes", null, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="codSoftland" class="text-center">Valor del Cambio</label>
+                    <div class="col-sm-6">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">UF</span>
+                            </div>
+                            <input type="text" class="form-control form-control-sm" placeholder="Valor UF" id="UF" name="UF" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Registrar ventas por sucursal en el mes a cobrar</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-sm-6 col-form-label text-left" for="selectArea">Area</label>
+                                    <label class="col-sm-3 col-form-label text-left" for="selectValor">Valor</label>
+                                    <label class="col-sm-3 col-form-label text-left" for="selectPorcentaje">Porcentaje</label>
+                                </div>
+                                @foreach (var area in (SelectList)ViewData["listaArea"])
+                                {
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <label class="col-form-label">@area.Text</label>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group input-group-sm">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">$</span>
+                                                </div>
+                                                <input type="text" name="valor_@(area.Value)" class="form-control text-left" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group input-group-sm">
+                                                <input type="text" name="porcentaje_@(area.Value)" class="form-control text-left" />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="form-group row">
+                                    <label class="col-sm-6 col-form-label text-right">Total:</label>
+                                    <div class="col-sm-3">
+                                        <input type="text" id="total" class="form-control form-control-sm text-left" readonly />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-sm-auto row">
+            <div class="form-group col-12">
+                <label for="btnGenerar" class="invisible">Generar</label>
+                <button class="btn btn-info btn-sm form-control form-control-sm" id="btnGenerar" name="btnGenerar" type="button" onclick="CargaReporteArriendo()"><i class="fa fa-cog"></i> Generar</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="card">
+
+    <div class="card-body">
+        <label class="col-lg-12 col-form-label"><strong class="lblEmpresa">Generar Detalle</strong></label>
+        <div id="divLoadStockZona">
+
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        // Obtenemos todos los inputs de valores
+        var valores = $("input[name^='valor_']");
+        // Agregamos un listener para que se actualice el total cada vez que se ingrese un valor
+        valores.on("input", function () {
+            var total = 0;
+            valores.each(function () {
+                var valor = $(this).val();
+                if (valor) {
+                    total += parseFloat(valor);
+                }
+            });
+            $("#total").val(total.toFixed(2));
+        });
+    });
+</script>
+<script>
+
+    $(document).ready(function () {
+        AbrirMenu("ReporteMontosOC");
+        $('#IdEmpresaBusqueda').select2({
+            theme: 'bootstrap4',
+            placeholder: '--Seleccione Empresa--',
+            language: "es"
+        });
+        //CargaZonasBodega();
+        //CargaConsolidadoStock(0);
+        //$('.lblEmpresa').html($("#IdEmpresaBus option:selected").text())
+        //$('.lblPeriodo').html($("#DesGrupo option:selected").text() + "-" + $("#anioBus").val())
+
+        moment.locale('es');
+
+    });
+
+    function CargaReporteArriendo() {
+        $.ajax({
+            url: '/Activo/AjaxReporteArriendo',
+            data: {
+                Mes: $("#IdMes").val(),
+                TotalDiasMes: $("#TotalDiasMes").val(),
+                UF: $("#UF").val()
+            },
+            async: true,
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "html",
+            global: true,
+            ifModified: false,
+            processData: true,
+            beforeSend: function () {
+                $('.lblEmpresa').html('')
+                $('.lblPeriodo').html('')
+                $("#divLoadStockZona").empty();
+                $("#divLoadStockZona").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (html) {
+                $('.lblEmpresa').html()
+                $('.lblPeriodo').html($("#DesGrupo option:selected").text() + "-" + $("#anioBus").val())
+                //html=decodeURIComponent(html);
+                $("#divLoadStockZona").empty();
+                $("#divLoadStockZona").append(html);
+            },
+            type: "post"
+        });
+    }
+    function ActualizarTotalDias() {
+        // Obtener el valor seleccionado del select de los meses
+        var mesSeleccionado = document.getElementById("IdMes").value;
+
+        // Hacer una llamada Ajax al controlador para obtener el total de días del mes seleccionado
+        $.ajax({
+            type: "GET",
+            url: "@Url.Action("ObtenerTotalDiasMes", "Activo")",
+            data: { idMes: mesSeleccionado },
+            success: function (totalDias) {
+                // Actualizar el valor del input de total de días con el valor devuelto por el controlador
+                $("#TotalDiasMes").val(totalDias);
+            }
+        });
+    }
+</script>

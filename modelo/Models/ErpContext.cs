@@ -23,6 +23,7 @@ namespace modelo.Models
         public System.Data.Entity.DbSet<Local.Estado> Estado { get; set; }
         public System.Data.Entity.DbSet<Local.Activo> Activo { get; set; }
         public System.Data.Entity.DbSet<Local.Familia> Familia { get; set; }
+        public System.Data.Entity.DbSet<Local.GrupoTarifario> GrupoTarifario { get; set; }
         public System.Data.Entity.DbSet<Local.Proveedor> Proveedor { get; set; }
 
         public System.Data.Entity.DbSet<Local.MarcaProducto> MarcaProducto { get; set; }

@@ -59,5 +59,6 @@ namespace modelo.Models.Local
         public string DescCC_MqsSur { get; set; }
         public double? ValorFactura { get; set; }
         public DateTime? FecIngBaja { get; set; }
+        public int? IdGrupoTarifario { get; set; }
     }
 }

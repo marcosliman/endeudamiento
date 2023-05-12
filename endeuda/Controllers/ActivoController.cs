@@ -10,6 +10,8 @@ using System.Data;
 using LinqToExcel;
 using System.Data.OleDb;
 using System.Data.Entity.Validation;
+using Microsoft.Win32;
+
 namespace tesoreria.Controllers
 {
     public class ActivoController : Controller
@@ -283,6 +285,12 @@ namespace tesoreria.Controllers
                               select new RetornoGenerico { Id = t.IdEstado, Nombre = t.NombreEstado }).OrderBy(c => c.Nombre).ToList();
                 SelectList listaEstados = new SelectList(estados.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEstado);
                 ViewData["listaEstados"] = listaEstados;
+                //Grupo Tarifario
+                var grupotarifas = (from t in db.GrupoTarifario
+                               where t.Activo == true
+                               select new RetornoGenerico { Id = t.IdGrupoTarifario, Nombre = t.GrupoFamilia }).OrderBy(c => c.Nombre).ToList();
+                SelectList listaGrupoTarifario = new SelectList(grupotarifas.OrderBy(c => c.Nombre), "Id", "Nombre", registro.IdEstado);
+                ViewData["listaGrupoTarifario"] = listaGrupoTarifario;
                 return View(registro);
             }
         }
@@ -379,6 +387,7 @@ namespace tesoreria.Controllers
                         activo.Glosa = datos.Glosa;
                         activo.IdMarcaProducto = datos.IdMarcaProducto;
                         activo.IdModeloProducto = datos.IdModeloProducto;
+                        activo.IdGrupoTarifario = datos.IdGrupoTarifario;
                         if (activo.IdEstado == 3)
                         {
                             activo.IdEstado = estado;
@@ -467,6 +476,7 @@ namespace tesoreria.Controllers
                         activoAdd.ValorFactura = datos.ValorFactura;
                         activoAdd.DesGrupo = descGrupo;
                         activoAdd.DesSGru = descSubGrupo;
+                        activoAdd.IdGrupoTarifario = datos.IdGrupoTarifario;
                         //bajada
                         if (activoSoftland != null)
                         {
@@ -1113,5 +1123,57 @@ namespace tesoreria.Controllers
                 return View(registro);
             }
         }
+        public ActionResult CobroArriendo()
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else if (seguridad != null && !seguridad.TienePermiso("CobroArriendo", Helper.TipoAcceso.Acceder))
+            {
+                return RedirectToAction("Inicio", "Home");
+            }
+            else
+            {
+                var mesActual = DateTime.Now.Month;
+                var empresaSoftland = db.Empresa.Find(Helper.Constantes.IdEmpresaMaquinariasa);
+                SoftLandContext dbSoft = new SoftLandContext(empresaSoftland.BaseSoftland);
+                var empresa = (from e in db.Empresa
+                               where e.Activo == true
+                               select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
+                SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
+                ViewData["listaEmpresa"] = listaEmpresa;
+
+                var areas = (from area in dbSoft.cwtaren
+                             select new RetornoGenerico { Id = 0, ValorString = area.CodArn, Nombre = area.DesArn }).OrderBy(c => c.Id).ToList();
+                SelectList listaArea = new SelectList(areas.OrderBy(c => c.Nombre), "ValorString", "Nombre");
+                ViewData["listaArea"] = listaArea;
+
+                var meses = (from mes in db.Mes
+                             select new RetornoGenerico { Id = mes.IdMes, Nombre = mes.NombreMes }).OrderBy(c => c.Id).ToList();
+                SelectList listaMes = new SelectList(meses.OrderBy(c => c.Id), "Id", "Nombre");
+                ViewData["listaMes"] = listaMes;
+
+                return View();
+            }
+        }
+        public ActionResult ObtenerTotalDiasMes(int idMes)
+        {
+            var totalDias = DateTime.DaysInMonth(DateTime.Now.Year, idMes);
+            return Json(totalDias, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult AjaxReporteArriendo(int? anioBus1, int? anioBus2, int? anioBus3, string DesGrupo, string[] CodBode)
+        {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
+            else
+            {
+
+                return View();
+            }
+        }
+
     }
 }

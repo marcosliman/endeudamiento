@@ -57,6 +57,7 @@
     <Compile Include="Models\InmobContext.cs" />
     <Compile Include="Models\Inmobiliaria\SII_ValoresUF.cs" />
     <Compile Include="Models\Local\Activo.cs" />
+    <Compile Include="Models\Local\GrupoTarifario.cs" />
     <Compile Include="Models\Local\ComprobanteDetAmortizacion.cs" />
     <Compile Include="Models\Local\ContratoDocumento.cs" />
     <Compile Include="Models\Local\ModeloProducto.cs" />

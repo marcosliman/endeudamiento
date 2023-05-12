@@ -47,6 +47,7 @@ namespace modelo.ViewModel
         public DateTime? FechaRegistro { get; set; }
         public string FechaRegistroStr { get; set; }
         public int IdEstado { get; set; }
+        public int IdGrupoTarifario { get; set; }
         public string NombreEstado { get; set; }
         public string NumeroLeasing { get; set; }
         public string TituloBoton { get; set; }

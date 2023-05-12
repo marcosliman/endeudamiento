@@ -1,0 +1,582 @@
+﻿@{
+    ViewBag.Title = "Reporte Arriendo";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+
+}
+<div class="card">
+    <div class="card-header bg-azulmarca text-white">
+        <h3 class="card-title">RESUMEN POR EMPRESA MAQSUR</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 1, "desc" ]]'>
+                        <thead class="table-info">
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Monto Acum.</th>
+                                <th>Q. O.C</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-secondary">
+                                <th>Total</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row" style="display: block; position: relative; width: 100%;">
+                    <div id="chartEmpresa" style="height: 400px;background-color: transparent;" data-highcharts-chart="15">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header bg-azulmarca text-white">
+        <h3 class="card-title">RESUMEN POR PROVEEDOR (LOS 10 PRIMEROS)</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProveedor" data-order='[[ 1, "desc" ]]'>
+                        <thead class="table-info">
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Monto Acum.</th>
+                                <th>Q. O.C</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                        <tfoot>
+                            <tr class="table-secondary">
+                                <th>Total</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row" style="display: block; position: relative; width: 100%;">
+                    <div id="chartProveedor" style="height: 400px;background-color: transparent;" data-highcharts-chart="15">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header bg-azulmarca text-white">
+        <h3 class="card-title">DETALLE COMPRAS</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaDetalle" data-order='[[ 1, "desc" ]]'>
+                <thead class="table-info">
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Proveedor</th>
+                        <th>DescCC</th>
+                        <th>DesArn</th>
+                        <th>NumOC</th>
+                        <th>NumReq</th>
+                        <th>Solicitante Req.</th>
+                        <th>Observ</th>
+                        <th>CodProd</th>
+                        <th>DesProd</th>
+                        <th>Cantidad</th>
+                        <th>Tipo Moneda</th>
+                        <th>Precio</th>
+                        <th>Total Linea</th>
+                        <th>Año/mes</th>
+                        <th>Comprador</th>
+                        <th>Aprobador 1</th>
+                        <th>Aprobador 2</th>
+                        <th>Condición Pago</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr class="table-secondary">
+                        <th colspan="10">Total</th>
+                        <th></th>
+                        <th colspan="2"></th>
+                        <th></th>
+                        <th colspan="5"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div id="datosComprobante"></div>
+        </div>
+    </div>
+</div>
+<script>
+    function chartData(table, columna) {
+        var series = {};
+        var valores = {};
+        // Count the number of entries for each position
+        table.column(0, { search: 'applied' })
+            .data()
+            .each(function (val, row) {
+                series[row] = val;
+            });
+        table.column(columna, { search: 'applied' })
+            .data()
+            .each(function (val, row) {
+                valores[row] = val;
+            });
+        //console.log(series)
+        // And map it to the format highcharts uses
+        return $.map(series, function (val, key) {
+            return {
+                name: val,
+                y: valores[key],
+            };
+        });
+    }
+    function CargaChartEmpresa(table) {
+        table = $('#grillaEmpresa').DataTable();
+        // Create the chart with initial data
+        //var container = $('<div/>').insertBefore(table.table().container());
+        //console.log(chartData(table))
+        var chart = Highcharts.chart('chartEmpresa', {
+            chart: {
+                type: 'pie',
+            },
+            title: {
+                text: 'Participación Empresa',
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b> <br> {point.y}'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.2f} %',
+                        distance: 20,
+                        filter: {
+                            property: 'percentage',
+                            operator: '>',
+                            value: 1
+                        }
+                    }
+                }
+            },
+            series: [
+                {
+                    name: "Deuda",
+                    data: chartData(table, 1)
+                },
+            ],
+        });
+
+        //// On each draw, update the data in the chart
+        //table.on('draw', function () {
+        //    chart.series[0].setData(chartData(table));
+        //});
+    }
+    function initTableEmpresa() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Monto Acum. OC Empresa',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
+                    }
+                }
+            }
+        };
+        var table = $('#grillaEmpresa').DataTable({
+            "initComplete": function (settings, json) {
+                CargaChartEmpresa(table);
+            },
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Empresa/MontosOC_Empresa_Read/0',
+                "data": function (d) {
+                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                    d.IdBanco = $("#IdBancoBus").val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
+                },
+                "dataSrc": ""
+            },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Monto_Acum_OC_Empresa"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [1, 2],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "NombreEmpresa" },
+                { "data": "Total" },
+                { "data": "Cantidad" }
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+                for (var it = 1; it <= 2; it++) {
+                    // Total over all pages
+                    var total = api.column(it).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api.column(it, { page: 'current' }).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    // Update footer
+                    $(api.column(it).footer()).html(totalFormat);
+                }
+            }
+        });
+
+        return table;
+    }
+
+    function CargaChartProveedor(table) {
+        table = $('#grillaProveedor').DataTable();
+        // Create the chart with initial data
+        //var container = $('<div/>').insertBefore(table.table().container());
+        //console.log(chartData(table))
+        var chart = Highcharts.chart('chartProveedor', {
+            chart: {
+                type: 'pie',
+            },
+            title: {
+                text: 'Participación Proveedores',
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.2f}%</b> <br> {point.y}'
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.2f} %',
+                        distance: 20,
+                        filter: {
+                            property: 'percentage',
+                            operator: '>',
+                            value: 1
+                        }
+                    }
+                }
+            },
+            series: [
+                {
+                    name: "Acumulado",
+                    data: chartData(table, 1)
+                },
+            ],
+        });
+
+        //// On each draw, update the data in the chart
+        //table.on('draw', function () {
+        //    chart.series[0].setData(chartData(table));
+        //});
+    }
+    function initTableProveedor() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Monto Acum. O.C Proveedores',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
+                    }
+                }
+            }
+        };
+        var table = $('#grillaProveedor').DataTable({
+            "initComplete": function (settings, json) {
+                CargaChartProveedor(table);
+            },
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Empresa/MontosOC_Proveedor_Read',
+                "data": function (d) {
+                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                    d.IdBanco = $("#IdBancoBus").val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
+                },
+                "dataSrc": ""
+            },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Monto_Acum_OC_Proveedores"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [1, 2],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "NomAux" },
+                { "data": "Total" },
+                { "data": "Cantidad" }
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+                for (var it = 1; it <= 2; it++) {
+                    // Total over all pages
+                    var total = api.column(it).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api.column(it, { page: 'current' }).data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+                    var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                    var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                    // Update footer
+                    $(api.column(it).footer()).html(totalFormat);
+                }
+            }
+        });
+
+        return table;
+    }
+
+    function initTableDetalle() {
+        var buttonCommon = {
+            text: 'Exportar a Excel',
+            title: 'Monto Acum. OC Detalle',
+            extend: 'excelHtml5',
+            exportOptions: {
+                columns: "thead th:not(.noExport)",
+                format: {
+                    body: function (data, row, column, node) {
+                        var texto = node.innerText;
+                        texto = (column > 0) ? texto.replace(/[$.]/g, '') : texto;
+                        texto = (column > 0) ? texto.replace(/[$,]/g, '.').replace(/[$~]/g, '.') : texto;
+                        return texto;
+                    }
+                }
+            }
+        };
+        var table = $('#grillaDetalle').DataTable({
+            "initComplete": function (settings, json) {
+            },
+            "scrollY": 450,
+            "scrollX": true,
+            "retrieve": true,
+            'ajax': {
+                "type": "POST",
+                "url": '/Empresa/MontosOC_Detalle_Read',
+                "data": function (d) {
+                    d.IdEmpresa = $("#IdEmpresaBus").val();
+                    d.IdBanco = $("#IdBancoBus").val();
+                    d.anio = $("#anioBus").val();
+                    d.IdMes = $("#IdMesBus").val();
+                    d.valorUf = $("#valorUfBus").val();
+                },
+                "dataSrc": ""
+            },
+            buttons: [
+                $.extend(true, {}, buttonCommon, {
+                    filename: "Monto_Acum_OC_Detalle"
+                })
+            ],
+            columnDefs: [
+                { targets: '_all', className: 'align-middle' },
+                {
+                    targets: [10, 12, 13],
+                    render: function (data, type, row) {
+                        var numFormt = "";
+                        if (data != null) {
+                            var num = data.toString();
+                            numFormt = SeparadorMiles(num);
+                        }
+                        return numFormt;
+                    }
+                }
+            ],
+            columns: [
+                { "data": "NombreEmpresa" },
+                { "data": "NomAux" },
+                { "data": "DescCC" },
+                { "data": "DesArn" },
+                {
+                    "mData": "NumOC",
+                    "bSortable": true,
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        boton = '<a href="javascript:ModalComprobanteModal(\'\',\'' + data + '\',\'' + row.IdEmpresa + '\')">' + data + '</a> ';
+                        return boton;
+                    }
+                },
+                { "data": "NumReq" },
+                { "data": "DesSolic" },
+                { "data": "ObservOC" },
+                { "data": "CodProd" },
+                { "data": "DetProd" },
+                { "data": "Cantidad" },
+                { "data": "DesMon" },
+                { "data": "PrecioUnit" },
+                { "data": "ValorTotal" },
+                {
+                    "mData": "NumOC",
+                    "bSortable": true,
+                    "mRender": function (data, type, row) {
+                        var boton = '';
+                        boton = row.anio + "/" + row.mes;
+                        return boton;
+                    }
+                },
+                { "data": "Comprador" },
+                { "data": "Aprobador1" },
+                { "data": "Aprobador2" },
+                { "data": "CveDes" }
+            ],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+                for (var it = 10; it <= 13; it++) {
+                    if (it == 10 || it == 13) {
+                        // Total over all pages
+                        var total = api.column(it).data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+
+                        // Total over this page
+                        pageTotal = api.column(it, { page: 'current' }).data()
+                            .reduce(function (a, b) {
+                                return intVal(a) + intVal(b);
+                            }, 0);
+                        var pageTotalFormat = SeparadorMiles(redondearDecimales(pageTotal, 2).toString());
+                        var totalFormat = SeparadorMiles(redondearDecimales(total, 2).toString());
+                        // Update footer
+                        $(api.column(it).footer()).html(totalFormat);
+                    }
+
+                }
+            }
+        });
+
+        return table;
+    }
+    function ModalComprobanteModal(codProd, numOC, IdEmpresa) {
+        var tmpUrl = "/OrdenCompra/OrdenCompra";
+        $("#datosComprobante").empty();
+        $('#modal-comprobante').modal('show');
+        $.ajax({
+            url: tmpUrl,
+            type: "Get",
+            data: { codProd: codProd, numOC: numOC, IdEmpresa: IdEmpresa },
+            beforeSend: function () {
+                $("#datosComprobante").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+                mostrarCargando();
+            },
+            success: function (data) {
+                $("#datosComprobante").empty();
+                $("#datosComprobante").html(data);
+                esconderCargando();
+            }
+        });
+    }
+    $(document).ready(function () {
+        initTableEmpresa();
+        initTableProveedor();
+        initTableDetalle();
+    });
+</script>
+
