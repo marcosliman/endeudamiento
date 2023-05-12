@@ -517,6 +517,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\TarifarioController.cs" />
     <Compile Include="Controllers\CpteSoftlandController.cs" />
     <Compile Include="Controllers\ModeloProductoController.cs" />
     <Compile Include="Controllers\MarcaProductoController.cs" />
@@ -3261,6 +3262,10 @@
     <Content Include="Views\Empresa\DescargarBaseContratos.cshtml" />
     <Content Include="Views\Familia\TipoDeudaFamilia.cshtml" />
     <Content Include="Views\Amortizacion\DescargarCSVContable.cshtml" />
+    <Content Include="Views\Tarifario\Create.cshtml" />
+    <Content Include="Views\Tarifario\Index.cshtml" />
+    <Content Include="Views\Activo\CobroArriendo.cshtml" />
+    <Content Include="Views\Activo\AjaxReporteArriendo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
