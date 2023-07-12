@@ -26,6 +26,10 @@
                         <div class="col-sm-auto col-form-label">
                             @Model.EmpresaReceptora.RazonSocial
                         </div>
+                        <label class="col-sm-auto col-form-label">Tasa Diaria</label>
+                        <div class="col-sm-auto col-form-label">
+                            @Model.TasaDiaria
+                        </div>
                     </div>                   
                     <div class="form-group row">
                         
@@ -44,7 +48,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">Valor Cambio</span>
                                     </div>
-                                    <input type="text" class="form-control form-control-sm numberMiles required" name="ValorCambio" id="ValorCambio" value="" />
+                                    <input type="text" class="form-control form-control-sm numberMiles required" name="ValorCambio" id="ValorCambioProy" value="" />
                                 </div>
                             </div>
                         }
@@ -67,6 +71,7 @@
                                     <th>Item</th>
                                     <th>Inicio de Periodo</th>
                                     <th>Fin de Periodo</th>
+                                    <th>UF</th>
                                     <th>Días</th>
                                     <th>Monto ($)</th>
                                     <th>Intereses</th>
@@ -115,7 +120,7 @@
                 type: "Post",
                 data: { fecha: valor },
                 success: function (data) {
-                    $("#ValorCambio").val(SeparadorMiles(data.Valor.toString()));
+                    $("#ValorCambioProy").val(SeparadorMiles(data.Valor.toString()));
                 }
             });
         }
@@ -129,6 +134,7 @@
     }
 
     function initTableP() {
+        var ufVisible = ((IdTipoMoneda == "2") ? true : false);
         var buttonCommon = {
             text: 'Exportar a Excel',
             title: 'Proyección Mutuo',
@@ -153,7 +159,7 @@
                 "data": function (d) {
                     d.idMutuo = "@Model.IdMutuo";
                     d.fechaProyeccion = $('#fechaProyeccion').val();
-                    d.ValorCambio = $("#ValorCambio").val();
+                    d.ValorCambio = $("#ValorCambioProy").val();
                 },
                 "dataSrc": ""
             },
@@ -164,8 +170,9 @@
             ],
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
+                { targets: [3], visible: ufVisible },
                 {
-                    targets: [4, 5, 6, 7, 10, 11, 12],
+                    targets: [3,4, 5, 6, 7,8, 10, 11, 12,13],
                     render: function (data, type, row) {
                         var numFormt = "";
                         if (data != null) {
@@ -190,6 +197,7 @@
                         sort: "FechaTermino"
                     }
                 },
+                { "data": "ValorUF" },
                 { "data": "CantidadDias" },
                 { "data": "Monto" },
                 { "data": "Interes" },

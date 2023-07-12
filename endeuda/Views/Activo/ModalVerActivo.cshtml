@@ -186,7 +186,7 @@
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="IdEstado">Grupo Tarifario</label>
-                                @Html.DropDownList("IdGrupoTarifario", (SelectList)ViewData["listaGrupoTarifario"], null, htmlAttributes: new { @class = "form-control form-control-sm required" })
+                                @Html.DropDownList("IdGrupoTarifario", (SelectList)ViewData["listaGrupoTarifario"], "--Seleccione Grupo Tarifario--", htmlAttributes: new { @class = "form-control form-control-sm required" })
                             </div>
                         </div>
                     </div>

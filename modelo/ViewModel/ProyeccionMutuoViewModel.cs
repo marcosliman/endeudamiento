@@ -27,6 +27,7 @@ namespace modelo.ViewModel
         public string FechaNuevoStr { get; set; }
         public int CantidadDiasNuevo { get; set; }
         public string ExisteMutuo { get; set; }
+        public double? ValorUF { get; set; }
     }
 
 }

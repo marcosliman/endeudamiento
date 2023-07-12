@@ -159,6 +159,7 @@
     }
 
     function VerDeuda(idMutuo) {
+        $("#datosNuevoPrestamo").empty();
         $('#ModalDetalleDeuda').modal('show');
         $.ajax({
             url: "/Mutuo/ModalDetalleDeuda",
@@ -175,6 +176,7 @@
     }
 
     function NuevoCredito(idMutuo) {
+        $("#datosDeuda").empty();
         $("#ModalNuevoPrestamo").modal('show');
         $.ajax({
             url: "/Mutuo/ModalNuevoPrestamo",

@@ -240,7 +240,11 @@
     <script>
         $(document).ready(function () {
             $("#frmAcceso").submit(function () { if ($('#frmAcceso').valid() == true) { mostrarCargando(); } })
-
+            $('#frmAcceso').validate({
+                debug: false,
+                errorElement: "em",
+                errorContainer: $("#warning")
+            });
         })
 
         function SuccessSol(data) {

@@ -5,7 +5,56 @@
 }
 <div class="card">
     <div class="card-header bg-azulmarca text-white">
-        <h3 class="card-title">RESUMEN POR EMPRESA MAQSUR</h3>
+        <h3 class="card-title">DETALLE</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaDetalle" data-order='[[ 1, "desc" ]]'>
+                <thead class="table-info">
+                    <tr>
+                        <th>Nro. Equipo</th>
+                        <th>Sucursal</th>
+                        <th>Desc. Familia</th>
+                        <th>Grupo Tarifario</th>
+                        <th>CC Maqsur Maquinarias</th>
+                        <th>Año del Activo</th>
+                        <th>Estado</th>
+                        <th>Días en Arriendo</th>
+                        <th>Dias en Disponible</th>
+                        <th>Dias en Taller</th>
+                        <th>Tarifa en UF</th>
+                        <th>Tarifa en CLP</th>
+                        <th>Propiedad del bien</th>
+                        <th>Depreciación</th>
+                        <th>Tarifa en CLP a aplicar</th>
+                        <th>Cobro días en arriendo</th>
+                        <th>Cobro días disponible</th>
+                        <th>Cobro días en taller</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+                <tfoot>
+                    <tr class="table-secondary">
+                        <th colspan="10">Total</th>
+                        <th></th>
+                        <th colspan="2"></th>
+                        <th></th>
+                        <th colspan="4"></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header bg-azulmarca text-white">
+        <h3 class="card-title">RESUMEN POR ZONA</h3>
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -19,9 +68,9 @@
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 1, "desc" ]]'>
                         <thead class="table-info">
                             <tr>
-                                <th>Empresa</th>
-                                <th>Monto Acum.</th>
-                                <th>Q. O.C</th>
+                                <th>Zona</th>
+                                <th>Monto Venta</th>
+                                <th>dist %</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +97,7 @@
 </div>
 <div class="card">
     <div class="card-header bg-azulmarca text-white">
-        <h3 class="card-title">RESUMEN POR PROVEEDOR (LOS 10 PRIMEROS)</h3>
+        <h3 class="card-title">Cobro distribuido</h3>
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -62,9 +111,9 @@
                     <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaProveedor" data-order='[[ 1, "desc" ]]'>
                         <thead class="table-info">
                             <tr>
-                                <th>Empresa</th>
-                                <th>Monto Acum.</th>
-                                <th>Q. O.C</th>
+                                <th>Zona</th>
+                                <th>Cobro días en arriendo</th>
+                                <th>Cobro en días disponible + Taller</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -89,54 +138,10 @@
         </div>
     </div>
 </div>
-<div class="card">
-    <div class="card-header bg-azulmarca text-white">
-        <h3 class="card-title">DETALLE COMPRAS</h3>
-        <div class="card-tools">
-            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                <i class="fas fa-minus"></i>
-            </button>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaDetalle" data-order='[[ 1, "desc" ]]'>
-                <thead class="table-info">
-                    <tr>
-                        <th>Empresa</th>
-                        <th>Proveedor</th>
-                        <th>DescCC</th>
-                        <th>DesArn</th>
-                        <th>NumOC</th>
-                        <th>NumReq</th>
-                        <th>Solicitante Req.</th>
-                        <th>Observ</th>
-                        <th>CodProd</th>
-                        <th>DesProd</th>
-                        <th>Cantidad</th>
-                        <th>Tipo Moneda</th>
-                        <th>Precio</th>
-                        <th>Total Linea</th>
-                        <th>Año/mes</th>
-                        <th>Comprador</th>
-                        <th>Aprobador 1</th>
-                        <th>Aprobador 2</th>
-                        <th>Condición Pago</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-                <tfoot>
-                    <tr class="table-secondary">
-                        <th colspan="10">Total</th>
-                        <th></th>
-                        <th colspan="2"></th>
-                        <th></th>
-                        <th colspan="5"></th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+<div class="col-sm-auto row">
+    <div class="form-group col-12">
+        <label for="btnGenerar" class="invisible">Cerrar Mes</label>
+        <button class="btn btn-info btn-sm form-control form-control-sm" id="btnGenerar" name="btnGenerar" type="button" onclick="CargaReporteArriendo()"><i class="fa fa-cog"></i> Generar</button>
     </div>
 </div>
 <div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -574,9 +579,9 @@
         });
     }
     $(document).ready(function () {
-        initTableEmpresa();
-        initTableProveedor();
-        initTableDetalle();
+        //initTableEmpresa();
+        //initTableProveedor();
+        //initTableDetalle();
     });
 </script>
 

@@ -726,7 +726,7 @@ namespace tesoreria.Controllers
         }
 
         [HttpPost]
-        public JsonResult ActivarContrato(int idContrato,int IdFamilia, string descripcion)
+        public JsonResult ActivarContrato(int idContrato,int? IdFamilia, string descripcion)
         {
             dynamic showMessageString = string.Empty;
             var mensajeError = "Existen Datos Incompletos";

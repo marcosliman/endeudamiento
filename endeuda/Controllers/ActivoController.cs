@@ -1170,7 +1170,6 @@ namespace tesoreria.Controllers
             }
             else
             {
-
                 return View();
             }
         }

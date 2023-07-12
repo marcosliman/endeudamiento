@@ -27,6 +27,10 @@
                     <div class="col-sm-auto col-form-label">
                         @Model.EmpresaReceptora
                     </div>
+                    <label class="col-sm-auto col-form-label">Tasa Diaria</label>
+                    <div class="col-sm-auto col-form-label">
+                        @Model.TasaDiaria
+                    </div>
                 </div>
                 <div class="form-group row">
                     <label for="inputEmail3" class="col-sm-2 col-form-label">Detalle al: @ViewBag.oUltimoDiaDelMesStr</label>
@@ -76,6 +80,7 @@
                                     <th>Item</th>
                                     <th>Inicio de Periodo</th>
                                     <th>Fin de Periodo</th>
+                                    <th>UF</th>
                                     <th>Días</th>
                                     <th>Monto ($)</th>
                                     <th>Intereses</th>
@@ -102,6 +107,7 @@
 </div>
 
 <script>
+    var IdTipoMoneda = "@Model.IdTipoMoneda";
     $(document).ready(function () {
         $('.classFecha').datepicker({
             format: 'dd/mm/yyyy',
@@ -110,7 +116,7 @@
         });
         Deuda();
     });
-    function ValorUfByFecha(valor) {       
+    function ValorUfByFecha(valor) {
         $.ajax({
             url: "/FuncionesGenerales/JsonResultInidicadorUF",
             type: "Post",
@@ -118,7 +124,7 @@
             success: function (data) {
                 $("#ValorCambio").val(SeparadorMiles(data.Valor.toString()));
             }
-        });        
+        });
     }
     function Deuda() {
         var table = initTableP();
@@ -126,6 +132,7 @@
     }
 
     function initTableP() {
+        var ufVisible = ((IdTipoMoneda == "2") ? true : false);
         var buttonCommon = {
             text: 'Exportar a Excel',
             title: 'Detalle deuda Mutuo',
@@ -149,15 +156,16 @@
                 "url": '/Mutuo/ListProyectar_Read/',
                 "data": function (d) {
                     d.idMutuo = "@Model.IdMutuo";
-                    d.fechaProyeccion = "@Model.FechaPrestamo";
+                    d.fechaProyeccion = "@ViewBag.oUltimoDiaDelMesStr";
                     d.ValorCambio = $("#ValorCambio").val();
                 },
                 "dataSrc": ""
             },
             columnDefs: [
                 { targets: '_all', className: 'align-middle' },
+                { targets: [3], visible: ufVisible },
                 {
-                    targets: [4, 5, 6, 7, 10, 11, 12],
+                    targets: [3,4, 5, 6, 7,8, 10, 11, 12,13],
                     render: function (data, type, row) {
                         var numFormt = "";
                         if (data != null) {
@@ -187,6 +195,7 @@
                         sort: "FechaTermino"
                     }
                 },
+                { "data": "ValorUF" },
                 { "data": "CantidadDias" },
                 { "data": "Monto" },
                 { "data": "Interes" },

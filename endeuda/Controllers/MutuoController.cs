@@ -964,7 +964,8 @@ namespace tesoreria.Controllers
                                 {
                                     IdMutuo = m.IdMutuo,
                                     EmpresaFinancia = em.RazonSocial,
-                                    EmpresaReceptora = emr.RazonSocial
+                                    EmpresaReceptora = emr.RazonSocial,
+                                    TasaDiaria=m.TasaDiaria
                                 }).FirstOrDefault();
                 var tMutuo = db.Mutuo.Find(idMutuo);
 
@@ -1068,6 +1069,10 @@ namespace tesoreria.Controllers
 
                         //agregamos 1 mes al objeto anterior y restamos 1 día.
                         oUltimoDiaDelMes = oPrimerDiaDelMes.AddMonths(1).AddDays(-1);
+                        if (oUltimoDiaDelMes > fechaProyeccion)
+                        {
+                            oUltimoDiaDelMes=fechaProyeccion;
+                        }
 
                         TimeSpan difFechas = oUltimoDiaDelMes - oPrimerDiaDelMes;
                         days = (int)difFechas.TotalDays + 1;
@@ -1112,7 +1117,7 @@ namespace tesoreria.Controllers
                                 if((i+1)!= monthDiff)
                                 {
                                     var ufSii = valoresUF.Where(c => c.Fecha.Date == oUltimoDiaDelMes).FirstOrDefault();
-                                    valUfPeriodo = (ufSii != null) ? ufSii.Valor : valUfPeriodo;
+                                    valUfPeriodo = (ufSii != null) ? ufSii.Valor : valorCambio;
                                 }
                                 else
                                 {
@@ -1141,6 +1146,7 @@ namespace tesoreria.Controllers
                             proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                             proy.CantidadDiasNuevo = daysN;
                             proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, decRound);
+                            proy.ValorUF = valUfPeriodo;
                             arrayProyeccion.Add(proy);
 
                             montoInicial = montoTotal;
@@ -1185,7 +1191,7 @@ namespace tesoreria.Controllers
                                 if ((i + 1) != monthDiff)
                                 {
                                     var ufSii = valoresUF.Where(c => c.Fecha.Date == oUltimoDiaDelMes).FirstOrDefault();
-                                    valUfPeriodo = (ufSii != null) ? ufSii.Valor : valUfPeriodo;
+                                    valUfPeriodo = (ufSii != null) ? ufSii.Valor : valorCambio;
                                 }
                                 else
                                 {
@@ -1212,6 +1218,7 @@ namespace tesoreria.Controllers
                             proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                             proy.CantidadDiasNuevo = daysN;
                             proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, decRound);
+                            proy.ValorUF = valUfPeriodo;
                             arrayProyeccion.Add(proy);
 
                             montoInicial = montoTotal;
@@ -1237,7 +1244,7 @@ namespace tesoreria.Controllers
                             if ((i + 1) != monthDiff)
                             {
                                 var ufSii = valoresUF.Where(c => c.Fecha.Date == oUltimoDiaDelMes).FirstOrDefault();
-                                valUfPeriodo = (ufSii != null) ? ufSii.Valor : valUfPeriodo;
+                                valUfPeriodo = (ufSii != null) ? ufSii.Valor : valorCambio;
                             }
                             else
                             {
@@ -1264,6 +1271,7 @@ namespace tesoreria.Controllers
                         proy.FechaNuevoStr = (fechaAmortizacion != null) ? fechaAmortizacion.Value.ToString("dd-MM-yyyy") : string.Empty;
                         proy.CantidadDiasNuevo = daysN;
                         proy.InteresNuevo = Math.Round(interesNuevo * valUfPeriodo, decRound);
+                        proy.ValorUF = valUfPeriodo;
                         arrayProyeccion.Add(proy);
                         montoInicial = montoTotal;
                     }
@@ -1288,7 +1296,8 @@ namespace tesoreria.Controllers
                 c.FechaNuevo,
                 c.FechaNuevoStr,
                 c.CantidadDiasNuevo,
-                InteresNuevo= Math.Round(c.InteresNuevo, decRound)
+                InteresNuevo= Math.Round(c.InteresNuevo, decRound),
+                c.ValorUF
             }).ToList();
             return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
