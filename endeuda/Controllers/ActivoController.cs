@@ -1245,26 +1245,30 @@ namespace tesoreria.Controllers
                                     a.DesArn = (area!=null)? area.DesArn:a.Sucursal;
                                     //datos del activo
                                     var activo = db.Activo.Where(c => c.NumeroInterno == a.NroEquipo).FirstOrDefault();
-                                    a.DescCC_MqsSur = activo.DescCC_MqsSur;
-                                    a.DescCC_Mqs = activo.DescCC_Mqs;
-                                    a.Anio=activo.Anio;
-                                    var famActivo = familias.Where(c=>c.IdFamilia==activo.IdFamilia).FirstOrDefault();
-                                    a.DescripcionFamilia = (famActivo != null) ? famActivo.NombreFamilia : "";
-                                    var tarifaActivo=grupoTarifario.Where(c=>c.IdGrupoTarifario==activo.IdGrupoTarifario).FirstOrDefault();
-                                    a.GrupoTarifario = (tarifaActivo != null) ? tarifaActivo.DescripcionGrupoTarifario : "";
-                                    a.TarifaUF= (tarifaActivo != null) ? tarifaActivo.UF : 0;
-                                    a.TarifaCLP = (a.TarifaUF * valorUfDouble);
-                                    var DepreciacionDouble = (a.Depreciacion != "") ? Double.Parse(a.Depreciacion) : 0;                                    
-                                    a.TarifaCLP_Aplicar = a.TarifaCLP - DepreciacionDouble;
-                                    var DiasArriendoDouble = (a.DiasArriendo != "") ? Double.Parse(a.DiasArriendo) : 0;
-                                    a.Cobro_DiasArriendo = (DiasArriendoDouble * a.TarifaCLP_Aplicar) / 30;
-                                    var DiasDisponibleDouble = (a.DiasDisponible != "") ? Double.Parse(a.DiasDisponible) : 0;
-                                    a.Cobro_DiasDisponible = (DiasDisponibleDouble * a.TarifaCLP_Aplicar) / 30;
-                                    var DiasTallerDouble = (a.DiasTaller != "") ? Double.Parse(a.DiasTaller) : 0;
-                                    a.Cobro_DiasTaller = (DiasTallerDouble * a.TarifaCLP_Aplicar) / 30;
-                                    var estAct = estados.Where(c => c.IdEstado == activo.IdEstado).FirstOrDefault();
-                                    a.EstadoActivo = (estAct != null) ? estAct.NombreEstado : "";
-                                    listCobroArriendo.Add(a);
+                                    if (activo != null)
+                                    {
+                                        a.DescCC_MqsSur = activo.DescCC_MqsSur;
+                                        a.DescCC_Mqs = activo.DescCC_Mqs;
+                                        a.Anio = activo.Anio;
+                                        var famActivo = familias.Where(c => c.IdFamilia == activo.IdFamilia).FirstOrDefault();
+                                        a.DescripcionFamilia = (famActivo != null) ? famActivo.NombreFamilia : "";
+                                        var tarifaActivo = grupoTarifario.Where(c => c.IdGrupoTarifario == activo.IdGrupoTarifario).FirstOrDefault();
+                                        a.GrupoTarifario = (tarifaActivo != null) ? tarifaActivo.DescripcionGrupoTarifario : "";
+                                        a.TarifaUF = (tarifaActivo != null) ? tarifaActivo.UF : 0;
+                                        a.TarifaCLP = (a.TarifaUF * valorUfDouble);
+                                        var DepreciacionDouble = (a.Depreciacion != "") ? Double.Parse(a.Depreciacion) : 0;
+                                        a.TarifaCLP_Aplicar = a.TarifaCLP - DepreciacionDouble;
+                                        var DiasArriendoDouble = (a.DiasArriendo != "") ? Double.Parse(a.DiasArriendo) : 0;
+                                        a.Cobro_DiasArriendo = (DiasArriendoDouble * a.TarifaCLP_Aplicar) / 30;
+                                        var DiasDisponibleDouble = (a.DiasDisponible != "") ? Double.Parse(a.DiasDisponible) : 0;
+                                        a.Cobro_DiasDisponible = (DiasDisponibleDouble * a.TarifaCLP_Aplicar) / 30;
+                                        var DiasTallerDouble = (a.DiasTaller != "") ? Double.Parse(a.DiasTaller) : 0;
+                                        a.Cobro_DiasTaller = (DiasTallerDouble * a.TarifaCLP_Aplicar) / 30;
+                                        var estAct = estados.Where(c => c.IdEstado == activo.IdEstado).FirstOrDefault();
+                                        a.EstadoActivo = (estAct != null) ? estAct.NombreEstado : "";
+                                        listCobroArriendo.Add(a);
+                                    }
+                                    
                                 }
                                 else
                                 {
