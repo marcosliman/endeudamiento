@@ -3,6 +3,10 @@
     ViewBag.Title = "Dashboard";
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
 }
+<script src="~/Scripts/CryptoJS v3.1.2/rollups/aes.js"></script>
+<script src="~/Scripts/CryptoJS v3.1.2/rollups/pbkdf2.js"></script>
+<script src="~/Scripts/CryptoJS v3.1.2/rollups/sha256.js"></script>
+<script src="~/Scripts/Content.js"></script>
 <div class="d-sm-flex align-items-center justify-content-between">
     <h5 class="h5 mb-0 text-gray-800">Modificar Contraseña</h5>
     <ol class="breadcrumb">
@@ -55,7 +59,7 @@
         @using (Ajax.BeginForm("ModificarClave", "Usuario", null, new AjaxOptions
         {
             //InsertionMode = InsertionMode.Replace,
-            OnBegin = "mostrarCargando",
+            OnBegin = "return IrModificarClave()",
             HttpMethod = "post",
             OnSuccess = "Success_dl",
             OnFailure = "Failure_dl"
@@ -69,12 +73,13 @@
                 </div>
                 <div class="card-body p-0">
 
+
                     <div class="modal-body">
-                        <div class="form-group row">
+                        <div class="form-group form-group-sm row">
                             <label for="Clave" class="col-sm-3 col-form-label">Contraseña Actual</label>
                             <div class="col-lg-7">
                                 <div class="input-group">
-                                    <input ID="Clave" name="Clave" type="Password" Class="form-control form-control-sm required inputSol">
+                                    <input ID="Clave" name="Clave" type="Password" Class="form-control required inputSol">
                                     <div class="input-group-append">
                                         <button id="show_password" class="btn btn-primary" type="button" onclick="mostrarPassword('Clave')"> <span class="fa fa-eye-slash icon"></span> </button>
                                     </div>
@@ -87,14 +92,14 @@
                         <div class="form-group row">
                             <label for="CodigoParte" class="col-sm-3 col-form-label">Nueva Contraseña</label>
                             <div class="col-lg-7">
-                                <input type="password" name="NuevaClave" id="NuevaClave" class="form-control form-control-sm required inputSol" minlength="8" autocomplete="off" value="" />
+                                <input type="password" name="NuevaClave" id="NuevaClave" class="form-control required inputSol" minlength="8" autocomplete="off" value="" />
                             </div>
                         </div>
 
                         <div class="form-group row">
                             <label for="CodGrupo" class="col-sm-3 col-form-label">Repetir Contraseña</label>
                             <div class="col-lg-7">
-                                <input type="password" name="ClaveConfirm" id="ClaveConfirm" class="form-control form-control-sm required inputSol" minlength="8" autocomplete="off" value="" />
+                                <input type="password" name="ClaveConfirm" id="ClaveConfirm" class="form-control required inputSol" minlength="8" autocomplete="off" value="" />
                             </div>
                         </div>
 

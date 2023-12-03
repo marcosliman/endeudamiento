@@ -52,7 +52,11 @@
     <!-- Toastr -->
     <script src="~/Plantilla/AdminLTE/plugins/toastr/toastr.min.js"></script>
     @Scripts.Render("~/bundles/jqueryval")
-
+    <script src="~/Librerias/jquery_validate/messages_es.js"></script>
+    <script src="~/Scripts/CryptoJS v3.1.2/rollups/aes.js"></script>
+    <script src="~/Scripts/CryptoJS v3.1.2/rollups/pbkdf2.js"></script>
+    <script src="~/Scripts/CryptoJS v3.1.2/rollups/sha256.js"></script>
+    <script src="~/Scripts/Content.min.js"></script>
 
     <style>
         /*.login-container {
@@ -120,6 +124,7 @@
             </p>
             @using (Ajax.BeginForm("Autherize", "Home", new AjaxOptions
             {
+                OnBegin = "return IrAutherize()",
                 InsertionMode = InsertionMode.Replace,
                 HttpMethod = "post",
                 OnSuccess = "SuccessSol",
@@ -239,7 +244,7 @@
 
     <script>
         $(document).ready(function () {
-            $("#frmAcceso").submit(function () { if ($('#frmAcceso').valid() == true) { mostrarCargando(); } })
+            
             $('#frmAcceso').validate({
                 debug: false,
                 errorElement: "em",

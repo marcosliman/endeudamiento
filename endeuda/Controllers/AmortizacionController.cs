@@ -142,6 +142,10 @@ namespace tesoreria.Controllers
         }
         public ActionResult DescargarCSVContable(int? IdEmpresa, int? IdTipoContrato, int? Anio, int? IdMes, string valorUf)
         {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMes.ToString() + "-" + Anio.ToString();
             DateTime fechaInicio = DateTime.Now.Date;

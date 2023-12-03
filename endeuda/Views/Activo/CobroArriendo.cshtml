@@ -26,95 +26,123 @@
                 <i class="fas fa-minus"></i>
             </button>
         </div>
-    </div>
+    </div>   
     <div class="card-body">
-        <div class="row">
-
-            <div class="col-sm-2">
-                <div class="form-group">
-                    <label for="Mes">Mes</label>
-                    @Html.DropDownList("IdMes", ViewData["listaMes"] as SelectList, new { @class = "form-control form-control-sm", @onchange = "ActualizarTotalDias()" })
-
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    <label for="DiasMes">Dias del Mes</label>
-                    @Html.TextBox("TotalDiasMes", null, new { @class = "form-control form-control-sm", @readonly = "readonly" })
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    <label for="codSoftland" class="text-center">Valor del Cambio</label>
-                    <div class="col-sm-auto">
-                        <div class="input-group input-group-sm">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">UF</span>
-                            </div>
-                            <input type="text" class="form-control form-control-sm" placeholder="Valor UF" id="UF" name="UF" value="" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-2">
-                <div class="form-group">
-                    <label for="DiasMes">Archivo de Captura</label>
-                    <input type="file" name="ArchivoCaptura" id="ArchivoCaptura" />
-                </div>
-            </div>
-        </div>
-        <div class="container">
+        <form name="frmBusqueda" id="frmBusqueda" method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="col-md-12 mx-auto">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Registrar ventas por sucursal en el mes a cobrar</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <div class="row">
-                                    <label class="col-sm-6 col-form-label text-left" for="selectArea">Área</label>
-                                    <label class="col-sm-3 col-form-label text-left" for="selectValor">Venta Mensual</label>
-                                    <label class="col-sm-3 col-form-label text-left" for="selectPorcentaje">Porcentaje Distribución</label>
-                                </div>
-                                @foreach (var area in (SelectList)ViewData["listaArea"])
-                                {
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <label class="col-form-label">@area.Text</label>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="input-group input-group-sm">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">$</span>
-                                                </div>
-                                                <input type="text" name="valor_@(area.Value)" class="form-control text-left" />
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div class="input-group input-group-sm">
-                                                <input type="text" name="porcentaje_@(area.Value)" class="form-control text-left" />
-                                                <div class="input-group-append">
-                                                    <span class="input-group-text">%</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
-                                <div class="form-group row">
-                                    <label class="col-sm-6 col-form-label text-right">Total:</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" id="total" class="form-control form-control-sm text-left" readonly />
-                                    </div>
-                                </div>
-                            </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="anioBus">Año</label>
+                        <input type="text" name="anioBus" id="anioBus" value="@DateTime.Now.Year" class="form-control form-control-sm filtroRepote" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="IdMes">Mes</label>
+                        @Html.DropDownList("IdMes", ViewData["listaMes"] as SelectList, new { @class = "form-control form-control-sm" })
 
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="DiasMes">Dias del Mes</label>
+                        @Html.TextBox("TotalDiasMes", null, new { @class = "form-control form-control-sm", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="codSoftland" class="text-center">Valor del Cambio</label>
+                        <div class="col-sm-auto">
+                            <div class="input-group input-group-sm">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">UF</span>
+                                </div>
+                                <input type="text" class="form-control form-control-sm numberMiles" placeholder="Valor UF" id="valorUfBus" name="valorUf" value="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="DiasMes">Archivo de Captura</label>
+                        <input type="file" name="ArchivoCaptura" id="ArchivoCaptura" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label for="DiasMes">&nbsp;</label>
+                        <table class="table table-bordered table-hover dataTable dtr-inline table-sm" width="100%" id="grillaEjemplo" data-order='[[ 1, "asc" ]]'>
+                            <thead class="thead-light">
+
+                                <tr>
+                                    <th>NroEquipo</th>
+                                    <th>Sucursal</th>
+                                    <th>DiasArriendo</th>
+                                    <th>DiasDisponible</th>
+                                    <th>DiasTaller</th>
+                                    <th>Depreciacion</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 mx-auto">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Registrar ventas por sucursal en el mes a cobrar</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <label class="col-sm-3 col-form-label text-left" for="selectArea">Área</label>
+                                        <label class="col-sm-3 col-form-label text-left" for="selectValor">Venta Mensual</label>
+                                       @* <label class="col-sm-3 col-form-label text-left" for="selectPorcentaje">Porcentaje Distribución</label>*@
+                                    </div>
+                                    @foreach (var area in (SelectList)ViewData["listaArea"])
+                                    {
+                                        <div class="form-group row">
+                                            <div class="col-sm-3">
+                                                <label class="col-form-label">@area.Text</label>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="input-group input-group-sm">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                    </div>
+                                                    <input type="text" name="valor_@(area.Value)" id="valor_@(area.Value)" class="form-control text-left numberMiles" />
+                                                </div>
+                                            </div>
+                                            @*<div class="col-sm-3">
+                                                <div class="input-group input-group-sm">
+                                                    <input type="text" name="porcentaje_@(area.Value)" class="form-control text-left" />
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text">%</span>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                        </div>
+                                    }
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label text-right">Total:</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="total" class="form-control form-control-sm text-left" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </form>
+        
 
         <div class="col-sm-auto row">
             <div class="form-group col-12">
@@ -142,17 +170,37 @@
         valores.on("input", function () {
             var total = 0;
             valores.each(function () {
-                var valor = $(this).val();
+                var valor = $(this).val().replace(/[$.]/g, '').replace(/[$,]/g, '.');
                 if (valor) {
                     total += parseFloat(valor);
                 }
             });
-            $("#total").val(total.toFixed(2));
+            total = total.toFixed(2).toString().replace(/[$.]/g, ',')
+            $("#total").val(SeparadorMilesInput(total));
         });
     });
 </script>
 <script>
+    function CargaUfMes() {
+        $.ajax({
+            url: "/Bancos/UfUltimoDiaMes",
+            type: "Get",
+            data: {
+                anio: $("#anioBus").val(),
+                IdMes: $("#IdMes").val()
+            },
+            beforeSend: function () {
 
+            },
+            success: function (data) {
+                //console.log(data)
+                $("#valorUfBus").val(data.Valor.toString().replace(/[$.]/g, ','));
+                $(".numberMiles").each(function () {
+                    $(this).val(SeparadorMilesInput($(this).val().toString()))
+                });
+            }
+        });
+    }
     $(document).ready(function () {
         AbrirMenu("@menuAcceso");
         $('#IdEmpresaBusqueda').select2({
@@ -166,23 +214,40 @@
         //$('.lblPeriodo').html($("#DesGrupo option:selected").text() + "-" + $("#anioBus").val())
 
         moment.locale('es');
+        CargaUfMes();
+        ActualizarTotalDias();
+        $("#IdMes").change(function () {
+            CargaUfMes();
+            ActualizarTotalDias();
+        });
+        $(".numberMiles").each(function () {
+            $(this).val(SeparadorMilesInput($(this).val().toString()))
+        });
+        $('#grillaEjemplo').DataTable({
+            searching: false,
+            dom: "tB",
+            buttons: [
+                {
+                    text: 'Descargar Formato',
+                    extend: 'excelHtml5',
+                    filename: "FormatoCobroArriendos",
+                    title: ''
+                }
+            ]
 
+        });
+        $("#grillaEjemplo").hide();
     });
 
     function CargaReporteArriendo() {
+        var frm = $('#frmBusqueda').get(0);
+        var data = new FormData(frm);
         $.ajax({
             url: '/Activo/AjaxReporteArriendo',
-            data: {
-                Mes: $("#IdMes").val(),
-                TotalDiasMes: $("#TotalDiasMes").val(),
-                UF: $("#UF").val()
-            },
             async: true,
-            contentType: "application/x-www-form-urlencoded",
-            dataType: "html",
-            global: true,
-            ifModified: false,
-            processData: true,
+            data: data,
+            contentType: false,
+            processData: false,
             beforeSend: function () {
                 $('.lblEmpresa').html('')
                 $('.lblPeriodo').html('')

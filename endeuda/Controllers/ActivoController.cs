@@ -11,6 +11,7 @@ using LinqToExcel;
 using System.Data.OleDb;
 using System.Data.Entity.Validation;
 using Microsoft.Win32;
+using tesoreria.Helper;
 
 namespace tesoreria.Controllers
 {
@@ -18,6 +19,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Contrato
         public ActionResult ControlInterno()
         {
@@ -296,6 +298,7 @@ namespace tesoreria.Controllers
         }
         public ActivoViewModel SaveActivoBD(Activo datos)
         {
+            
             ActivoViewModel retorno = new ActivoViewModel();
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
             
@@ -513,6 +516,13 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult GrabarActivo(Activo datos)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Crear);
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Editar);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;            
 
             tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
@@ -1162,7 +1172,7 @@ namespace tesoreria.Controllers
             var totalDias = DateTime.DaysInMonth(DateTime.Now.Year, idMes);
             return Json(totalDias, JsonRequestBehavior.AllowGet);
         }
-        public ActionResult AjaxReporteArriendo(int? anioBus1, int? anioBus2, int? anioBus3, string DesGrupo, string[] CodBode)
+        public ActionResult AjaxReporteArriendo(HttpPostedFileBase ArchivoCaptura, string valorUf, FormCollection formCollection)
         {
             if (seguridad == null)
             {
@@ -1170,6 +1180,138 @@ namespace tesoreria.Controllers
             }
             else
             {
+                List<string> data = new List<string>();
+                List<CobroArriendoViewModel> listCobroArriendo= new List<CobroArriendoViewModel>();
+                if (ArchivoCaptura != null)
+                {
+                    // tdata.ExecuteCommand("truncate table OtherCompanyAssets");
+                    if (ArchivoCaptura.ContentType == "application/vnd.ms-excel" || ArchivoCaptura.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                    {
+                        var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
+                        var familias = db.Familia.ToList();
+                        var grupoTarifario=db.GrupoTarifario.ToList();
+                        var estados = db.Estado.ToList();
+                        var empresaSoftland = db.Empresa.Find(Helper.Constantes.IdEmpresaMaquinariasa);
+                        SoftLandContext dbSoft = new SoftLandContext(empresaSoftland.BaseSoftland);
+                        var areas = dbSoft.cwtaren.ToList();
+                        List<CobroArriendoViewModel> resumenZona = new List<CobroArriendoViewModel>();
+                        foreach (var area in areas)
+                        {
+                            var montoStr = formCollection["valor_" + area.CodArn];
+                            var montoDouble = (montoStr != "") ? Double.Parse(montoStr) : 0;
+                            CobroArriendoViewModel resumen = new CobroArriendoViewModel();
+                            resumen.CodArn = area.CodArn;
+                            resumen.DesArn= area.DesArn;
+                            resumen.MontoVenta = montoDouble;
+                            resumenZona.Add(resumen);
+                        }
+                        var totalVentaZona = resumenZona.Sum(c => c.MontoVenta);
+                        var zonaRetorno = resumenZona.Select(c => new CobroArriendoViewModel {
+                            CodArn=c.CodArn,
+                            DesArn=c.DesArn,
+                            MontoVenta=c.MontoVenta,
+                            PorcentajeVenta= (c.MontoVenta>0)?Math.Round( (((double)c.MontoVenta/ (double)totalVentaZona)*100),4):0
+                        }).ToList();
+                        ViewData["resumenZona"] = zonaRetorno;
+                        string filename = ArchivoCaptura.FileName;
+                        string targetpath = Server.MapPath("~/App_Data/");
+                        ArchivoCaptura.SaveAs(targetpath + filename);
+                        string pathToExcelFile = targetpath + filename;
+                        var connectionString = "";
+                        if (filename.EndsWith(".xls"))
+                        {
+                            connectionString = string.Format("Provider=Microsoft.Jet.OLEDB.4.0; data source={0}; Extended Properties=Excel 8.0;", pathToExcelFile);
+                        }
+                        else if (filename.EndsWith(".xlsx"))
+                        {
+                            connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\";", pathToExcelFile);
+                        }
+                        var adapter = new OleDbDataAdapter("SELECT * FROM [Sheet1$]", connectionString);
+                        var ds = new DataSet();
+                        adapter.Fill(ds, "ExcelTable");
+                        DataTable dtable = ds.Tables["ExcelTable"];
+                        string sheetName = "Sheet1";
+                        var excelFile = new ExcelQueryFactory(pathToExcelFile);
+                        var artistAlbums = from a in excelFile.Worksheet<CobroArriendoViewModel>(sheetName) select a;                        
+                        foreach (var a in artistAlbums)
+                        {
+                            try
+                            {
+                                if (a.NroEquipo != "")
+                                {                                    
+                                    var areaint = Int32.Parse(a.Sucursal);
+                                    var areaStr = string.Format("{0:000}", areaint);
+                                    var area = dbSoft.cwtaren.Find(areaStr);
+                                    a.DesArn = (area!=null)? area.DesArn:a.Sucursal;
+                                    //datos del activo
+                                    var activo = db.Activo.Where(c => c.NumeroInterno == a.NroEquipo).FirstOrDefault();
+                                    a.DescCC_MqsSur = activo.DescCC_MqsSur;
+                                    a.DescCC_Mqs = activo.DescCC_Mqs;
+                                    a.Anio=activo.Anio;
+                                    var famActivo = familias.Where(c=>c.IdFamilia==activo.IdFamilia).FirstOrDefault();
+                                    a.DescripcionFamilia = (famActivo != null) ? famActivo.NombreFamilia : "";
+                                    var tarifaActivo=grupoTarifario.Where(c=>c.IdGrupoTarifario==activo.IdGrupoTarifario).FirstOrDefault();
+                                    a.GrupoTarifario = (tarifaActivo != null) ? tarifaActivo.DescripcionGrupoTarifario : "";
+                                    a.TarifaUF= (tarifaActivo != null) ? tarifaActivo.UF : 0;
+                                    a.TarifaCLP = (a.TarifaUF * valorUfDouble);
+                                    var DepreciacionDouble = (a.Depreciacion != "") ? Double.Parse(a.Depreciacion) : 0;                                    
+                                    a.TarifaCLP_Aplicar = a.TarifaCLP - DepreciacionDouble;
+                                    var DiasArriendoDouble = (a.DiasArriendo != "") ? Double.Parse(a.DiasArriendo) : 0;
+                                    a.Cobro_DiasArriendo = (DiasArriendoDouble * a.TarifaCLP_Aplicar) / 30;
+                                    var DiasDisponibleDouble = (a.DiasDisponible != "") ? Double.Parse(a.DiasDisponible) : 0;
+                                    a.Cobro_DiasDisponible = (DiasDisponibleDouble * a.TarifaCLP_Aplicar) / 30;
+                                    var DiasTallerDouble = (a.DiasTaller != "") ? Double.Parse(a.DiasTaller) : 0;
+                                    a.Cobro_DiasTaller = (DiasTallerDouble * a.TarifaCLP_Aplicar) / 30;
+                                    var estAct = estados.Where(c => c.IdEstado == activo.IdEstado).FirstOrDefault();
+                                    a.EstadoActivo = (estAct != null) ? estAct.NombreEstado : "";
+                                    listCobroArriendo.Add(a);
+                                }
+                                else
+                                {
+                                    data.Add("<ul>");
+                                    if (a.NroEquipo == "") data.Add("<li> Nro es obligatorio</li>");
+                                    data.Add("</ul>");
+                                    data.ToArray();
+                                    break;
+                                }
+                                
+                            }
+                            catch (DbEntityValidationException ex)
+                            {
+                                foreach (var entityValidationErrors in ex.EntityValidationErrors)
+                                {
+                                    foreach (var validationError in entityValidationErrors.ValidationErrors)
+                                    {
+                                        Response.Write("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                                    }
+                                }
+                            }
+                        }
+                        ViewData["listCobroArriendo"] = listCobroArriendo;
+                        //var saldoInsoluto=
+                        //deleting excel file from folder
+                        if ((System.IO.File.Exists(pathToExcelFile)))
+                        {
+                            System.IO.File.Delete(pathToExcelFile);
+                        }
+
+                    }
+                    else
+                    {
+                        //alert message for invalid file format
+                        data.Add("<ul>");
+                        data.Add("<li>Only Excel file format is allowed</li>");
+                        data.Add("</ul>");
+                        data.ToArray();
+                    }
+                }
+                else
+                {
+                    data.Add("<ul>");
+                    if (ArchivoCaptura == null) data.Add("<li>Please choose Excel file</li>");
+                    data.Add("</ul>");
+                    data.ToArray();
+                }
                 return View();
             }
         }

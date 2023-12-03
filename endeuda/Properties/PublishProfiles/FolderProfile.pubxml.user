@@ -7,7 +7,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
     <_PublishTargetUrl>C:\Users\marco\Documents\Traspasos\endeudamiento</_PublishTargetUrl>
-    <History>True|2023-03-14T14:59:48.8777749Z;True|2023-03-07T09:00:51.5359539-03:00;True|2023-02-28T10:55:25.4572680-03:00;True|2023-02-23T13:37:44.9790842-03:00;True|2023-01-17T17:21:43.8993068-03:00;True|2023-01-17T17:20:52.4294952-03:00;True|2023-01-16T23:10:19.1188451-03:00;True|2022-12-22T10:39:17.3157040-03:00;True|2022-12-21T12:14:53.6318077-03:00;True|2022-12-14T10:41:59.9881029-03:00;True|2022-12-14T09:03:13.0714122-03:00;True|2022-12-14T08:49:23.2501308-03:00;True|2022-12-11T09:47:27.5627002-03:00;True|2022-12-02T10:44:51.1588489-03:00;True|2022-11-16T12:12:14.0091172-03:00;True|2022-11-15T12:08:11.8536884-03:00;True|2022-11-15T10:54:54.4932962-03:00;True|2022-11-14T16:01:51.9385870-03:00;True|2022-11-08T12:28:37.0347007-03:00;True|2022-11-03T12:38:55.4691994-03:00;True|2022-10-17T16:53:45.6144039-03:00;True|2022-10-08T18:25:30.1242916-03:00;True|2022-09-22T17:45:39.4653168-03:00;True|2022-09-17T22:37:44.7839371-03:00;True|2022-08-18T17:33:11.0537805-04:00;True|2022-08-17T19:05:13.1595662-04:00;True|2022-08-17T00:22:37.9960682-04:00;True|2022-08-07T07:14:51.8167702-04:00;True|2022-08-01T08:26:31.8064115-04:00;True|2022-06-14T09:16:48.3005666-04:00;True|2022-06-07T19:37:43.8631766-04:00;True|2022-06-07T19:30:31.7591443-04:00;True|2022-05-18T10:07:50.6619328-04:00;True|2022-05-18T09:50:26.5764087-04:00;False|2022-05-11T12:30:28.2364347-04:00;False|2022-05-11T12:29:56.3161951-04:00;False|2022-05-11T12:29:37.7855220-04:00;False|2022-05-11T12:28:52.3870322-04:00;True|2022-05-04T18:00:26.1911653-04:00;True|2022-05-03T13:56:06.7227767-04:00;False|2022-04-29T15:19:56.7863165-04:00;False|2022-04-29T15:19:03.3369009-04:00;False|2022-04-29T15:17:53.8434321-04:00;False|2022-04-29T15:17:16.2526585-04:00;False|2022-04-29T15:17:01.1362482-04:00;False|2022-04-29T15:16:31.1716849-04:00;False|2022-04-29T15:16:05.7291993-04:00;False|2022-04-29T15:15:33.2777277-04:00;</History>
+    <History>True|2023-11-21T02:48:01.3922870Z;True|2023-09-07T10:35:34.2163032-03:00;True|2023-05-02T16:13:59.2199444-04:00;True|2023-05-02T15:46:16.3305115-04:00;True|2023-04-05T17:05:48.8102066-04:00;True|2023-03-14T11:59:48.8777749-03:00;True|2023-03-07T09:00:51.5359539-03:00;True|2023-02-28T10:55:25.4572680-03:00;True|2023-02-23T13:37:44.9790842-03:00;True|2023-01-17T17:21:43.8993068-03:00;True|2023-01-17T17:20:52.4294952-03:00;True|2023-01-16T23:10:19.1188451-03:00;True|2022-12-22T10:39:17.3157040-03:00;True|2022-12-21T12:14:53.6318077-03:00;True|2022-12-14T10:41:59.9881029-03:00;True|2022-12-14T09:03:13.0714122-03:00;True|2022-12-14T08:49:23.2501308-03:00;True|2022-12-11T09:47:27.5627002-03:00;True|2022-12-02T10:44:51.1588489-03:00;True|2022-11-16T12:12:14.0091172-03:00;True|2022-11-15T12:08:11.8536884-03:00;True|2022-11-15T10:54:54.4932962-03:00;True|2022-11-14T16:01:51.9385870-03:00;True|2022-11-08T12:28:37.0347007-03:00;True|2022-11-03T12:38:55.4691994-03:00;True|2022-10-17T16:53:45.6144039-03:00;True|2022-10-08T18:25:30.1242916-03:00;True|2022-09-22T17:45:39.4653168-03:00;True|2022-09-17T22:37:44.7839371-03:00;True|2022-08-18T17:33:11.0537805-04:00;True|2022-08-17T19:05:13.1595662-04:00;True|2022-08-17T00:22:37.9960682-04:00;True|2022-08-07T07:14:51.8167702-04:00;True|2022-08-01T08:26:31.8064115-04:00;True|2022-06-14T09:16:48.3005666-04:00;True|2022-06-07T19:37:43.8631766-04:00;True|2022-06-07T19:30:31.7591443-04:00;True|2022-05-18T10:07:50.6619328-04:00;True|2022-05-18T09:50:26.5764087-04:00;False|2022-05-11T12:30:28.2364347-04:00;False|2022-05-11T12:29:56.3161951-04:00;False|2022-05-11T12:29:37.7855220-04:00;False|2022-05-11T12:28:52.3870322-04:00;True|2022-05-04T18:00:26.1911653-04:00;True|2022-05-03T13:56:06.7227767-04:00;False|2022-04-29T15:19:56.7863165-04:00;False|2022-04-29T15:19:03.3369009-04:00;False|2022-04-29T15:17:53.8434321-04:00;False|2022-04-29T15:17:16.2526585-04:00;False|2022-04-29T15:17:01.1362482-04:00;False|2022-04-29T15:16:31.1716849-04:00;False|2022-04-29T15:16:05.7291993-04:00;False|2022-04-29T15:15:33.2777277-04:00;</History>
     <LastFailureDetails />
   </PropertyGroup>
   <ItemGroup>
@@ -30,10 +30,10 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>08/11/2020 22:01:40</publishTime>
     </File>
     <File Include="bin/bodega.dll">
-      <publishTime>03/14/2023 11:59:43</publishTime>
+      <publishTime>11/20/2023 23:47:56</publishTime>
     </File>
     <File Include="bin/bodega.pdb">
-      <publishTime>03/14/2023 11:59:43</publishTime>
+      <publishTime>11/20/2023 23:47:56</publishTime>
     </File>
     <File Include="bin/DocumentFormat.OpenXml.dll">
       <publishTime>03/14/2022 22:39:18</publishTime>
@@ -363,13 +363,13 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>10/19/2020 15:37:20</publishTime>
     </File>
     <File Include="bin/modelo.dll">
-      <publishTime>02/23/2023 13:48:10</publishTime>
+      <publishTime>11/20/2023 23:47:53</publishTime>
     </File>
     <File Include="bin/modelo.dll.config">
       <publishTime>12/04/2021 13:26:18</publishTime>
     </File>
     <File Include="bin/modelo.pdb">
-      <publishTime>02/23/2023 13:48:10</publishTime>
+      <publishTime>11/20/2023 23:47:53</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
       <publishTime>12/04/2021 13:26:19</publishTime>
@@ -516,7 +516,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/Web.config">
-      <publishTime>01/17/2023 16:56:42</publishTime>
+      <publishTime>11/20/2023 12:23:40</publishTime>
     </File>
     <File Include="bin/WebGrease.dll">
       <publishTime>12/04/2021 13:26:19</publishTime>
@@ -1167,25 +1167,25 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/css/highcharts.css">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/es-modules/modules/drilldown.src.js">
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/highcharts-more.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/highcharts-more.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/highcharts.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/highcharts.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/accessibility.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/accessibility.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
@@ -1194,7 +1194,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/data.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/data.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
@@ -1203,7 +1203,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/drilldown.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/drilldown.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
@@ -1212,7 +1212,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/export-data.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/export-data.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
@@ -1221,7 +1221,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/exporting.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/exporting.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
@@ -1236,7 +1236,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:15</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/solid-gauge.js">
-      <publishTime>12/04/2021 13:26:15</publishTime>
+      <publishTime>06/05/2023 13:24:22</publishTime>
     </File>
     <File Include="Librerias/highcharts/modules/solid-gauge.js.map">
       <publishTime>12/04/2021 13:26:15</publishTime>
@@ -3057,10 +3057,10 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/05/2021 22:10:54</publishTime>
     </File>
     <File Include="Plantilla/AdminLTE/plugins/datatables/jquery.dataTables.js">
-      <publishTime>12/05/2021 22:10:54</publishTime>
+      <publishTime>11/25/2020 07:51:19</publishTime>
     </File>
     <File Include="Plantilla/AdminLTE/plugins/datatables/jquery.dataTables.min.js">
-      <publishTime>12/05/2021 22:10:54</publishTime>
+      <publishTime>07/31/2023 11:43:02</publishTime>
     </File>
     <File Include="Plantilla/AdminLTE/plugins/daterangepicker/daterangepicker.css">
       <publishTime>11/25/2020 07:51:19</publishTime>
@@ -6243,7 +6243,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>11/25/2020 07:51:19</publishTime>
     </File>
     <File Include="Plantilla/AdminLTE/plugins/moment/moment.min.js">
-      <publishTime>12/05/2021 22:10:54</publishTime>
+      <publishTime>06/05/2023 23:42:25</publishTime>
     </File>
     <File Include="Plantilla/AdminLTE/plugins/moment/moment.min.js.map">
       <publishTime>11/25/2020 07:51:19</publishTime>
@@ -7592,6 +7592,276 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Scripts/bootstrap.min.js.map">
       <publishTime>12/04/2021 13:26:16</publishTime>
     </File>
+    <File Include="Scripts/Content.js">
+      <publishTime>09/07/2023 16:39:21</publishTime>
+    </File>
+    <File Include="Scripts/Content.min.js">
+      <publishTime>06/11/2023 19:59:13</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/aes-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/aes.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/cipher-core-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/cipher-core.js">
+      <publishTime>01/15/2013 11:43:04</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/core-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/core.js">
+      <publishTime>01/15/2013 11:43:04</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/enc-base64-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/enc-base64.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/enc-utf16-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/enc-utf16.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/evpkdf-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/evpkdf.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/format-hex-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/format-hex.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/hmac-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/hmac.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/lib-typedarrays-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/lib-typedarrays.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/md5-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/md5.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-cfb-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-cfb.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ctr-gladman-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ctr-gladman.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ctr-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ctr.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ecb-min.js">
+      <publishTime>01/15/2013 11:43:04</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ecb.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ofb-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/mode-ofb.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-ansix923-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-ansix923.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-iso10126-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-iso10126.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-iso97971-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-iso97971.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-nopadding-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-nopadding.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-zeropadding-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pad-zeropadding.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pbkdf2-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/pbkdf2.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/rabbit-legacy-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/rabbit-legacy.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/rabbit-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/rabbit.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/rc4-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/rc4.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/ripemd160-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/ripemd160.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha1-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha1.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha224-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha224.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha256-min.js">
+      <publishTime>01/15/2013 11:43:04</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha256.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha3-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha3.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha384-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha384.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha512-min.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/sha512.js">
+      <publishTime>01/15/2013 11:43:03</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/tripledes-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/tripledes.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/x64-core-min.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/components/x64-core.js">
+      <publishTime>01/15/2013 11:43:02</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/aes.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-md5.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-ripemd160.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-sha1.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-sha224.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-sha256.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-sha3.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-sha384.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/hmac-sha512.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/md5.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/pbkdf2.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/rabbit-legacy.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/rabbit.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/rc4.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/ripemd160.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/sha1.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/sha224.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/sha256.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/sha3.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/sha384.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/sha512.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
+    <File Include="Scripts/CryptoJS v3.1.2/rollups/tripledes.js">
+      <publishTime>01/15/2013 11:43:01</publishTime>
+    </File>
     <File Include="Scripts/esm/popper-utils.js">
       <publishTime>12/04/2021 13:26:16</publishTime>
     </File>
@@ -7692,7 +7962,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:16</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.js">
-      <publishTime>12/04/2021 13:26:16</publishTime>
+      <publishTime>06/11/2023 19:58:42</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.min.js">
       <publishTime>12/04/2021 13:26:16</publishTime>
@@ -7964,6 +8234,12 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Views/Actividades/AjaxPendientes.cshtml">
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
+    <File Include="Views/Activo/AjaxReporteArriendo.cshtml">
+      <publishTime>07/12/2023 20:36:44</publishTime>
+    </File>
+    <File Include="Views/Activo/CobroArriendo.cshtml">
+      <publishTime>07/12/2023 20:32:11</publishTime>
+    </File>
     <File Include="Views/Activo/ControlInterno.cshtml">
       <publishTime>01/17/2023 13:02:14</publishTime>
     </File>
@@ -7983,7 +8259,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>01/25/2022 23:32:45</publishTime>
     </File>
     <File Include="Views/Activo/ModalVerActivo.cshtml">
-      <publishTime>07/13/2022 15:50:30</publishTime>
+      <publishTime>05/12/2023 10:36:11</publishTime>
     </File>
     <File Include="Views/Activo/SincronizarActivo.cshtml">
       <publishTime>04/02/2022 22:27:05</publishTime>
@@ -8295,13 +8571,13 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>08/30/2022 21:20:26</publishTime>
+      <publishTime>11/20/2023 00:13:27</publishTime>
     </File>
     <File Include="Views/Home/IndexG.cshtml">
       <publishTime>12/04/2021 13:26:16</publishTime>
     </File>
     <File Include="Views/Home/Inicio.cshtml">
-      <publishTime>11/09/2022 12:18:26</publishTime>
+      <publishTime>11/20/2023 12:32:49</publishTime>
     </File>
     <File Include="Views/Home/Login.cshtml">
       <publishTime>12/04/2021 13:26:16</publishTime>
@@ -8388,19 +8664,19 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>04/18/2022 10:26:41</publishTime>
     </File>
     <File Include="Views/Mutuo/ModalDetalleDeuda.cshtml">
-      <publishTime>09/17/2022 21:11:57</publishTime>
+      <publishTime>05/02/2023 12:35:52</publishTime>
     </File>
     <File Include="Views/Mutuo/ModalNuevoPrestamo.cshtml">
       <publishTime>05/17/2022 16:24:37</publishTime>
     </File>
     <File Include="Views/Mutuo/ModalProyectarAbono.cshtml">
-      <publishTime>09/17/2022 21:10:04</publishTime>
+      <publishTime>05/02/2023 12:36:14</publishTime>
     </File>
     <File Include="Views/Mutuo/ModalRegistrarAbono.cshtml">
       <publishTime>05/17/2022 17:34:47</publishTime>
     </File>
     <File Include="Views/Mutuo/MutuoGestion.cshtml">
-      <publishTime>12/02/2022 10:42:27</publishTime>
+      <publishTime>05/02/2023 12:20:41</publishTime>
     </File>
     <File Include="Views/Mutuo/MutuoInicio.cshtml">
       <publishTime>12/02/2022 10:43:42</publishTime>
@@ -8553,7 +8829,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/21/2022 10:41:26</publishTime>
     </File>
     <File Include="Views/Reportes/ConsolidadoDeudaLeasingTipoActivo.cshtml">
-      <publishTime>10/24/2022 10:13:53</publishTime>
+      <publishTime>07/12/2023 19:05:25</publishTime>
     </File>
     <File Include="Views/Reportes/ControlActivoCodigoInterno.cshtml">
       <publishTime>12/04/2021 13:26:16</publishTime>
@@ -8652,7 +8928,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:16</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>02/08/2023 18:20:54</publishTime>
+      <publishTime>11/20/2023 23:34:14</publishTime>
     </File>
     <File Include="Views/Shared/_LayoutAjax.cshtml">
       <publishTime>12/04/2021 13:26:16</publishTime>
@@ -8693,6 +8969,12 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Views/Solicitud/TraspasoBodegaSol.cshtml">
       <publishTime>12/04/2021 13:26:16</publishTime>
     </File>
+    <File Include="Views/Tarifario/Create.cshtml">
+      <publishTime>05/12/2023 10:24:10</publishTime>
+    </File>
+    <File Include="Views/Tarifario/Index.cshtml">
+      <publishTime>05/12/2023 10:24:10</publishTime>
+    </File>
     <File Include="Views/Tesoreria/Create.cshtml">
       <publishTime>08/07/2020 12:37:06</publishTime>
     </File>
@@ -8726,11 +9008,23 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Views/TipoSeguro/Index.cshtml">
       <publishTime>06/10/2022 18:01:49</publishTime>
     </File>
+    <File Include="Views/Usuario/CambiarClave.cshtml">
+      <publishTime>11/20/2023 10:51:17</publishTime>
+    </File>
     <File Include="Views/Usuario/Create.cshtml">
       <publishTime>09/13/2021 11:39:35</publishTime>
     </File>
+    <File Include="Views/Usuario/DatosUsuario.cshtml">
+      <publishTime>11/20/2023 00:21:50</publishTime>
+    </File>
     <File Include="Views/Usuario/Index.cshtml">
       <publishTime>08/13/2020 21:52:03</publishTime>
+    </File>
+    <File Include="Views/Usuario/RespuestaClave.cshtml">
+      <publishTime>09/13/2021 11:45:04</publishTime>
+    </File>
+    <File Include="Views/Usuario/SolicitaClave.cshtml">
+      <publishTime>09/13/2021 11:42:32</publishTime>
     </File>
     <File Include="Views/Web.config">
       <publishTime>12/04/2021 13:26:16</publishTime>
@@ -8739,7 +9033,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>12/04/2021 13:26:16</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>01/17/2023 17:20:48</publishTime>
+      <publishTime>11/20/2023 23:47:57</publishTime>
     </File>
     <File Include="webfonts/fa-brands-400.eot">
       <publishTime>12/04/2021 13:26:18</publishTime>

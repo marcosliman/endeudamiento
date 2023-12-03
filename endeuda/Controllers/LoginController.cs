@@ -12,6 +12,7 @@ namespace tesoreria.Controllers
     public class LoginController : Controller
     {
         // GET: Login
+        tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         private ErpContext db = new ErpContext();
         public Seguridad PerfilesUsuario(int tipoAcceso, int idUsuario)
         {                
@@ -176,6 +177,60 @@ namespace tesoreria.Controllers
         {
             RedirectToAction("Index", "Home");
         }
+        public RetornoSeguridad ValidaAcceso(string[] menus, Helper.TipoAcceso tipoAcceso)
+        {
+            RetornoSeguridad retorno = new RetornoSeguridad();
+            var sufMensaje = "";
+            if (tipoAcceso == Helper.TipoAcceso.Crear)
+            {
+                sufMensaje = " para Crear";
+            }
+            if (tipoAcceso == Helper.TipoAcceso.Editar)
+            {
+                sufMensaje = " para Editar";
+            }
+            if (tipoAcceso == Helper.TipoAcceso.Eliminar)
+            {
+                sufMensaje = " para Eliminar";
+            }
+            if (seguridad == null)
+            {
+                retorno.Controlador = "Login";
+                retorno.Vista = "LogOut";
+                retorno.AccesoValido = false;
+                retorno.Estado = 100;
+                retorno.Mensaje = "Usuario no Conectado";
+            }
+            else if (seguridad != null)
+            {
+                var puedeAcceder = false;
+                foreach (var CodMenu in menus)
+                {
+                    if (seguridad.TienePermiso(CodMenu, tipoAcceso) == true)
+                    {
+                        puedeAcceder = true;
+                        break;
+                    }
+                }
+                if (puedeAcceder == true)
+                {
+                    retorno.AccesoValido = true;
+                }
+                else
+                {
+                    retorno.Estado = 100;
+                    retorno.Controlador = "Home";
+                    retorno.Vista = "Inicio";
+                    retorno.AccesoValido = false;
+                    retorno.Mensaje = "Usuario Sin Permiso" + sufMensaje;
+                }
 
+            }
+            return retorno;
+        }
+        public ActionResult SinAcceso()
+        {
+            return View();
+        }
     }
 }

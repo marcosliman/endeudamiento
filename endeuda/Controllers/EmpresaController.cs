@@ -19,6 +19,7 @@ namespace tesoreria.Controllers
         // GET: Empresa
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         public ActionResult Index()
         {
             if (seguridad == null)
@@ -282,6 +283,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult DescargarBaseContratos(int? IdEmpresaBus, int? IdBancoBus, int? anioBus, int? IdMesBus, string valorUfBus)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Solicitante" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUfBus != "") ? Double.Parse(valorUfBus) : 1;
             var inicioMes = "01-" + IdMesBus.ToString() + "-" + anioBus.ToString();
             DateTime fechaInicio = DateTime.Now.Date;

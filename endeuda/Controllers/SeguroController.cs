@@ -928,6 +928,10 @@ namespace tesoreria.Controllers
         }
         public ActionResult ExportarTxtBanco(string RutBeneficiario)
         {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
             FuncionesGeneralesController funcion = new FuncionesGeneralesController();
 
             var activos = PolizasActivas(null, null, null, "", RutBeneficiario,"");            

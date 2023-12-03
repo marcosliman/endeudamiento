@@ -7,12 +7,16 @@ using modelo.Models;
 using modelo.Models.Local;
 using modelo.ViewModel;
 using tesoreria.Helper;
+using System.Text;
+using System.IO;
+using System.Security.Cryptography;
 namespace tesoreria.Controllers
 {
     public class UsuarioController : Controller
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -31,11 +35,32 @@ namespace tesoreria.Controllers
         }
         public JsonResult Usuarios_Read(bool? interno)
         {
-            var lista = db.Usuario.ToList();
-            return Json(lista, JsonRequestBehavior.AllowGet);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Usuarios" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == true)
+            {
+                var lista = db.Usuario.Select(c =>
+                new {
+                    c.IdUsuario,
+                    c.RutUsuario,
+                    c.NombreUsuario,
+                    c.ApellidoUsuario,
+                    c.CorreoElectronico,
+                    c.Activo
+                }).ToList();
+                return Json(lista, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Usuarios" }, Helper.TipoAcceso.Editar);
+            if (acceso.AccesoValido == false)
+            {
+                return View("~/Views/Login/SinAcceso.cshtml");
+            }
             modelo.Models.Local.Usuario registro = new modelo.Models.Local.Usuario();
             registro.Activo = true;
             if (id != null)
@@ -67,12 +92,22 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult Create(modelo.Models.Local.Usuario registro, int[] perfiles)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Usuarios" }, Helper.TipoAcceso.Acceder);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "Usuarios" }, Helper.TipoAcceso.Crear);
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "Usuarios" }, Helper.TipoAcceso.Editar);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var valido = true;
             modelo.Models.Local.Usuario registroEdit = new modelo.Models.Local.Usuario();
             if (registro.IdUsuario > 0)
             {
+                if (tieneEditar.AccesoValido == false)
+                {
+                    return Json(new { tieneEditar.Estado, tieneEditar.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+                }
                 showMessageString = new { Estado = 0, Mensaje = "Usuario Actualizado" };
                 registroEdit = db.Usuario.Find(registro.IdUsuario);
                 if (registroEdit != null)
@@ -98,6 +133,10 @@ namespace tesoreria.Controllers
             }
             else
             {
+                if (tieneCrear.AccesoValido == false)
+                {
+                    return Json(new { tieneCrear.Estado, tieneCrear.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+                }
                 var mensajeRetorno = "";
                 var rutExiste = db.Usuario.Where(c => c.RutUsuario.Replace("-", "").Replace(".", "").ToUpper() == registro.RutUsuario.Replace("-", "").Replace(".", "").ToUpper()).FirstOrDefault();
                 if (rutExiste != null)
@@ -210,14 +249,98 @@ namespace tesoreria.Controllers
                 return View(usuario);
             }
         }
+        private static string DecryptStringFromBytes(byte[] cipherText, byte[] key, byte[] iv)
+        {
+            // Check arguments. 
+            if (cipherText == null || cipherText.Length <= 0)
+            {
+                throw new ArgumentNullException("cipherText");
+            }
+            if (key == null || key.Length <= 0)
+            {
+                throw new ArgumentNullException("key");
+            }
+            if (iv == null || iv.Length <= 0)
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            // Declare the string used to hold 
+            // the decrypted text. 
+            string plaintext = null;
+
+            // Create an RijndaelManaged object 
+            // with the specified key and IV. 
+            using (var rijAlg = new RijndaelManaged())
+            {
+                //Settings 
+                rijAlg.Mode = CipherMode.CBC;
+                rijAlg.Padding = PaddingMode.PKCS7;
+                rijAlg.FeedbackSize = 128;
+
+                rijAlg.Key = key;
+                rijAlg.IV = iv;
+
+                // Create a decrytor to perform the stream transform. 
+                var decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);
+
+                try
+                {
+                    // Create the streams used for decryption. 
+                    using (var msDecrypt = new MemoryStream(cipherText))
+                    {
+                        using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                        {
+
+                            using (var srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                // Read the decrypted bytes from the decrypting stream 
+                                // and place them in a string. 
+                                plaintext = srDecrypt.ReadToEnd();
+
+                            }
+
+                        }
+                    }
+                }
+                catch
+                {
+                    plaintext = "keyError";
+                }
+            }
+
+            return plaintext;
+        }
+        [HttpPost]
         public ActionResult ActualizarClave(modelo.Models.Local.Usuario registro, string ClaveConfirm)
         {
             dynamic showMessageString = string.Empty;
+            var keybytes = Encoding.UTF8.GetBytes("8080808080808080");
+            var iv = Encoding.UTF8.GetBytes("8080808080808080");
 
+            var ClaveConfirmcrypted = Convert.FromBase64String(ClaveConfirm);
+            HomeController homeCtrl = new HomeController();
+            var ClaveConfirmDecrypt = DecryptStringFromBytes(ClaveConfirmcrypted, keybytes, iv);
+
+            var Clavecrypted = Convert.FromBase64String(registro.Clave);
+            var ClaveDecrypt = DecryptStringFromBytes(Clavecrypted, keybytes, iv);
+            if (ClaveDecrypt.Length < 8 || ClaveConfirmDecrypt.Length < 8)
+            {
+                showMessageString = new { Estado = 100, Mensaje = "Por favor, no escribas menos de 8 caracteres.", ToUrl = "" };
+                return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+            }
             var usuario = db.Usuario.Find(registro.IdUsuario);
             if (registro.Clave == ClaveConfirm)
             {
-                usuario.Clave = Crypto.Hash(registro.Clave);
+                //clave actual
+                var claveActual = usuario.Clave;
+                var nuevaClave = Crypto.Hash(ClaveDecrypt);
+                if (claveActual == nuevaClave)
+                {
+                    showMessageString = new { Estado = 100, Mensaje = "La Nueva Clave debe ser distinta a la Actual", ToUrl = "" };
+                    return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                }
+                usuario.Clave = nuevaClave;
                 usuario.CambiarClave = false;
                 db.SaveChanges();
                 showMessageString = new { Estado = 0, Mensaje = "Contraseña actualizada Exitosamente", claveCuenta = registro.Clave };
@@ -241,16 +364,43 @@ namespace tesoreria.Controllers
                 return View(usuario);
             }
         }
-        public ActionResult ModificarClave(modelo.Models.Local.Usuario registro, string NuevaClave, string ClaveConfirm)
+        public ActionResult ModificarClave(modelo.Models.Local.Usuario registro, string NuevaClave,string ClaveConfirm)
         {
             dynamic showMessageString = string.Empty;
+            var keybytes = Encoding.UTF8.GetBytes("8080808080808080");
+            var iv = Encoding.UTF8.GetBytes("8080808080808080");
 
+            var ClaveConfirmcrypted = Convert.FromBase64String(ClaveConfirm);
+            HomeController homeCtrl = new HomeController();
+            var ClaveConfirmDecrypt = DecryptStringFromBytes(ClaveConfirmcrypted, keybytes, iv);
+
+            var Clavecrypted = Convert.FromBase64String(registro.Clave);
+            var ClaveDecrypt = DecryptStringFromBytes(Clavecrypted, keybytes, iv);
+
+            var NuevaClavecrypted = Convert.FromBase64String(NuevaClave);
+            var NuevaClaveDecrypt = DecryptStringFromBytes(NuevaClavecrypted, keybytes, iv);
+
+
+            if (NuevaClaveDecrypt.Length < 8 || ClaveConfirmDecrypt.Length < 8)
+            {
+                showMessageString = new { Estado = 100, Mensaje = "Por favor, no escribas menos de 8 caracteres.", ToUrl = "" };
+                return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+            }
             var usuario = db.Usuario.Find(registro.IdUsuario);
-            if (usuario.Clave == Crypto.Hash(registro.Clave))
+            var claveActual = usuario.Clave;
+            var ClaveInputHash = Crypto.Hash(ClaveDecrypt);
+            if (claveActual == ClaveInputHash)
             {
                 if (NuevaClave == ClaveConfirm)
                 {
-                    usuario.Clave = Crypto.Hash(NuevaClave);
+                    //clave actual                    
+                    var nuevaClave = Crypto.Hash(NuevaClaveDecrypt);
+                    if (claveActual == nuevaClave)
+                    {
+                        showMessageString = new { Estado = 100, Mensaje = "La Nueva Clave debe ser distinta a la Actual", ToUrl = "" };
+                        return Json(showMessageString, JsonRequestBehavior.AllowGet);
+                    }
+                    usuario.Clave = nuevaClave;
                     db.SaveChanges();
                     showMessageString = new { Estado = 0, Mensaje = "Contraseña actualizada Exitosamente", claveCuenta = registro.Clave };
                 }
@@ -265,6 +415,7 @@ namespace tesoreria.Controllers
                 showMessageString = new { Estado = 100, Mensaje = "La Contraseña Actual es Incorrecta", ToUrl = "" };
 
             }
+
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
     }

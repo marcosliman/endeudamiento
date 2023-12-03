@@ -132,6 +132,7 @@
     <Compile Include="Models\Softland\soempre.cs" />
     <Compile Include="Models\Softland\wisusuarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\CobroArriendoViewModel.cs" />
     <Compile Include="ViewModel\ComprobanteEgresoViewModel.cs" />
     <Compile Include="ViewModel\CorreoMicrosoftViewModels.cs" />
     <Compile Include="ViewModel\CachedUser.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="ViewModel\DetAmortizacionViewModel.cs" />
     <Compile Include="ViewModel\ReporteContratoViewModel.cs" />
     <Compile Include="ViewModel\ReporteRelacionadViewModel.cs" />
+    <Compile Include="ViewModel\RetornoSeguridad.cs" />
     <Compile Include="ViewModel\SiniestroDocumentoViewModel.cs" />
     <Compile Include="ViewModel\SiniestroViewModel.cs" />
     <Compile Include="ViewModel\TipoPerdidaViewModel.cs" />

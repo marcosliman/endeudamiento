@@ -27,7 +27,9 @@ using System.Threading.Tasks;
 using tesoreria.Utils;
 using gestor.Helpers;
 using gestor.TokenStorage;
-
+using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 namespace tesoreria.Controllers
 {
     public class HomeController : BaseController
@@ -243,15 +245,83 @@ namespace tesoreria.Controllers
                 return View();
             }
         }
+        private static string DecryptStringFromBytes(byte[] cipherText, byte[] key, byte[] iv)
+        {
+            // Check arguments. 
+            if (cipherText == null || cipherText.Length <= 0)
+            {
+                throw new ArgumentNullException("cipherText");
+            }
+            if (key == null || key.Length <= 0)
+            {
+                throw new ArgumentNullException("key");
+            }
+            if (iv == null || iv.Length <= 0)
+            {
+                throw new ArgumentNullException("key");
+            }
+
+            // Declare the string used to hold 
+            // the decrypted text. 
+            string plaintext = null;
+
+            // Create an RijndaelManaged object 
+            // with the specified key and IV. 
+            using (var rijAlg = new RijndaelManaged())
+            {
+                //Settings 
+                rijAlg.Mode = CipherMode.CBC;
+                rijAlg.Padding = PaddingMode.PKCS7;
+                rijAlg.FeedbackSize = 128;
+
+                rijAlg.Key = key;
+                rijAlg.IV = iv;
+
+                // Create a decrytor to perform the stream transform. 
+                var decryptor = rijAlg.CreateDecryptor(rijAlg.Key, rijAlg.IV);
+
+                try
+                {
+                    // Create the streams used for decryption. 
+                    using (var msDecrypt = new MemoryStream(cipherText))
+                    {
+                        using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                        {
+
+                            using (var srDecrypt = new StreamReader(csDecrypt))
+                            {
+                                // Read the decrypted bytes from the decrypting stream 
+                                // and place them in a string. 
+                                plaintext = srDecrypt.ReadToEnd();
+
+                            }
+
+                        }
+                    }
+                }
+                catch
+                {
+                    plaintext = "keyError";
+                }
+            }
+
+            return plaintext;
+        }
         public ActionResult Autherize(string usuarioCuenta, string claveCuenta, int tipoAcceso)
         {
+            var keybytes = Encoding.UTF8.GetBytes("8080808080808080");
+            var iv = Encoding.UTF8.GetBytes("8080808080808080");
+
+            var encrypted = Convert.FromBase64String(claveCuenta);
+            var decriptedFromJavascript = DecryptStringFromBytes(encrypted, keybytes, iv);
+
             dynamic showMessageString = string.Empty;
             dynamic nombreEmpresa = string.Empty;
             dynamic nombreUsuario = string.Empty;
             var arrayPerfil = new List<Helper.Perfil>();
             //usuarioCuenta = "marcosliman20@gmail.com";
             //claveCuenta = Crypto.Hash("123456");
-            claveCuenta = Crypto.Hash(claveCuenta);
+            claveCuenta = Crypto.Hash(decriptedFromJavascript);
             var usuario = db.Usuario.Where(c => c.CorreoElectronico == usuarioCuenta && c.Clave == claveCuenta).FirstOrDefault();
             if (usuario != null)
             {

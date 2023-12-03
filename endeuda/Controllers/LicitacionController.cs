@@ -907,28 +907,35 @@ namespace tesoreria.Controllers
 
         public void Descargar(string rutaArchivo)
         {
-            string filename = rutaArchivo;
-
-            if (!String.IsNullOrEmpty(rutaArchivo))
+            if (seguridad == null)
             {
-
-                String path = Server.MapPath(rutaArchivo);
-                System.IO.FileInfo toDownload = new System.IO.FileInfo(path);
-
-                if (toDownload.Exists)
-                {
-                    Response.Clear();
-                    Response.AddHeader("Content-Disposition", "attachment; filename=" + toDownload.Name);
-                    Response.AddHeader("Content-Length", toDownload.Length.ToString());
-                    Response.ContentType = "application/octet-stream";
-                    Response.WriteFile(rutaArchivo);
-                    Response.End();
-                }
-                else
-                {
-                    Response.Write("<script>alert('Archivo no existe');window.history.back();</script>");
-                }
+                Response.Write("<script>alert('Usuario no conectado');</script>");
             }
+            else
+            {
+                string filename = rutaArchivo;
+
+                if (!String.IsNullOrEmpty(rutaArchivo))
+                {
+
+                    String path = Server.MapPath(rutaArchivo);
+                    System.IO.FileInfo toDownload = new System.IO.FileInfo(path);
+
+                    if (toDownload.Exists)
+                    {
+                        Response.Clear();
+                        Response.AddHeader("Content-Disposition", "attachment; filename=" + toDownload.Name);
+                        Response.AddHeader("Content-Length", toDownload.Length.ToString());
+                        Response.ContentType = "application/octet-stream";
+                        Response.WriteFile(rutaArchivo);
+                        Response.End();
+                    }
+                    else
+                    {
+                        Response.Write("<script>alert('Archivo no existe');window.history.back();</script>");
+                    }
+                }
+            }            
 
         }
 

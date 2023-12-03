@@ -1,4 +1,5 @@
 ﻿using System.Web.Helpers;
+using System.Web.Mvc;
 using Microsoft.Owin;
 using Owin;
 
@@ -12,6 +13,7 @@ namespace tesoreria
         {
             ConfigureAuth(app);
             AntiForgeryConfig.UniqueClaimTypeIdentifier = System.IdentityModel.Claims.ClaimTypes.NameIdentifier;
+            MvcHandler.DisableMvcResponseHeader = true;
         }
     }
 }
