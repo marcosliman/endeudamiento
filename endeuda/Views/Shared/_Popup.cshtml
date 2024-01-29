@@ -38,6 +38,25 @@
             $('.modal-dialog').draggable({
                 handle: ".modal-header"
             });
+            $(".form-control:input[type='text'], textarea").on({
+                "focus": function (event) {
+                    $(event.target).select();
+                },
+                "keyup": function (event) {
+                    $(event.target).val(function (index, value) {
+                        var valor = value.replace(/<script>/g, '').replace(/<\/script>/g, '');
+                        valor = valor.replace(/</g, '').replace(/>/g, '');
+                        return valor;
+                    });
+                },
+                "change": function (event) {
+                    $(event.target).val(function (index, value) {
+                        var valor = value.replace(/<script>/g, '').replace(/<\/script>/g, '');
+                        valor = valor.replace(/</g, '').replace(/>/g, '');
+                        return valor;
+                    });
+                }
+            });
             $(".numberMiles").each(function () {
                 $(this).val(SeparadorMilesInput($(this).val().toString()))
             })
