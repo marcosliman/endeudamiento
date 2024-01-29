@@ -12,7 +12,8 @@ namespace tesoreria.Controllers
     public class FamiliaController : Controller
     {
         private ErpContext db = new ErpContext();
-       tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -41,7 +42,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult Familia_Read(bool? interno, string familia, bool? activo)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Familia" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var lista = (from Fam in db.Familia
                          where
                          ((familia != "" && familia!=null) ? (Fam.NombreFamilia.Contains(familia)) : true) 
