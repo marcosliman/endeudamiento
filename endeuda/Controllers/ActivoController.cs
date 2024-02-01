@@ -39,6 +39,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaActivo_Read(string numeroInterno, string codigoSoftland)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var contratoNull = new Contrato();
             var registro = (from ac in db.Activo
                             join em in db.Empresa on ac.IdEmpresa equals em.IdEmpresa into emw
@@ -155,6 +160,13 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalVerActivo(int IdActivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
@@ -686,6 +698,12 @@ namespace tesoreria.Controllers
         }
         public JsonResult ObtenerGrupoSoftland(int idEmpresa)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var empresa = db.Empresa.Find(idEmpresa);
             SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
             var grupos = (from t in dbSoft.awtgrup
@@ -694,6 +712,12 @@ namespace tesoreria.Controllers
         }
         public JsonResult ObtenerSubGrupoSoftland(int idEmpresa, string CodGru)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var empresa = db.Empresa.Find(idEmpresa);
             SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
             var subgrupos = (from t in dbSoft.awtsubgr where ((CodGru!="")? t.CodGru==CodGru :true)
@@ -817,6 +841,13 @@ namespace tesoreria.Controllers
         }
         public ActionResult ImportActivosInterno(int? IdContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             var empresa = (from e in db.Empresa
                            where e.Activo == true
                            select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
@@ -829,6 +860,14 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ImportPlanillaActivoInterno(int IdEmpresa, HttpPostedFileBase archivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
+
             dynamic showMessageString = string.Empty;
             List<string> data = new List<string>();
             if (archivo != null)

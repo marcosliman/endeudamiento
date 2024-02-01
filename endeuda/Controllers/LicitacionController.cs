@@ -13,6 +13,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Contrato
         #region Licitacion
         public ActionResult RegistrarLicitacion()
@@ -280,7 +281,15 @@ namespace tesoreria.Controllers
 
         /*finaliza licitacion*/
         [HttpPost]
-        public JsonResult FinalizarLicitacion(int idLicitacion) {
+        public JsonResult FinalizarLicitacion(int idLicitacion) 
+        {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
@@ -358,6 +367,13 @@ namespace tesoreria.Controllers
 
         public ActionResult BuscarLicitacion_Read(int? idBanco, int? idEmpresa, int? idTipoFinanciamiento)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from l in db.Licitacion
                             join e in db.Estado on l.IdEstado equals e.IdEstado
                             //join lo in db.LicitacionOferta on l.IdLicitacion equals lo.IdLicitacion into low
@@ -393,9 +409,12 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalVerLicitacion(int idLicitacion)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
             else
             {
@@ -422,6 +441,13 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaActivoLicitacion_Read(int idLicitacion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion", "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var idEmpresa = 0;
             var licitacion = db.Licitacion.Find(idLicitacion);
             if (licitacion != null)
@@ -463,9 +489,12 @@ namespace tesoreria.Controllers
         }
         public ActionResult ModalAsociarActivo(int idLicitacion)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
             else
             {
@@ -478,6 +507,14 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaActivoAsociar_Read(int idLicitacion, string numeroActivo, string codigoActivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
+
             var idEmpresa = 0;
             var licitacion = db.Licitacion.Find(idLicitacion);
             if (licitacion != null) {
@@ -536,6 +573,13 @@ namespace tesoreria.Controllers
 
         public ActionResult AsociarActivo(int idLicitacion, int[] activos)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
@@ -639,6 +683,13 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaLicitacionOferta_Read(int? idLicitacion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion", "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from l in db.LicitacionOferta
                             join e in db.Estado on l.IdEstado equals e.IdEstado
                             where l.IdLicitacion == ((idLicitacion != null) ? idLicitacion : l.IdLicitacion)
@@ -659,9 +710,12 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalRegistrarOferta(int idLicitacionOferta, int idLicitacion)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
             else
             {
@@ -715,10 +769,12 @@ namespace tesoreria.Controllers
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
             LicitacionOfertaDocumento archivoOferta = new LicitacionOfertaDocumento();
-            tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                showMessageString = new { Estado = 1000, Mensaje = "Se finalizó la sesión" };
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
             else
             {
@@ -830,6 +886,14 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteLicitacionOferta(int idLicitacionOferta)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
+
             dynamic showMessageString = string.Empty;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
