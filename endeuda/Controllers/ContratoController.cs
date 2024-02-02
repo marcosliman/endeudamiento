@@ -13,6 +13,7 @@ using LinqToExcel;
 using System.Data.OleDb;
 using System.Data.Entity.Validation;
 using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Math;
 
 namespace tesoreria.Controllers
 {
@@ -21,6 +22,7 @@ namespace tesoreria.Controllers
         private ErpContext db = new ErpContext();
         private InmobContext dbInmob = new InmobContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Contrato
 
         #region Contrato leasing
@@ -60,6 +62,13 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaContrato_Read(int tipoContrato, int? idBanco, int? idEmpresa, string numeroContrato,int? IdEstado)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoCredito" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado.ToList() on c.IdEstado equals e.IdEstado
                             where c.IdTipoContrato == tipoContrato
@@ -92,6 +101,14 @@ namespace tesoreria.Controllers
 
         public ActionResult RegistrarContratoLeasing(int idContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarContrato", "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
+
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
@@ -120,14 +137,14 @@ namespace tesoreria.Controllers
 
         public ActionResult AddContratoLeasing(int idContrato)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarContrato", "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
-            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
-            }
+            
             else
             {
                 var registro = (from c in db.Contrato.ToList()
@@ -728,6 +745,14 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult ActivarContrato(int idContrato,int? IdFamilia, string descripcion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
+
             dynamic showMessageString = string.Empty;
             var mensajeError = "Existen Datos Incompletos";
             var contrato = db.Contrato.Find(idContrato);
@@ -836,13 +861,11 @@ namespace tesoreria.Controllers
 
         public ActionResult RegistrarContratoCredito(int idContrato)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoCredito" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
             else
             {
@@ -866,13 +889,12 @@ namespace tesoreria.Controllers
 
         public ActionResult AddContratoCredito(int idContrato)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarContrato", "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
             else
             {
@@ -1029,7 +1051,13 @@ namespace tesoreria.Controllers
         #region Activo
         public ActionResult ListaActivoContrato_Read(int idContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing", "ContratoBuscar" }, Helper.TipoAcceso.Acceder);
 
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from ac in db.Activo
                             join rel in db.ContratoActivo on ac.IdActivo equals rel.IdActivo
                             join con in db.Contrato on rel.IdContrato equals con.IdContrato
@@ -1067,10 +1095,14 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalAsociarActivo(int idContrato)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
+
             else
             {
                 var contratoActivo = new ContratoActivo();
@@ -1082,6 +1114,13 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaActivoAsociar_Read(int idContrato, string numeroActivo, string codigoActivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var idEmpresa = 0;
             var contrato = db.Contrato.Find(idContrato);
             if (contrato != null)
@@ -1135,6 +1174,13 @@ namespace tesoreria.Controllers
 
         public ActionResult AsociarActivo(int idContrato, int[] activos)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
@@ -1298,7 +1344,14 @@ namespace tesoreria.Controllers
 
         #region Amortizacion
         public ActionResult AddAmortizacion(int idContrato,string soloVer)
-        {            
+        {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             ContratoActivo contratoActivo=new ContratoActivo();
             var eliminar = "SI";
             var contrato = db.ContratoActivo.Where(c=>c.IdContrato==idContrato).FirstOrDefault();
@@ -1359,6 +1412,13 @@ namespace tesoreria.Controllers
         }
         public ActionResult DetAmortizacion_Read(int idContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing", "OtrosCreditos" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from ca in db.Contrato_Amortizacion.ToList()
                             join d in db.Contrato_DetAmortizacion.ToList() on ca.IdContratoAmortizacion equals d.IdContratoAmortizacion
                             where ca.IdContrato == idContrato
@@ -1617,13 +1677,12 @@ namespace tesoreria.Controllers
         #region Documento Contrato
         public ActionResult AddDocumentoContrato(int idContrato)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else if (seguridad != null && !seguridad.TienePermiso("RegistrarContrato", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
             else
             {
@@ -1789,6 +1848,13 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaContratoDocumento_Read(int idContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaContratoLeasing" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from c in db.ContratoDocumento
                             join td in db.TipoDocumento on c.IdTipoDocumento equals td.IdTipoDocumento
                             where c.IdContrato == idContrato
@@ -2063,14 +2129,14 @@ namespace tesoreria.Controllers
         #region Vista contrato
         public ActionResult ContratoBuscar()
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ContratoBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
-            else if (seguridad != null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
-            }
+     
             else
             {
                 var banco = (from e in db.Banco
@@ -2096,6 +2162,14 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaBuscarContrato_Read(int? idBanco, int? idEmpresa, int? idTipoFinanciamiento, string numeroContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ContratoBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
+
             var registro = (from c in db.Contrato.ToList()
                             join e in db.Estado.ToList() on c.IdEstado equals e.IdEstado
                             where c.IdEmpresa == ((idEmpresa != null) ? idEmpresa : c.IdEmpresa)
@@ -2153,13 +2227,12 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalVistaContrato(int idContrato)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ContratoBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
-            }
-            else if (seguridad != null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
             else
             {
@@ -2185,14 +2258,14 @@ namespace tesoreria.Controllers
 
         public ActionResult VistaContrato(int idContrato)
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ContratoBuscar" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
-            else if (seguridad != null && !seguridad.TienePermiso("ContratoBuscar", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
-            }
+
             else
             {
                 var registro = (from c in db.Contrato.ToList()
