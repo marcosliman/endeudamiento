@@ -15,6 +15,7 @@ namespace tesoreria.Controllers
         private ErpContext db = new ErpContext();
         private InmobContext dbInm = new InmobContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -142,6 +143,14 @@ namespace tesoreria.Controllers
         }
         public JsonResult UfUltimoDiaMes(int? anio, int? IdMes)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing", "MutuoInicio" }, Helper.TipoAcceso.Acceder);
+
+            if (acceso.AccesoValido == false)
+
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
+
             var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
             DateTime fechaInicio = DateTime.Now.Date;
             if (inicioMes != "" && IdMes!=null)
