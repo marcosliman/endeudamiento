@@ -1291,7 +1291,7 @@ namespace tesoreria.Controllers
             if (tieneCrear.AccesoValido == false)
 
             {
-                return RedirectToAction(acceso.Vista, acceso.Controlador);
+                return RedirectToAction(tieneCrear.Vista, tieneCrear.Controlador);
             }
             else
             {
