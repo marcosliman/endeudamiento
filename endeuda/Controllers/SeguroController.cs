@@ -13,6 +13,7 @@ using LinqToExcel;
 using System.Data.OleDb;
 using System.Data.Entity.Validation;
 using DocumentFormat.OpenXml.Math;
+using Microsoft.Ajax.Utilities;
 
 namespace tesoreria.Controllers
 {
@@ -25,7 +26,7 @@ namespace tesoreria.Controllers
         public ActionResult ListaSeguro()
         {
             
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "ListaSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -58,7 +59,7 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaSeguro_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza,int? IdEstado)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -92,7 +93,7 @@ namespace tesoreria.Controllers
         public ActionResult RegistrarSeguro(int idPoliza)
         {
             
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "ListaSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -122,7 +123,7 @@ namespace tesoreria.Controllers
 
         public ActionResult AddSeguro(int idPoliza)
         {
-            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "ListaSeguro" }, Helper.TipoAcceso.Crear);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Crear);
 
             if (tieneCrear.AccesoValido == false)
 
@@ -201,12 +202,11 @@ namespace tesoreria.Controllers
 
         public ActionResult GrabarSeguro(Poliza dato)
         {
-            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Crear);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
             dynamic showMessageString = string.Empty;
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
             if (tieneCrear.AccesoValido == false)
-
             {
                 return Json(new { tieneCrear.Estado, tieneCrear.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -314,6 +314,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeletePoliza(int idPoliza)
         {
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
+            if (tieneCrear.AccesoValido == false)
+            {
+                return Json(new { tieneCrear.Estado, tieneCrear.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
@@ -371,6 +376,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult ActivarPoliza(int idPoliza)
         {
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
+            if (tieneCrear.AccesoValido == false)
+            {
+                return Json(new { tieneCrear.Estado, tieneCrear.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var poliza = db.Poliza.Find(idPoliza);
             var activos = db.PolizaActivo.Where(c => c.IdPoliza == idPoliza).Count();
@@ -393,7 +403,7 @@ namespace tesoreria.Controllers
         #region Activo
         public ActionResult ListaActivoPoliza_Read(int idPoliza)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -490,7 +500,7 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalAsociarActivo(int idPoliza)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -508,7 +518,7 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaActivoAsociar_Read(int idPoliza, string numeroActivo, string codigoActivo)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -568,7 +578,7 @@ namespace tesoreria.Controllers
 
         public ActionResult AsociarActivo(int idPoliza, int[] activos)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro", "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -634,8 +644,8 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteAsociacionActivo(int idPolizaActivo)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Acceder);
-            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Editar);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Editar);
             if (acceso.AccesoValido == false || tieneEditar.AccesoValido == false)
 
             {
@@ -689,7 +699,7 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalEditarBeneficiario(int idActivoPoliza)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -708,8 +718,8 @@ namespace tesoreria.Controllers
 
         public ActionResult EditarBeneficiario(PolizaActivo dato)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
-            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Editar);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Editar);
             if (acceso.AccesoValido == false || tieneEditar.AccesoValido == false)
 
             {
@@ -777,7 +787,7 @@ namespace tesoreria.Controllers
         #region Documento Poliza
         public ActionResult AddDocumento(int idPoliza)
         {
-            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Crear);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro" }, Helper.TipoAcceso.Acceder);
             if (tieneCrear.AccesoValido == false)
 
             {
@@ -812,7 +822,7 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaPolizaDocumento_Read(int idPoliza)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 
@@ -840,6 +850,11 @@ namespace tesoreria.Controllers
 
         public ActionResult GrabarPolizaDocumento(PolizaDocumento dato, HttpPostedFileBase archivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
@@ -861,6 +876,15 @@ namespace tesoreria.Controllers
 
                             if (archivo != null)
                             {
+                                string[] extsPermitidas = { ".xls", ".xlsx", ".pdf" };
+                                var extFie = Path.GetExtension(archivo.FileName);
+                                if (!extsPermitidas.Any(y => y == extFie))
+                                {
+                                    dbContextTransaction.Rollback();
+                                    mensaje = "Extensión no permitida";
+                                    showMessageString = new { Estado = 100, Mensaje = mensaje };
+                                    return Json(showMessageString, JsonRequestBehavior.AllowGet);
+                                }
                                 var poliza = db.Poliza.Where(c => c.IdPoliza == dato.IdPoliza).FirstOrDefault();
                                 var pathDocumento = "";
                                 var fileName = dato.IdTipoDocumento.ToString() + '_' + Path.GetFileName(archivo.FileName);
@@ -915,6 +939,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeletePolizaDocumento(int idPolizaDocumento)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var dbArchivo = db.PolizaDocumento.Find(idPolizaDocumento);
 
@@ -1031,6 +1060,7 @@ namespace tesoreria.Controllers
         }
         public List<PolizaActivoViewModel> PolizasActivas(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza,string RutBeneficiario,string numeroActivo)
         {
+           
             RutBeneficiario = (RutBeneficiario!=null)?RutBeneficiario.Replace(".", "").Replace("-", ""):"";
             var registro = (from p in db.Poliza.ToList()
                             join e in db.Estado.ToList() on p.IdEstado equals e.IdEstado
@@ -1146,10 +1176,8 @@ namespace tesoreria.Controllers
         }
         public ActionResult ListaSeguroBuscar_Read(int? idEmpresa, int? idEmpresaAseguradora, int? idTipoSeguro, string numeroPoliza, string numeroActivo)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -1159,13 +1187,12 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalVistaSeguro(int idPoliza)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
+
             else
             {
                 //var contrato = new ContratoViewModel();
@@ -1189,8 +1216,8 @@ namespace tesoreria.Controllers
 
         public ActionResult VistaSeguro(int idPoliza)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            
             if (acceso.AccesoValido == false)
 
             {
@@ -1286,7 +1313,7 @@ namespace tesoreria.Controllers
         #region Siniestro
         public ActionResult ModalAgregarSiniestro(int idPolizaActivo,int idSiniestro)
         {
-            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Crear);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (tieneCrear.AccesoValido == false)
 
@@ -1538,7 +1565,7 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteSiniestro(int idSiniestro)
         {
-            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "NuevosProyectos" }, Helper.TipoAcceso.Editar);
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (tieneEditar.AccesoValido == false)
 
@@ -1626,6 +1653,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaSiniestroDocumento_Read(int idSiniestro)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from c in db.SiniestroDocumento
                             join td in db.TipoDocumento on c.IdTipoDocumento equals td.IdTipoDocumento
                             where c.IdSiniestro == idSiniestro
@@ -1646,6 +1678,11 @@ namespace tesoreria.Controllers
 
         public ActionResult GrabarSiniestroDocumento(SiniestroDocumento dato, HttpPostedFileBase archivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
@@ -1727,6 +1764,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteSiniestroDocumento(int idSiniestroDocumento)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var dbArchivo = db.SiniestroDocumento.Find(idSiniestroDocumento);
 
@@ -1805,8 +1847,8 @@ namespace tesoreria.Controllers
         }
         public ActionResult ImportActivos(int? IdPoliza)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Acceder);
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
+           
             if (acceso.AccesoValido == false)
 
             {
@@ -1822,7 +1864,7 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult ImportaPlanillaActivos(int IdPoliza, HttpPostedFileBase archivo)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "ListaSeguro" }, Helper.TipoAcceso.Acceder);
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarSeguro", "SeguroBuscar" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
 

@@ -13,6 +13,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -41,7 +42,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult MarcaProducto_Read(string marpro, bool? activo)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "MarcaProducto" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var lista = (from MProducto in db.MarcaProducto
                          where
                          ((marpro != null) ? (MProducto.DescMarcaProducto.Contains(marpro)) : 0 == 0)
@@ -60,6 +65,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "MarcaProducto" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             MarcaProducto registro = new MarcaProducto();
             registro.Activo = true;
             if (id != null)
@@ -76,6 +86,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult CreateMarcaProducto(MarcaProducto registro)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "MarcaProducto" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             MarcaProducto registroEdit = new MarcaProducto();

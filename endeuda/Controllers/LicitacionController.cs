@@ -46,6 +46,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaLicitacion_Read(int? idEmpresa, int? idTipoFinanciamiento)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion", "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from l in db.Licitacion
                             join e in db.Estado on l.IdEstado equals e.IdEstado
                             where l.IdEmpresa == ((idEmpresa != null) ? idEmpresa : l.IdEmpresa)
@@ -201,6 +206,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteLicitacion(int idLicitacion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion", "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
@@ -284,9 +294,7 @@ namespace tesoreria.Controllers
         public JsonResult FinalizarLicitacion(int idLicitacion) 
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -638,6 +646,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteAsociacionActivo(int idLicitacionActivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion", "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
@@ -770,7 +783,6 @@ namespace tesoreria.Controllers
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
             LicitacionOfertaDocumento archivoOferta = new LicitacionOfertaDocumento();
             var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
 
             {
@@ -827,7 +839,15 @@ namespace tesoreria.Controllers
 
                                 if (archivo != null)
                                 {
-
+                                    string[] extsPermitidas = { ".xls", ".xlsx", ".pdf" };
+                                    var extFie = Path.GetExtension(archivo.FileName);
+                                    if (!extsPermitidas.Any(y => y == extFie))
+                                    {
+                                        dbContextTransaction.Rollback();
+                                        mensaje = "Extensión no permitida";
+                                        showMessageString = new { Estado = 100, Mensaje = mensaje };
+                                        return Json(new { result = showMessageString }, JsonRequestBehavior.AllowGet);
+                                    }
                                     var pathDocumento = "";
                                     var fileName = idOferta.ToString() + '_' + Path.GetFileName(archivo.FileName);
                                     var carpeta = "Licitacion";
@@ -945,7 +965,11 @@ namespace tesoreria.Controllers
 
         public ActionResult LicitacionOfertaDocumentos_Read(int? idLicitacionOferta)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion", "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = db.LicitacionOfertaDocumento.Where(c => c.IdLicitacionOferta == idLicitacionOferta).ToList();
 
             return Json(registro, JsonRequestBehavior.AllowGet);
@@ -955,6 +979,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteArchivoOferta(int idLicitacionOfertaDocumento)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "RegistrarLicitacion", "LicitacionBuscar" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var dbArchivo = db.LicitacionOfertaDocumento.Find(idLicitacionOfertaDocumento);
             var archivo = Server.MapPath(dbArchivo.UrlDocumento);

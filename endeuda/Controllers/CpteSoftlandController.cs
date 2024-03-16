@@ -16,6 +16,10 @@ namespace tesoreria.Controllers
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         public ActionResult ComprobanteSoftland(string CpbNum, string CpbAno, string baseSoftland, bool? deModal)
         {
+            if (seguridad == null)
+            {
+                return RedirectToAction("LogOut", "Login");
+            }
             SoftLandContext dbSoft = new SoftLandContext(baseSoftland);
             var movCpbte = dbSoft.cwmovim.Where(c => c.CpbNum == CpbNum && c.CpbAno == CpbAno && c.CpbNum != "00000000").FirstOrDefault();
             var nroComprobante = "";

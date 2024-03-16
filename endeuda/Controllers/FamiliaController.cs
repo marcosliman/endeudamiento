@@ -65,6 +65,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Familia" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             Familia registro = new Familia();
             registro.Activo = true;
             if (id != null)
@@ -81,6 +86,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult CreateFamilia(Familia registro)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Familia" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             Familia registroEdit = new Familia();

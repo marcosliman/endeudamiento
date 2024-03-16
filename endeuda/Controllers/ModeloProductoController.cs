@@ -13,6 +13,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -41,7 +42,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult ModeloProducto_Read(string marpro, bool? activo)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ModeloProducto" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var lista = (from MProducto in db.ModeloProducto
                          where
                          ((marpro != null) ? (MProducto.DescModeloProducto.Contains(marpro)) : 0 == 0)
@@ -60,6 +65,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ModeloProducto" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             ModeloProducto registro = new ModeloProducto();
             registro.Activo = true;
             if (id != null)
@@ -76,6 +86,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult CreateModeloProducto(ModeloProducto registro)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ModeloProducto" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             ModeloProducto registroEdit = new ModeloProducto();

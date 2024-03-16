@@ -186,11 +186,11 @@
                     }
                 },
                 {
-                    "mData": null,
+                    "mData": "IdMutuoDocumento",
                     "bSortable": false,
-                    "mRender": function (o, type, row) {
+                    "mRender": function (data, type, row) {
                         var acciones = '';
-                        acciones += '<button class="btn btn-primary btn-xs" type="button" onclick="EliminarArchivo(' + o.IdPolizaDocumento + ');"><i class="far fa-trash-alt"></i></button>';
+                        acciones += '<button class="btn btn-primary btn-xs" type="button" onclick="EliminarArchivo(' + data + ');"><i class="far fa-trash-alt"></i></button>';
                         return acciones;
                     }
                 }

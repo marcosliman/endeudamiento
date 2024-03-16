@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
+using System.IO.Pipes;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -23,8 +24,7 @@ namespace tesoreria.Controllers
         LoginController loginCtrl = new LoginController();
         #region Inicio
         public ActionResult MutuoInicio()
-        {
-            
+        {            
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoInicio" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
@@ -52,6 +52,11 @@ namespace tesoreria.Controllers
 
         public ActionResult GraficoDeudaVigente_Read(int? idEmpresaFinancia)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoInicio" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var mutuo = (from m in db.Mutuo.ToList()
                          join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
                          where m.IdEmpresaFinancia == ((idEmpresaFinancia != null) ? idEmpresaFinancia : m.IdEmpresaFinancia)
@@ -94,6 +99,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaSaldoVigente_Read(int? idEmpresaFinancia, int? anio, int? IdMes, string valorUf)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoInicio" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
             DateTime fechaInicio = DateTime.Now.Date;
@@ -143,6 +153,11 @@ namespace tesoreria.Controllers
 
         public ActionResult GraficoAmortizacionDeuda_Read(int? idEmpresaFinancia, string valorUf)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoInicio" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var mutuo = (from m in db.Mutuo.ToList()
                                     join emr in db.Empresa.ToList() on m.IdEmpresaReceptora equals emr.IdEmpresa
@@ -208,7 +223,6 @@ namespace tesoreria.Controllers
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
 
             if (acceso.AccesoValido == false)
-
             {
                 return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
@@ -233,9 +247,7 @@ namespace tesoreria.Controllers
         public ActionResult ListaMutuo_Read(int? idEmpresaFinancia, int? idEmpresaReceptora)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -300,9 +312,7 @@ namespace tesoreria.Controllers
         public ActionResult ModalAddMutuo(int idMutuo)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
@@ -330,9 +340,7 @@ namespace tesoreria.Controllers
         public ActionResult AddMutuo(int idMutuo)
         {
             var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Crear);
-
             if (tieneCrear.AccesoValido == false)
-
             {
                 return RedirectToAction(tieneCrear.Vista, tieneCrear.Controlador);
             }
@@ -394,7 +402,6 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult GrabarMutuo(Mutuo dato)
         {
-
             dynamic showMessageString = string.Empty;
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
@@ -486,6 +493,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteMutuo(int idMutuo)
         {
+            var tieneEliminar = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Eliminar);
+            if (tieneEliminar.AccesoValido == false)
+            {
+                return Json(new { tieneEliminar.Estado, tieneEliminar.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
@@ -539,6 +551,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult ConfirmarPrestamo(int idMutuo)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var mutuo = db.Mutuo.Find(idMutuo);
 
@@ -598,6 +615,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaMutuoDocumento_Read(int idMutuo)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from c in db.MutuoDocumento
                             join td in db.TipoDocumento on c.IdTipoDocumento equals td.IdTipoDocumento
                             where c.IdMutuo == idMutuo
@@ -618,6 +640,11 @@ namespace tesoreria.Controllers
 
         public ActionResult GrabarMutuoDocumento(MutuoDocumento dato, HttpPostedFileBase archivo)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             //validar que los datos ingresados sean correctos
             var validarDatos = DependencyResolver.Current.GetService<FuncionesGeneralesController>();
@@ -639,6 +666,15 @@ namespace tesoreria.Controllers
 
                             if (archivo != null)
                             {
+                                string[] extsPermitidas = { ".xls", ".xlsx", ".pdf" };
+                                var extFie = Path.GetExtension(archivo.FileName);
+                                if (!extsPermitidas.Any(y => y == extFie))
+                                {
+                                    dbContextTransaction.Rollback();
+                                    mensaje = "Extensión no permitida";
+                                    showMessageString = new { Estado = 100, Mensaje = mensaje };
+                                    return Json(showMessageString, JsonRequestBehavior.AllowGet);
+                                }
                                 var mutuo = db.Mutuo.Where(c => c.IdMutuo == dato.IdMutuo).FirstOrDefault();
                                 var pathDocumento = "";
                                 var fileName = dato.IdTipoDocumento.ToString() + '_' + Path.GetFileName(archivo.FileName);
@@ -693,6 +729,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteMutuoDocumento(int idMutuoDocumento)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var dbArchivo = db.MutuoDocumento.Find(idMutuoDocumento);
 
@@ -716,7 +757,6 @@ namespace tesoreria.Controllers
         public ActionResult ModalRegistrarAbono(int idMutuo)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
 
             {
@@ -742,9 +782,7 @@ namespace tesoreria.Controllers
         public ActionResult ListaMutuoAbono_Read(int IdMutuo)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -755,8 +793,7 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteMutuoAbono(int IdMutuoAbono)
         {
-            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Editar);
-
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
             if (tieneEditar.AccesoValido == false)
 
             {
@@ -795,10 +832,8 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult GrabarAbonoMutuo(MutuoAbono dato)
         {
-            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Crear);
-
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
             if (tieneCrear.AccesoValido == false)
-
             {
                 return Json(new { tieneCrear.Estado, tieneCrear.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -857,9 +892,7 @@ namespace tesoreria.Controllers
         public ActionResult ModalNuevoPrestamo(int idMutuo)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
@@ -883,9 +916,7 @@ namespace tesoreria.Controllers
         public ActionResult ListaMutuoPrestamo_Read(int IdMutuo)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -896,6 +927,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult DeleteMutuoPrestamo(int IdMutuoPrestamo)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             using (var dbContextTransaction = db.Database.BeginTransaction())
             {
@@ -929,7 +965,7 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult GrabarNuevoPrestamo(MutuoPrestamo dato)
         {
-            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Crear);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
             if (tieneCrear.AccesoValido == false)
 
             {
@@ -1354,7 +1390,7 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult FinalizarDeuda(int IdMutuo,string CodigoContrato)
         {
-            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Editar);
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "MutuoGestion" }, Helper.TipoAcceso.Acceder);
             if (tieneEditar.AccesoValido == false)
 
             {

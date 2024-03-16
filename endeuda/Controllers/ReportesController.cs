@@ -16,25 +16,25 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Contrato
         public ActionResult ConsolidadoDeudaLeasing()
         {
-            if (seguridad == null)
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ConsolidadoDeudaLeasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
             {
-                return RedirectToAction("LogOut", "Login");
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
-            else if (seguridad != null && !seguridad.TienePermiso("ConsolidadoDeudaLeasing", Helper.TipoAcceso.Acceder))
-            {
-                return RedirectToAction("Inicio", "Home");
-            }
-            else
-            {
-                FiltroViewData();
-                return View();
-            }
+            FiltroViewData();
+            return View();
         }
         public ActionResult ConsolidadoDeudaLeasing_Read(int? IdEmpresaBus, int? IdBancoBus, int? anioBus, int? IdMesBus, string valorUf)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ConsolidadoDeudaLeasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMesBus.ToString() + "-" + anioBus.ToString();
             DateTime fechaInicio = DateTime.Now.Date;
@@ -116,6 +116,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult ConsolidadoDeudaCreditosCon_Read(int? IdEmpresaBus, int? IdBancoBus, int? anioBus, int? IdMesBus, string valorUf,int? tipoFinanciamiento,string ConSaldo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ConsolidadoDeudaCreditosCon" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMesBus.ToString() + "-" + anioBus.ToString();
             DateTime fechaInicio = DateTime.Now.Date;
@@ -247,6 +252,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaActivosFinanciados_Read(int? idEmpresa, int? idBanco, string numeroActivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ActivosFinanciados" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from a in db.Activo.ToList()
                                 join f in db.Familia.ToList() on a.IdFamilia equals f.IdFamilia into fw
                                 from fv in fw.DefaultIfEmpty()
@@ -323,7 +333,12 @@ namespace tesoreria.Controllers
             }
         }
         public ActionResult CuotasPagadas_Read(int? anioInicial,int? IdMesInicial,int? anioFinal,int? IdMesFinal,int? estadoPago)
-        {            
+        {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "CuotasPagadas" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var listado = (from c in db.Contrato
                              join b in db.Banco on c.IdBanco equals b.IdBanco
                              join e in db.Empresa on c.IdEmpresa equals e.IdEmpresa
@@ -422,6 +437,11 @@ namespace tesoreria.Controllers
 
         public ActionResult PrestamosRelacionadas_Read(int? idEmpresaFinancia, int? idEmpresaReceptora)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "PrestamosRelacionadas" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var consulta = "select mu.IdMutuo,emp.RazonSocial as EmiteDeuda,emp2.RazonSocial as RecibeDeuda, Sum(mu.MontoPrestamo) as MontoPrestamo,mu.FechaPrestamo, MUTUO.SumaAbono as MontoAbono, mu.InteresTotal, Sum(mu.MontoPrestamo) - Sum(MUTUO.SumaAbono) as Saldo " +
                           "from Empresa emp " +
                           "left " +

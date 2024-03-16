@@ -15,6 +15,7 @@ namespace tesoreria.Controllers
         private ErpContext db = new ErpContext();
         private InmobContext dbInm = new InmobContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -34,6 +35,11 @@ namespace tesoreria.Controllers
 
         public JsonResult Tarifario_Read(bool? interno)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Tarifario" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var lista = (from gtari in db.GrupoTarifario.ToList()
                          select new
                          {
@@ -50,6 +56,11 @@ namespace tesoreria.Controllers
 
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Tarifario" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             GrupoTarifario registro = new GrupoTarifario();
             registro.Activo = true;
             if (id != null)
@@ -67,7 +78,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult Create(GrupoTarifario registro)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Tarifario" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             GrupoTarifario registroEdit = new GrupoTarifario();

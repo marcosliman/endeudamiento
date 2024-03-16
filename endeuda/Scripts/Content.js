@@ -134,6 +134,7 @@ function IrModificarClave() {
     var encryptedConfirm = encrypt(text);
     var newClave = $("#NuevaClave").val();
     var newClaveencrypted = encrypt(newClave);
+   
     $.ajax({
         url: "/Usuario/ModificarClave",
         type: "Post",
@@ -143,6 +144,7 @@ function IrModificarClave() {
             ClaveConfirm: encryptedConfirm,
             NuevaClave: newClaveencrypted,
             IdUsuario: $("#IdUsuario").val()
+            
         },
         beforeSend: function () {
             // $("#btnCrear").prop("disabled", true);
@@ -155,6 +157,47 @@ function IrModificarClave() {
             }
             else {
                 esconderCargando();
+                toastr.error(data.Mensaje);
+            }
+        },
+        error: function () {
+            esconderCargando();
+            toastr.error("Error al intentar ingresar al sistema");
+        }
+    });
+    return false;
+}
+function IrEditUser() {
+    mostrarCargando();
+    var password = "abc123";
+    var text = $("#Clave").val();
+    var encryptedpassword = encrypt(text);
+    var RequestVerificationToken = $("[name='__RequestVerificationToken']").val();
+    $.ajax({
+        url: "/Usuario/Create",
+        type: "Post",
+        data: {
+            IdUsuario: $("#IdUsuario").val(),
+            RutUsuario: $("#RutUsuario").val(),
+            NombreUsuario: $("#NombreUsuario").val(),
+            ApellidoUsuario: $("#ApellidoUsuario").val(),
+            CorreoElectronico: $("#CorreoElectronico").val(),
+            Activo: $("#Activo").val(),
+            Clave: encryptedpassword,
+            perfiles: $("#perfiles").val(),
+            __RequestVerificationToken: RequestVerificationToken
+        },
+        beforeSend: function () {
+            $("#btnCpbte").prop("disabled", true);
+        },
+        success: function (data) {
+            esconderCargando();
+            if (data.Estado == "0") {
+                toastr.success(data.Mensaje);
+                $('#modal-registro').modal('hide');
+                RefreshLista();
+            }
+            else {
                 toastr.error(data.Mensaje);
             }
         },

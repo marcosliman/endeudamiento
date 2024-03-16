@@ -575,6 +575,13 @@ namespace tesoreria.Controllers
         [HttpPost]
         public ActionResult EliminarActivo(int idActivo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+            var tieneCrear = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Crear);
+            var tieneEditar = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Editar);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             using (var dbContextTransaction = db.Database.BeginTransaction())
@@ -624,6 +631,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult ListaImportaActivo_Read(int idEmpresa, string CodGru,string CodSGru,string CodActBus)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var empresa = db.Empresa.Find(idEmpresa);
             SoftLandContext dbSoft = new SoftLandContext(empresa.BaseSoftland);
             var activosEmpresa = db.Activo.Where(c => c.IdEmpresa == idEmpresa).ToList();
@@ -775,6 +787,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public ActionResult ImportaActivoSoftland(int idEmpresa,string CodAct)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             using (var dbContextTransaction = db.Database.BeginTransaction())
@@ -809,6 +826,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public ActionResult ImportaActivoSoftland_Masivo(int idEmpresa, string[] activos)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             using (var dbContextTransaction = db.Database.BeginTransaction())
@@ -1025,6 +1047,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public ActionResult SincronizarActivoConSoftland(int? IdActivo, string CodAct)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "ControlInterno" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             using (var dbContextTransaction = db.Database.BeginTransaction())

@@ -102,6 +102,11 @@ namespace tesoreria.Controllers
             dynamic showMessageString = string.Empty;
             var valido = true;
             modelo.Models.Local.Usuario registroEdit = new modelo.Models.Local.Usuario();
+            var keybytes = Encoding.UTF8.GetBytes("8080808080808080");
+            var iv = Encoding.UTF8.GetBytes("8080808080808080");
+
+            var ClaveConfirmcrypted = Convert.FromBase64String(registro.Clave);
+            var ClaveConfirmDecrypt = DecryptStringFromBytes(ClaveConfirmcrypted, keybytes, iv);
             if (registro.IdUsuario > 0)
             {
                 if (tieneEditar.AccesoValido == false)
@@ -112,9 +117,9 @@ namespace tesoreria.Controllers
                 registroEdit = db.Usuario.Find(registro.IdUsuario);
                 if (registroEdit != null)
                 {
-                    if (registro.Clave != "" && registro.Clave != null)
+                    if (ClaveConfirmDecrypt != "" && ClaveConfirmDecrypt != null)
                     {
-                        registroEdit.Clave = Crypto.Hash(registro.Clave);
+                        registroEdit.Clave = Crypto.Hash(ClaveConfirmDecrypt);
                     }
                     registroEdit.RutUsuario = registro.RutUsuario;
                     registroEdit.NombreUsuario = registro.NombreUsuario;
@@ -155,7 +160,7 @@ namespace tesoreria.Controllers
                 {
                     registroEdit = registro;
                     registroEdit.RutUsuario = registro.RutUsuario.ToUpper();
-                    registroEdit.Clave = Crypto.Hash(registro.Clave);
+                    registroEdit.Clave = Crypto.Hash(ClaveConfirmDecrypt);
                     registroEdit.FechaRegistro = DateTime.Now;
                     registroEdit.CambiarClave = false;
                     showMessageString = new { Estado = 0, Mensaje = "Usuario Registrado" };

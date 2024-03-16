@@ -13,6 +13,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -41,6 +42,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult TipoPerdida_Read(bool? interno, string perdida, bool? activo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoDocumento" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
 
             var lista = (from TPerdida in db.TipoPerdida
                          where
@@ -60,6 +66,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoDocumento" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             TipoPerdida registro = new TipoPerdida();
             registro.Activo = true;
             if (id != null)
@@ -76,6 +87,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult CreateTipoPerdida(TipoPerdida registro)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoDocumento" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             TipoPerdida registroEdit = new TipoPerdida();

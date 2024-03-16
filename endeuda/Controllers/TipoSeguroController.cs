@@ -13,6 +13,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
        tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -41,6 +42,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult TipoSeguro_Read(bool? interno, string seguro, bool? activo)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoSeguro" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
 
             var lista = (from TSeguro in db.TipoSeguro
                          where
@@ -60,6 +66,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoSeguro" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             TipoSeguro registro = new TipoSeguro();
             registro.Activo = true;
             if (id != null)
@@ -76,6 +87,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult CreateTipoSeguro(TipoSeguro registro)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoSeguro" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             TipoSeguro registroEdit = new TipoSeguro();

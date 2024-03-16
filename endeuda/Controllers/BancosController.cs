@@ -35,6 +35,11 @@ namespace tesoreria.Controllers
 
         public JsonResult Bancos_Read(bool? interno)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Bancos" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var lista = (from bco in db.Banco.ToList()
                          select new
                          {
@@ -52,6 +57,11 @@ namespace tesoreria.Controllers
 
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Bancos" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             Banco registro = new Banco();
             registro.Activo = true;
             if (id != null)
@@ -69,7 +79,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult Create(Banco registro)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Bancos" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             Banco registroEdit = new Banco();
@@ -101,6 +115,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ConsolidadoDeudaBanco_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, string valorUf)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Solicitante" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
             DateTime fechaInicio = DateTime.Now.Date;

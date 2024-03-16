@@ -13,7 +13,7 @@
 <script src="~/Scripts/Content.js"></script>
 @using (Ajax.BeginForm("Create", "Usuario", new AjaxOptions
 {
-    OnBegin = "mostrarCargando",
+    OnBegin = "return IrEditUser()",
     InsertionMode = InsertionMode.Replace,
     HttpMethod = "post",
     OnSuccess = "Success_dl",

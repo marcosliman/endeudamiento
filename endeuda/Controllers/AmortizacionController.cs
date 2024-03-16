@@ -44,9 +44,7 @@ namespace tesoreria.Controllers
         {
             
             var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
@@ -72,9 +70,7 @@ namespace tesoreria.Controllers
         public ActionResult ListaContrato_Read(int? idTipoContrato, int? IdEmpresa, int? Anio, int? IdMes)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -94,9 +90,7 @@ namespace tesoreria.Controllers
         public ActionResult Leasing()
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "Leasing" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
@@ -123,10 +117,8 @@ namespace tesoreria.Controllers
         }
         public ActionResult AmortizacionContrato(int IdContrato)
         {
-            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos" }, Helper.TipoAcceso.Acceder);
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
             if (acceso.AccesoValido == false)
-
             {
                 return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
@@ -144,6 +136,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult SynContratoCpbte(int? IdContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             var contrato = db.Contrato.Find(IdContrato);
             var syncCpbte = db.Database.SqlQuery<RetornoGenerico>(
@@ -154,6 +151,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult DescargarCSVContable(int? IdEmpresa, int? IdTipoContrato, int? Anio, int? IdMes, string valorUf)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
@@ -420,6 +422,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult AsociarCpbteEgreso(int IdContratoDetAmortizacion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             var detalleCuota = db.Contrato_DetAmortizacion.Find(IdContratoDetAmortizacion);
             var fecha = detalleCuota.FechaPago.ToString("dd-MM-yyyy");
             ViewBag.FechaPago = fecha;
@@ -439,6 +446,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult ComprobantesEgrBusqueda_Read(int IdContratoDetAmortizacion, string AnoCpbte, string CpbNum, string rangoFecha, string busGlosa,string CpbTip,string MontoCpbte,double? MovNumDocRef)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("es-ES");
             DateTime? fechaInicio = null;
             DateTime? fechaFin = null;
@@ -536,12 +548,22 @@ namespace tesoreria.Controllers
         }
         public JsonResult ComprobantesDetAmortizacion_Read(int IdContratoDetAmortizacion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var listaRetorno = db.ComprobanteDetAmortizacion.Where(c => c.IdContratoDetAmortizacion == IdContratoDetAmortizacion).ToList();
             return Json(listaRetorno, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public JsonResult AsociarComprobanteDet(string CpbNum, string CpbAno, int IdContratoDetAmortizacion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             try
             {
@@ -607,6 +629,11 @@ namespace tesoreria.Controllers
         [HttpPost]
         public JsonResult QuitarCpbtePrograma(string CpbNum, string CpbAno, int IdContratoDetAmortizacion)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             try
             {
@@ -627,9 +654,7 @@ namespace tesoreria.Controllers
         public ActionResult ModalContrato(int idContrato)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return RedirectToAction(acceso.Vista, acceso.Controlador);
             }
@@ -668,9 +693,7 @@ namespace tesoreria.Controllers
         public ActionResult ListaDocumentoContrato_Read(int idContrato)
         {
             var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
-
             if (acceso.AccesoValido == false)
-
             {
                 return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
             }
@@ -691,6 +714,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ModalAmortizacion(int idContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
@@ -710,6 +738,11 @@ namespace tesoreria.Controllers
 
         public ActionResult ListaAmortizacion_Read(int idContrato)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registro = (from ca in db.Contrato_Amortizacion.ToList()
                             join d in db.Contrato_DetAmortizacion.ToList() on ca.IdContratoAmortizacion equals d.IdContratoAmortizacion
                             where ca.IdContrato == idContrato
@@ -757,6 +790,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult ComprobanteEgreso()
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "OtrosCreditos", "Leasing" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             return View();            
         }
         

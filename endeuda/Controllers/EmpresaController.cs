@@ -12,6 +12,7 @@ using modelo.Models.Local;
 using modelo.ViewModel;
 using DocumentFormat.OpenXml.Drawing.Charts;
 using System.Text;
+using DocumentFormat.OpenXml.Math;
 namespace tesoreria.Controllers
 {
     public class EmpresaController : Controller
@@ -38,6 +39,11 @@ namespace tesoreria.Controllers
 
         public JsonResult Empresas_Read(bool? interno)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Empresa" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             //var lista = db.Empresa.ToList();
             var lista = (from emp in db.Empresa.ToList()
                          select new
@@ -54,6 +60,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Empresa" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return RedirectToAction(tieneAcceso.Vista, tieneAcceso.Controlador);
+            }
             Empresa empresa = new Empresa();
             empresa.Activo = true;
 
@@ -83,7 +94,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult Create(Empresa empresa, int[] empresas)
         {
-            
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Empresa" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             Empresa empresaEdit = new Empresa();
@@ -126,6 +141,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult ResumenDeudaTipoFinanciamiento_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes,string valorUf)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Solicitante" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
             DateTime fechaInicio = DateTime.Now.Date;
@@ -162,6 +182,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult ConsolidadoDeudaEmpresa_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, string valorUf)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Solicitante" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble=(valorUf!="")?Double.Parse(valorUf):1;
             var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
             DateTime fechaInicio = DateTime.Now.Date;
@@ -197,6 +222,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult ConsolidadoDeudaEmpresaAnios_Read(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, string valorUf)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Solicitante" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
             var inicioMes = "01-" + IdMes.ToString() + "-" + anio.ToString();
             DateTime fechaInicio = DateTime.Now.Date;
@@ -234,6 +264,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult TipoDeudaResumen(int? IdEmpresa, int? IdBanco, int? anio, int? IdMes, string valorUf)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Solicitante" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return RedirectToAction(tieneAcceso.Vista, tieneAcceso.Controlador);
+            }
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");

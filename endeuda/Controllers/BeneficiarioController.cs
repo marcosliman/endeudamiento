@@ -18,6 +18,7 @@ namespace tesoreria.Controllers
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
         public JsonResult Clientes_Read(string q)
         {
+            
             var empresaSoft = db.Empresa.Find(Helper.Constantes.IdEmpresaPrincipal);
             SoftLandContext dbSoft = new SoftLandContext(empresaSoft.BaseSoftland);
 

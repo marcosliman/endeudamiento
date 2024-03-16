@@ -13,6 +13,7 @@ namespace tesoreria.Controllers
     {
         private ErpContext db = new ErpContext();
         tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Perfil
         public ActionResult Index()
         {
@@ -32,6 +33,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult Perfiles_Read(bool? interno)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Perfiles" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var lista = db.Perfil.ToList();
 
             return Json(lista, JsonRequestBehavior.AllowGet);
@@ -39,8 +45,12 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Perfiles" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             Perfil registro = new Perfil();
-
 
             if (id != null)
             {
@@ -56,7 +66,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult Create(Perfil registro)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Perfiles" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             Perfil registroEdit = new Perfil();
@@ -83,8 +97,12 @@ namespace tesoreria.Controllers
             return Json(showMessageString, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Permisos()
-        {            
-            
+        {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "Permisos" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             ViewBag.Perfil = new SelectList(db.Perfil.Where(c => c.Activo == true).OrderBy(c => c.NombrePerfil), "IdPerfil", "NombrePerfil");
                         
             var perfiles = (from p in db.Perfil
@@ -102,6 +120,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Permisos_Read(int idPerfil)
         {
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Permisos" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var registros = (from v in db.Menu
                              join a in db.PermisoPerfil on v.IdMenu equals a.IdMenu into resp
                              from j in resp.DefaultIfEmpty()
@@ -286,7 +309,11 @@ namespace tesoreria.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public ActionResult Permisos_Update(int IdPerfil)
         {
-
+            var tieneAcceso = loginCtrl.ValidaAcceso(new string[] { "Permisos" }, Helper.TipoAcceso.Acceder);
+            if (tieneAcceso.AccesoValido == false)
+            {
+                return Json(new { tieneAcceso.Estado, tieneAcceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
             /*se usa transacciones*/
             using (var dbContextTransaction = db.Database.BeginTransaction())

@@ -12,7 +12,8 @@ namespace tesoreria.Controllers
     public class TipoDocumentoController : Controller
     {
         private ErpContext db = new ErpContext();
-       tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+        LoginController loginCtrl = new LoginController();
         // GET: Usuario
         public ActionResult Index()
         {
@@ -41,7 +42,11 @@ namespace tesoreria.Controllers
         }
         public JsonResult TipoDocumento_Read(bool? interno,int? categoria, string documento, bool? activo)
         {
-
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoDocumento" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             var lista = (from Tdocto in db.TipoDocumento
                          join Catdocto in db.CategoriaDocumento on Tdocto.IdCategoriaDocumento equals Catdocto.IdCategoriaDocumento into t_Catdocto
                          from l_Catdocto in t_Catdocto.DefaultIfEmpty()
@@ -65,6 +70,11 @@ namespace tesoreria.Controllers
         }
         public ActionResult Create(int? id)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoDocumento" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return RedirectToAction(acceso.Vista, acceso.Controlador);
+            }
             TipoDocumento registro = new TipoDocumento();
             registro.Activo = true;
             if (id != null)
@@ -84,6 +94,11 @@ namespace tesoreria.Controllers
         [ValidateAntiForgeryToken]
         public JsonResult CreateTipoDocumento(TipoDocumento registro)
         {
+            var acceso = loginCtrl.ValidaAcceso(new string[] { "TipoDocumento" }, Helper.TipoAcceso.Acceder);
+            if (acceso.AccesoValido == false)
+            {
+                return Json(new { acceso.Estado, acceso.Mensaje, tabla = "" }, JsonRequestBehavior.AllowGet);
+            }
             dynamic showMessageString = string.Empty;
 
             TipoDocumento registroEdit = new TipoDocumento();
