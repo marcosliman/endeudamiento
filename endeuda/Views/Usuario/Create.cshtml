@@ -37,8 +37,8 @@
                     @Html.EditorFor(model => model.RutUsuario, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
                 </div>
                 <div class="col-sm col-form-label col-form-label-sm">
-                    @Html.CheckBoxFor(model => model.Activo, new { htmlAttributes = new { @class = "form-control form-control-sm" } })
-                    <label class="" for="Activo">Activo</label>
+                    @Html.CheckBoxFor(model => model.Activo, new { htmlAttributes = new { @class = "form-control form-control-sm",@id="ActivoUser" } })
+                    <label class="" for="ActivoUser">Activo</label>
                 </div>
             </div>
             <div class="form-group form-group-sm row">

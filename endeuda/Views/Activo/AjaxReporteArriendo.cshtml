@@ -3,6 +3,11 @@
     Layout = "~/Views/Shared/_Popup.cshtml";
     var listCobroArriendo = ViewData["listCobroArriendo"] as List<modelo.ViewModel.CobroArriendoViewModel>;
     var resumenZona = ViewData["resumenZona"] as List<modelo.ViewModel.CobroArriendoViewModel>;
+    var cobroDistribuidoZona = ViewData["cobroDistribuidoZona"] as List<modelo.ViewModel.CobroArriendoViewModel>;
+    double? sumMtoVenta = 0;
+    double? sumPorcVenta = 0;
+    double? sumCobDiasArriendo = 0;
+    double? sumCobroDiasDispTall = 0;
 }
 <div class="card">
     <div class="card-header bg-azulmarca text-white">
@@ -54,11 +59,11 @@
                             <td>@ca.TarifaUF</td>
                             <td>@ca.TarifaCLP</td>
                             <td>@ca.Propiedad</td>
-                            <td>@ca.Depreciacion</td>
-                            <td>@ca.TarifaCLP_Aplicar</td>
-                            <td>@ca.Cobro_DiasArriendo</td>
-                            <td>@ca.Cobro_DiasDisponible</td>
-                            <td>@ca.Cobro_DiasTaller</td>
+                            <td>@(String.Format("{0:N0}", ca.DepreciacionDouble))</td>
+                            <td>@(String.Format("{0:N0}", ca.TarifaCLP_Aplicar))</td>
+                            <td>@(String.Format("{0:N0}", ca.Cobro_DiasArriendo))</td>
+                            <td>@(String.Format("{0:N0}", ca.Cobro_DiasDisponible))</td>
+                            <td>@(String.Format("{0:N0}", ca.Cobro_DiasTaller))</td>
                         </tr>
                     }
                 </tbody>
@@ -99,18 +104,20 @@
                         <tbody>
                             @foreach (var rz in resumenZona)
                             {
+                                sumMtoVenta = sumMtoVenta + rz.MontoVenta;
+                                sumPorcVenta = sumPorcVenta + rz.PorcentajeVenta;
                                 <tr>
                                     <td>@rz.DesArn</td>
-                                    <td>@rz.MontoVenta</td>
-                                    <td>@rz.PorcentajeVenta</td>
+                                    <td>@(String.Format("{0:N0}", rz.MontoVenta))</td>
+                                    <td>@(String.Format("{0:N4}", rz.PorcentajeVenta))</td>
                                 </tr>
                             }
                         </tbody>
                         <tfoot>
                             <tr class="table-secondary">
                                 <th>Total</th>
-                                <th></th>
-                                <th></th>
+                                <th>@(String.Format("{0:N0}", sumMtoVenta))</th>
+                                <th>@(String.Format("{0:N2}", (Math.Round((double)sumPorcVenta, 2))))</th>
                             </tr>
                         </tfoot>
                     </table>
@@ -148,12 +155,22 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @foreach (var rz in cobroDistribuidoZona)
+                            {
+                                sumCobDiasArriendo = sumCobDiasArriendo + rz.Cobro_DiasArriendo;
+                                sumCobroDiasDispTall = sumCobroDiasDispTall + (rz.Cobro_DiasDisponible + rz.Cobro_DiasTaller);
+                                <tr>
+                                    <td>@rz.DesArn</td>
+                                    <td>@(String.Format("{0:N0}", rz.Cobro_DiasArriendo))</td>
+                                    <td>@(String.Format("{0:N0}", (rz.Cobro_DiasDisponible + rz.Cobro_DiasTaller)))</td>
+                                </tr>
+                            }
                         </tbody>
                         <tfoot>
                             <tr class="table-secondary">
                                 <th>Total</th>
-                                <th></th>
-                                <th></th>
+                                <th>@(String.Format("{0:N0}", sumCobDiasArriendo))</th>
+                                <th>@(String.Format("{0:N0}", sumCobroDiasDispTall))</th>
                             </tr>
                         </tfoot>
                     </table>

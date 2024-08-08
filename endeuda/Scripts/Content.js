@@ -79,6 +79,7 @@ function IrAutherize() {
             }
             else {
                 esconderCargando();
+                //alert("aqui")
                 toastr.error(data.result.Mensaje);
             }
         },
@@ -134,7 +135,6 @@ function IrModificarClave() {
     var encryptedConfirm = encrypt(text);
     var newClave = $("#NuevaClave").val();
     var newClaveencrypted = encrypt(newClave);
-   
     $.ajax({
         url: "/Usuario/ModificarClave",
         type: "Post",
@@ -144,7 +144,6 @@ function IrModificarClave() {
             ClaveConfirm: encryptedConfirm,
             NuevaClave: newClaveencrypted,
             IdUsuario: $("#IdUsuario").val()
-            
         },
         beforeSend: function () {
             // $("#btnCrear").prop("disabled", true);
@@ -173,6 +172,7 @@ function IrEditUser() {
     var text = $("#Clave").val();
     var encryptedpassword = encrypt(text);
     var RequestVerificationToken = $("[name='__RequestVerificationToken']").val();
+    //alert($("#ActivoUser").prop("checked"))
     $.ajax({
         url: "/Usuario/Create",
         type: "Post",
@@ -182,7 +182,7 @@ function IrEditUser() {
             NombreUsuario: $("#NombreUsuario").val(),
             ApellidoUsuario: $("#ApellidoUsuario").val(),
             CorreoElectronico: $("#CorreoElectronico").val(),
-            Activo: $("#Activo").val(),
+            Activo: $("#ActivoUser").prop("checked"),
             Clave: encryptedpassword,
             perfiles: $("#perfiles").val(),
             __RequestVerificationToken: RequestVerificationToken

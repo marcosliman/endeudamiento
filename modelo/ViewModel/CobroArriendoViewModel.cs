@@ -15,6 +15,7 @@ namespace modelo.ViewModel
         public string DiasDisponible { get; set; }
         public string DiasTaller { get; set; }
         public string Depreciacion { get; set; }
+        public double? DepreciacionDouble { get; set; }
         public string DesArn { get; set; }
         public string DescripcionFamilia { get; set; }
         public string GrupoTarifario { get; set; }

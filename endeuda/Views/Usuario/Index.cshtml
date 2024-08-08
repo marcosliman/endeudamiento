@@ -95,7 +95,7 @@
                         "bSortable": false,
                         "mRender": function (o, type, row) {
                             var estado = 'NO';
-                            if (o.Activo == true) {
+                            if (row.Activo == true) {
                                 estado = "SI";
                             }
                             return estado;

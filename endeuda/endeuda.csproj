@@ -3360,10 +3360,10 @@
     <Content Include="Views\Usuario\DatosUsuario.cshtml" />
     <Content Include="Views\Usuario\RespuestaClave.cshtml" />
     <Content Include="Views\Usuario\SolicitaClave.cshtml" />
+    <Content Include="Views\Login\SinAcceso.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

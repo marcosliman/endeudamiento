@@ -1309,6 +1309,7 @@ namespace tesoreria.Controllers
                                     var areaStr = string.Format("{0:000}", areaint);
                                     var area = dbSoft.cwtaren.Find(areaStr);
                                     a.DesArn = (area!=null)? area.DesArn:a.Sucursal;
+                                    a.CodArn= (area != null) ? area.CodArn :"";
                                     //datos del activo
                                     var activo = db.Activo.Where(c => c.NumeroInterno == a.NroEquipo).FirstOrDefault();
                                     if (activo != null)
@@ -1322,14 +1323,26 @@ namespace tesoreria.Controllers
                                         a.GrupoTarifario = (tarifaActivo != null) ? tarifaActivo.DescripcionGrupoTarifario : "";
                                         a.TarifaUF = (tarifaActivo != null) ? tarifaActivo.UF : 0;
                                         a.TarifaCLP = (a.TarifaUF * valorUfDouble);
+                                        a.TarifaCLP = (a.TarifaCLP != null) ? Math.Round((double)a.TarifaCLP, 0) : 0;
+
                                         var DepreciacionDouble = (a.Depreciacion != "") ? Double.Parse(a.Depreciacion) : 0;
+                                        DepreciacionDouble = (DepreciacionDouble != null) ? Math.Round((double)DepreciacionDouble, 0) : 0;
+                                        a.DepreciacionDouble = DepreciacionDouble;
+
                                         a.TarifaCLP_Aplicar = a.TarifaCLP - DepreciacionDouble;
+                                        a.TarifaCLP_Aplicar = (a.TarifaCLP_Aplicar != null) ? Math.Round((double)a.TarifaCLP_Aplicar, 0) : 0;
+
                                         var DiasArriendoDouble = (a.DiasArriendo != "") ? Double.Parse(a.DiasArriendo) : 0;
                                         a.Cobro_DiasArriendo = (DiasArriendoDouble * a.TarifaCLP_Aplicar) / 30;
+                                        a.Cobro_DiasArriendo = (a.Cobro_DiasArriendo != null) ? Math.Round((double)a.Cobro_DiasArriendo, 0) : 0;
+
                                         var DiasDisponibleDouble = (a.DiasDisponible != "") ? Double.Parse(a.DiasDisponible) : 0;
                                         a.Cobro_DiasDisponible = (DiasDisponibleDouble * a.TarifaCLP_Aplicar) / 30;
+                                        a.Cobro_DiasDisponible = (a.Cobro_DiasDisponible != null) ? Math.Round((double)a.Cobro_DiasDisponible, 0) : 0;
+
                                         var DiasTallerDouble = (a.DiasTaller != "") ? Double.Parse(a.DiasTaller) : 0;
                                         a.Cobro_DiasTaller = (DiasTallerDouble * a.TarifaCLP_Aplicar) / 30;
+                                        a.Cobro_DiasTaller = (a.Cobro_DiasTaller != null) ? Math.Round((double)a.Cobro_DiasTaller, 0) : 0;
                                         var estAct = estados.Where(c => c.IdEstado == activo.IdEstado).FirstOrDefault();
                                         a.EstadoActivo = (estAct != null) ? estAct.NombreEstado : "";
                                         listCobroArriendo.Add(a);
@@ -1364,7 +1377,20 @@ namespace tesoreria.Controllers
                         {
                             System.IO.File.Delete(pathToExcelFile);
                         }
-
+                        List<CobroArriendoViewModel> cobroDistribuidoZona = new List<CobroArriendoViewModel>();
+                        foreach (var area in areas)
+                        {
+                            var montoStr = formCollection["valor_" + area.CodArn];
+                            var montoDouble = (montoStr != "") ? Double.Parse(montoStr) : 0;
+                            CobroArriendoViewModel resumen = new CobroArriendoViewModel();
+                            resumen.CodArn = area.CodArn;
+                            resumen.DesArn = area.DesArn;
+                            resumen.Cobro_DiasArriendo = listCobroArriendo.Where(c=>c.CodArn==area.CodArn).Sum(c=>c.Cobro_DiasArriendo);
+                            resumen.Cobro_DiasDisponible = listCobroArriendo.Where(c => c.CodArn == area.CodArn).Sum(c => c.Cobro_DiasDisponible);
+                            resumen.Cobro_DiasTaller = listCobroArriendo.Where(c => c.CodArn == area.CodArn).Sum(c => c.Cobro_DiasTaller);
+                            cobroDistribuidoZona.Add(resumen);
+                        }
+                        ViewData["cobroDistribuidoZona"] = cobroDistribuidoZona;
                     }
                     else
                     {
