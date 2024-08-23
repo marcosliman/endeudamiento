@@ -17,8 +17,7 @@ namespace modelo.Models.Local
         public string AliasEmpresa { get; set; }
         public string BaseSoftland { get; set; }
         public bool Activo { get; set; }
-
-        
-
+        public string CtaLeasingDirecto { get; set; }
+        public string CtaLeasingIndirecto { get; set; }
     }
 }

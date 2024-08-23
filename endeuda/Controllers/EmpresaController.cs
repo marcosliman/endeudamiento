@@ -113,6 +113,9 @@ namespace tesoreria.Controllers
                     empresaEdit.BaseSoftland = empresa.BaseSoftland;
                     empresaEdit.IdTributario = empresa.IdTributario;
                     empresaEdit.Activo = empresa.Activo;
+                    empresaEdit.CtaLeasingDirecto=empresa.CtaLeasingDirecto;
+                    empresaEdit.CtaLeasingIndirecto = empresa.CtaLeasingIndirecto;
+
                 }
             }
             else

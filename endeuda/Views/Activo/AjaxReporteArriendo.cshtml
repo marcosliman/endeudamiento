@@ -4,6 +4,7 @@
     var listCobroArriendo = ViewData["listCobroArriendo"] as List<modelo.ViewModel.CobroArriendoViewModel>;
     var resumenZona = ViewData["resumenZona"] as List<modelo.ViewModel.CobroArriendoViewModel>;
     var cobroDistribuidoZona = ViewData["cobroDistribuidoZona"] as List<modelo.ViewModel.CobroArriendoViewModel>;
+    var ListDistEquipo = ViewData["ListDistEquipo"] as List<modelo.ViewModel.CobroArriendoViewModel>;
     double? sumMtoVenta = 0;
     double? sumPorcVenta = 0;
     double? sumCobDiasArriendo = 0;
@@ -23,6 +24,10 @@
             <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaDetalle" data-order='[[ 1, "desc" ]]'>
                 <thead class="table-info">
                     <tr>
+                        <th colspan="20"></th>
+                        <th style="text-align:center" colspan="@resumenZona.Count()">DISTRIBUCION INDIRECTO</th>
+                    </tr>
+                    <tr>
                         <th>Nro. Equipo</th>
                         <th>Sucursal</th>
                         <th>Desc. Familia</th>
@@ -41,8 +46,14 @@
                         <th>Cobro días en arriendo</th>
                         <th>Cobro días disponible</th>
                         <th>Cobro días en taller</th>
-                    </tr>
-                </thead>
+                        <th>Cta. Directa</th>
+                        <th>Cta. Indirecta</th>
+                        @foreach (var rz in resumenZona)
+                        {
+                            <th>@rz.DesArn</th>                            
+                        }
+                        </tr>
+                    </thead>
                 <tbody>
                     @foreach (var ca in listCobroArriendo) {
                         <tr>
@@ -56,24 +67,35 @@
                             <td>@ca.DiasArriendo</td>
                             <td>@ca.DiasDisponible</td>
                             <td>@ca.DiasTaller</td>
-                            <td>@ca.TarifaUF</td>
-                            <td>@ca.TarifaCLP</td>
+                            <td>@(String.Format("{0:N0}", ca.TarifaUF))</td>
+                            <td>@(String.Format("{0:N0}", ca.TarifaCLP))</td>
                             <td>@ca.Propiedad</td>
                             <td>@(String.Format("{0:N0}", ca.DepreciacionDouble))</td>
                             <td>@(String.Format("{0:N0}", ca.TarifaCLP_Aplicar))</td>
                             <td>@(String.Format("{0:N0}", ca.Cobro_DiasArriendo))</td>
                             <td>@(String.Format("{0:N0}", ca.Cobro_DiasDisponible))</td>
                             <td>@(String.Format("{0:N0}", ca.Cobro_DiasTaller))</td>
+                            <td>@((ca.Cobro_DiasArriendo>0)?ca.CtaLeasingDirecto:"")</td>
+                            <td>@((ca.Cobro_DiasTaller+ ca.Cobro_DiasDisponible > +0)?ca.CtaLeasingIndirecto:"")</td>
+                            @foreach (var dist in ListDistEquipo.Where(y => y.NroEquipo == ca.NroEquipo).ToList())
+                            {
+                                <td>@(String.Format("{0:N0}", dist.MontoVenta))</td>
+                            }
                         </tr>
                     }
                 </tbody>
                 <tfoot>
                     <tr class="table-secondary">
-                        <th colspan="10">Total</th>
+                        <th colspan="9">Total</th>
                         <th></th>
                         <th colspan="2"></th>
                         <th></th>
-                        <th colspan="4"></th>
+                        <th colspan="7"></th>
+                        @foreach (var rz in resumenZona)
+                        {
+                            <td></td>
+
+                        }
                     </tr>
                 </tfoot>
             </table>
@@ -189,7 +211,7 @@
 <div class="col-sm-auto row">
     <div class="form-group col-12">
         <label for="btnGenerar" class="invisible">Cerrar Mes</label>
-        <button class="btn btn-info btn-sm form-control form-control-sm" id="btnGenerar" name="btnGenerar" type="button" onclick="CargaReporteArriendo()"><i class="fa fa-cog"></i> Generar</button>
+        <button class="btn btn-info btn-sm form-control form-control-sm" id="btnGenerar" name="btnGenerar" type="button" onclick="CargaReporteArriendo()"><i class="fa fa-save"></i> Cerrar Mes</button>
     </div>
 </div>
 <div class="modal fade" id="modal-comprobante" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -52,7 +52,18 @@
                     @Html.EditorFor(model => model.AliasEmpresa, new { htmlAttributes = new { @class = "form-control form-control-sm required" } })
                 </div>
             </div>
-
+            <div class="form-group form-group-sm row">
+                <label for="CtaDevolucion" class="col-sm-3 col-form-label col-form-label-sm">Cta. Leasing Directo</label>
+                <div class="col-9">
+                    @Html.EditorFor(model => model.CtaLeasingDirecto, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
+            <div class="form-group form-group-sm row">
+                <label for="CtaDevolucion" class="col-sm-3 col-form-label col-form-label-sm">Cta. Leasing InDirecto</label>
+                <div class="col-9">
+                    @Html.EditorFor(model => model.CtaLeasingIndirecto, new { htmlAttributes = new { @class = "form-control form-control-sm required", MaxLength = "18" } })
+                </div>
+            </div>
             <div class="form-group form-group-sm row">
                 <label for="IdTributario" class="col-sm-3 col-form-label col-form-label-sm">Estado</label>
                 <div class="col-6">

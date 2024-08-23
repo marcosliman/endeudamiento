@@ -33,6 +33,8 @@ namespace modelo.ViewModel
         public string CodArn { get; set; }
         public double? MontoVenta { get; set; }
         public double? PorcentajeVenta { get; set; }
+        public string CtaLeasingDirecto { get; set; }
+        public string CtaLeasingIndirecto { get; set; }
     }
 
 }

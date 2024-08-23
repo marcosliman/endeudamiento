@@ -153,7 +153,7 @@ namespace tesoreria.Controllers
                                where e.Activo == true
                                select new RetornoGenerico { Id = e.IdEmpresa, Nombre = e.RazonSocial }).OrderBy(c => c.Id).ToList();
                 SelectList listaEmpresa = new SelectList(empresa.OrderBy(c => c.Nombre), "Id", "Nombre");
-                ViewData["listaEmpresa"] = listaEmpresa;
+                ViewData["listaEmpresa"] = listaEmpresa; 
                 return View();
             }
         }
@@ -1253,6 +1253,7 @@ namespace tesoreria.Controllers
                     // tdata.ExecuteCommand("truncate table OtherCompanyAssets");
                     if (ArchivoCaptura.ContentType == "application/vnd.ms-excel" || ArchivoCaptura.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                     {
+                        List<CobroArriendoViewModel> ListDistEquipo = new List<CobroArriendoViewModel>();
                         var valorUfDouble = (valorUf != "") ? Double.Parse(valorUf) : 1;
                         var familias = db.Familia.ToList();
                         var grupoTarifario=db.GrupoTarifario.ToList();
@@ -1345,6 +1346,18 @@ namespace tesoreria.Controllers
                                         a.Cobro_DiasTaller = (a.Cobro_DiasTaller != null) ? Math.Round((double)a.Cobro_DiasTaller, 0) : 0;
                                         var estAct = estados.Where(c => c.IdEstado == activo.IdEstado).FirstOrDefault();
                                         a.EstadoActivo = (estAct != null) ? estAct.NombreEstado : "";
+                                        a.CtaLeasingDirecto = empresaSoftland.CtaLeasingDirecto;
+                                        a.CtaLeasingIndirecto = empresaSoftland.CtaLeasingIndirecto;
+                                        foreach(var rz in zonaRetorno)
+                                        {
+                                            var distZona = (a.Cobro_DiasTaller + a.Cobro_DiasDisponible)*rz.PorcentajeVenta;
+                                            distZona = (distZona>0)?Math.Round((double)distZona, 0):0;
+                                            CobroArriendoViewModel newDist= new CobroArriendoViewModel();
+                                            newDist.CodArn = rz.CodArn;
+                                            newDist.NroEquipo = a.NroEquipo;
+                                            newDist.MontoVenta = distZona;
+                                            ListDistEquipo.Add(newDist);
+                                        }
                                         listCobroArriendo.Add(a);
                                     }
                                     
@@ -1371,6 +1384,7 @@ namespace tesoreria.Controllers
                             }
                         }
                         ViewData["listCobroArriendo"] = listCobroArriendo;
+                        ViewData["ListDistEquipo"] = ListDistEquipo;
                         //var saldoInsoluto=
                         //deleting excel file from folder
                         if ((System.IO.File.Exists(pathToExcelFile)))
