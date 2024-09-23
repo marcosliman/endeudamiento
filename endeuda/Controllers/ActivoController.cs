@@ -210,7 +210,8 @@ namespace tesoreria.Controllers
                                     Activo=ac,
                                     IdMarcaProducto=ac.IdMarcaProducto,
                                     IdModeloProducto=ac.IdModeloProducto,
-                                    Glosa=ac.Glosa
+                                    Glosa=ac.Glosa,
+                                    IdGrupoTarifario=(ac.IdGrupoTarifario!=null)?(int)ac.IdGrupoTarifario:0
                                 }).FirstOrDefault();
                 var codiCCLtda = "";
                 var codiCCMaquinariasa = "";
@@ -1317,6 +1318,7 @@ namespace tesoreria.Controllers
                                     {
                                         a.DescCC_MqsSur = activo.DescCC_MqsSur;
                                         a.DescCC_Mqs = activo.DescCC_Mqs;
+                                        a.CodiCC_Mqs = activo.CodiCC_Mqs;
                                         a.Anio = activo.Anio;
                                         var famActivo = familias.Where(c => c.IdFamilia == activo.IdFamilia).FirstOrDefault();
                                         a.DescripcionFamilia = (famActivo != null) ? famActivo.NombreFamilia : "";
@@ -1351,7 +1353,7 @@ namespace tesoreria.Controllers
                                         foreach(var rz in zonaRetorno)
                                         {
                                             var distZona = (a.Cobro_DiasTaller + a.Cobro_DiasDisponible)*rz.PorcentajeVenta;
-                                            distZona = (distZona>0)?Math.Round((double)distZona, 0):0;
+                                            distZona = (distZona>0)?Math.Round((double)distZona/100, 0):0;
                                             CobroArriendoViewModel newDist= new CobroArriendoViewModel();
                                             newDist.CodArn = rz.CodArn;
                                             newDist.NroEquipo = a.NroEquipo;
@@ -1400,8 +1402,8 @@ namespace tesoreria.Controllers
                             resumen.CodArn = area.CodArn;
                             resumen.DesArn = area.DesArn;
                             resumen.Cobro_DiasArriendo = listCobroArriendo.Where(c=>c.CodArn==area.CodArn).Sum(c=>c.Cobro_DiasArriendo);
-                            resumen.Cobro_DiasDisponible = listCobroArriendo.Where(c => c.CodArn == area.CodArn).Sum(c => c.Cobro_DiasDisponible);
-                            resumen.Cobro_DiasTaller = listCobroArriendo.Where(c => c.CodArn == area.CodArn).Sum(c => c.Cobro_DiasTaller);
+                            resumen.Cobro_DiasDisponible = ListDistEquipo.Where(c => c.CodArn == area.CodArn).Sum(c => c.MontoVenta);
+                            resumen.Cobro_DiasTaller = ListDistEquipo.Where(c => c.CodArn == area.CodArn).Sum(c => c.MontoVenta);
                             cobroDistribuidoZona.Add(resumen);
                         }
                         ViewData["cobroDistribuidoZona"] = cobroDistribuidoZona;

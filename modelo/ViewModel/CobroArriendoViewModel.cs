@@ -21,6 +21,7 @@ namespace modelo.ViewModel
         public string GrupoTarifario { get; set; }
         public string DescCC_MqsSur { get; set; }
         public string DescCC_Mqs { get; set; }
+        public string CodiCC_Mqs { get; set; }
         public int? Anio { get; set; }
         public string EstadoActivo { get; set; }
         public double? TarifaUF { get; set; }
