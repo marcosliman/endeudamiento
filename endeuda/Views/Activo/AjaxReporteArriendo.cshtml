@@ -81,7 +81,7 @@
                             <td>@(String.Format("{0:N0}", ca.Cobro_DiasTaller))</td>
                             <td>@((ca.Cobro_DiasArriendo>0)?ca.CtaLeasingDirecto:"")</td>
                             <td>@((ca.Cobro_DiasTaller+ ca.Cobro_DiasDisponible > +0)?ca.CtaLeasingIndirecto:"")</td>
-                            @foreach (var dist in ListDistEquipo.Where(y => y.NroEquipo == ca.NroEquipo).ToList())
+                            @foreach (var dist in ListDistEquipo.Where(y => y.NroEquipo == ca.NroEquipo && y.NroLinea==ca.NroLinea).ToList())
                             {
                                 <td>@(String.Format("{0:N0}", dist.MontoVenta))</td>
                             }

@@ -9,6 +9,7 @@ namespace modelo.ViewModel
 {
     public class CobroArriendoViewModel
     {
+        public int NroLinea { get; set; }
         public string NroEquipo { get; set; }
         public string Sucursal { get; set; }
         public string DiasArriendo { get; set; }

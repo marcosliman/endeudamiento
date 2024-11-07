@@ -12,7 +12,7 @@ using System.Data.OleDb;
 using System.Data.Entity.Validation;
 using Microsoft.Win32;
 using tesoreria.Helper;
-
+using ClosedXML.Excel;
 namespace tesoreria.Controllers
 {
     public class ActivoController : Controller
@@ -1292,30 +1292,67 @@ namespace tesoreria.Controllers
                         }
                         else if (filename.EndsWith(".xlsx"))
                         {
-                            connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties=\"Excel 12.0 Xml;HDR=YES;IMEX=1\";", pathToExcelFile);
+                            connectionString = string.Format("Provider=Microsoft.ACE.OLEDB.12.0;Data Source={0};Extended Properties='Excel 12.0 Xml;HDR=YES;IMEX=1';", pathToExcelFile);
                         }
                         var adapter = new OleDbDataAdapter("SELECT * FROM [Sheet1$]", connectionString);
                         var ds = new DataSet();
                         adapter.Fill(ds, "ExcelTable");
                         DataTable dtable = ds.Tables["ExcelTable"];
                         string sheetName = "Sheet1";
-                        var excelFile = new ExcelQueryFactory(pathToExcelFile);
-                        var artistAlbums = from a in excelFile.Worksheet<CobroArriendoViewModel>(sheetName) select a;                        
+                        var excelFile = new ExcelQueryFactory(pathToExcelFile)
+                        {
+                            UsePersistentConnection = true
+                        };
+                        //IQueryable<CobroArriendoViewModel> artistAlbums = new IQueryable<CobroArriendoViewModel>();
+                        //artistAlbums = from a in excelFile.Worksheet<CobroArriendoViewModel>(sheetName) select a;
+                        // Crea una lista y agrega el valor inicial
+                        var artistAlbums = new List<CobroArriendoViewModel>();
+
+                        using (var workbook = new XLWorkbook(pathToExcelFile))
+                        {
+                            var worksheet = workbook.Worksheet(sheetName);
+                            foreach (var row in worksheet.RowsUsed().Skip(1)) // Saltamos la fila de encabezado
+                            {
+                                artistAlbums.Add(new CobroArriendoViewModel
+                                {
+                                    NroEquipo = row.Cell(1).GetValue<string>(),
+                                    Sucursal = row.Cell(2).GetValue<string>(),
+                                    DiasArriendo = row.Cell(2).GetValue<string>(),
+                                    DiasDisponible = row.Cell(2).GetValue<string>(),
+                                    DiasTaller = row.Cell(2).GetValue<string>(),
+                                    Depreciacion = row.Cell(2).GetValue<string>(),
+                                    // Configura cada propiedad basada en el índice de columna
+                                });
+                            }
+                        }
+                        var NroLinea = 1;
+                        //var totoal = artistAlbums.Count();
+                        //var es123b = artistAlbums.ToList().Where(c => c.NroEquipo == "123B").ToList();
+                        //var es123a = artistAlbums.ToList().Where(c => c.NroEquipo == "123A").ToList();
                         foreach (var a in artistAlbums)
                         {
                             try
                             {
-                                if (a.NroEquipo != "")
-                                {                                    
+                                if (a.NroEquipo != "" && a.NroEquipo!=null)
+                                {
+                                    if (a.NroEquipo == "123B")
+                                    {
+                                        var alerta = 1;
+                                    }
                                     var areaint = Int32.Parse(a.Sucursal);
                                     var areaStr = string.Format("{0:000}", areaint);
                                     var area = dbSoft.cwtaren.Find(areaStr);
                                     a.DesArn = (area!=null)? area.DesArn:a.Sucursal;
                                     a.CodArn= (area != null) ? area.CodArn :"";
                                     //datos del activo
-                                    var activo = db.Activo.Where(c => c.NumeroInterno == a.NroEquipo).FirstOrDefault();
+                                    var activo = db.Database.SqlQuery<Activo>(
+                                        "SELECT * FROM Activo WHERE SUBSTRING(NumeroInterno, PATINDEX('%[^0]%', NumeroInterno), LEN(NumeroInterno)) = " +
+                                        "SUBSTRING(@p0, PATINDEX('%[^0]%', @p0), LEN(@p0))",
+                                        a.NroEquipo
+                                    ).FirstOrDefault();
                                     if (activo != null)
                                     {
+                                        a.NroLinea = NroLinea;
                                         a.DescCC_MqsSur = activo.DescCC_MqsSur;
                                         a.DescCC_Mqs = activo.DescCC_Mqs;
                                         a.CodiCC_Mqs = activo.CodiCC_Mqs;
@@ -1328,8 +1365,18 @@ namespace tesoreria.Controllers
                                         a.TarifaCLP = (a.TarifaUF * valorUfDouble);
                                         a.TarifaCLP = (a.TarifaCLP != null) ? Math.Round((double)a.TarifaCLP, 0) : 0;
 
-                                        var DepreciacionDouble = (a.Depreciacion != "") ? Double.Parse(a.Depreciacion) : 0;
-                                        DepreciacionDouble = (DepreciacionDouble != null) ? Math.Round((double)DepreciacionDouble, 0) : 0;
+                                        double DepreciacionDouble;
+                                        if (!string.IsNullOrEmpty(a.Depreciacion) && Double.TryParse(a.Depreciacion, out DepreciacionDouble))
+                                        {
+                                            // El valor fue convertido correctamente a double
+                                        }
+                                        else
+                                        {
+                                            // Si el valor es nulo o no se puede convertir, asigna 0
+                                            DepreciacionDouble = 0;
+                                        }
+
+                                        DepreciacionDouble = Math.Round((double)DepreciacionDouble, 0);
                                         a.DepreciacionDouble = DepreciacionDouble;
 
                                         a.TarifaCLP_Aplicar = a.TarifaCLP - DepreciacionDouble;
@@ -1358,11 +1405,16 @@ namespace tesoreria.Controllers
                                             newDist.CodArn = rz.CodArn;
                                             newDist.NroEquipo = a.NroEquipo;
                                             newDist.MontoVenta = distZona;
+                                            newDist.NroLinea = NroLinea;
                                             ListDistEquipo.Add(newDist);
                                         }
                                         listCobroArriendo.Add(a);
+                                        NroLinea++;
                                     }
-                                    
+                                    else
+                                    {
+                                        var noentra = a.NroEquipo;
+                                    }
                                 }
                                 else
                                 {
@@ -1384,9 +1436,11 @@ namespace tesoreria.Controllers
                                     }
                                 }
                             }
+                            
                         }
                         ViewData["listCobroArriendo"] = listCobroArriendo;
                         ViewData["ListDistEquipo"] = ListDistEquipo;
+                        var totalAdd = listCobroArriendo.Count();
                         //var saldoInsoluto=
                         //deleting excel file from folder
                         if ((System.IO.File.Exists(pathToExcelFile)))
