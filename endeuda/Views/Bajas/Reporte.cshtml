@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = "Reporte Baja Activos";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<br />
+
+<div class="card card-outline card-info collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <select class="form-control form-control-sm">
+                    <option>Seleccione Empresa</option>
+                    <option>MAQUINARIAS SUR S.A</option>
+                    <option>MERITENS S.A.</option>
+                    <option>BIOMASA SOCIEDAD ANOMINA</option>
+                    <option>NOK SOCIEDAD ANONIMA</option>
+                    <option>MAQSUR MAQUINARIAS S.A.</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="text" placeholder="Fecha Baja" />
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="Buscar()"><i class="fa fa-search"></i> Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+
+<div class="card d-none" id="idReporte">
+    <div class="card-header">
+        <h3 class="card-title">Reporte Bajas Activos</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaReporte" data-order='[[ 1, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th>Nro Activo</th>
+                        <th>Familia</th>
+                        <th>Descripcion</th>
+                        <th>Motivo</th>
+                        <th>Monto</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Marca</th>
+                        <th>Fecha Baja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2343</td>
+                        <td>Maquinaria</td>
+                        <td>GRUA HORQUILLA COMBUSTIÓN</td>
+                        <td>Deterioro</td>
+                        <td>24.804.951</td>
+                        <td>32 8FG30</td>
+                        <td>2022</td>
+                        <td>TOYOTA</td>
+                        <td>07/11/2024</td>
+                    </tr>
+                    <tr>
+                        <td>007079</td>
+                        <td>Maquinaria</td>
+                        <td>GENERADOR 275 KVA</td>
+                        <td>Perdida</td>
+                        <td>27.761.399</td>
+                        <td>DE300</td>
+                        <td>2019</td>
+                        <td>CATERPILLAR</td>
+                        <td>07/11/2024</td>
+                    </tr>
+                    <tr>
+                        <td>007079</td>
+                        <td>Maquinaria</td>
+                        <td>GENERADOR 275 KVA</td>
+                        <td>Perdida</td>
+                        <td>27.761.399</td>
+                        <td>DE300</td>
+                        <td>2019</td>
+                        <td>CATERPILLAR</td>
+                        <td>07/11/2024</td>
+                    </tr>
+                    <tr>
+                        <td>007079</td>
+                        <td>Maquinaria</td>
+                        <td>GENERADOR 275 KVA</td>
+                        <td>Perdida</td>
+                        <td>27.761.399</td>
+                        <td>DE300</td>
+                        <td>2019</td>
+                        <td>CATERPILLAR</td>
+                        <td>07/11/2024</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<form name="frmSolicitud" id="frmSolicitud" method="post">
+    <input type="hidden" name="id" id="id" />
+</form>   
+
+<div class="modal fade" id="ModalVerLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-verlicitacion" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="datosLicitacion"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalEditarLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-editarlicitacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("ReporteBaja");
+        initTable();
+    });
+
+    function Buscar() {
+        $("#idReporte").removeClass('d-none');
+    }
+
+    function initTable() {
+        var table = $('#grillaSolicitud').DataTable({
+        });
+
+        return table;
+    }
+
+    function CreateRegistro(id) {
+        $('#id').val(id);
+        url = "/Bajas/SolicitudAutorizar";
+        $('#frmSolicitud').attr('action', url);
+        $('#frmSolicitud').submit();
+    }
+
+</script>

@@ -1,0 +1,158 @@
+﻿<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h5 class="h5 mb-0 text-gray-800">Aprobar Solicitud Baja</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item"><a href="/Bajas/AprobarSolicitud">Aprobar Solicitud</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Aprobar</li>
+    </ol>
+</div>
+<input type="hidden" name="id" id="id" value="" />
+
+<div class="card card-outline card-info">
+    <div class="card-header">
+        <h3 class="card-title">Datos Generales</h3>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Empresa</label>
+            <div class="col-sm-3">BIOMASA SOCIEDAD ANOMINA</div>
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Folio</label>
+            <div class="col-sm-3">003</div>
+        </div>
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha</label>
+            <div class="col-sm-3">07/11/2024</div>
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Observación</label>
+            <div class="col-sm-3">
+                <textarea class="form-control form-control-sm required"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="Volver();">Volver</button>
+        <button type="button" id="btnGenerar" class="btn btn-primary" onclick="GrabarSolicitud();">Grabar aprobacion Solicitud</button>
+    </div>
+</div>
+
+<div class="card" id="idActivo">
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación selecciona la opción de cada activo</label>
+        </div>
+        <div class="table-responsive mt-1">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacioActivo" data-order='[[ 1, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th>Nro Activo</th>
+                        <th>Familia</th>
+                        <th>Descripcion</th>
+                        <th>Motivo</th>
+                        <th>Monto</th>
+                        <th>Modelo</th>
+                        <th>Año</th>
+                        <th>Marca</th>
+                        <th>Situación</th>
+                        <th>Observación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>2343</td>
+                        <td>Maquinaria</td>
+                        <td>GRUA HORQUILLA COMBUSTIÓN</td>
+                        <td>Deterioro</td>
+                        <td>24.804.951</td>
+                        <td>32 8FG30</td>
+                        <td>2022</td>
+                        <td>TOYOTA</td>
+                        <td>
+                            <select class="form-control form-control-sm">
+                                <option>[ Seleccione Situación ]</option>
+                                <option>Aprobar</option>
+                                <option>Rechazar</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control form-control-sm" /></td>
+                    </tr>
+                    <tr>
+                        <td>007079</td>
+                        <td>Maquinaria</td>
+                        <td>GENERADOR 275 KVA</td>
+                        <td>Perdida</td>
+                        <td>27.761.399</td>
+                        <td>DE300</td>
+                        <td>2019</td>
+                        <td>CATERPILLAR</td>
+                        <td>
+                            <select class="form-control form-control-sm">
+                                <option>[ Seleccione Situación ]</option>
+                                <option>Aprobar</option>
+                                <option>Rechazar</option>
+                            </select>
+                        </td>
+                        <td><input type="text" class="form-control form-control-sm" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="ModalAsociarActivo" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="datosActivo"></div>
+        </div>
+    </div>
+</div>
+
+<form name="frmLicitacionAcc" id="frmLicitacionAcc" method="post">
+    <input type="hidden" name="idLicitacion" id="idLicitacionAcc" />
+    <input type="hidden" name="idLicitacion" id="idLicitacionModal" />
+</form>
+<script>
+    $(document).ready(function () {
+        AbrirMenu("SolicitudAprobar");
+        initTableActivo();
+
+        $('#frmLicitacion').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning"),
+            rules: {
+                idEmpresa: { required: true },
+                IdTipoFinanciamiento: { required: true },
+                Monto: { required: true },
+            }
+        });
+    });
+
+    function GrabarSolicitud() {
+        $("#idActivo").removeClass('d-none');
+    }
+
+    function AsociarActivo() {
+        $.ajax({
+            url: "/Bajas/ModalAsociarActivo",
+            type: "Post",
+            data: { id: $("#id").val() },
+            beforeSend: function () {
+                $("#datosActivo").html('<i class="fa fa-circle-o-notch fa-spin"></i> Cargando...');
+            },
+            success: function (data) {
+                $("#datosActivo").empty();
+                $("#datosActivo").html(data);
+            }
+        });
+    }
+
+    function initTableActivo() {
+        var table = $('#grillaLicitacioActivo').DataTable({
+        });
+        return table;
+    }
+
+    function Volver() {
+        url = '/Bajas/Aprobacion/';
+        location.href = url;
+    }
+</script>

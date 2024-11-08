@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Lista Aprobar Solicitud de Baja";
+}
+@{
+    tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
+}
+
+<div class="d-sm-flex align-items-center justify-content-between">
+    <h5 class="h5 mb-0 text-gray-800">@ViewBag.Title</h5>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Inicio</li>
+    </ol>
+</div>
+<br />
+
+<div class="card card-outline card-info collapsed-card">
+    <div class="card-header">
+        <h3 class="card-title">Filtros</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <select class="form-control form-control-sm">
+                    <option>Seleccione Empresa</option>
+                    <option>MAQUINARIAS SUR S.A</option>
+                    <option>MERITENS S.A.</option>
+                    <option>BIOMASA SOCIEDAD ANOMINA</option>
+                    <option>NOK SOCIEDAD ANONIMA</option>
+                    <option>MAQSUR MAQUINARIAS S.A.</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Solicitudes de baja para aprobar</h3>
+        <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaSolicitud" data-order='[[ 1, "asc" ]]'>
+                <thead class="thead-light">
+                    <tr>
+                        <th class="no-sort"></th>
+                        <th>Folio</th>
+                        <th>Fecha</th>
+                        <th>Empresa</th>
+                        <th>Estado</th>
+                        <th>Cantidad Activos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#ModalVerLicitacion" onclick="CreateRegistro()"><i class="fa fa-book-open"></i></button></td>
+                        <td>003</td>
+                        <td>07/11/2024</td>
+                        <td>BIOMASA SOCIEDAD ANOMINA</td>
+                        <td>Enviado</td>
+                        <td>3</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<form name="frmSolicitud" id="frmSolicitud" method="post">
+    <input type="hidden" name="id" id="id" />
+</form>   
+
+<div class="modal fade" id="ModalVerLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-verlicitacion" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div id="datosLicitacion"></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ModalEditarLicitacion" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modal-editarlicitacion" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        AbrirMenu("AutorizacionBaja");
+        initTable();
+    });
+
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    function initTable() {
+        var table = $('#grillaSolicitud').DataTable({
+        });
+
+        return table;
+    }
+
+    function CreateRegistro(id) {
+        $('#id').val(id);
+        url = "/Bajas/SolicitudAprobar";
+        $('#frmSolicitud').attr('action', url);
+        $('#frmSolicitud').submit();
+    }
+
+</script>

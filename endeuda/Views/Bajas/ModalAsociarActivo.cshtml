@@ -1,0 +1,157 @@
+﻿@model modelo.Models.Local.LicitacionActivo
+@{
+    ViewBag.Title = "Seleccionar Activo Baja";
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-2">
+                <input type="text" class="form-control form-control-sm" name="numeroActivo" id="numeroActivoB" placeholder="Número Activo">
+            </div>
+            <div class="col-md-2">
+                <input type="text" class="form-control form-control-sm" name="codigoInterno" id="codigoInternoB" placeholder="Código Interno">
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-2">
+                <div class="row justify-content-end">
+                    <button class="btn btn-info btn-sm " type="button" onclick="RefreshLista()"><i class="fa fa-search"></i> Filtrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body table-responsive">
+        <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaActivo" data-order='[[ 0, "asc" ]]'>
+            <thead class="thead-light">
+                <tr>
+                    <th class="no-sort" width="3%"><i class="far fa-eye"></i></th>
+                    <th>Nro Activo</th>
+                    <th>Familia</th>
+                    <th>Descripcion</th>
+                    <th>Motivo</th>
+                    <th>Monto</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Marca</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" class="activo" name="chkActivo" id="1" value="1" /></td>
+                    <td>878</td>
+                    <td>Maquinaria</td>
+                    <td>TRANSPALETA ELECTRICA HOMBRE CAMINANDO</td>
+                    <td>
+                        <select class="form-control form-control-sm">
+                            <option>[ Seleccione Motivo ]</option>
+                            <option>Deterioro</option>
+                            <option>Perdida</option>
+                        </select>
+                    </td>
+                    <td>4.568.474</td>
+                    <td>MPB045VG</td>
+                    <td>2019</td>
+                    <td>YALE</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="activo" name="chkActivo" id="1" value="1" /></td>
+                    <td>934</td>
+                    <td>Maquinaria</td>
+                    <td>APILADOR ELECTRICO REACH</td>
+                    <td>
+                        <select class="form-control form-control-sm">
+                            <option>[ Seleccione Motivo ]</option>
+                            <option>Deterioro</option>
+                            <option>Perdida</option>
+                        </select>
+                    </td>
+                    <td>25.564.275</td>
+                    <td></td>
+                    <td>2016</td>
+                    <td>BT</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" class="activo" name="chkActivo" id="1" value="1" /></td>
+                    <td>935</td>
+                    <td>Maquinaria</td>
+                    <td>APILADOR ELECTRICO</td>
+                    <td>
+                        <select class="form-control form-control-sm">
+                            <option>[ Seleccione Motivo ]</option>
+                            <option>Deterioro</option>
+                            <option>Perdida</option>
+                        </select>
+                    </td>
+                    <td>9.654.567</td>
+                    <td>MS16</td>
+                    <td>2017</td>
+                    <td>YALE</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+        <button type="button" id="btAsociar" class="btn btn-primary">Asociar</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+        initTable();
+    });
+
+    function RefreshLista() {
+        var table = initTable();
+        table.ajax.reload(function (json) { });
+    }
+
+    var idSeleccion = new Array();
+    function ActualizarSeleccion(key) {
+        //console.log(key)
+        // console.log($("#" + key).prop("checked"))
+        if ($("#" + key).prop("checked") == true) {
+            var existe = idSeleccion.includes(key)
+            if (existe == false) {
+                idSeleccion.push(key);
+            }
+        }
+        else {
+            let pos = idSeleccion.indexOf(key)
+            let elementoEliminado = idSeleccion.splice(pos, 1)
+        }
+        // console.log(idSeleccion)
+    }
+
+    function initTable() {
+        var table = $('#grillaActivo').DataTable({
+        });
+        return table;
+    }
+
+    function SuccessA(data) {
+        if (data.result.Estado == "0") {
+            toastr.success(data.result.Mensaje);
+            $('#ModalAsociarActivo').modal('hide');
+            //CargaTab('documentos-part', 4);
+            RefreshListaActivo();
+        }
+        else {
+            toastr.error(data.result.Mensaje);
+        }
+    }
+
+    function FailureA(data) {
+        //esconderCargando();
+        toastr.error(data.result.Mensaje);
+    }
+</script>
