@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "Formulario Venta";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Venta Activo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="ml-2">
+            <div class="form-group form-group-sm row">
+                <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Nro. Equipo</label>
+                <div class="col-6">
+                    <input type="text" class="form-control" id="numeroEquipo" placeholder="Ingrese Numero Equipo">
+                </div>
+                <div class="col-2">
+                    <button type="button" onclick="Buscar()" class="btn btn-primary btn-sm">Buscar</button>
+                </div>
+            </div>
+            <div class="d-none" id="idActivoB">
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Familia</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="usuario" placeholder="Familia">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Descipción</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="usuario" placeholder="Descipción">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Modelo</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="usuario" placeholder="Modelo">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Año</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="usuario" placeholder="Año">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Marca</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="usuario" placeholder="Marca">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Nro. Nota Venta</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="usuario" placeholder="Nro. Nota Venta">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Nro. Factura</label>
+                    <div class="col-6">
+                        <input type="text" class="form-control" id="usuario" placeholder="Nro. Factura">
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                        <thead class="thead-light">
+                            <tr>
+                                <th class="no-sort" width="3%">Item</th>
+                                <th>Adjunto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><a href="">Adjunto.pdf</a></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td><a href="">Adjunto1.pdf</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-sm">Crear</button>
+    </div>
+
+</div>
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        $('#perfiles').select2({
+            theme: 'bootstrap4'
+        })
+        window.top.esconderCargando();
+    });
+
+    function Buscar() {
+        $("#idActivoB").removeClass('d-none');
+    }
+
+</script>

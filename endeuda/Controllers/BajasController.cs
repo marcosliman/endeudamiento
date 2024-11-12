@@ -57,6 +57,22 @@ namespace tesoreria.Controllers
             return PartialView(licitacionActivo);
         }
 
+        public ActionResult ModalFormulario1(int? id)
+        {
+            var licitacionActivo = new LicitacionActivo();
+            licitacionActivo.IdLicitacion = 1;
+
+            return PartialView(licitacionActivo);
+        }
+
+        public ActionResult ModalFormulario2(int? id)
+        {
+            var licitacionActivo = new LicitacionActivo();
+            licitacionActivo.IdLicitacion = 2;
+
+            return PartialView(licitacionActivo);
+        }
+
         public ActionResult ModalVerSolicitud(int? id)
         {
             var licitacionActivo = new LicitacionActivo();
