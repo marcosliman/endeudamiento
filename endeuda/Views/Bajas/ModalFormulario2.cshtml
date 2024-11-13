@@ -206,4 +206,21 @@
         $("#idActivoB").removeClass('d-none');
     }
 
+    function CargaTab(div, op) {
+        // Eliminar las clases 'show' y 'active' de todos los tabs y nav-links
+        $('.tab-pane').removeClass("show active");
+        $('.nav-link-contrato').removeClass("active");
+
+        // Añadir la clase 'active' al header correspondiente
+        $("#header" + op).addClass("active");
+
+        // Mostrar el contenido del tab adecuado
+        if (op == 1) {
+            $("#tab1").addClass("show active");
+        }
+        if (op == 2) {
+            $("#tab2").addClass("show active");
+        }
+    }
+
 </script>
