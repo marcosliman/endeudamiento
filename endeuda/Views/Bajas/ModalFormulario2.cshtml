@@ -18,7 +18,10 @@
                 <a class="nav-link nav-link-contrato active" id="header1" href="#tab1" role="tab" aria-controls="tab1" aria-selected="true" onclick="CargaTab(this, 1)">Datos Activo</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link nav-link-contrato" id="header2" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false" onclick="CargaTab(this, 2)">Adjuntos</a>
+                <a class="nav-link nav-link-contrato" id="header2" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false" onclick="CargaTab(this, 2)">Documentos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link nav-link-contrato" id="header3" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false" onclick="CargaTab(this, 3)">Registro Fotográfico</a>
             </li>
         </ul>
     </div>
@@ -128,12 +131,6 @@
                             </div>
                         </div>
                         <div class="form-group form-group-sm row">
-                            <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Fotografía</label>
-                            <div class="col-6">
-                                <input type="file" class="form-control" id="usuario">
-                            </div>
-                        </div>
-                        <div class="form-group form-group-sm row">
                             <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Descripción</label>
                             <div class="col-6">
                                 <textarea class="form-control"></textarea>
@@ -145,7 +142,7 @@
             <div class="tab-pane fade" id="tab2" role="tabpanel">
                 <div class="ml-2">
                     <div class="form-group form-group-sm row">
-                        <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Adjunto</label>
+                        <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Documento</label>
                         <div class="col-6">
                             <input type="file" class="form-control" id="file">
                         </div>
@@ -169,6 +166,39 @@
                                 <tr>
                                     <td>2</td>
                                     <td><a href="">Adjunto1.pdf</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab3" role="tabpanel">
+                <div class="ml-2">
+                    <div class="form-group form-group-sm row">
+                        <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Fotografía</label>
+                        <div class="col-6">
+                            <input type="file" class="form-control" id="file">
+                        </div>
+                        <div class="col-2">
+                            <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
+                        </div>
+                    </div>
+                    <div class="form-group form-group-sm row">
+                        <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="no-sort" width="3%">Item</th>
+                                    <th>Registro Fotográfico</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><a href="">Foto1.png</a></td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td><a href="">Foto2.png</a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -220,6 +250,9 @@
         }
         if (op == 2) {
             $("#tab2").addClass("show active");
+        }
+        if (op == 3) {
+            $("#tab3").addClass("show active");
         }
     }
 
