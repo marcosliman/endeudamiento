@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Motivo Baja";
+}
+@{
+    Layout = "~/Views/Shared/_Popup.cshtml";
+}
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">@ViewBag.Title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="ml-2">
+            <div class="form-group form-group-sm row">
+                <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Motivo Baja</label>
+                <div class="col-6">
+                    <input type="text" class="form-control" id="numeroEquipo" placeholder="Ingrese Motivo baja">
+                </div>
+            </div>
+            <div id="idActivoB">
+                <div class="form-group form-group-sm row">
+                    <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Tipo Baja</label>
+                    <div class="col-6">
+                        <select class="form-control form-control-sm" id="tipoBaja">
+                            <option>Seleccione Tipo Baja</option>
+                            <option value="1">Venta</option>
+                            <option>Baja</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Registro Fotográfico</label>
+                    <div class="col-6">
+                        <input type="radio" id="huey" name="drone" value="huey" /> <label for="huey">SI</label>
+                        <input type="radio" id="huey" name="drone" value="huey" /> <label for="huey">NO</label>
+                    </div>
+                </div>
+                <div class="form-group form-group-sm row">
+                    <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Estado</label>
+                    <div class="col-6">
+                        <input type="radio" id="huey" name="drone" value="huey" /> <label for="huey">Vigente</label>
+                        <input type="radio" id="huey" name="drone" value="huey" /> <label for="huey">No Vigente</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
+        <button type="button" id="btnGenerar" class="btn btn-primary" onclick="Grabar();">Grabar Registro</button>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $('#frmEdit').validate({
+            debug: false,
+            errorElement: "em",
+            errorContainer: $("#warning")
+        });
+        $('#perfiles').select2({
+            theme: 'bootstrap4'
+        })
+        window.top.esconderCargando();
+    });
+
+</script>

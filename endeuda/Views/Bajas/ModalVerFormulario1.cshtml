@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Formulario Venta";
+    ViewBag.Title = "Venta";
 }
 @{
     Layout = "~/Views/Shared/_Popup.cshtml";
@@ -30,13 +30,10 @@
                     <div class="form-group form-group-sm row">
                         <label for="nombrearchivo" class="col-sm-3 col-form-label col-form-label-sm">Nro. Equipo</label>
                         <div class="col-6">
-                            <input type="text" class="form-control" id="numeroEquipo" placeholder="Ingrese Numero Equipo">
-                        </div>
-                        <div class="col-2">
-                            <button type="button" onclick="Buscar()" class="btn btn-primary btn-sm">Buscar</button>
+                            <input type="text" class="form-control" id="numeroEquipo" placeholder="Ingrese Numero Equipo" readonly>
                         </div>
                     </div>
-                    <div class="d-none" id="idActivoB">
+                    <div id="idActivoB">
                         <div class="form-group form-group-sm row">
                             <label for="descripcion" class="col-sm-3 col-form-label col-form-label-sm">Familia</label>
                             <div class="col-6">
@@ -70,13 +67,13 @@
                         <div class="form-group form-group-sm row">
                             <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Nro. Nota Venta</label>
                             <div class="col-6">
-                                <input type="text" class="form-control" id="usuario" placeholder="Nro. Nota Venta">
+                                <input type="text" class="form-control" id="usuario" placeholder="Nro. Nota Venta" readonly>
                             </div>
                         </div>
                         <div class="form-group form-group-sm row">
                             <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Nro. Factura</label>
                             <div class="col-6">
-                                <input type="text" class="form-control" id="usuario" placeholder="Nro. Factura">
+                                <input type="text" class="form-control" id="usuario" placeholder="Nro. Factura" readonly>
                             </div>
                         </div>
                     </div>
@@ -84,15 +81,6 @@
             </div>
             <div class="tab-pane fade" id="tab2" role="tabpanel">
                 <div class="ml-2">
-                    <div class="form-group form-group-sm row">
-                        <label for="usuario" class="col-sm-3 col-form-label col-form-label-sm">Documento</label>
-                        <div class="col-6">
-                            <input type="file" class="form-control" id="file">
-                        </div>
-                        <div class="col-2">
-                            <button type="submit" class="btn btn-primary btn-sm">Agregar</button>
-                        </div>
-                    </div>
                     <div class="form-group form-group-sm row">
                         <table class="table table-bordered table-hover dataTable1 dtr-inline" width="100%" id="grillaEmpresa" data-order='[[ 0, "asc" ]]'>
                             <thead class="thead-light">
@@ -120,7 +108,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary btn-sm">Crear</button>
     </div>
 </div>
 <script>

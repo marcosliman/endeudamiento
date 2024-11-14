@@ -2,8 +2,8 @@
     <h5 class="h5 mb-0 text-gray-800">Aprobar Solicitud Baja</h5>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/Home/Inicio">Home</a></li>
-        <li class="breadcrumb-item"><a href="/Bajas/AprobarSolicitud">Aprobar Solicitud</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Aprobar</li>
+        <li class="breadcrumb-item"><a href="/Bajas/AprobarSolicitud">Finalizar Solicitud</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Finalizar</li>
     </ol>
 </div>
 <input type="hidden" name="id" id="id" value="" />
@@ -20,29 +20,28 @@
             <div class="col-sm-3">003</div>
         </div>
         <div class="form-group row">
+            <label for="inputEmail3" class="col-sm-3 col-form-label">Motivo Baja</label>
+            <div class="col-sm-3">Venta</div>
             <label for="inputEmail3" class="col-sm-3 col-form-label">Fecha</label>
             <div class="col-sm-3">07/11/2024</div>
-            <label for="inputEmail3" class="col-sm-3 col-form-label">Observación</label>
-            <div class="col-sm-3">
-                <textarea class="form-control form-control-sm required"></textarea>
-            </div>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" onclick="Volver();">Volver</button>
-        <button type="button" id="btnGenerar" class="btn btn-primary" onclick="GrabarSolicitud();">Grabar aprobacion Solicitud</button>
+        <button type="button" id="btnGenerar" class="btn btn-primary" onclick="GrabarSolicitud();">Finalizar Solicitud</button>
     </div>
 </div>
 
 <div class="card" id="idActivo">
     <div class="card-body">
         <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-12 col-form-label">A continuación selecciona la opción de cada activo</label>
+            <label for="inputEmail3" class="col-sm-12 col-form-label">Activos dados de baja</label>
         </div>
         <div class="table-responsive mt-1">
             <table class="table table-bordered table-hover dataTable dtr-inline" width="100%" id="grillaLicitacioActivo" data-order='[[ 1, "asc" ]]'>
                 <thead class="thead-light">
                     <tr>
+                        <th class="no-sort noExport">Acción</th>
                         <th>Nro Activo</th>
                         <th>Familia</th>
                         <th>Descripcion</th>
@@ -51,12 +50,11 @@
                         <th>Modelo</th>
                         <th>Año</th>
                         <th>Marca</th>
-                        <th>Situación</th>
-                        <th>Observación</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
+                        <td><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ModalAsociarActivo" type="button" onclick="VerActivo()"><i class="far fa-edit"></i></button></td>
                         <td>2343</td>
                         <td>Maquinaria</td>
                         <td>GRUA HORQUILLA COMBUSTIÓN</td>
@@ -65,16 +63,9 @@
                         <td>32 8FG30</td>
                         <td>2022</td>
                         <td>TOYOTA</td>
-                        <td>
-                            <select class="form-control form-control-sm">
-                                <option>[ Seleccione Situación ]</option>
-                                <option>Aprobar</option>
-                                <option>Rechazar</option>
-                            </select>
-                        </td>
-                        <td><input type="text" class="form-control form-control-sm" /></td>
                     </tr>
                     <tr>
+                        <td><button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#ModalAsociarActivo" type="button" onclick="VerActivo()"><i class="far fa-edit"></i></button></td>
                         <td>007079</td>
                         <td>Maquinaria</td>
                         <td>GENERADOR 275 KVA</td>
@@ -83,14 +74,6 @@
                         <td>DE300</td>
                         <td>2019</td>
                         <td>CATERPILLAR</td>
-                        <td>
-                            <select class="form-control form-control-sm">
-                                <option>[ Seleccione Situación ]</option>
-                                <option>Aprobar</option>
-                                <option>Rechazar</option>
-                            </select>
-                        </td>
-                        <td><input type="text" class="form-control form-control-sm" /></td>
                     </tr>
                 </tbody>
             </table>
@@ -111,7 +94,7 @@
 </form>
 <script>
     $(document).ready(function () {
-        AbrirMenu("AprobacionBaja");
+        AbrirMenu("FinalizarBaja");
         initTableActivo();
 
         $('#frmLicitacion').validate({
@@ -130,9 +113,10 @@
         $("#idActivo").removeClass('d-none');
     }
 
-    function AsociarActivo() {
+    function VerActivo() {
+        let url = "/Bajas/ModalVerFormulario1";
         $.ajax({
-            url: "/Bajas/ModalAsociarActivo",
+            url: url,
             type: "Post",
             data: { id: $("#id").val() },
             beforeSend: function () {
@@ -152,7 +136,7 @@
     }
 
     function Volver() {
-        url = '/Bajas/Aprobacion/';
+        url = '/Bajas/Finalizar/';
         location.href = url;
     }
 </script>

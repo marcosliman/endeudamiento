@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Lista Aprobar Solicitud de Baja";
+    ViewBag.Title = "Lista Finalizar Solicitud de Baja";
 }
 @{
     tesoreria.Helper.Seguridad seguridad = System.Web.HttpContext.Current.Session["Seguridad"] as tesoreria.Helper.Seguridad;
@@ -48,7 +48,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">Solicitudes de baja para aprobar</h3>
+        <h3 class="card-title">Solicitudes de baja para finalizar</h3>
         <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse">
                 <i class="fas fa-minus"></i>
@@ -74,7 +74,7 @@
                         <td>003</td>
                         <td>07/11/2024</td>
                         <td>BIOMASA SOCIEDAD ANOMINA</td>
-                        <td>Enviado</td>
+                        <td>Para Finalizar</td>
                         <td>3</td>
                     </tr>
                 </tbody>
@@ -103,7 +103,7 @@
 
 <script>
     $(document).ready(function () {
-        AbrirMenu("AprobacionBaja");
+        AbrirMenu("FinalizarBaja");
         initTable();
     });
 
@@ -121,7 +121,7 @@
 
     function CreateRegistro(id) {
         $('#id').val(id);
-        url = "/Bajas/SolicitudAprobar";
+        url = "/Bajas/SolicitudFinalizar";
         $('#frmSolicitud').attr('action', url);
         $('#frmSolicitud').submit();
     }

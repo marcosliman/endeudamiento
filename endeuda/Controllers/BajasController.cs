@@ -73,6 +73,14 @@ namespace tesoreria.Controllers
             return PartialView(licitacionActivo);
         }
 
+        public ActionResult ModalVerFormulario1(int? id)
+        {
+            var licitacionActivo = new LicitacionActivo();
+            licitacionActivo.IdLicitacion = -1;
+
+            return PartialView(licitacionActivo);
+        }
+
         public ActionResult ModalVerSolicitud(int? id)
         {
             var licitacionActivo = new LicitacionActivo();
@@ -81,19 +89,19 @@ namespace tesoreria.Controllers
         }
         #endregion
 
-        public ActionResult Aprobacion()
+        public ActionResult Finalizar()
         {
             return View();
         }
 
-        public ActionResult SolicitudAprobar(int? id)
+        public ActionResult SolicitudFinalizar(int? id)
         {
 
             if (seguridad == null)
             {
                 return RedirectToAction("LogOut", "Login");
             }
-            else if (seguridad != null && !seguridad.TienePermiso("AprobacionBaja", Helper.TipoAcceso.Acceder))
+            else if (seguridad != null && !seguridad.TienePermiso("FinalizarBaja", Helper.TipoAcceso.Acceder))
             {
                 return RedirectToAction("Inicio", "Home");
             }
@@ -123,6 +131,17 @@ namespace tesoreria.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult MotivoBaja()
+        {
+            return View();
+        }
+
+        public ActionResult ModalAddMotivo(int? id)
+        {
+
+            return PartialView();
         }
 
         public ActionResult Reporte()
